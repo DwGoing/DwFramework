@@ -64,19 +64,20 @@ namespace Test
 ```
 
 ```c#
+
 // Program.cs
 using DwFramework.Core;
 using DwFramework.Core.Extensions;
 
 class Program
 {
-		static void Main(string[] args)
-		{
-				ServiceHost host = new ServiceHost();
-				host.RegisterFromAssembly("Test"); // 从程序集注入
-				var provider = host.Build();
-				var service = provider.GetService<ITestInterface, TestClass1>();
-				service.TestMethod("helo");
-		}
+    static void Main(string[] args)
+    {
+        ServiceHost host = new ServiceHost();
+        host.RegisterFromAssembly("Test"); // 从程序集注入
+        var provider = host.Build();
+        var service = provider.GetService<ITestInterface, TestClass1>();
+        service.TestMethod("helo");
+    }
 }
 ```
