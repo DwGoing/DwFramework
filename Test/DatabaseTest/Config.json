@@ -1,0 +1,11 @@
+﻿{
+  "Database": {
+    "Redis": {
+      "ConnectString": "192.168.10.100:6379,defaultDatabase=0,poolsize=50,ssl=false,writeBuffer=10240"
+    },
+    "MySql": {
+      "MasterConnection": "server=192.168.10.100;port=3306;uid=dwgoing;pwd=Ayou1209;database=test;",
+      "SlaveConnections": []
+    }
+  }
+}
