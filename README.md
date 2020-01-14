@@ -12,13 +12,13 @@
 |   DwFramework.Core    |   核心组件    |      |
 |   DwFramework.Http    |  WebAPI组件   |      |
 | DwFramework.WebSocket | WebSocket组件 |      |
-| DwFramework.Database  |   Mysql组件   |      |
+| DwFramework.Database  | Database组件  |      |
 |                       |               |      |
 |                       |               |      |
 
 ---
 
-### 0x3 使用示例
+### 0x3 简单示例
 
 ```c#
 // Test.cs
