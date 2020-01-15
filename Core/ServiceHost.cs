@@ -30,15 +30,6 @@ namespace DwFramework.Core
         /// <summary>
         /// 注册服务
         /// </summary>
-        /// <param name="addService"></param>
-        public void RegisterServices(Action<ServiceCollection> addService)
-        {
-            addService?.Invoke(_services);
-        }
-
-        /// <summary>
-        /// 注册服务
-        /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
         public IRegistrationBuilder<T, ConcreteReflectionActivatorData, SingleRegistrationStyle> RegisterType<T>() where T : class
