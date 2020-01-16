@@ -1,5 +1,7 @@
-﻿using Autofac.Builder;
+﻿using Autofac;
+using Autofac.Builder;
 using Autofac.Extensions.DependencyInjection;
+using AutoFac.Extras.NLog.DotNetCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -35,6 +37,17 @@ namespace DwFramework.Core.Extensions
                     return item as T;
             }
             return default;
+        }
+
+        /// <summary>
+        /// 注册NLog服务
+        /// </summary>
+        /// <param name="builder"></param>
+        /// <returns></returns>
+        public static ContainerBuilder RegisterNLog(this ContainerBuilder builder)
+        {
+            builder.RegisterModule<NLogModule>();
+            return builder;
         }
     }
 }

@@ -7,6 +7,7 @@ using Autofac.Builder;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
 
+using DwFramework.Core.Extensions;
 using DwFramework.Core.Models;
 
 namespace DwFramework.Core
@@ -21,10 +22,21 @@ namespace DwFramework.Core
         /// <summary>
         /// 构造函数
         /// </summary>
-        public ServiceHost()
+        public ServiceHost(bool hasLog = false)
         {
             _containerBuilder = new ContainerBuilder();
             _services = new ServiceCollection();
+            if (hasLog)
+                _containerBuilder.RegisterNLog();
+        }
+
+        /// <summary>
+        /// 注册服务
+        /// </summary>
+        /// <param name="action"></param>
+        public void RegisterService(Action<ServiceCollection> action)
+        {
+            action?.Invoke(_services);
         }
 
         /// <summary>

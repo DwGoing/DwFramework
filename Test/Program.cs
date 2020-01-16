@@ -3,6 +3,9 @@ using System.IO;
 using System.Text;
 using System.Linq;
 using System.Threading;
+
+using Microsoft.Extensions.DependencyInjection;
+
 using DwFramework.Core;
 using DwFramework.Core.Extensions;
 using DwFramework.Http;
@@ -15,12 +18,13 @@ namespace Test
     {
         static void Main(string[] args)
         {
-            ServiceHost host = new ServiceHost();
+            ServiceHost host = new ServiceHost(true);
             host.RegisterConfiguration($"{Directory.GetCurrentDirectory()}/CoreTest", "Config.json");
             host.RegisterFromAssembly("Test"); // 从程序集注入
             var provider = host.Build();
             var service = provider.GetService<ITestInterface, TestClass1>();
             service.TestMethod("helo");
+            Console.ReadLine();
 
             //ServiceHost host = new ServiceHost();
             //host.RegisterConfiguration($"{Directory.GetCurrentDirectory()}/HttpTest", "Config.json");
