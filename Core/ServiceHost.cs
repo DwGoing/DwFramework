@@ -3,11 +3,10 @@ using System.Reflection;
 using System.Linq;
 
 using Autofac;
-using Autofac.Builder;
+using Autofac.Core;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
 
-using DwFramework.Core.Extensions;
 using DwFramework.Core.Models;
 
 namespace DwFramework.Core
@@ -22,21 +21,20 @@ namespace DwFramework.Core
         /// <summary>
         /// 构造函数
         /// </summary>
-        public ServiceHost(bool hasLog = false)
+        public ServiceHost()
         {
             _containerBuilder = new ContainerBuilder();
             _services = new ServiceCollection();
-            if (hasLog)
-                _containerBuilder.RegisterNLog();
         }
 
         /// <summary>
         /// 注册服务
         /// </summary>
         /// <param name="action"></param>
-        public void RegisterService(Action<ServiceCollection> action)
+        public ServiceHost RegisterService(Action<ServiceCollection> action)
         {
             action?.Invoke(_services);
+            return this;
         }
 
         /// <summary>
@@ -44,9 +42,21 @@ namespace DwFramework.Core
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public IRegistrationBuilder<T, ConcreteReflectionActivatorData, SingleRegistrationStyle> RegisterType<T>() where T : class
+        public ServiceHost RegisterModule<T>() where T : class, IModule, new()
         {
-            return _containerBuilder.RegisterType<T>();
+            _containerBuilder.RegisterModule<T>();
+            return this;
+        }
+
+        /// <summary>
+        /// 注册服务
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public ServiceHost RegisterType<T>() where T : class
+        {
+            _containerBuilder.RegisterType<T>();
+            return this;
         }
 
         /// <summary>
@@ -55,9 +65,10 @@ namespace DwFramework.Core
         /// <typeparam name="I"></typeparam>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public IRegistrationBuilder<T, ConcreteReflectionActivatorData, SingleRegistrationStyle> RegisterType<I, T>() where T : class
+        public ServiceHost RegisterType<I, T>() where T : class
         {
-            return _containerBuilder.RegisterType<T>().As<I>();
+            _containerBuilder.RegisterType<T>().As<I>();
+            return this;
         }
 
         /// <summary>
@@ -66,9 +77,10 @@ namespace DwFramework.Core
         /// <typeparam name="T"></typeparam>
         /// <param name="instance"></param>
         /// <returns></returns>
-        public IRegistrationBuilder<T, SimpleActivatorData, SingleRegistrationStyle> RegisterInstance<T>(T instance) where T : class
+        public ServiceHost RegisterInstance<T>(T instance) where T : class
         {
-            return _containerBuilder.RegisterInstance(instance);
+            _containerBuilder.RegisterInstance(instance);
+            return this;
         }
 
         /// <summary>
@@ -78,16 +90,18 @@ namespace DwFramework.Core
         /// <typeparam name="T"></typeparam>
         /// <param name="instance"></param>
         /// <returns></returns>
-        public IRegistrationBuilder<T, SimpleActivatorData, SingleRegistrationStyle> RegisterInstance<I, T>(T instance) where T : class
+        public ServiceHost RegisterInstance<I, T>(T instance) where T : class
         {
-            return _containerBuilder.RegisterInstance(instance).As<I>();
+            _containerBuilder.RegisterInstance(instance).As<I>();
+            return this;
         }
 
         /// <summary>
         /// 注册服务
         /// </summary>
         /// <param name="assemblyName"></param>
-        public void RegisterFromAssembly(string assemblyName)
+        /// <returns></returns>
+        public ServiceHost RegisterFromAssembly(string assemblyName)
         {
             var assembly = AppDomain.CurrentDomain.GetAssemblies().Where(item => item.FullName.Split(",").First() == assemblyName).FirstOrDefault();
             if (assembly == null)
@@ -112,6 +126,7 @@ namespace DwFramework.Core
                         tmp.AutoActivate();
                 }
             }
+            return this;
         }
 
         /// <summary>

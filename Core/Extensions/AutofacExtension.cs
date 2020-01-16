@@ -44,10 +44,10 @@ namespace DwFramework.Core.Extensions
         /// </summary>
         /// <param name="builder"></param>
         /// <returns></returns>
-        public static ContainerBuilder RegisterNLog(this ContainerBuilder builder)
+        public static ServiceHost RegisterNLog(this ServiceHost host)
         {
-            builder.RegisterModule<NLogModule>();
-            return builder;
+            host.RegisterModule<NLogModule>();
+            return host;
         }
     }
 }

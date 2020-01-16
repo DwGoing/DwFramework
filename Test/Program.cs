@@ -18,12 +18,15 @@ namespace Test
     {
         static void Main(string[] args)
         {
-            ServiceHost host = new ServiceHost(true);
+            ServiceHost host = new ServiceHost();
             host.RegisterConfiguration($"{Directory.GetCurrentDirectory()}/CoreTest", "Config.json");
-            host.RegisterFromAssembly("Test"); // 从程序集注入
-            var provider = host.Build();
-            var service = provider.GetService<ITestInterface, TestClass1>();
-            service.TestMethod("helo");
+            host.RegisterNLog();
+            //host.RegisterFromAssembly("Test"); // 从程序集注入
+            //var provider = host.Build();
+            //var service = provider.GetService<ITestInterface>();
+            //service.TestMethod("helo");
+            //service = provider.GetService<ITestInterface, TestClass1>();
+            //service.TestMethod("helo");
             Console.ReadLine();
 
             //ServiceHost host = new ServiceHost();
