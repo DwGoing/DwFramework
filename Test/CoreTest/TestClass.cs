@@ -12,7 +12,14 @@ namespace Test
     {
         public TestClass1(IConfiguration configuration, ILogger logger)
         {
-            logger.Info("TestClass1已注入");
+            try
+            {
+                throw new NotImplementedException("未定义的函数");
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "TestClass1已注入");
+            }
         }
 
         public void TestMethod(string str)
