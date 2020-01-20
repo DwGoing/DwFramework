@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Threading;
+using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -31,9 +32,9 @@ namespace DwFramework.WebSocket
         /// </summary>
         /// <param name="provider"></param>
         /// <param name="handler"></param>
-        public static void InitWebSocketService(this AutofacServiceProvider provider, Action<string, System.Net.WebSockets.WebSocket> handler)
+        public static async void InitWebSocketServiceAsync(this AutofacServiceProvider provider, Action<string, System.Net.WebSockets.WebSocket> handler)
         {
-            provider.GetService<IWebSocketService, WebSocketService>().OpenService(handler);
+            await provider.GetService<IWebSocketService, WebSocketService>().OpenService(handler);
         }
 
         /// <summary>
@@ -113,43 +114,46 @@ namespace DwFramework.WebSocket
         /// 开启WebSocket服务
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        public void OpenService(Action<string, System.Net.WebSockets.WebSocket> handler)
+        public Task OpenService(Action<string, System.Net.WebSockets.WebSocket> handler)
         {
-            var builder = new WebHostBuilder()
-                // wss证书路径
-                .UseContentRoot($"{AppDomain.CurrentDomain.BaseDirectory}{_config.ContentRoot}")
-                .UseKestrel(options =>
-                {
-                    // 监听地址及端口
-                    if (_config.Listen == null || _config.Listen.Count <= 0)
-                        options.Listen(IPAddress.Parse("0.0.0.0"), 5088);
-                    else
+            return Task.Run(() =>
+            {
+                var builder = new WebHostBuilder()
+                    // wss证书路径
+                    .UseContentRoot($"{AppDomain.CurrentDomain.BaseDirectory}{_config.ContentRoot}")
+                    .UseKestrel(options =>
                     {
-                        if (_config.Listen.ContainsKey("ws"))
+                        // 监听地址及端口
+                        if (_config.Listen == null || _config.Listen.Count <= 0)
+                            options.Listen(IPAddress.Parse("0.0.0.0"), 5088);
+                        else
                         {
-                            string[] ipAndPort = _config.Listen["ws"].Split(":");
-                            options.Listen(IPAddress.Parse(ipAndPort[0]), int.Parse(ipAndPort[1]));
-                        }
-                        if (_config.Listen.ContainsKey("wss"))
-                        {
-                            string[] addrAndCert = _config.Listen["wss"].Split(";");
-                            string[] ipAndPort = addrAndCert[0].Split(":");
-                            options.Listen(IPAddress.Parse(ipAndPort[0]), int.Parse(ipAndPort[1]), listenOptions =>
+                            if (_config.Listen.ContainsKey("ws"))
                             {
-                                string[] certAndPassword = addrAndCert[1].Split(",");
-                                listenOptions.UseHttps(certAndPassword[0], certAndPassword[1]);
-                            });
+                                string[] ipAndPort = _config.Listen["ws"].Split(":");
+                                options.Listen(IPAddress.Parse(ipAndPort[0]), int.Parse(ipAndPort[1]));
+                            }
+                            if (_config.Listen.ContainsKey("wss"))
+                            {
+                                string[] addrAndCert = _config.Listen["wss"].Split(";");
+                                string[] ipAndPort = addrAndCert[0].Split(":");
+                                options.Listen(IPAddress.Parse(ipAndPort[0]), int.Parse(ipAndPort[1]), listenOptions =>
+                                {
+                                    string[] certAndPassword = addrAndCert[1].Split(",");
+                                    listenOptions.UseHttps(certAndPassword[0], certAndPassword[1]);
+                                });
+                            }
                         }
-                    }
-                })
-                .Configure(app =>
-                {
-                    app.UseWebSockets();
-                    app.UsePreHandler();
-                    app.RunCustomHandler(handler);
-                })
-                .Build();
-            builder.Run();
+                    })
+                    .Configure(app =>
+                    {
+                        app.UseWebSockets();
+                        app.UsePreHandler();
+                        app.RunCustomHandler(handler);
+                    })
+                    .Build();
+                builder.Run();
+            });
         }
     }
 }

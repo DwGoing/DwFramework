@@ -61,32 +61,19 @@ namespace Test
         {
             ServiceHost host = new ServiceHost();
             host.RegisterConfiguration($"{Directory.GetCurrentDirectory()}", "Config.json");
-            host.RegisterNLog();
-            host.RegisterType<ITestInterface, TestClass2>();
+            host.RegisterHttpService();
+            host.RegisterWebSocketService();
             var provider = host.Build();
-            var service = provider.GetService<ITestInterface>();
-            service.TestMethod("helo");
-            Console.ReadLine();
-
-            //ServiceHost host = new ServiceHost();
-            //host.RegisterConfiguration($"{Directory.GetCurrentDirectory()}/HttpTest", "Config.json");
-            //host.RegisterHttpService();
-            //var provider = host.Build();
-            //provider.InitHttpService<HttpStartup>();
-
-            //ServiceHost host = new ServiceHost();
-            //host.RegisterConfiguration($"{Directory.GetCurrentDirectory()}/WebsocketTest", "Config.json");
-            //host.RegisterWebSocketService();
-            //var provider = host.Build();
-            //provider.InitWebSocketService(async (msg, webSocket) =>
-            //{
-            //    // 对消息自定义处理
-            //    Console.WriteLine(msg);
-            //    byte[] msgBytes = Encoding.UTF8.GetBytes(msg);
-            //    await webSocket.SendAsync(new ArraySegment<byte>(msgBytes), System.Net.WebSockets.WebSocketMessageType.Text, true, CancellationToken.None);
-            //    if (msg == "close")
-            //        await webSocket.CloseOutputAsync(System.Net.WebSockets.WebSocketCloseStatus.NormalClosure, null, CancellationToken.None);
-            //});
+            provider.InitHttpServiceAsync<HttpStartup>();
+            provider.InitWebSocketServiceAsync(async (msg, webSocket) =>
+            {
+                // 对消息自定义处理
+                Console.WriteLine(msg);
+                byte[] msgBytes = Encoding.UTF8.GetBytes(msg);
+                await webSocket.SendAsync(new ArraySegment<byte>(msgBytes), System.Net.WebSockets.WebSocketMessageType.Text, true, CancellationToken.None);
+                if (msg == "close")
+                    await webSocket.CloseOutputAsync(System.Net.WebSockets.WebSocketCloseStatus.NormalClosure, null, CancellationToken.None);
+            });
 
             //ServiceHost host = new ServiceHost();
             //host.RegisterConfiguration($"{Directory.GetCurrentDirectory()}/DatabaseTest", "Config.json");
@@ -96,6 +83,7 @@ namespace Test
             //var service = provider.GetService<IDatabaseService, DatabaseService>();
             //var res = service.QueryWithCache<TestTable>(item => item.Id == 3);
             //Console.WriteLine(res.ToJson());
+            Console.ReadLine();
         }
     }
 }

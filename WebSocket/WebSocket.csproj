@@ -3,6 +3,20 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <RootNamespace>DwFramework.WebSocket</RootNamespace>
+    <PackOnBuild>true</PackOnBuild>
+    <PackageId>DwFramework.WebSocket</PackageId>
+    <PackageVersion>0.1.1</PackageVersion>
+    <Authors>DwGoing</Authors>
+    <Copyright>DwGoing</Copyright>
+    <DevelopmentDependency>true</DevelopmentDependency>
+    <NeutralLanguage>zh</NeutralLanguage>
+    <Owners>DwGoing</Owners>
+    <Summary>DwFramework WebSocket库</Summary>
+    <Title>DwFramework.WebSocket</Title>
+    <PackageLicenseUrl>https://licenses.nuget.org/MIT</PackageLicenseUrl>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <Description>DwFramework WebSocket库</Description>
+    <PackageProjectUrl>https://github.com/Dwgoing/DwFramework/tree/master/WebSocket</PackageProjectUrl>
   </PropertyGroup>
 
   <ItemGroup>

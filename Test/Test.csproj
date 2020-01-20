@@ -12,9 +12,6 @@
     <ProjectReference Include="..\Database\Database.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <None Update="HttpTest\Config.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Update="DatabaseTest\Config.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -26,8 +23,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="HttpTest\" />
-    <Folder Include="HttpTest\Controllers\" />
     <Folder Include="DatabaseTest\" />
+    <Folder Include="Controllers\" />
   </ItemGroup>
 </Project>
