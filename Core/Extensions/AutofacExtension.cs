@@ -1,5 +1,4 @@
-﻿using Autofac;
-using Autofac.Builder;
+﻿using Autofac.Builder;
 using Autofac.Extensions.DependencyInjection;
 using AutoFac.Extras.NLog.DotNetCore;
 using Microsoft.Extensions.Configuration;

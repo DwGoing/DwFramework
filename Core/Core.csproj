@@ -3,6 +3,19 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <RootNamespace>DwFramework.Core</RootNamespace>
+    <PackOnBuild>true</PackOnBuild>
+    <PackageId>DwFramework.Core</PackageId>
+    <PackageVersion>0.0.1</PackageVersion>
+    <Authors>DwGoing</Authors>
+    <Copyright>DwGoing</Copyright>
+    <DevelopmentDependency>true</DevelopmentDependency>
+    <NeutralLanguage>zh</NeutralLanguage>
+    <Owners>DwGoing</Owners>
+    <Summary>DwFramework核心库</Summary>
+    <Title>DwFramework.Core</Title>
+    <PackageLicenseUrl>https://licenses.nuget.org/MIT</PackageLicenseUrl>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <Description>DwFramework核心库</Description>
   </PropertyGroup>
 
   <ItemGroup>

@@ -5,28 +5,67 @@ using System.Linq;
 using System.Threading;
 
 using Microsoft.Extensions.DependencyInjection;
+using AutoFac.Extras.NLog.DotNetCore;
 
 using DwFramework.Core;
 using DwFramework.Core.Extensions;
+using DwFramework.Core.Models;
 using DwFramework.Http;
 using DwFramework.WebSocket;
 using DwFramework.Database;
 
 namespace Test
 {
+    public interface ITestInterface
+    {
+        void TestMethod(string str);
+    }
+
+    [Registerable(typeof(ITestInterface), Lifetime.Singleton)] // 标记该类型实现的接口及实现类型
+    public class TestClass1 : ITestInterface
+    {
+        private readonly ILogger _logger;
+
+        public TestClass1(ILogger logger)
+        {
+            _logger = logger;
+            _logger.Debug("TestClass1已注入");
+        }
+
+        public void TestMethod(string str)
+        {
+            _logger.Debug($"TestClass1:{str}");
+        }
+    }
+
+    [Registerable(typeof(ITestInterface), Lifetime.Singleton)] // 标记该类型实现的接口及实现类型
+    public class TestClass2 : ITestInterface
+    {
+        private readonly ILogger _logger;
+
+        public TestClass2(ILogger logger)
+        {
+            _logger = logger;
+            _logger.Debug("TestClass2已注入");
+        }
+
+        public void TestMethod(string str)
+        {
+            _logger.Debug($"TestClass2:{str}");
+        }
+    }
+
     class Program
     {
         static void Main(string[] args)
         {
             ServiceHost host = new ServiceHost();
-            host.RegisterConfiguration($"{Directory.GetCurrentDirectory()}/CoreTest", "Config.json");
+            host.RegisterConfiguration($"{Directory.GetCurrentDirectory()}", "Config.json");
             host.RegisterNLog();
-            //host.RegisterFromAssembly("Test"); // 从程序集注入
-            //var provider = host.Build();
-            //var service = provider.GetService<ITestInterface>();
-            //service.TestMethod("helo");
-            //service = provider.GetService<ITestInterface, TestClass1>();
-            //service.TestMethod("helo");
+            host.RegisterType<ITestInterface, TestClass2>();
+            var provider = host.Build();
+            var service = provider.GetService<ITestInterface>();
+            service.TestMethod("helo");
             Console.ReadLine();
 
             //ServiceHost host = new ServiceHost();

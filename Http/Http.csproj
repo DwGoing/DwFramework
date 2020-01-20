@@ -3,6 +3,25 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <RootNamespace>DwFramework.Http</RootNamespace>
+    <Description>DwFramework WebAPI库</Description>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <RootNamespace>DwFramework.Core</RootNamespace>
+    <PackOnBuild>true</PackOnBuild>
+    <PackageId>DwFramework.Http</PackageId>
+    <PackageVersion>0.0.1</PackageVersion>
+    <Authors>DwGoing</Authors>
+    <Copyright>DwGoing</Copyright>
+    <DevelopmentDependency>true</DevelopmentDependency>
+    <NeutralLanguage>zh</NeutralLanguage>
+    <Owners>DwGoing</Owners>
+    <Summary>DwFramework WebAPI库</Summary>
+    <Title>DwFramework.Http</Title>
+    <PackageLicenseUrl>https://licenses.nuget.org/MIT</PackageLicenseUrl>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <Description>DwFramework核心库</Description>
   </PropertyGroup>
 
   <ItemGroup>

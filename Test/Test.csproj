@@ -15,20 +15,19 @@
     <None Update="HttpTest\Config.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="WebSocketTest\Config.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Update="DatabaseTest\Config.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="nlog.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Config.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="HttpTest\" />
     <Folder Include="HttpTest\Controllers\" />
-    <Folder Include="WebSocketTest\" />
     <Folder Include="DatabaseTest\" />
   </ItemGroup>
 </Project>
