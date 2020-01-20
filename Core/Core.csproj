@@ -1,0 +1,39 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <RootNamespace>DwFramework.Core</RootNamespace>
+    <PackOnBuild>true</PackOnBuild>
+    <PackageId>DwFramework.Core</PackageId>
+    <PackageVersion>0.0.1</PackageVersion>
+    <Authors>DwGoing</Authors>
+    <Copyright>DwGoing</Copyright>
+    <DevelopmentDependency>true</DevelopmentDependency>
+    <NeutralLanguage>zh</NeutralLanguage>
+    <Owners>DwGoing</Owners>
+    <Summary>DwFramework核心库</Summary>
+    <Title>DwFramework.Core</Title>
+    <PackageLicenseUrl>https://licenses.nuget.org/MIT</PackageLicenseUrl>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <Description>DwFramework核心库</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Class1.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="AutoFac.Extras.NLog.DotNetCore" Version="1.0.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="Autofac" Version="4.9.4" />
+    <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="5.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="3.1.1" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="3.1.1" />
+    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="3.1.1" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.1" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Extensions\" />
+    <Folder Include="Models\" />
+    <Folder Include="Plugins\" />
+  </ItemGroup>
+</Project>
