@@ -1,6 +1,6 @@
-# DwFramework.Core
+# DwFramework.WebSocket
 
-## DwFramework核心库
+## DwFramework WebSocket库
 
 ### 0x1 初始化
 
