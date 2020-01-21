@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Database", "Database\Databa
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "_Test", "_Test\_Test.csproj", "{52CCC652-1138-4AB5-B84A-82ED5B9D20B2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rpc", "Rpc\Rpc.csproj", "{D4C90356-F02C-4ADD-AD16-69F5F13ADD7D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -37,6 +39,10 @@ Global
 		{52CCC652-1138-4AB5-B84A-82ED5B9D20B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{52CCC652-1138-4AB5-B84A-82ED5B9D20B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{52CCC652-1138-4AB5-B84A-82ED5B9D20B2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D4C90356-F02C-4ADD-AD16-69F5F13ADD7D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D4C90356-F02C-4ADD-AD16-69F5F13ADD7D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D4C90356-F02C-4ADD-AD16-69F5F13ADD7D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D4C90356-F02C-4ADD-AD16-69F5F13ADD7D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 	EndGlobalSection
