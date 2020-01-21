@@ -6,7 +6,7 @@
 
 当使用该库时，需提前读取配置文件，Json配置如下：
 
-```c#
+```json
 {
   "WebSocket": {
     "ContentRoot": "",
@@ -19,10 +19,8 @@
 
 ### 0x2 注册服务及初始化
 
-一般我们在服务初始化阶段，会读取配置文件。
-
 ```c#
-// 注册WebSocket服务
+// 注册服务
 host.RegisterWebSocketService();
 // 初始化
 var provider = host.Build();
