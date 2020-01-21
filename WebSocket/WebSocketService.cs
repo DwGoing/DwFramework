@@ -35,14 +35,14 @@ namespace DwFramework.WebSocket
         /// </summary>
         /// <param name="provider"></param>
         /// <param name="handler"></param>
-        public static async void InitWebSocketServiceAsync(this AutofacServiceProvider provider, OnConnectHandler onConnect = null, OnSendHandler onSend = null, OnReceiveHandler onReceive = null, OnCloseHandler onClose = null)
+        public static Task InitWebSocketServiceAsync(this AutofacServiceProvider provider, OnConnectHandler onConnect = null, OnSendHandler onSend = null, OnReceiveHandler onReceive = null, OnCloseHandler onClose = null)
         {
             var service = provider.GetService<IWebSocketService, WebSocketService>();
             if (onConnect != null) service.OnConnect += onConnect;
             if (onSend != null) service.OnSend += onSend;
             if (onReceive != null) service.OnReceive += onReceive;
             if (onClose != null) service.OnClose += onClose;
-            await service.OpenService();
+            return service.OpenServiceAsync();
         }
     }
 
@@ -78,7 +78,7 @@ namespace DwFramework.WebSocket
         /// 开启WebSocket服务
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        public Task OpenService()
+        public Task OpenServiceAsync()
         {
             return Task.Run(() =>
             {
