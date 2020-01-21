@@ -11,5 +11,11 @@
     <ProjectReference Include="..\Database\Database.csproj" />
     <ProjectReference Include="..\Http\Http.csproj" />
     <ProjectReference Include="..\WebSocket\WebSocket.csproj" />
+    <ProjectReference Include="..\Rpc\Rpc.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="Config.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 </Project>
