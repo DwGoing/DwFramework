@@ -29,9 +29,9 @@ namespace DwFramework.Http
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="provider"></param>
-        public static async void InitHttpServiceAsync<T>(this AutofacServiceProvider provider) where T : class, IHttpStartup
+        public static Task InitHttpServiceAsync<T>(this AutofacServiceProvider provider) where T : class, IHttpStartup
         {
-            await provider.GetService<IHttpService, HttpService>().OpenService<T>();
+            return provider.GetService<IHttpService, HttpService>().OpenServiceAsync<T>();
         }
     }
 
@@ -61,7 +61,7 @@ namespace DwFramework.Http
         /// 开启Http服务
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        public Task OpenService<T>() where T : class, IHttpStartup
+        public Task OpenServiceAsync<T>() where T : class, IHttpStartup
         {
             return Task.Run(() =>
             {
