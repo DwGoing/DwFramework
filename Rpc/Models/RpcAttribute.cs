@@ -2,10 +2,14 @@
 
 namespace DwFramework.Rpc
 {
-    public class RpcAttribute
+    [AttributeUsage(AttributeTargets.Method)]
+    public class RpcAttribute : Attribute
     {
-        public RpcAttribute()
+        public string CallName { get; private set; }
+
+        public RpcAttribute(string callName = null)
         {
+            CallName = callName;
         }
     }
 }

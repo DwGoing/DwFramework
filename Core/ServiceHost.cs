@@ -108,7 +108,7 @@ namespace DwFramework.Core
             var types = assembly.GetTypes();
             foreach (var item in types)
             {
-                var attr = item.GetCustomAttribute(typeof(RegisterableAttribute)) as RegisterableAttribute;
+                var attr = item.GetCustomAttribute<RegisterableAttribute>() as RegisterableAttribute;
                 if (attr != null)
                 {
                     var tmp = _containerBuilder.RegisterType(item).As(attr.InterfaceType);

@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Net;
 using System.Threading.Tasks;
+using System.Reflection;
 
 using Hprose.RPC;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Autofac.Extensions.DependencyInjection;
 
 using DwFramework.Core;
@@ -72,6 +74,63 @@ namespace DwFramework.Rpc
                 Service.Bind(listener);
                 Console.WriteLine($"Rpc Bind:\n{_config.Prefixes.ToJson()}");
             });
+        }
+
+        /// <summary>
+        /// 从实例中注册Rpc函数
+        /// </summary>
+        /// <param name="instance"></param>
+        public void RegisterFuncFromInstance(object instance)
+        {
+            var methods = instance.GetType().GetMethods();
+            foreach (var item in methods)
+            {
+                var attr = item.GetCustomAttribute<RpcAttribute>() as RpcAttribute;
+                if (attr != null)
+                {
+                    Service.AddMethod(item.Name, instance, attr.CallName ?? "");
+                }
+            }
+        }
+
+        /// <summary>
+        /// 从服务中注册Rpc函数
+        /// </summary>
+        /// <typeparam name="I"></typeparam>
+        /// <typeparam name="T"></typeparam>
+        public void RegisterFuncFromService<I, T>() where T : class where I : class
+        {
+            T service = ServiceHost.ServiceProvider.GetService<I, T>();
+            var methods = service.GetType().GetMethods();
+            foreach (var item in methods)
+            {
+                var attr = item.GetCustomAttribute<RpcAttribute>() as RpcAttribute;
+                if (attr != null)
+                {
+                    Service.AddMethod(item.Name, service, attr.CallName ?? "");
+                }
+            }
+        }
+
+        /// <summary>
+        /// 从服务中注册Rpc函数
+        /// </summary>
+        /// <typeparam name="I"></typeparam>
+        public void RegisterFuncFromService<I>() where I : class
+        {
+            var services = ServiceHost.ServiceProvider.GetAllServices<I>();
+            foreach (var service in services)
+            {
+                var methods = service.GetType().GetMethods();
+                foreach (var method in methods)
+                {
+                    var attr = method.GetCustomAttribute<RpcAttribute>() as RpcAttribute;
+                    if (attr != null)
+                    {
+                        Service.AddMethod(method.Name, service, attr.CallName ?? "");
+                    }
+                }
+            }
         }
     }
 }
