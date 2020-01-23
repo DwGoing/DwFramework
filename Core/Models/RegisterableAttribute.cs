@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DwFramework.Core.Models
+namespace DwFramework.Core
 {
     public enum Lifetime
     {

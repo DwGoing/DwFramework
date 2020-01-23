@@ -1,4 +1,4 @@
-﻿namespace DwFramework.Core.Models
+﻿namespace DwFramework.Core
 {
     public class ResultInfo
     {

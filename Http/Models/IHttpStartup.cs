@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DwFramework.Http.Models
+namespace DwFramework.Http
 {
     public interface IHttpStartup
     {
