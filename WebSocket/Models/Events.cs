@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DwFramework.WebSocket.Models
+namespace DwFramework.WebSocket
 {
     public delegate void OnConnectHandler(WebSocketClient client, OnConnectEventargs args);
     public delegate void OnSendHandler(WebSocketClient client, OnSendEventargs args);

@@ -9,7 +9,6 @@ using Autofac.Extensions.DependencyInjection;
 
 using DwFramework.Core;
 using DwFramework.Core.Extensions;
-using DwFramework.Http.Models;
 
 namespace DwFramework.Http
 {

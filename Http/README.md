@@ -28,8 +28,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 
-using DwFramework.Http.Models;
-
 namespace Test
 {
     public class Startup : IHttpStartup

@@ -9,8 +9,6 @@ using Autofac.Core.Registration;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
 
-using DwFramework.Core.Models;
-
 namespace DwFramework.Core
 {
     public class ServiceHost
