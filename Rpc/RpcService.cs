@@ -5,7 +5,6 @@ using System.Reflection;
 
 using Hprose.RPC;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using Autofac.Extensions.DependencyInjection;
 
 using DwFramework.Core;
