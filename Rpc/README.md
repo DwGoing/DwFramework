@@ -86,4 +86,14 @@ rpc.RegisterFuncFromService<{接口类型},{实例类型}>();
 rpc.RegisterFuncFromService<{接口类型}>();
 ```
 
-其中需要特别注意的是，RegisterFuncFromService<{接口类型}>()会把实现相同接口的服务中所有Rpc函数都进行注册，如果在Rpc标签中对函数调用名称不进行区分，可能在调用时出现“调非所调”的情况。所以，我们建议当使用Rpc标签时尽量都表示调用名称。
+其中需要特别注意的是，RegisterFuncFromService<{接口类型}>()会把实现相同接口的服务中所有Rpc函数都进行注册，如果在Rpc标签中对函数调用名称不进行区分，可能在调用时出现“调非所调”的情况。所以，我们建议当使用Rpc标签时尽量都标识调用名称。
+
+### 0x4 函数调用
+
+该库并为对Rpc客户端进行封装，你可以直接引用Hprose.RPC，使用其自带的客户端来调用函数。
+
+```c#
+var client = new Client("http://127.0.0.1:10010/");
+client.Invoke("Method1", new object[] { "helo" });
+client.Invoke("Method2", new object[] { "helo" });
+```
