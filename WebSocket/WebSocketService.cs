@@ -8,7 +8,6 @@ using System.Text;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Http;
 using Autofac.Extensions.DependencyInjection;
 
@@ -52,7 +51,7 @@ namespace DwFramework.WebSocket
             public Dictionary<string, string> Listen { get; set; }
         }
 
-        private readonly IConfiguration _configuration;
+        private readonly IRunEnvironment _environment;
         private readonly Config _config;
         private Dictionary<string, WebSocketClient> _clients;
 
@@ -64,11 +63,11 @@ namespace DwFramework.WebSocket
         /// <summary>
         /// 构造函数
         /// </summary>
-        /// <param name="configuration"></param>
-        public WebSocketService(IConfiguration configuration)
+        /// <param name="environment"></param>
+        public WebSocketService(IRunEnvironment environment)
         {
-            _configuration = configuration;
-            _config = _configuration.GetSection("WebSocket").Get<Config>();
+            _environment = environment;
+            _config = environment.GetConfiguration().GetSection<Config>("WebSocket");
             _clients = new Dictionary<string, WebSocketClient>();
         }
 

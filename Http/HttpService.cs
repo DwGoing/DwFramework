@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
 using Autofac.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Hosting;
 
 using DwFramework.Core;
 using DwFramework.Core.Extensions;
@@ -43,17 +42,17 @@ namespace DwFramework.Http
             public Dictionary<string, string> Listen { get; set; }
         }
 
-        private readonly IConfiguration _configuration;
+        private readonly IRunEnvironment _environment;
         private readonly Config _config;
 
         /// <summary>
         /// 构造函数
         /// </summary>
-        /// <param name="configuration"></param>
-        public HttpService(IConfiguration configuration)
+        /// <param name="environment"></param>
+        public HttpService(IRunEnvironment environment)
         {
-            _configuration = configuration;
-            _config = _configuration.GetSection("Http").Get<Config>();
+            _environment = environment;
+            _config = _environment.GetConfiguration().GetSection<Config>("Http");
         }
 
         /// <summary>

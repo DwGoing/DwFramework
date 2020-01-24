@@ -13,7 +13,8 @@ namespace DwFramework.Core
 
     public interface IRunEnvironment
     {
-
+        EnvironmentType GetEnvironmentType();
+        IConfiguration GetConfiguration();
     }
 
     public class RunEnvironment : IRunEnvironment
@@ -25,6 +26,18 @@ namespace DwFramework.Core
         {
             EnvironmentType = environmentType;
             Configuration = configuration;
+        }
+
+        public EnvironmentType GetEnvironmentType()
+        {
+            return EnvironmentType;
+        }
+
+        public IConfiguration GetConfiguration()
+        {
+            if (Configuration == null)
+                throw new Exception("未读取到配置");
+            return Configuration;
         }
     }
 }

@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using System.Reflection;
 
 using Hprose.RPC;
-using Microsoft.Extensions.Configuration;
 using Autofac.Extensions.DependencyInjection;
 
 using DwFramework.Core;
@@ -40,7 +39,7 @@ namespace DwFramework.Rpc
             public string[] Prefixes { get; set; }
         }
 
-        private readonly IConfiguration _configuration;
+        private readonly IRunEnvironment _environment;
         private readonly Config _config;
 
         public Service Service { get; private set; }
@@ -49,10 +48,10 @@ namespace DwFramework.Rpc
         /// 构造函数
         /// </summary>
         /// <param name="configuration"></param>
-        public RpcService(IConfiguration configuration)
+        public RpcService(IRunEnvironment environment)
         {
-            _configuration = configuration;
-            _config = _configuration.GetSection("Rpc").Get<Config>();
+            _environment = environment;
+            _config = _environment.GetConfiguration().GetSection<Config>("Rpc");
         }
 
         /// <summary>
