@@ -1,27 +1,13 @@
 ﻿using System.Collections.Generic;
 
-using Autofac.Builder;
 using Autofac.Extensions.DependencyInjection;
 using AutoFac.Extras.NLog.DotNetCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace DwFramework.Core.Extensions
 {
     public static class AutofacExtension
     {
-        /// <summary>
-        /// 注入配置
-        /// </summary>
-        /// <param name="host"></param>
-        /// <param name="basePath"></param>
-        /// <param name="jsonFile"></param>
-        /// <returns></returns>
-        public static IRegistrationBuilder<IConfiguration, SimpleActivatorData, SingleRegistrationStyle> RegisterConfiguration(this ServiceHost host, string basePath, string jsonFile)
-        {
-            return host.RegisterInstance(new ConfigurationBuilder().SetBasePath(basePath).AddJsonFile(jsonFile).Build()).As<IConfiguration>().SingleInstance();
-        }
-
         /// <summary>
         /// 获取服务
         /// </summary>

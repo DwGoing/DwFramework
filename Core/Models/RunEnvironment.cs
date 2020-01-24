@@ -1,4 +1,7 @@
 ﻿using System;
+
+using Microsoft.Extensions.Configuration;
+
 namespace DwFramework.Core
 {
     public enum EnvironmentType
@@ -16,10 +19,12 @@ namespace DwFramework.Core
     public class RunEnvironment : IRunEnvironment
     {
         public EnvironmentType EnvironmentType { get; private set; }
+        public IConfiguration Configuration { get; private set; }
 
-        public RunEnvironment(EnvironmentType environmentType)
+        public RunEnvironment(EnvironmentType environmentType, IConfiguration configuration)
         {
             EnvironmentType = environmentType;
+            Configuration = configuration;
         }
     }
 }

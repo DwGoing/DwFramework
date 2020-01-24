@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Reflection;
 using System.Linq;
+using System.IO;
 
 using Autofac;
 using Autofac.Builder;
@@ -8,6 +9,7 @@ using Autofac.Core;
 using Autofac.Core.Registration;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Configuration;
 
 namespace DwFramework.Core
 {
@@ -21,13 +23,24 @@ namespace DwFramework.Core
         /// <summary>
         /// 构造函数
         /// </summary>
-        public ServiceHost(EnvironmentType environmentType = EnvironmentType.Develop)
+        public ServiceHost(EnvironmentType environmentType = EnvironmentType.Develop, string configFilePath = null)
         {
             _containerBuilder = new ContainerBuilder();
             _services = new ServiceCollection();
-            RegisterInstance<IRunEnvironment, RunEnvironment>(new RunEnvironment(environmentType));
+            // 读取配置文件
+            IConfiguration configuration = null;
+            if (configFilePath != null && File.Exists(configFilePath))
+                configuration = new ConfigurationBuilder().AddJsonFile(configFilePath).Build();
+            // 环境变量
+            RegisterInstance<IRunEnvironment, RunEnvironment>(new RunEnvironment(environmentType, configuration)).SingleInstance();
         }
 
+        /// <summary>
+        /// 注册服务
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="func"></param>
+        /// <returns></returns>
         public IRegistrationBuilder<T, SimpleActivatorData, SingleRegistrationStyle> Register<T>(Func<IComponentContext, T> func)
         {
             return _containerBuilder.Register(func);
