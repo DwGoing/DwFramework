@@ -21,10 +21,11 @@ namespace DwFramework.Core
         /// <summary>
         /// 构造函数
         /// </summary>
-        public ServiceHost()
+        public ServiceHost(EnvironmentType environmentType = EnvironmentType.Develop)
         {
             _containerBuilder = new ContainerBuilder();
             _services = new ServiceCollection();
+            RegisterInstance<IRunEnvironment, RunEnvironment>(new RunEnvironment(environmentType));
         }
 
         public IRegistrationBuilder<T, SimpleActivatorData, SingleRegistrationStyle> Register<T>(Func<IComponentContext, T> func)
