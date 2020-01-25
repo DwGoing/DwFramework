@@ -38,7 +38,6 @@ namespace DwFramework.Http
         public class Config
         {
             public string ContentRoot { get; set; }
-            public string WebRoot { get; set; }
             public Dictionary<string, string> Listen { get; set; }
         }
 
@@ -66,8 +65,6 @@ namespace DwFramework.Http
                 var builder = new WebHostBuilder()
                     // https证书路径
                     .UseContentRoot($"{AppDomain.CurrentDomain.BaseDirectory}{_config.ContentRoot}")
-                    // 页面路径
-                    .UseWebRoot($"{AppDomain.CurrentDomain.BaseDirectory}{_config.WebRoot}")
                     .UseKestrel(options =>
                     {
                         // 监听地址及端口
