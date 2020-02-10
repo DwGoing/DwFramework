@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using System.Reflection;
@@ -128,6 +129,62 @@ namespace DwFramework.Rpc
                     {
                         Console.WriteLine(method.Name);
                         Service.AddMethod(method.Name, service, attr.CallName ?? "");
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// 从程序集中注册Rpc函数
+        /// 仅支持从程序集中注册的服务
+        /// </summary>
+        /// <param name="assemblyName"></param>
+        public void RegisterFuncFromAssembly(string assemblyName)
+        {
+            var assembly = AppDomain.CurrentDomain.GetAssemblies().Where(item => item.FullName.Split(",").First() == assemblyName).FirstOrDefault();
+            if (assembly == null)
+                throw new Exception("未找到该程序集");
+            var types = assembly.GetTypes();
+            foreach (var type in types)
+            {
+                var typeAttr = type.GetCustomAttribute<RegisterableAttribute>() as RegisterableAttribute;
+                if (typeAttr == null)
+                    continue;
+                var methods = type.GetMethods();
+                foreach (var method in methods)
+                {
+                    var methodAttr = method.GetCustomAttribute<RpcAttribute>() as RpcAttribute;
+                    if (methodAttr != null)
+                    {
+                        Service.AddMethod(method.Name, _provider.GetService(typeAttr.InterfaceType), methodAttr.CallName ?? "");
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// 从程序集中注册Rpc函数
+        /// 仅支持从程序集中注册的服务
+        /// </summary>
+        public void RegisterFuncFromAssemblies()
+        {
+            var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+            foreach (var assembly in assemblies)
+            {
+                var types = assembly.GetTypes();
+                foreach (var type in types)
+                {
+                    var typeAttr = type.GetCustomAttribute<RegisterableAttribute>() as RegisterableAttribute;
+                    if (typeAttr == null)
+                        continue;
+                    var methods = type.GetMethods();
+                    foreach (var method in methods)
+                    {
+                        var methodAttr = method.GetCustomAttribute<RpcAttribute>() as RpcAttribute;
+                        if (methodAttr != null)
+                        {
+                            Service.AddMethod(method.Name, _provider.GetService(typeAttr.InterfaceType), methodAttr.CallName ?? "");
+                        }
                     }
                 }
             }

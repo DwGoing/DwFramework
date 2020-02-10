@@ -118,24 +118,23 @@ namespace DwFramework.Core
             if (assembly == null)
                 throw new Exception("未找到该程序集");
             var types = assembly.GetTypes();
-            foreach (var item in types)
+            foreach (var type in types)
             {
-                var attr = item.GetCustomAttribute<RegisterableAttribute>() as RegisterableAttribute;
-                if (attr != null)
+                var attr = type.GetCustomAttribute<RegisterableAttribute>() as RegisterableAttribute;
+                if (attr == null)
+                    continue;
+                var tmp = _containerBuilder.RegisterType(type).As(attr.InterfaceType);
+                switch (attr.Lifetime)
                 {
-                    var tmp = _containerBuilder.RegisterType(item).As(attr.InterfaceType);
-                    switch (attr.Lifetime)
-                    {
-                        case Lifetime.Singleton:
-                            tmp.SingleInstance();
-                            break;
-                        case Lifetime.InstancePerLifetimeScope:
-                            tmp.InstancePerLifetimeScope();
-                            break;
-                    }
-                    if (attr.IsAutoActivate)
-                        tmp.AutoActivate();
+                    case Lifetime.Singleton:
+                        tmp.SingleInstance();
+                        break;
+                    case Lifetime.InstancePerLifetimeScope:
+                        tmp.InstancePerLifetimeScope();
+                        break;
                 }
+                if (attr.IsAutoActivate)
+                    tmp.AutoActivate();
             }
         }
 

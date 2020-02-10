@@ -38,6 +38,17 @@ namespace DwFramework.Core.Extensions
         }
 
         /// <summary>
+        /// 获取服务
+        /// </summary>
+        /// <param name="provider"></param>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public static IEnumerable<object> GetAllServices(this IServiceProvider provider, Type type)
+        {
+            return provider.GetServices(type);
+        }
+
+        /// <summary>
         /// 注册NLog服务
         /// </summary>
         /// <param name="builder"></param>
