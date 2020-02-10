@@ -127,7 +127,6 @@ namespace DwFramework.Rpc
                     var attr = method.GetCustomAttribute<RpcAttribute>() as RpcAttribute;
                     if (attr != null)
                     {
-                        Console.WriteLine(method.Name);
                         Service.AddMethod(method.Name, service, attr.CallName ?? "");
                     }
                 }
