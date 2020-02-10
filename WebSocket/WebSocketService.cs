@@ -9,7 +9,6 @@ using System.Text;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Autofac.Extensions.DependencyInjection;
 
 using DwFramework.Core;
 using DwFramework.Core.Extensions;
@@ -32,7 +31,7 @@ namespace DwFramework.WebSocket
         /// </summary>
         /// <param name="provider"></param>
         /// <param name="handler"></param>
-        public static Task InitWebSocketServiceAsync(this AutofacServiceProvider provider, OnConnectHandler onConnect = null, OnSendHandler onSend = null, OnReceiveHandler onReceive = null, OnCloseHandler onClose = null)
+        public static Task InitWebSocketServiceAsync(this IServiceProvider provider, OnConnectHandler onConnect = null, OnSendHandler onSend = null, OnReceiveHandler onReceive = null, OnCloseHandler onClose = null)
         {
             var service = provider.GetService<IWebSocketService, WebSocketService>();
             if (onConnect != null) service.OnConnect += onConnect;
@@ -51,6 +50,7 @@ namespace DwFramework.WebSocket
             public Dictionary<string, string> Listen { get; set; }
         }
 
+        private readonly IServiceProvider _provider;
         private readonly IRunEnvironment _environment;
         private readonly Config _config;
         private Dictionary<string, WebSocketClient> _clients;
@@ -64,8 +64,9 @@ namespace DwFramework.WebSocket
         /// 构造函数
         /// </summary>
         /// <param name="environment"></param>
-        public WebSocketService(IRunEnvironment environment)
+        public WebSocketService(IServiceProvider provider, IRunEnvironment environment)
         {
+            _provider = provider;
             _environment = environment;
             _config = environment.GetConfiguration().GetSection<Config>("WebSocket");
             _clients = new Dictionary<string, WebSocketClient>();

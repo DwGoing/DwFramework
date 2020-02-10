@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
-using Autofac.Extensions.DependencyInjection;
 using AutoFac.Extras.NLog.DotNetCore;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -15,7 +15,7 @@ namespace DwFramework.Core.Extensions
         /// <typeparam name="T"></typeparam>
         /// <param name="provider"></param>
         /// <returns></returns>
-        public static T GetService<I, T>(this AutofacServiceProvider provider) where T : class where I : class
+        public static T GetService<I, T>(this IServiceProvider provider) where T : class where I : class
         {
             var services = provider.GetServices<I>();
             foreach (var item in services)
@@ -32,7 +32,7 @@ namespace DwFramework.Core.Extensions
         /// <typeparam name="I"></typeparam>
         /// <param name="provider"></param>
         /// <returns></returns>
-        public static IEnumerable<I> GetAllServices<I>(this AutofacServiceProvider provider) where I : class
+        public static IEnumerable<I> GetAllServices<I>(this IServiceProvider provider) where I : class
         {
             return provider.GetServices<I>();
         }

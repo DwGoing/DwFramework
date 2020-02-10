@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 
-using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Hosting;
 
 using DwFramework.Core;
@@ -27,7 +26,7 @@ namespace DwFramework.Http
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="provider"></param>
-        public static Task InitHttpServiceAsync<T>(this AutofacServiceProvider provider) where T : class, IHttpStartup
+        public static Task InitHttpServiceAsync<T>(this IServiceProvider provider) where T : class, IHttpStartup
         {
             return provider.GetService<IHttpService, HttpService>().OpenServiceAsync<T>();
         }
@@ -41,15 +40,18 @@ namespace DwFramework.Http
             public Dictionary<string, string> Listen { get; set; }
         }
 
+        private readonly IServiceProvider _provider;
         private readonly IRunEnvironment _environment;
         private readonly Config _config;
 
         /// <summary>
         /// 构造函数
         /// </summary>
+        /// <param name="provider"></param>
         /// <param name="environment"></param>
-        public HttpService(IRunEnvironment environment)
+        public HttpService(IServiceProvider provider, IRunEnvironment environment)
         {
+            _provider = provider;
             _environment = environment;
             _config = _environment.GetConfiguration().GetSection<Config>("Http");
         }

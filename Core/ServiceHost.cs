@@ -15,8 +15,6 @@ namespace DwFramework.Core
 {
     public class ServiceHost
     {
-        public static AutofacServiceProvider ServiceProvider { get; private set; }
-
         private ContainerBuilder _containerBuilder;
         private ServiceCollection _services;
 
@@ -148,8 +146,7 @@ namespace DwFramework.Core
         public AutofacServiceProvider Build()
         {
             _containerBuilder.Populate(_services);
-            ServiceProvider = new AutofacServiceProvider(_containerBuilder.Build());
-            return ServiceProvider;
+            return new AutofacServiceProvider(_containerBuilder.Build());
         }
     }
 }

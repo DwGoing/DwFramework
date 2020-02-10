@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using System.Reflection;
 
 using Hprose.RPC;
-using Autofac.Extensions.DependencyInjection;
 
 using DwFramework.Core;
 using DwFramework.Core.Extensions;
@@ -26,7 +25,7 @@ namespace DwFramework.Rpc
         /// 初始化Rpc服务
         /// </summary>
         /// <param name="provider"></param>
-        public static Task InitRpcServiceAsync(this AutofacServiceProvider provider)
+        public static Task InitRpcServiceAsync(this IServiceProvider provider)
         {
             return provider.GetService<IRpcService, RpcService>().OpenServiceAsync();
         }
@@ -39,6 +38,7 @@ namespace DwFramework.Rpc
             public string[] Prefixes { get; set; }
         }
 
+        private readonly IServiceProvider _provider;
         private readonly IRunEnvironment _environment;
         private readonly Config _config;
 
@@ -47,9 +47,11 @@ namespace DwFramework.Rpc
         /// <summary>
         /// 构造函数
         /// </summary>
-        /// <param name="configuration"></param>
-        public RpcService(IRunEnvironment environment)
+        /// <param name="provider"></param>
+        /// <param name="environment"></param>
+        public RpcService(IServiceProvider provider, IRunEnvironment environment)
         {
+            _provider = provider;
             _environment = environment;
             _config = _environment.GetConfiguration().GetSection<Config>("Rpc");
         }
@@ -70,7 +72,6 @@ namespace DwFramework.Rpc
                 listener.Start();
                 Service = new Service();
                 Service.Bind(listener);
-                Console.WriteLine($"Rpc Bind:\n{_config.Prefixes.ToJson()}");
             });
         }
 
@@ -98,7 +99,7 @@ namespace DwFramework.Rpc
         /// <typeparam name="T"></typeparam>
         public void RegisterFuncFromService<I, T>() where T : class where I : class
         {
-            T service = ServiceHost.ServiceProvider.GetService<I, T>();
+            T service = _provider.GetService<I, T>();
             var methods = service.GetType().GetMethods();
             foreach (var item in methods)
             {
@@ -116,7 +117,7 @@ namespace DwFramework.Rpc
         /// <typeparam name="I"></typeparam>
         public void RegisterFuncFromService<I>() where I : class
         {
-            var services = ServiceHost.ServiceProvider.GetAllServices<I>();
+            var services = _provider.GetAllServices<I>();
             foreach (var service in services)
             {
                 var methods = service.GetType().GetMethods();
@@ -125,6 +126,7 @@ namespace DwFramework.Rpc
                     var attr = method.GetCustomAttribute<RpcAttribute>() as RpcAttribute;
                     if (attr != null)
                     {
+                        Console.WriteLine(method.Name);
                         Service.AddMethod(method.Name, service, attr.CallName ?? "");
                     }
                 }
