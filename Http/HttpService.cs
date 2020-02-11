@@ -65,6 +65,7 @@ namespace DwFramework.Http
             return Task.Run(() =>
             {
                 var builder = new WebHostBuilder()
+                    .UseDwServiceProvider(_provider)
                     // https证书路径
                     .UseContentRoot($"{AppDomain.CurrentDomain.BaseDirectory}{_config.ContentRoot}")
                     .UseKestrel(options =>

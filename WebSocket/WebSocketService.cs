@@ -82,6 +82,7 @@ namespace DwFramework.WebSocket
             return Task.Run(() =>
             {
                 var builder = new WebHostBuilder()
+                    .UseDwServiceProvider(_provider)
                     // wss证书路径
                     .UseContentRoot($"{AppDomain.CurrentDomain.BaseDirectory}{_config.ContentRoot}")
                     .UseKestrel(options =>
