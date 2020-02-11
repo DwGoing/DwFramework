@@ -59,6 +59,7 @@ namespace DwFramework.WebSocket
         public event OnSendHandler OnSend;
         public event OnReceiveHandler OnReceive;
         public event OnCloseHandler OnClose;
+        public event OnErrorHandler OnError;
 
         /// <summary>
         /// 构造函数
@@ -139,7 +140,7 @@ namespace DwFramework.WebSocket
                                 }
                                 catch (Exception ex)
                                 {
-                                    Console.WriteLine(ex.Message);
+                                    OnError?.Invoke(client, new OnErrorEventargs(ex));
                                 }
                                 finally
                                 {

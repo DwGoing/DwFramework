@@ -6,6 +6,7 @@ namespace DwFramework.WebSocket
     public delegate void OnSendHandler(WebSocketClient client, OnSendEventargs args);
     public delegate void OnReceiveHandler(WebSocketClient client, OnReceiveEventargs args);
     public delegate void OnCloseHandler(WebSocketClient client, OnCloceEventargs args);
+    public delegate void OnErrorHandler(WebSocketClient client, OnErrorEventargs args);
 
     public class OnConnectEventargs : EventArgs
     {
@@ -35,5 +36,15 @@ namespace DwFramework.WebSocket
     public class OnCloceEventargs : EventArgs
     {
 
+    }
+
+    public class OnErrorEventargs : EventArgs
+    {
+        public Exception Exception { get; private set; }
+
+        public OnErrorEventargs(Exception exception)
+        {
+            Exception = exception;
+        }
     }
 }
