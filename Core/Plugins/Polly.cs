@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 
 using Polly;
+using Polly.Retry;
+using Polly.CircuitBreaker;
 
 namespace DwFramework.Core.Plugins
 {
@@ -12,171 +14,96 @@ namespace DwFramework.Core.Plugins
         /// 异常后重试
         /// </summary>
         /// <typeparam name="TException"></typeparam>
-        /// <param name="action"></param>
-        /// <param name="retryCount"></param>
-        /// <param name="onRetry"></param>
-        /// <param name="expression"></param>
-        public static void RetryWhenException<TException>(Action action, int retryCount, Action<Exception, int> onRetry, Expression<Func<TException, bool>> expression = null) where TException : Exception
-        {
-            PolicyBuilder builder = null;
-            if (expression == null)
-                builder = Policy.Handle<TException>();
-            else
-                builder = Policy.Handle(expression.Compile());
-            var policy = builder.Retry(retryCount, onRetry);
-            policy.Execute(action);
-        }
-
-        /// <summary>
-        /// 异常后重试
-        /// </summary>
-        /// <typeparam name="TException"></typeparam>
-        /// <typeparam name="TResult"></typeparam>
-        /// <param name="func"></param>
         /// <param name="retryCount"></param>
         /// <param name="onRetry"></param>
         /// <param name="expression"></param>
         /// <returns></returns>
-        public static TResult RetryWhenException<TException, TResult>(Func<TResult> func, int retryCount, Action<Exception, int> onRetry, Expression<Func<TException, bool>> expression = null) where TException : Exception
+        public static RetryPolicy RetryWhenException<TException>(int retryCount, Action<Exception, int> onRetry, Expression<Func<TException, bool>> expression = null) where TException : Exception
         {
             PolicyBuilder builder = null;
             if (expression == null)
                 builder = Policy.Handle<TException>();
             else
                 builder = Policy.Handle(expression.Compile());
-            var policy = builder.Retry(retryCount, onRetry);
-            return policy.Execute(func);
+            return builder.Retry(retryCount, onRetry);
         }
 
         /// <summary>
         /// 特定后结果重试
         /// </summary>
         /// <typeparam name="TResult"></typeparam>
-        /// <param name="func"></param>
         /// <param name="expression"></param>
         /// <param name="retryCount"></param>
         /// <param name="onRetry"></param>
         /// <returns></returns>
-        public static TResult RetryWhereResult<TResult>(Func<TResult> func, Expression<Func<TResult, bool>> expression, int retryCount, Action<TResult, int> onRetry)
+        public static RetryPolicy<TResult> RetryWhereResult<TResult>(Expression<Func<TResult, bool>> expression, int retryCount, Action<TResult, int> onRetry)
         {
-            var policy = Policy.HandleResult(expression.Compile()).Retry(retryCount, (res, i) =>
+            return Policy.HandleResult(expression.Compile()).Retry(retryCount, (res, index) =>
             {
-                onRetry(res.Result, i);
+                onRetry(res.Result, index);
             });
-            return policy.Execute(func);
         }
 
         /// <summary>
         /// 异常后始终重试
         /// </summary>
         /// <typeparam name="TException"></typeparam>
-        /// <param name="action"></param>
-        /// <param name="onRetry"></param>
-        /// <param name="expression"></param>
-        public static void RetryForeverWhenException<TException>(Action action, Action<Exception, int> onRetry, Expression<Func<TException, bool>> expression = null) where TException : Exception
-        {
-            PolicyBuilder builder = null;
-            if (expression == null)
-                builder = Policy.Handle<TException>();
-            else
-                builder = Policy.Handle(expression.Compile());
-            var policy = builder.RetryForever(onRetry);
-            policy.Execute(action);
-        }
-
-        /// <summary>
-        /// 异常后始终重试
-        /// </summary>
-        /// <typeparam name="TException"></typeparam>
-        /// <typeparam name="TResult"></typeparam>
-        /// <param name="func"></param>
         /// <param name="onRetry"></param>
         /// <param name="expression"></param>
         /// <returns></returns>
-        public static TResult RetryForeverWhenException<TException, TResult>(Func<TResult> func, Action<Exception, int> onRetry, Expression<Func<TException, bool>> expression = null) where TException : Exception
+        public static RetryPolicy RetryForeverWhenException<TException>(Action<Exception, int> onRetry, Expression<Func<TException, bool>> expression = null) where TException : Exception
         {
             PolicyBuilder builder = null;
             if (expression == null)
                 builder = Policy.Handle<TException>();
             else
                 builder = Policy.Handle(expression.Compile());
-            var policy = builder.RetryForever(onRetry);
-            return policy.Execute(func);
+            return builder.RetryForever(onRetry);
         }
 
         /// <summary>
         /// 特定结果后始终重试
         /// </summary>
         /// <typeparam name="TResult"></typeparam>
-        /// <param name="func"></param>
         /// <param name="expression"></param>
         /// <param name="onRetry"></param>
         /// <returns></returns>
-        public static TResult RetryForeverWhereResult<TResult>(Func<TResult> func, Expression<Func<TResult, bool>> expression, Action<TResult, int> onRetry)
+        public static RetryPolicy<TResult> RetryForeverWhereResult<TResult>(Expression<Func<TResult, bool>> expression, Action<TResult, int> onRetry)
         {
-            var policy = Policy.HandleResult(expression.Compile()).RetryForever((res, i) =>
+            return Policy.HandleResult(expression.Compile()).RetryForever((res, index) =>
             {
-                onRetry(res.Result, i);
+                onRetry(res.Result, index);
             });
-            return policy.Execute(func);
         }
 
         /// <summary>
         /// 异常后延时重试
         /// </summary>
         /// <typeparam name="TException"></typeparam>
-        /// <param name="action"></param>
-        /// <param name="retryCount"></param>
-        /// <param name="spacingMilliseconds"></param>
-        /// <param name="onRetry"></param>
-        /// <param name="expression"></param>
-        public static void WaitAndRetryWhenException<TException>(Action action, int retryCount, long spacingMilliseconds, Action<Exception, TimeSpan> onRetry, Expression<Func<TException, bool>> expression = null) where TException : Exception
-        {
-            PolicyBuilder builder = null;
-            if (expression == null)
-                builder = Policy.Handle<TException>();
-            else
-                builder = Policy.Handle(expression.Compile());
-            var policy = builder.WaitAndRetry(retryCount, sleep => TimeSpan.FromMilliseconds(spacingMilliseconds), onRetry);
-            policy.Execute(action);
-        }
-
-        /// <summary>
-        /// 异常后延时重试
-        /// </summary>
-        /// <typeparam name="TException"></typeparam>
-        /// <param name="action"></param>
-        /// <param name="spacingMilliseconds"></param>
-        /// <param name="onRetry"></param>
-        /// <param name="expression"></param>
-        public static void WaitAndRetryWhenException<TException>(Action action, long[] spacingMilliseconds, Action<Exception, TimeSpan> onRetry, Expression<Func<TException, bool>> expression = null) where TException : Exception
-        {
-            PolicyBuilder builder = null;
-            if (expression == null)
-                builder = Policy.Handle<TException>();
-            else
-                builder = Policy.Handle(expression.Compile());
-            List<TimeSpan> sleeps = new List<TimeSpan>();
-            foreach (var item in spacingMilliseconds)
-            {
-                sleeps.Add(TimeSpan.FromMilliseconds(item));
-            }
-            var policy = builder.WaitAndRetry(sleeps, onRetry);
-            policy.Execute(action);
-        }
-
-        /// <summary>
-        /// 异常后延时重试
-        /// </summary>
-        /// <typeparam name="TException"></typeparam>
-        /// <typeparam name="TResult"></typeparam>
-        /// <param name="func"></param>
         /// <param name="retryCount"></param>
         /// <param name="spacingMilliseconds"></param>
         /// <param name="onRetry"></param>
         /// <param name="expression"></param>
         /// <returns></returns>
-        public static TResult WaitAndRetryWhenException<TException, TResult>(Func<TResult> func, long[] spacingMilliseconds, Action<Exception, TimeSpan> onRetry, Expression<Func<TException, bool>> expression = null) where TException : Exception
+        public static RetryPolicy WaitAndRetryWhenException<TException>(int retryCount, long spacingMilliseconds, Action<Exception, TimeSpan> onRetry, Expression<Func<TException, bool>> expression = null) where TException : Exception
+        {
+            PolicyBuilder builder = null;
+            if (expression == null)
+                builder = Policy.Handle<TException>();
+            else
+                builder = Policy.Handle(expression.Compile());
+            return builder.WaitAndRetry(retryCount, sleep => TimeSpan.FromMilliseconds(spacingMilliseconds), onRetry);
+        }
+
+        /// <summary>
+        /// 异常后延时重试
+        /// </summary>
+        /// <typeparam name="TException"></typeparam>
+        /// <param name="spacingMilliseconds"></param>
+        /// <param name="onRetry"></param>
+        /// <param name="expression"></param>
+        /// <returns></returns>
+        public static RetryPolicy WaitAndRetryWhenException<TException>(long[] spacingMilliseconds, Action<Exception, TimeSpan> onRetry, Expression<Func<TException, bool>> expression = null) where TException : Exception
         {
             PolicyBuilder builder = null;
             if (expression == null)
@@ -188,32 +115,66 @@ namespace DwFramework.Core.Plugins
             {
                 sleeps.Add(TimeSpan.FromMilliseconds(item));
             }
-            var policy = builder.WaitAndRetry(sleeps, onRetry);
-            return policy.Execute(func);
+            return builder.WaitAndRetry(sleeps, onRetry);
         }
 
         /// <summary>
         /// 特定结果后延时重试
         /// </summary>
         /// <typeparam name="TResult"></typeparam>
-        /// <param name="func"></param>
         /// <param name="expression"></param>
-        /// <param name="retryCount"></param>
         /// <param name="spacingMilliseconds"></param>
         /// <param name="onRetry"></param>
         /// <returns></returns>
-        public static TResult WaitAndRetryWhereResult<TResult>(Func<TResult> func, Expression<Func<TResult, bool>> expression, long[] spacingMilliseconds, Action<TResult, TimeSpan> onRetry)
+        public static RetryPolicy<TResult> WaitAndRetryWhereResult<TResult>(Expression<Func<TResult, bool>> expression, long[] spacingMilliseconds, Action<TResult, TimeSpan> onRetry)
         {
             List<TimeSpan> sleeps = new List<TimeSpan>();
             foreach (var item in spacingMilliseconds)
             {
                 sleeps.Add(TimeSpan.FromMilliseconds(item));
             }
-            var policy = Policy.HandleResult(expression.Compile()).WaitAndRetry(sleeps, (res, time) =>
+            return Policy.HandleResult(expression.Compile()).WaitAndRetry(sleeps, (res, ts) =>
             {
-                onRetry(res.Result, time);
+                onRetry(res.Result, ts);
             });
-            return policy.Execute(func);
+        }
+
+        /// <summary>
+        /// 异常后熔断
+        /// </summary>
+        /// <typeparam name="TException"></typeparam>
+        /// <param name="allowExceptions"></param>
+        /// <param name="millisecondsOfBreak"></param>
+        /// <param name="onBreak"></param>
+        /// <param name="onReset"></param>
+        /// <param name="expression"></param>
+        /// <returns></returns>
+        public static CircuitBreakerPolicy CircuitBreakerWhenException<TException>(int allowCount, long millisecondsOfBreak, Action<Exception, TimeSpan> onBreak, Action onReset, Expression<Func<TException, bool>> expression = null) where TException : Exception
+        {
+            PolicyBuilder builder = null;
+            if (expression == null)
+                builder = Policy.Handle<TException>();
+            else
+                builder = Policy.Handle(expression.Compile());
+            return builder.CircuitBreaker(allowCount, TimeSpan.FromMilliseconds(millisecondsOfBreak), onBreak, onReset);
+        }
+
+        /// <summary>
+        /// 特定结果后熔断
+        /// </summary>
+        /// <typeparam name="TResult"></typeparam>
+        /// <param name="expression"></param>
+        /// <param name="allowExceptions"></param>
+        /// <param name="millisecondsOfBreak"></param>
+        /// <param name="onBreak"></param>
+        /// <param name="onReset"></param>
+        /// <returns></returns>
+        public static CircuitBreakerPolicy<TResult> CircuitBreakerWhenResult<TResult>(Expression<Func<TResult, bool>> expression, int allowExceptions, long millisecondsOfBreak, Action<TResult, TimeSpan> onBreak, Action onReset)
+        {
+            return Policy.HandleResult(expression.Compile()).CircuitBreaker<TResult>(allowExceptions, TimeSpan.FromMilliseconds(millisecondsOfBreak), (res, ts) =>
+            {
+                onBreak(res.Result, ts);
+            }, onReset);
         }
     }
 }
