@@ -36,5 +36,9 @@
   <ItemGroup>
     <Folder Include="Extensions\" />
     <Folder Include="Models\" />
+    <Folder Include="Plugins\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="Extensions\PollyExtension.cs" />
   </ItemGroup>
 </Project>

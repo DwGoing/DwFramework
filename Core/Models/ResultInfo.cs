@@ -1,9 +1,14 @@
-﻿namespace DwFramework.Core
+﻿using System;
+using System.Linq.Expressions;
+
+using Polly;
+
+namespace DwFramework.Core
 {
     public class ResultCode
     {
         public const int Ok = 200;
-        public const int Error = 200;
+        public const int Error = 400;
     }
 
     public class ResultInfo
