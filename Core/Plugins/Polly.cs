@@ -3,14 +3,38 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 
 using Polly;
+using Polly.Wrap;
 using Polly.Retry;
 using Polly.CircuitBreaker;
 using Polly.Fallback;
+using Polly.Timeout;
+using Polly.Bulkhead;
 
 namespace DwFramework.Core.Plugins
 {
     public static class PollyPlugin
     {
+        /// <summary>
+        /// 组合策略
+        /// </summary>
+        /// <param name="policies"></param>
+        /// <returns></returns>
+        public static PolicyWrap Wrap(params ISyncPolicy[] policies)
+        {
+            return Policy.Wrap(policies);
+        }
+
+        /// <summary>
+        /// 组合策略
+        /// </summary>
+        /// <typeparam name="TResult"></typeparam>
+        /// <param name="policies"></param>
+        /// <returns></returns>
+        public static PolicyWrap<TResult> Wrap<TResult>(params ISyncPolicy<TResult>[] policies)
+        {
+            return Policy.Wrap(policies);
+        }
+
         /// <summary>
         /// 异常后重试
         /// </summary>
@@ -141,6 +165,40 @@ namespace DwFramework.Core.Plugins
         }
 
         /// <summary>
+        /// 异常后始终延时重试
+        /// </summary>
+        /// <typeparam name="TException"></typeparam>
+        /// <param name="spacingMillisecondsProvider"></param>
+        /// <param name="onRetry"></param>
+        /// <param name="expression"></param>
+        /// <returns></returns>
+        public static RetryPolicy WaitAndRetryForeverWhenException<TException>(Func<int, TimeSpan> spacingMillisecondsProvider, Action<Exception, TimeSpan> onRetry, Expression<Func<TException, bool>> expression = null) where TException : Exception
+        {
+            PolicyBuilder builder = null;
+            if (expression == null)
+                builder = Policy.Handle<TException>();
+            else
+                builder = Policy.Handle(expression.Compile());
+            return builder.WaitAndRetryForever(spacingMillisecondsProvider, onRetry);
+        }
+
+        /// <summary>
+        /// 特定结果后始终延时重试
+        /// </summary>
+        /// <typeparam name="TResult"></typeparam>
+        /// <param name="expression"></param>
+        /// <param name="spacingMillisecondsProvider"></param>
+        /// <param name="onRetry"></param>
+        /// <returns></returns>
+        public static RetryPolicy<TResult> WaitAndRetryForeverWhereResult<TResult>(Expression<Func<TResult, bool>> expression, Func<int, TimeSpan> spacingMillisecondsProvider, Action<TResult, TimeSpan> onRetry)
+        {
+            return Policy.HandleResult(expression.Compile()).WaitAndRetryForever(spacingMillisecondsProvider, (res, ts) =>
+             {
+                 onRetry(res.Result, ts);
+             });
+        }
+
+        /// <summary>
         /// 异常后熔断
         /// </summary>
         /// <typeparam name="TException"></typeparam>
@@ -210,6 +268,28 @@ namespace DwFramework.Core.Plugins
             {
                 onFallback(res.Result);
             });
+        }
+
+        /// <summary>
+        /// 超时
+        /// </summary>
+        /// <param name="timeoutMilliseconds"></param>
+        /// <returns></returns>
+        public static TimeoutPolicy Timeout(long timeoutMilliseconds)
+        {
+            return Policy.Timeout(TimeSpan.FromMilliseconds(timeoutMilliseconds), TimeoutStrategy.Pessimistic);
+        }
+
+        /// <summary>
+        /// 并发控制
+        /// </summary>
+        /// <param name="maxTasks"></param>
+        /// <returns></returns>
+        public static BulkheadPolicy Bulkhead(int maxTasks)
+        {
+            if (maxTasks > 12 || maxTasks <= 0)
+                throw new Exception("不合适的任务数量");
+            return Policy.Bulkhead(maxTasks);
         }
     }
 }
