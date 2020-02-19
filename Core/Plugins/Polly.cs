@@ -5,6 +5,7 @@ using System.Linq.Expressions;
 using Polly;
 using Polly.Retry;
 using Polly.CircuitBreaker;
+using Polly.Fallback;
 
 namespace DwFramework.Core.Plugins
 {
@@ -171,10 +172,44 @@ namespace DwFramework.Core.Plugins
         /// <returns></returns>
         public static CircuitBreakerPolicy<TResult> CircuitBreakerWhenResult<TResult>(Expression<Func<TResult, bool>> expression, int allowExceptions, long millisecondsOfBreak, Action<TResult, TimeSpan> onBreak, Action onReset)
         {
-            return Policy.HandleResult(expression.Compile()).CircuitBreaker<TResult>(allowExceptions, TimeSpan.FromMilliseconds(millisecondsOfBreak), (res, ts) =>
+            return Policy.HandleResult(expression.Compile()).CircuitBreaker(allowExceptions, TimeSpan.FromMilliseconds(millisecondsOfBreak), (res, ts) =>
             {
                 onBreak(res.Result, ts);
             }, onReset);
+        }
+
+        /// <summary>
+        /// 异常后使用备用
+        /// </summary>
+        /// <typeparam name="TException"></typeparam>
+        /// <param name="fallbackAction"></param>
+        /// <param name="onFallback"></param>
+        /// <param name="expression"></param>
+        /// <returns></returns>
+        public static FallbackPolicy FallbackWhenException<TException>(Action fallbackAction, Action<Exception> onFallback, Expression<Func<TException, bool>> expression = null) where TException : Exception
+        {
+            PolicyBuilder builder = null;
+            if (expression == null)
+                builder = Policy.Handle<TException>();
+            else
+                builder = Policy.Handle(expression.Compile());
+            return builder.Fallback(fallbackAction, onFallback);
+        }
+
+        /// <summary>
+        /// 特定结果后使用备用
+        /// </summary>
+        /// <typeparam name="TResult"></typeparam>
+        /// <param name="expression"></param>
+        /// <param name="fallbackAction"></param>
+        /// <param name="onFallback"></param>
+        /// <returns></returns>
+        public static FallbackPolicy<TResult> FallbackWhenException<TResult>(Expression<Func<TResult, bool>> expression, Func<TResult> fallbackAction, Action<TResult> onFallback)
+        {
+            return Policy.HandleResult(expression.Compile()).Fallback(fallbackAction, (res) =>
+            {
+                onFallback(res.Result);
+            });
         }
     }
 }
