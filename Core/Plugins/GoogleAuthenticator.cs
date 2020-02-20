@@ -14,7 +14,8 @@ namespace DwFramework.Core.Plugins
         /// <returns></returns>
         public static string GetMobilePhoneKey(string key)
         {
-            return Encoding.UTF8.GetBytes(key).ToBase32String();
+            var baseCode = Encoding.UTF8.GetBytes(key).ToBase32String();
+            return baseCode.TrimEnd('=');
         }
 
         /// <summary>
