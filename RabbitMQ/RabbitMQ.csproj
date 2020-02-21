@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <PackOnBuild>true</PackOnBuild>
+    <RootNamespace>DwFramework.RabbitMQ</RootNamespace>
+    <PackageId>DwFramework.RabbitMQ</PackageId>
+    <PackageVersion>0.1.0</PackageVersion>
+    <Authors>DwGoing</Authors>
+    <Owners>DwGoing</Owners>
+    <Description>DwFramework RabbitMQ库</Description>
+    <Copyright>DwGoing</Copyright>
+    <DevelopmentDependency>true</DevelopmentDependency>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <Summary>DwFramework RabbitMQ库</Summary>
+    <Title>DwFramework.RabbitMQ</Title>
+    <PackageLicenseUrl>https://licenses.nuget.org/MIT</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/Dwgoing/DwFramework/tree/master/RabbitMQ</PackageProjectUrl>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="RabbitMQ.Client" Version="5.1.2" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Models\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Core\Core.csproj" />
+  </ItemGroup>
+</Project>
