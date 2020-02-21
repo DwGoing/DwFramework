@@ -3,13 +3,32 @@ using System.Text;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Threading.Tasks;
 
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace DwFramework.Core.Plugins
 {
-    public class JWTPlugin
+    public static class JWTPlugin
     {
+        public static IServiceCollection AddJWTAuthentication(IServiceCollection services, ISecurityTokenValidator tokenValidator, Func<TokenValidatedContext, Task> onSuccess, Func<JwtBearerChallengeContext, Task> onFail)
+        {
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    options.SecurityTokenValidators.Clear();
+                    options.SecurityTokenValidators.Add(tokenValidator);
+                    options.Events = new JwtBearerEvents
+                    {
+                        OnTokenValidated = onSuccess,
+                        OnChallenge = onFail
+                    };
+                });
+            return services;
+        }
+
         private const string CustomPrefix = "Custom-";
 
         /// <summary>

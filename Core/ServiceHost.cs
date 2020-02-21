@@ -15,8 +15,8 @@ namespace DwFramework.Core
 {
     public class ServiceHost
     {
-        private ContainerBuilder _containerBuilder;
-        private ServiceCollection _services;
+        private readonly ContainerBuilder _containerBuilder;
+        private readonly ServiceCollection _services;
 
         /// <summary>
         /// 构造函数
