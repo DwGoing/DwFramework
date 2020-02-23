@@ -14,20 +14,6 @@ using DwFramework.Core.Extensions;
 
 namespace DwFramework.MachineLearning
 {
-
-
-    public static class RabbitMQServiceExtension
-    {
-        /// <summary>
-        /// 注册MachineLearning服务
-        /// </summary>
-        /// <param name="host"></param>
-        public static void RegisterMachineLearningService(this ServiceHost host)
-        {
-            host.RegisterType<IMachineLearningService, MachineLearningService>().SingleInstance();
-        }
-    }
-
     public class MachineLearningService : IMachineLearningService
     {
         public readonly MLContext MLContext;
