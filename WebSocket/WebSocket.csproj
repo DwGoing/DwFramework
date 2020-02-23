@@ -33,5 +33,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Models\" />
+    <Folder Include="Extensions\" />
   </ItemGroup>
 </Project>
