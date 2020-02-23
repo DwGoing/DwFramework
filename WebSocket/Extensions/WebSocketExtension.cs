@@ -9,7 +9,7 @@ namespace DwFramework.WebSocket.Extensions
     public static class WebSocketExtension
     {
         /// <summary>
-        /// 注册WebSocket服务
+        /// 注册服务
         /// </summary>
         /// <param name="host"></param>
         public static void RegisterWebSocketService(this ServiceHost host)
@@ -18,7 +18,7 @@ namespace DwFramework.WebSocket.Extensions
         }
 
         /// <summary>
-        /// 初始化WebSocket服务
+        /// 初始化服务
         /// </summary>
         /// <param name="provider"></param>
         /// <param name="handler"></param>
@@ -30,6 +30,16 @@ namespace DwFramework.WebSocket.Extensions
             if (onReceive != null) service.OnReceive += onReceive;
             if (onClose != null) service.OnClose += onClose;
             return service.OpenServiceAsync();
+        }
+
+        /// <summary>
+        /// 获取服务
+        /// </summary>
+        /// <param name="provider"></param>
+        /// <returns></returns>
+        public static WebSocketService GetWebSocketService(this IServiceProvider provider)
+        {
+            return provider.GetService<WebSocketService>();
         }
     }
 }

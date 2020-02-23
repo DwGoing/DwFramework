@@ -9,7 +9,7 @@ namespace DwFramework.RabbitMQ.Extensions
     public static class RabbitMQExtension
     {
         /// <summary>
-        /// 注册RabbitMQ服务
+        /// 注册服务
         /// </summary>
         /// <param name="host"></param>
         public static void RegisterRabbitMQService(this ServiceHost host)
@@ -18,13 +18,23 @@ namespace DwFramework.RabbitMQ.Extensions
         }
 
         /// <summary>
-        /// 初始化RabbitMQ服务
+        /// 初始化服务
         /// </summary>
         /// <param name="provider"></param>
         /// <returns></returns>
         public static Task InitRabbitMQServiceAsync(this IServiceProvider provider)
         {
             return provider.GetService<RabbitMQService>().OpenServiceAsync();
+        }
+
+        /// <summary>
+        /// 获取服务
+        /// </summary>
+        /// <param name="provider"></param>
+        /// <returns></returns>
+        public static RabbitMQService GetRabbitMQService(this IServiceProvider provider)
+        {
+            return provider.GetService<RabbitMQService>();
         }
     }
 }

@@ -11,7 +11,7 @@ namespace DwFramework.Database.Extensions
     public static class DatabaseExtension
     {
         /// <summary>
-        /// 注册Database服务
+        /// 注册服务
         /// </summary>
         /// <param name="host"></param>
         public static void RegisterDatabaseService(this ServiceHost host)
@@ -20,13 +20,23 @@ namespace DwFramework.Database.Extensions
         }
 
         /// <summary>
-        /// 初始化Database服务
+        /// 初始化服务
         /// </summary>
         /// <param name="provider"></param>
         /// <returns></returns>
         public static Task InitDatabaseServiceAsync(this IServiceProvider provider)
         {
             return provider.GetService<DatabaseService>().OpenServiceAsync();
+        }
+
+        /// <summary>
+        /// 获取服务
+        /// </summary>
+        /// <param name="provider"></param>
+        /// <returns></returns>
+        public static DatabaseService GetDatabaseService(this IServiceProvider provider)
+        {
+            return provider.GetService<DatabaseService>();
         }
 
         /// <summary>
