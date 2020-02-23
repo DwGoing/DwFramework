@@ -11,27 +11,6 @@ using DwFramework.Core.Extensions;
 
 namespace DwFramework.Rpc
 {
-    public static class RpcServiceExtension
-    {
-        /// <summary>
-        /// 注册Rpc服务
-        /// </summary>
-        /// <param name="host"></param>
-        public static void RegisterRpcService(this ServiceHost host)
-        {
-            host.RegisterType<IRpcService, RpcService>().SingleInstance();
-        }
-
-        /// <summary>
-        /// 初始化Rpc服务
-        /// </summary>
-        /// <param name="provider"></param>
-        public static Task InitRpcServiceAsync(this IServiceProvider provider)
-        {
-            return provider.GetService<IRpcService, RpcService>().OpenServiceAsync();
-        }
-    }
-
     public class RpcService : IRpcService
     {
         public class Config
