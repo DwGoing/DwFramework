@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rpc", "Rpc\Rpc.csproj", "{D
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RabbitMQ", "RabbitMQ\RabbitMQ.csproj", "{283212E1-967F-4FAA-A885-750597A6F7E7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MachineLearning", "MachineLearning\MachineLearning.csproj", "{415A8677-3836-4D63-A283-79A1038C67FC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -43,6 +45,10 @@ Global
 		{283212E1-967F-4FAA-A885-750597A6F7E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{283212E1-967F-4FAA-A885-750597A6F7E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{283212E1-967F-4FAA-A885-750597A6F7E7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{415A8677-3836-4D63-A283-79A1038C67FC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{415A8677-3836-4D63-A283-79A1038C67FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{415A8677-3836-4D63-A283-79A1038C67FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{415A8677-3836-4D63-A283-79A1038C67FC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 	EndGlobalSection

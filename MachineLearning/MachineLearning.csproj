@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <PackageId>DwFramework.MachineLearning</PackageId>
+    <PackageVersion>0.1.0</PackageVersion>
+    <Authors>DwGoing</Authors>
+    <Description>DwFramework MachineLearning库</Description>
+    <RootNamespace>DwFramework.MachineLearning</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Core\Core.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="NuGet.Build.Packaging" Version="0.2.2">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.ML" Version="1.4.0" />
+  </ItemGroup>
+</Project>
