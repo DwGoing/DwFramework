@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using SqlSugar;
@@ -48,6 +49,49 @@ namespace DwFramework.Database
                     IsAutoCloseConnection = true,       //默认false, 时候知道关闭数据库连接, 设置为true无需使用using或者Close操作
                     InitKeyType = InitKeyType.SystemTable    //默认SystemTable, 字段信息读取, 如：该属性是不是主键，是不是标识列等等信息
                 });
+            });
+        }
+
+        /// <summary>
+        /// 创建表
+        /// </summary>
+        /// <param name="tableName"></param>
+        /// <param name="columns"></param>
+        /// <param name="isCreatePrimaryKey"></param>
+        /// <returns></returns>
+        public Task<bool> CreateTableAsync(string tableName, List<DbColumnInfo> columns, bool isCreatePrimaryKey = true)
+        {
+            return Task.Run(() =>
+            {
+                return Db.DbMaintenance.CreateTable(tableName, columns, isCreatePrimaryKey);
+            });
+        }
+
+        /// <summary>
+        /// 删除表
+        /// </summary>
+        /// <param name="tableName"></param>
+        /// <returns></returns>
+        public Task<bool> DropTableAsync(string tableName)
+        {
+            return Task.Run(() =>
+            {
+                return Db.DbMaintenance.DropTable(tableName);
+            });
+        }
+
+        /// <summary>
+        /// 复制表结构
+        /// </summary>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        /// <returns></returns>
+        public Task<bool> CopyTableStructAsync(string from, string to)
+        {
+            return Task.Run(() =>
+            {
+                var columns = Db.DbMaintenance.GetColumnInfosByTableName(from);
+                return Db.DbMaintenance.CreateTable(to, columns);
             });
         }
     }
