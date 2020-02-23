@@ -24,7 +24,7 @@ namespace DwFramework.RabbitMQ.Extensions
         /// <returns></returns>
         public static Task InitRabbitMQServiceAsync(this IServiceProvider provider)
         {
-            return provider.GetService<IRabbitMQService, RabbitMQService>().OpenServiceAsync();
+            return provider.GetService<RabbitMQService>().OpenServiceAsync();
         }
     }
 }

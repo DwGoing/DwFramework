@@ -23,7 +23,7 @@ namespace DwFramework.Rpc.Extensions
         /// <param name="provider"></param>
         public static Task InitRpcServiceAsync(this IServiceProvider provider)
         {
-            return provider.GetService<IRpcService, RpcService>().OpenServiceAsync();
+            return provider.GetService<RpcService>().OpenServiceAsync();
         }
     }
 }

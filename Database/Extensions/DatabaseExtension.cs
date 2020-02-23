@@ -26,7 +26,7 @@ namespace DwFramework.Database.Extensions
         /// <returns></returns>
         public static Task InitDatabaseServiceAsync(this IServiceProvider provider)
         {
-            return provider.GetService<IDatabaseService, DatabaseService>().OpenServiceAsync();
+            return provider.GetService<DatabaseService>().OpenServiceAsync();
         }
 
         /// <summary>

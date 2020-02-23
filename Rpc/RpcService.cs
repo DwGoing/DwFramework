@@ -75,11 +75,10 @@ namespace DwFramework.Rpc
         /// <summary>
         /// 从服务中注册Rpc函数
         /// </summary>
-        /// <typeparam name="I"></typeparam>
         /// <typeparam name="T"></typeparam>
-        public void RegisterFuncFromService<I, T>() where T : class where I : class
+        public void RegisterFuncFromService<T>() where T : class
         {
-            T service = _provider.GetService<I, T>();
+            T service = _provider.GetService<T>();
             var methods = service.GetType().GetMethods();
             foreach (var item in methods)
             {
@@ -95,9 +94,9 @@ namespace DwFramework.Rpc
         /// 从服务中注册Rpc函数
         /// </summary>
         /// <typeparam name="I"></typeparam>
-        public void RegisterFuncFromService<I>() where I : class
+        public void RegisterFuncFromServices<I>() where I : class
         {
-            var services = _provider.GetAllServices<I>();
+            var services = _provider.GetServices<I>();
             foreach (var service in services)
             {
                 var methods = service.GetType().GetMethods();

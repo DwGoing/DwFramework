@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+
 using Autofac.Extensions.DependencyInjection;
 using AutoFac.Extras.NLog.DotNetCore;
 using Microsoft.AspNetCore.Hosting;
@@ -12,19 +13,12 @@ namespace DwFramework.Core.Extensions
         /// <summary>
         /// 获取服务
         /// </summary>
-        /// <typeparam name="I"></typeparam>
         /// <typeparam name="T"></typeparam>
         /// <param name="provider"></param>
         /// <returns></returns>
-        public static T GetService<I, T>(this IServiceProvider provider) where T : class where I : class
+        public static T GetService<T>(this IServiceProvider provider) where T : class
         {
-            var services = provider.GetServices<I>();
-            foreach (var item in services)
-            {
-                if (item.GetType() == typeof(T))
-                    return item as T;
-            }
-            return default;
+            return provider.GetService(typeof(T)) as T;
         }
 
         /// <summary>
@@ -33,20 +27,9 @@ namespace DwFramework.Core.Extensions
         /// <typeparam name="I"></typeparam>
         /// <param name="provider"></param>
         /// <returns></returns>
-        public static IEnumerable<I> GetAllServices<I>(this IServiceProvider provider) where I : class
+        public static IEnumerable<I> GetServices<I>(this IServiceProvider provider) where I : class
         {
-            return provider.GetServices<I>();
-        }
-
-        /// <summary>
-        /// 获取服务
-        /// </summary>
-        /// <param name="provider"></param>
-        /// <param name="type"></param>
-        /// <returns></returns>
-        public static IEnumerable<object> GetAllServices(this IServiceProvider provider, Type type)
-        {
-            return provider.GetServices(type);
+            return ServiceProviderServiceExtensions.GetServices<I>(provider);
         }
 
         /// <summary>

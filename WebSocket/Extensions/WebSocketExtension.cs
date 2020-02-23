@@ -24,7 +24,7 @@ namespace DwFramework.WebSocket.Extensions
         /// <param name="handler"></param>
         public static Task InitWebSocketServiceAsync(this IServiceProvider provider, OnConnectHandler onConnect = null, OnSendHandler onSend = null, OnReceiveHandler onReceive = null, OnCloseHandler onClose = null)
         {
-            var service = provider.GetService<IWebSocketService, WebSocketService>();
+            var service = provider.GetService<WebSocketService>();
             if (onConnect != null) service.OnConnect += onConnect;
             if (onSend != null) service.OnSend += onSend;
             if (onReceive != null) service.OnReceive += onReceive;
