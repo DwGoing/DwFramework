@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 
 using Autofac.Extensions.DependencyInjection;
@@ -24,12 +25,12 @@ namespace DwFramework.Core.Extensions
         /// <summary>
         /// 获取服务
         /// </summary>
-        /// <typeparam name="I"></typeparam>
+        /// <typeparam name="T"></typeparam>
         /// <param name="provider"></param>
         /// <returns></returns>
-        public static IEnumerable<I> GetServices<I>(this IServiceProvider provider) where I : class
+        public static IEnumerable<T> GetServices<T>(this IServiceProvider provider) where T : class
         {
-            return ServiceProviderServiceExtensions.GetServices<I>(provider);
+            return provider.GetServices(typeof(T)).Cast<T>();
         }
 
         /// <summary>
