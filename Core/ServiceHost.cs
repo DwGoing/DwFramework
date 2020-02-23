@@ -123,18 +123,20 @@ namespace DwFramework.Core
                 var attr = type.GetCustomAttribute<RegisterableAttribute>() as RegisterableAttribute;
                 if (attr == null)
                     continue;
-                var tmp = _containerBuilder.RegisterType(type).As(attr.InterfaceType);
+                var builder = _containerBuilder.RegisterType(type);
+                if (attr.InterfaceType != null)
+                    builder.As(attr.InterfaceType);
                 switch (attr.Lifetime)
                 {
                     case Lifetime.Singleton:
-                        tmp.SingleInstance();
+                        builder.SingleInstance();
                         break;
                     case Lifetime.InstancePerLifetimeScope:
-                        tmp.InstancePerLifetimeScope();
+                        builder.InstancePerLifetimeScope();
                         break;
                 }
                 if (attr.IsAutoActivate)
-                    tmp.AutoActivate();
+                    builder.AutoActivate();
             }
         }
 
@@ -153,18 +155,20 @@ namespace DwFramework.Core
                     var attr = type.GetCustomAttribute<RegisterableAttribute>() as RegisterableAttribute;
                     if (attr == null)
                         continue;
-                    var tmp = _containerBuilder.RegisterType(type).As(attr.InterfaceType);
+                    var builder = _containerBuilder.RegisterType(type);
+                    if (attr.InterfaceType != null)
+                        builder.As(attr.InterfaceType);
                     switch (attr.Lifetime)
                     {
                         case Lifetime.Singleton:
-                            tmp.SingleInstance();
+                            builder.SingleInstance();
                             break;
                         case Lifetime.InstancePerLifetimeScope:
-                            tmp.InstancePerLifetimeScope();
+                            builder.InstancePerLifetimeScope();
                             break;
                     }
                     if (attr.IsAutoActivate)
-                        tmp.AutoActivate();
+                        builder.AutoActivate();
                 }
             }
         }
