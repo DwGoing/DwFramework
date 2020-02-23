@@ -14,7 +14,7 @@ namespace DwFramework.WebSocket.Extensions
         /// <param name="host"></param>
         public static void RegisterWebSocketService(this ServiceHost host)
         {
-            host.RegisterType<IWebSocketService, WebSocketService>().SingleInstance();
+            host.RegisterType<WebSocketService>().SingleInstance();
         }
 
         /// <summary>

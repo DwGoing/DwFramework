@@ -16,7 +16,7 @@ namespace DwFramework.Database.Extensions
         /// <param name="host"></param>
         public static void RegisterDatabaseService(this ServiceHost host)
         {
-            host.RegisterType<IDatabaseService, DatabaseService>().SingleInstance();
+            host.RegisterType<DatabaseService>().SingleInstance();
         }
 
         /// <summary>

@@ -14,7 +14,7 @@ namespace DwFramework.Http.Extensions
         /// <param name="host"></param>
         public static void RegisterHttpService(this ServiceHost host)
         {
-            host.RegisterType<IHttpService, HttpService>().SingleInstance();
+            host.RegisterType<HttpService>().SingleInstance();
         }
 
         /// <summary>

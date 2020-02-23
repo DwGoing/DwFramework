@@ -14,7 +14,7 @@ namespace DwFramework.Rpc.Extensions
         /// <param name="host"></param>
         public static void RegisterRpcService(this ServiceHost host)
         {
-            host.RegisterType<IRpcService, RpcService>().SingleInstance();
+            host.RegisterType<RpcService>().SingleInstance();
         }
 
         /// <summary>

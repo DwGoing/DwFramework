@@ -14,7 +14,7 @@ namespace DwFramework.RabbitMQ.Extensions
         /// <param name="host"></param>
         public static void RegisterRabbitMQService(this ServiceHost host)
         {
-            host.RegisterType<IRabbitMQService, RabbitMQService>().SingleInstance();
+            host.RegisterType<RabbitMQService>().SingleInstance();
         }
 
         /// <summary>

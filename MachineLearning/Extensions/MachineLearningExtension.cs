@@ -13,7 +13,7 @@ namespace DwFramework.MachineLearning.Extensions
         /// <param name="host"></param>
         public static void RegisterMachineLearningService(this ServiceHost host)
         {
-            host.RegisterType<IMachineLearningService, MachineLearningService>().SingleInstance();
+            host.RegisterType<MachineLearningService>().SingleInstance();
         }
     }
 }
