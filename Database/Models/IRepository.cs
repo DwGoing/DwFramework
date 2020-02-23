@@ -6,7 +6,8 @@ namespace DwFramework.Database
 {
     public interface IRepository<T>
     {
-        T[] Find(Func<T, bool> expression);
-        T FindSingle(Func<T, bool> expression);
+        T[] FindAll();
+        T[] Find(Expression<Func<T, bool>> expression);
+        T FindSingle(Expression<Func<T, bool>> expression);
     }
 }
