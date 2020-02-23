@@ -5,47 +5,10 @@ using SqlSugar;
 
 using DwFramework.Core;
 using DwFramework.Core.Extensions;
+using DwFramework.Database.Extensions;
 
 namespace DwFramework.Database
 {
-    public static class DatabaseServiceExtension
-    {
-        /// <summary>
-        /// 注册RabbitMQ服务
-        /// </summary>
-        /// <param name="host"></param>
-        public static void RegisterDatabaseService(this ServiceHost host)
-        {
-            host.RegisterType<IDatabaseService, DatabaseService>().SingleInstance();
-        }
-
-        /// <summary>
-        /// 初始化RabbitMQ服务
-        /// </summary>
-        /// <param name="provider"></param>
-        /// <returns></returns>
-        public static Task InitDatabaseServiceAsync(this IServiceProvider provider)
-        {
-            return provider.GetService<IDatabaseService, DatabaseService>().OpenServiceAsync();
-        }
-
-        /// <summary>
-        /// 匹配DbType
-        /// </summary>
-        /// <param name="typeStr"></param>
-        /// <returns></returns>
-        public static DbType ParseDbType(this string typeStr)
-        {
-            typeStr = typeStr.ToLower();
-            foreach (var item in Enum.GetValues(typeof(DbType)))
-            {
-                if (item.ToString().ToLower() == typeStr)
-                    return (DbType)item;
-            }
-            throw new Exception("无法找到匹配的DbType");
-        }
-    }
-
     public class DatabaseService : IDatabaseService
     {
         public class Config
