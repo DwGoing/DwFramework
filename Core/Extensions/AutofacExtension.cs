@@ -45,7 +45,7 @@ namespace DwFramework.Core.Extensions
         }
 
         /// <summary>
-        /// 注入在上层注入的服务
+        /// 注入上层服务
         /// </summary>
         /// <param name="host"></param>
         /// <param name="provider"></param>
