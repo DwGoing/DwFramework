@@ -139,6 +139,37 @@ namespace DwFramework.Core
         }
 
         /// <summary>
+        /// 注册服务
+        /// </summary>
+        /// <returns></returns>
+        public void RegisterFromAssemblies()
+        {
+            var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+            foreach (var assembly in assemblies)
+            {
+                var types = assembly.GetTypes();
+                foreach (var type in types)
+                {
+                    var attr = type.GetCustomAttribute<RegisterableAttribute>() as RegisterableAttribute;
+                    if (attr == null)
+                        continue;
+                    var tmp = _containerBuilder.RegisterType(type).As(attr.InterfaceType);
+                    switch (attr.Lifetime)
+                    {
+                        case Lifetime.Singleton:
+                            tmp.SingleInstance();
+                            break;
+                        case Lifetime.InstancePerLifetimeScope:
+                            tmp.InstancePerLifetimeScope();
+                            break;
+                    }
+                    if (attr.IsAutoActivate)
+                        tmp.AutoActivate();
+                }
+            }
+        }
+
+        /// <summary>
         /// 构建服务主机
         /// </summary>
         /// <returns></returns>
