@@ -16,6 +16,7 @@
     <Title>DwFramework.RabbitMQ</Title>
     <PackageLicenseUrl>https://licenses.nuget.org/MIT</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/Dwgoing/DwFramework/tree/master/RabbitMQ</PackageProjectUrl>
+    <NeutralLanguage>zh</NeutralLanguage>
   </PropertyGroup>
 
   <ItemGroup>

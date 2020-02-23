@@ -16,6 +16,7 @@
     <PackageProjectUrl>https://github.com/Dwgoing/DwFramework/tree/master/Core</PackageProjectUrl>
     <Summary>DwFramework 核心库</Summary>
     <Title>DwFramework.Core</Title>
+    <NeutralLanguage>zh</NeutralLanguage>
   </PropertyGroup>
 
   <ItemGroup>

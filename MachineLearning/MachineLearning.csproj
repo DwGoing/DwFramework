@@ -7,6 +7,9 @@
     <Authors>DwGoing</Authors>
     <Description>DwFramework MachineLearning库</Description>
     <RootNamespace>DwFramework.MachineLearning</RootNamespace>
+    <DevelopmentDependency>true</DevelopmentDependency>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <NeutralLanguage>zh</NeutralLanguage>
   </PropertyGroup>
 
   <ItemGroup>
