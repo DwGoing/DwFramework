@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
-    <RootNamespace>DwFramework.Core</RootNamespace>
+    <RootNamespace>DwFramework.Http</RootNamespace>
     <PackOnBuild>true</PackOnBuild>
     <PackageId>DwFramework.Http</PackageId>
     <PackageVersion>0.1.9</PackageVersion>
@@ -34,6 +34,7 @@
   <ItemGroup>
     <Folder Include="Models\" />
     <Folder Include="Plugins\" />
+    <Folder Include="Extensions\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Core\Core.csproj" />

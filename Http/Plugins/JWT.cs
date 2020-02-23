@@ -9,7 +9,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 
-namespace DwFramework.Core.Plugins
+namespace DwFramework.Http.Plugins
 {
     public static class JWTPlugin
     {
