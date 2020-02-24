@@ -7,11 +7,11 @@ using Quartz;
 using Quartz.Impl;
 using Quartz.Simpl;
 using Quartz.Impl.Calendar;
+using Quartz.Impl.Matchers;
 
 using DwFramework.Core;
 using DwFramework.Core.Plugins;
 using DwFramework.Core.Extensions;
-using DwFramework.TaskSchedule.Extensions;
 
 namespace DwFramework.TaskSchedule
 {
@@ -60,13 +60,26 @@ namespace DwFramework.TaskSchedule
         }
 
         /// <summary>
+        /// 添加JobListener
+        /// </summary>
+        /// <param name="schedulerKey"></param>
+        /// <param name="listener"></param>
+        public void AddJobListener<T>(string schedulerKey) where T : JobListener, new()
+        {
+            var scheduler = AllSchedulers.Where(item => item.SchedulerName == schedulerKey).SingleOrDefault();
+            if (scheduler == null)
+                throw new Exception("未知调度器");
+            scheduler.ListenerManager.AddJobListener(new T(), GroupMatcher<JobKey>.AnyGroup());
+        }
+
+        /// <summary>
         /// 释放调度器
         /// </summary>
         /// <param name="schedulerKey"></param>
         /// <returns></returns>
         public Task DisposeScheduler(string schedulerKey)
         {
-            var scheduler = AllSchedulers.Where(item => item.SchedulerName == schedulerKey).Single();
+            var scheduler = AllSchedulers.Where(item => item.SchedulerName == schedulerKey).SingleOrDefault();
             if (scheduler == null)
                 throw new Exception("未知调度器");
             return scheduler.Shutdown(false);
@@ -86,7 +99,7 @@ namespace DwFramework.TaskSchedule
         /// <returns></returns>
         public Task ExcludeInDay(string schedulerKey, string calName, int startHour = 0, int startMinute = 0, int startSecond = 0, int endHour = 23, int endMinute = 59, int endSecond = 59)
         {
-            var scheduler = AllSchedulers.Where(item => item.SchedulerName == schedulerKey).Single();
+            var scheduler = AllSchedulers.Where(item => item.SchedulerName == schedulerKey).SingleOrDefault();
             if (scheduler == null)
                 throw new Exception("未知调度器");
             var calender = new DailyCalendar(DateBuilder.DateOf(startHour, startMinute, startSecond).DateTime, DateBuilder.DateOf(endHour, endMinute, endSecond).DateTime);
@@ -102,7 +115,7 @@ namespace DwFramework.TaskSchedule
         /// <returns></returns>
         public Task ExcludeInWeek(string schedulerKey, string calName, DayOfWeek[] excludeDays)
         {
-            var scheduler = AllSchedulers.Where(item => item.SchedulerName == schedulerKey).Single();
+            var scheduler = AllSchedulers.Where(item => item.SchedulerName == schedulerKey).SingleOrDefault();
             if (scheduler == null)
                 throw new Exception("未知调度器");
             var calender = new WeeklyCalendar();
@@ -122,7 +135,7 @@ namespace DwFramework.TaskSchedule
         /// <returns></returns>
         public Task ExcludeInMonth(string schedulerKey, string calName, int[] excludeDays)
         {
-            var scheduler = AllSchedulers.Where(item => item.SchedulerName == schedulerKey).Single();
+            var scheduler = AllSchedulers.Where(item => item.SchedulerName == schedulerKey).SingleOrDefault();
             if (scheduler == null)
                 throw new Exception("未知调度器");
             var calender = new MonthlyCalendar();
@@ -142,7 +155,7 @@ namespace DwFramework.TaskSchedule
         /// <returns></returns>
         public Task ExcludeInYear(string schedulerKey, string calName, (int, int)[] excludeMonthDays)
         {
-            var scheduler = AllSchedulers.Where(item => item.SchedulerName == schedulerKey).Single();
+            var scheduler = AllSchedulers.Where(item => item.SchedulerName == schedulerKey).SingleOrDefault();
             if (scheduler == null)
                 throw new Exception("未知调度器");
             var calender = new AnnualCalendar();
@@ -162,7 +175,7 @@ namespace DwFramework.TaskSchedule
         /// <returns></returns>
         public Task ExcludeByCron(string schedulerKey, string calName, string cronExpression)
         {
-            var scheduler = AllSchedulers.Where(item => item.SchedulerName == schedulerKey).Single();
+            var scheduler = AllSchedulers.Where(item => item.SchedulerName == schedulerKey).SingleOrDefault();
             if (scheduler == null)
                 throw new Exception("未知调度器");
             var calender = new CronCalendar(cronExpression);
@@ -178,7 +191,7 @@ namespace DwFramework.TaskSchedule
         /// <returns></returns>
         private Task CreateJob<T>(string schedulerKey, Func<JobBuilder, JobBuilder> jobBuild, Func<TriggerBuilder, TriggerBuilder> triggerBuild) where T : ScheduleJob
         {
-            var scheduler = AllSchedulers.Where(item => item.SchedulerName == schedulerKey).Single();
+            var scheduler = AllSchedulers.Where(item => item.SchedulerName == schedulerKey).SingleOrDefault();
             if (scheduler == null)
                 throw new Exception("未知调度器");
             var jobDetails = jobBuild(JobBuilder.Create<T>()).Build();
