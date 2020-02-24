@@ -47,18 +47,6 @@ namespace DwFramework.TaskSchedule
         }
 
         /// <summary>
-        /// 开启服务
-        /// </summary>
-        /// <returns></returns>
-        public Task OpenServiceAsync()
-        {
-            return Task.Run(() =>
-          {
-
-          });
-        }
-
-        /// <summary>
         /// 创建调度器
         /// </summary>
         /// <param name="schedulerKey"></param>
