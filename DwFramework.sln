@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MachineLearning", "MachineL
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Database", "Database\Database.csproj", "{6B2A3DA2-DD2E-468E-A621-448C67565B43}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskSchedule", "TaskSchedule\TaskSchedule.csproj", "{94C543DD-1B1D-4B70-8355-09150794C1C2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -55,6 +57,10 @@ Global
 		{6B2A3DA2-DD2E-468E-A621-448C67565B43}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6B2A3DA2-DD2E-468E-A621-448C67565B43}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6B2A3DA2-DD2E-468E-A621-448C67565B43}.Release|Any CPU.Build.0 = Release|Any CPU
+		{94C543DD-1B1D-4B70-8355-09150794C1C2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{94C543DD-1B1D-4B70-8355-09150794C1C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{94C543DD-1B1D-4B70-8355-09150794C1C2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{94C543DD-1B1D-4B70-8355-09150794C1C2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 	EndGlobalSection

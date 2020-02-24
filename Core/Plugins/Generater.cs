@@ -6,6 +6,23 @@ namespace DwFramework.Core.Plugins
     public static class GeneraterPlugin
     {
         /// <summary>
+        /// 生成随机字符串
+        /// </summary>
+        /// <param name="length"></param>
+        /// <returns></returns>
+        public static string GenerateRandomString(int length)
+        {
+            char[] chars = @"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789".ToCharArray();
+            Random random = new Random(DateTime.Now.Millisecond);
+            StringBuilder builder = new StringBuilder();
+            for (int i = 0; i < length; i++)
+            {
+                builder.Append(chars[random.Next(chars.Length)]);
+            }
+            return builder.ToString();
+        }
+
+        /// <summary>
         /// 生成流水号
         /// [日期 6位][时间 4位][随机数 6位][自定义号段1 4位][自定义号段2 4位]
         /// </summary>

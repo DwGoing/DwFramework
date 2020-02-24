@@ -9,7 +9,7 @@ namespace DwFramework.Core.Extensions
         /// </summary>
         /// <param name="c"></param>
         /// <returns></returns>
-        public static int ToValue(this char c)
+        public static int ToBase32Value(this char c)
         {
             var value = (int)c;
             if (value < 91 && value > 64)
@@ -32,7 +32,7 @@ namespace DwFramework.Core.Extensions
         /// </summary>
         /// <param name="b"></param>
         /// <returns></returns>
-        public static char ToChar(this byte b)
+        public static char ToBase32Char(this byte b)
         {
             if (b < 26)
             {
@@ -46,7 +46,7 @@ namespace DwFramework.Core.Extensions
         }
 
         /// <summary>
-        /// 转Base32zijie数组
+        /// 转Base32字符数组
         /// </summary>
         /// <param name="str"></param>
         /// <returns></returns>
@@ -66,7 +66,7 @@ namespace DwFramework.Core.Extensions
 
             foreach (char c in str)
             {
-                int cValue = ToValue(c);
+                int cValue = ToBase32Value(c);
 
                 if (bitsRemaining > 5)
                 {
@@ -112,12 +112,12 @@ namespace DwFramework.Core.Extensions
             foreach (byte b in bytes)
             {
                 nextChar = (byte)(nextChar | (b >> (8 - bitsRemaining)));
-                returnArray[arrayIndex++] = ToChar(nextChar);
+                returnArray[arrayIndex++] = ToBase32Char(nextChar);
 
                 if (bitsRemaining < 4)
                 {
                     nextChar = (byte)((b >> (3 - bitsRemaining)) & 31);
-                    returnArray[arrayIndex++] = ToChar(nextChar);
+                    returnArray[arrayIndex++] = ToBase32Char(nextChar);
                     bitsRemaining += 5;
                 }
 
@@ -127,7 +127,7 @@ namespace DwFramework.Core.Extensions
 
             if (arrayIndex != charCount)
             {
-                returnArray[arrayIndex++] = ToChar(nextChar);
+                returnArray[arrayIndex++] = ToBase32Char(nextChar);
                 while (arrayIndex != charCount) returnArray[arrayIndex++] = '=';
             }
 
