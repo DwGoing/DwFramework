@@ -26,13 +26,7 @@ namespace DwFramework.TaskSchedule
         private readonly Config _config;
         private readonly DirectSchedulerFactory _schedulerFactory;
 
-        public IScheduler[] AllSchedulers
-        {
-            get
-            {
-                return _schedulerFactory.GetAllSchedulers().Result.ToArray();
-            }
-        }
+        public IScheduler[] AllSchedulers => _schedulerFactory.GetAllSchedulers().Result.ToArray();
 
         /// <summary>
         /// 构造函数
@@ -60,16 +54,142 @@ namespace DwFramework.TaskSchedule
         }
 
         /// <summary>
+        /// 添加ScheduleListener
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="schedulerKey"></param>
+        public void AddScheduleListener<T>(string schedulerKey) where T : ScheduleListener, new()
+        {
+            var scheduler = AllSchedulers.Where(item => item.SchedulerName == schedulerKey).SingleOrDefault();
+            if (scheduler == null)
+                throw new Exception("未知调度器");
+            scheduler.ListenerManager.AddSchedulerListener(new T());
+        }
+
+        /// <summary>
         /// 添加JobListener
         /// </summary>
+        /// <typeparam name="T"></typeparam>
         /// <param name="schedulerKey"></param>
-        /// <param name="listener"></param>
+        /// <param name="matchers"></param>
+        private void AddJobListener<T>(string schedulerKey, params IMatcher<JobKey>[] matchers) where T : JobListener, new()
+        {
+            var scheduler = AllSchedulers.Where(item => item.SchedulerName == schedulerKey).SingleOrDefault();
+            if (scheduler == null)
+                throw new Exception("未知调度器");
+            scheduler.ListenerManager.AddJobListener(new T(), matchers);
+        }
+
+        /// <summary>
+        /// 添加JobListener
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="schedulerKey"></param>
         public void AddJobListener<T>(string schedulerKey) where T : JobListener, new()
         {
             var scheduler = AllSchedulers.Where(item => item.SchedulerName == schedulerKey).SingleOrDefault();
             if (scheduler == null)
                 throw new Exception("未知调度器");
             scheduler.ListenerManager.AddJobListener(new T(), GroupMatcher<JobKey>.AnyGroup());
+        }
+
+        /// <summary>
+        /// 添加JobListener
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="schedulerKey"></param>
+        /// <param name="name"></param>
+        /// <param name="group"></param>
+        public void AddJobListener<T>(string schedulerKey, string name, string group) where T : JobListener, new()
+        {
+            var scheduler = AllSchedulers.Where(item => item.SchedulerName == schedulerKey).SingleOrDefault();
+            if (scheduler == null)
+                throw new Exception("未知调度器");
+            scheduler.ListenerManager.AddJobListener(new T(), KeyMatcher<JobKey>.KeyEquals(new JobKey(name, group)));
+        }
+
+        /// <summary>
+        /// 添加JobListener
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="schedulerKey"></param>
+        /// <param name="group"></param>
+        public void AddJobListenerForGroup<T>(string schedulerKey, string group) where T : JobListener, new()
+        {
+            var scheduler = AllSchedulers.Where(item => item.SchedulerName == schedulerKey).SingleOrDefault();
+            if (scheduler == null)
+                throw new Exception("未知调度器");
+            scheduler.ListenerManager.AddJobListener(new T(), GroupMatcher<JobKey>.GroupContains(group));
+        }
+
+        /// <summary>
+        /// 添加JobListener
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="schedulerKey"></param>
+        /// <param name="name"></param>
+        public void AddJobListenerForName<T>(string schedulerKey, string name) where T : JobListener, new()
+        {
+            var scheduler = AllSchedulers.Where(item => item.SchedulerName == schedulerKey).SingleOrDefault();
+            if (scheduler == null)
+                throw new Exception("未知调度器");
+            scheduler.ListenerManager.AddJobListener(new T(), NameMatcher<JobKey>.NameContains(name));
+        }
+
+        /// <summary>
+        /// 添加TriggerListener
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="schedulerKey"></param>
+        public void AddTriggerListener<T>(string schedulerKey) where T : TriggerListener, new()
+        {
+            var scheduler = AllSchedulers.Where(item => item.SchedulerName == schedulerKey).SingleOrDefault();
+            if (scheduler == null)
+                throw new Exception("未知调度器");
+            scheduler.ListenerManager.AddTriggerListener(new T(), GroupMatcher<TriggerKey>.AnyGroup());
+        }
+
+        /// <summary>
+        /// 添加TriggerListener
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="schedulerKey"></param>
+        /// <param name="name"></param>
+        /// <param name="group"></param>
+        public void AddTriggerListener<T>(string schedulerKey, string name, string group) where T : TriggerListener, new()
+        {
+            var scheduler = AllSchedulers.Where(item => item.SchedulerName == schedulerKey).SingleOrDefault();
+            if (scheduler == null)
+                throw new Exception("未知调度器");
+            scheduler.ListenerManager.AddTriggerListener(new T(), KeyMatcher<JobKey>.KeyEquals(new TriggerKey(name, group)));
+        }
+
+        /// <summary>
+        /// 添加TriggerListener
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="schedulerKey"></param>
+        /// <param name="group"></param>
+        public void AddTriggerListenerForGroup<T>(string schedulerKey, string group) where T : TriggerListener, new()
+        {
+            var scheduler = AllSchedulers.Where(item => item.SchedulerName == schedulerKey).SingleOrDefault();
+            if (scheduler == null)
+                throw new Exception("未知调度器");
+            scheduler.ListenerManager.AddTriggerListener(new T(), GroupMatcher<TriggerKey>.GroupContains(group));
+        }
+
+        /// <summary>
+        /// 添加TriggerListener
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="schedulerKey"></param>
+        /// <param name="name"></param>
+        public void AddTriggerListenerForName<T>(string schedulerKey, string name) where T : TriggerListener, new()
+        {
+            var scheduler = AllSchedulers.Where(item => item.SchedulerName == schedulerKey).SingleOrDefault();
+            if (scheduler == null)
+                throw new Exception("未知调度器");
+            scheduler.ListenerManager.AddTriggerListener(new T(), NameMatcher<TriggerKey>.NameContains(name));
         }
 
         /// <summary>
@@ -186,16 +306,37 @@ namespace DwFramework.TaskSchedule
         /// 创建任务
         /// </summary>
         /// <typeparam name="T"></typeparam>
+        /// <param name="schedulerKey"></param>
         /// <param name="jobBuild"></param>
         /// <param name="triggerBuild"></param>
+        /// <param name="jobName"></param>
+        /// <param name="jobGroup"></param>
+        /// <param name="triggerName"></param>
+        /// <param name="triggerGroup"></param>
         /// <returns></returns>
-        private Task CreateJob<T>(string schedulerKey, Func<JobBuilder, JobBuilder> jobBuild, Func<TriggerBuilder, TriggerBuilder> triggerBuild) where T : ScheduleJob
+        private Task CreateJob<T>(string schedulerKey, Func<JobBuilder, JobBuilder> jobBuild, Func<TriggerBuilder, TriggerBuilder> triggerBuild, string jobName = null, string jobGroup = null, string triggerName = null, string triggerGroup = null) where T : ScheduleJob
         {
             var scheduler = AllSchedulers.Where(item => item.SchedulerName == schedulerKey).SingleOrDefault();
             if (scheduler == null)
                 throw new Exception("未知调度器");
-            var jobDetails = jobBuild(JobBuilder.Create<T>()).Build();
-            var trigger = triggerBuild(TriggerBuilder.Create()).Build();
+            var jobBuilder = jobBuild(JobBuilder.Create<T>());
+            if (jobName != null)
+            {
+                JobKey key = new JobKey(jobName);
+                if (jobGroup != null)
+                    key.Group = jobGroup;
+                jobBuilder.WithIdentity(key);
+            }
+            var jobDetails = jobBuilder.Build();
+            var triggerBuilder = triggerBuild(TriggerBuilder.Create());
+            if (triggerName != null)
+            {
+                TriggerKey key = new TriggerKey(triggerName);
+                if (triggerGroup != null)
+                    key.Group = triggerGroup;
+                triggerBuilder.WithIdentity(key);
+            }
+            var trigger = triggerBuilder.Build();
             return scheduler.ScheduleJob(jobDetails, trigger);
         }
 
@@ -203,10 +344,18 @@ namespace DwFramework.TaskSchedule
         /// 创建任务
         /// </summary>
         /// <typeparam name="T"></typeparam>
+        /// <param name="schedulerKey"></param>
         /// <param name="repeat"></param>
         /// <param name="intervalMilliseconds"></param>
+        /// <param name="startAt"></param>
+        /// <param name="calName"></param>
+        /// <param name="properties"></param>
+        /// <param name="jobName"></param>
+        /// <param name="jobGroup"></param>
+        /// <param name="triggerName"></param>
+        /// <param name="triggerGroup"></param>
         /// <returns></returns>
-        public Task CreateJob<T>(string schedulerKey, int repeat, long intervalMilliseconds, DateTimeOffset? startAt = null, string calName = null, IDictionary<string, object> properties = null) where T : ScheduleJob
+        public Task CreateJob<T>(string schedulerKey, int repeat, long intervalMilliseconds, DateTimeOffset? startAt = null, string calName = null, IDictionary<string, object> properties = null, string jobName = null, string jobGroup = null, string triggerName = null, string triggerGroup = null) where T : ScheduleJob
         {
             if (repeat < 0 || intervalMilliseconds <= 0)
                 throw new Exception("参数错误");
@@ -229,17 +378,24 @@ namespace DwFramework.TaskSchedule
                  if (calName != null)
                      triggerBuilder.ModifiedByCalendar(calName);
                  return triggerBuilder;
-             });
+             }, jobName, jobGroup, triggerName, triggerGroup);
         }
 
         /// <summary>
         /// 创建任务
         /// </summary>
         /// <typeparam name="T"></typeparam>
+        /// <param name="schedulerKey"></param>
         /// <param name="cronExpression"></param>
+        /// <param name="startAt"></param>
+        /// <param name="calName"></param>
         /// <param name="properties"></param>
+        /// <param name="jobName"></param>
+        /// <param name="jobGroup"></param>
+        /// <param name="triggerName"></param>
+        /// <param name="triggerGroup"></param>
         /// <returns></returns>
-        public Task CreateJob<T>(string schedulerKey, string cronExpression, DateTimeOffset? startAt = null, string calName = null, IDictionary<string, object> properties = null) where T : ScheduleJob
+        public Task CreateJob<T>(string schedulerKey, string cronExpression, DateTimeOffset? startAt = null, string calName = null, IDictionary<string, object> properties = null, string jobName = null, string jobGroup = null, string triggerName = null, string triggerGroup = null) where T : ScheduleJob
         {
             return CreateJob<T>(schedulerKey, jobBuilder =>
              {
@@ -253,7 +409,7 @@ namespace DwFramework.TaskSchedule
                  if (calName != null)
                      triggerBuilder.ModifiedByCalendar(calName);
                  return triggerBuilder;
-             });
+             }, jobName, jobGroup, triggerName, triggerGroup);
         }
     }
 }
