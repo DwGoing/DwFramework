@@ -12,6 +12,18 @@ namespace DwFramework.Core.Extensions
     public static class AutofacExtension
     {
         /// <summary>
+        /// 服务是否注册
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="provider"></param>
+        /// <returns></returns>
+        public static bool IsRegistered<T>(this IServiceProvider provider) where T : class
+        {
+            var services = provider.GetServices<T>();
+            return services.Count() > 0;
+        }
+
+        /// <summary>
         /// 获取服务
         /// </summary>
         /// <typeparam name="T"></typeparam>
