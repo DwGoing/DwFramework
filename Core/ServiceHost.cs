@@ -76,6 +76,16 @@ namespace DwFramework.Core
         /// <summary>
         /// 注册服务
         /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public IRegistrationBuilder<object, ConcreteReflectionActivatorData, SingleRegistrationStyle> RegisterType(Type type)
+        {
+            return _containerBuilder.RegisterType(type);
+        }
+
+        /// <summary>
+        /// 注册服务
+        /// </summary>
         /// <typeparam name="I"></typeparam>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
