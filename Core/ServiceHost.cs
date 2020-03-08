@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Reflection;
 using System.Linq;
+using System.IO;
 
 using Autofac;
 using Autofac.Builder;
@@ -8,25 +9,36 @@ using Autofac.Core;
 using Autofac.Core.Registration;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Configuration;
 
 namespace DwFramework.Core
 {
     public class ServiceHost
     {
-        public static AutofacServiceProvider ServiceProvider { get; private set; }
-
-        private ContainerBuilder _containerBuilder;
-        private ServiceCollection _services;
+        private readonly ContainerBuilder _containerBuilder;
+        private readonly ServiceCollection _services;
 
         /// <summary>
         /// 构造函数
         /// </summary>
-        public ServiceHost()
+        public ServiceHost(EnvironmentType environmentType = EnvironmentType.Develop, string configFilePath = null)
         {
             _containerBuilder = new ContainerBuilder();
             _services = new ServiceCollection();
+            // 读取配置文件
+            IConfiguration configuration = null;
+            if (configFilePath != null && File.Exists(configFilePath))
+                configuration = new ConfigurationBuilder().AddJsonFile(configFilePath).Build();
+            // 环境变量
+            RegisterInstance<IRunEnvironment, RunEnvironment>(new RunEnvironment(environmentType, configuration)).SingleInstance();
         }
 
+        /// <summary>
+        /// 注册服务
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="func"></param>
+        /// <returns></returns>
         public IRegistrationBuilder<T, SimpleActivatorData, SingleRegistrationStyle> Register<T>(Func<IComponentContext, T> func)
         {
             return _containerBuilder.Register(func);
@@ -59,6 +71,16 @@ namespace DwFramework.Core
         public IRegistrationBuilder<T, ConcreteReflectionActivatorData, SingleRegistrationStyle> RegisterType<T>() where T : class
         {
             return _containerBuilder.RegisterType<T>();
+        }
+
+        /// <summary>
+        /// 注册服务
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public IRegistrationBuilder<object, ConcreteReflectionActivatorData, SingleRegistrationStyle> RegisterType(Type type)
+        {
+            return _containerBuilder.RegisterType(type);
         }
 
         /// <summary>
@@ -106,23 +128,57 @@ namespace DwFramework.Core
             if (assembly == null)
                 throw new Exception("未找到该程序集");
             var types = assembly.GetTypes();
-            foreach (var item in types)
+            foreach (var type in types)
             {
-                var attr = item.GetCustomAttribute<RegisterableAttribute>() as RegisterableAttribute;
-                if (attr != null)
+                var attr = type.GetCustomAttribute<RegisterableAttribute>() as RegisterableAttribute;
+                if (attr == null)
+                    continue;
+                var builder = _containerBuilder.RegisterType(type);
+                if (attr.InterfaceType != null)
+                    builder.As(attr.InterfaceType);
+                switch (attr.Lifetime)
                 {
-                    var tmp = _containerBuilder.RegisterType(item).As(attr.InterfaceType);
+                    case Lifetime.Singleton:
+                        builder.SingleInstance();
+                        break;
+                    case Lifetime.InstancePerLifetimeScope:
+                        builder.InstancePerLifetimeScope();
+                        break;
+                }
+                if (attr.IsAutoActivate)
+                    builder.AutoActivate();
+            }
+        }
+
+        /// <summary>
+        /// 注册服务
+        /// </summary>
+        /// <returns></returns>
+        public void RegisterFromAssemblies()
+        {
+            var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+            foreach (var assembly in assemblies)
+            {
+                var types = assembly.GetTypes();
+                foreach (var type in types)
+                {
+                    var attr = type.GetCustomAttribute<RegisterableAttribute>() as RegisterableAttribute;
+                    if (attr == null)
+                        continue;
+                    var builder = _containerBuilder.RegisterType(type);
+                    if (attr.InterfaceType != null)
+                        builder.As(attr.InterfaceType);
                     switch (attr.Lifetime)
                     {
                         case Lifetime.Singleton:
-                            tmp.SingleInstance();
+                            builder.SingleInstance();
                             break;
                         case Lifetime.InstancePerLifetimeScope:
-                            tmp.InstancePerLifetimeScope();
+                            builder.InstancePerLifetimeScope();
                             break;
                     }
                     if (attr.IsAutoActivate)
-                        tmp.AutoActivate();
+                        builder.AutoActivate();
                 }
             }
         }
@@ -134,8 +190,7 @@ namespace DwFramework.Core
         public AutofacServiceProvider Build()
         {
             _containerBuilder.Populate(_services);
-            ServiceProvider = new AutofacServiceProvider(_containerBuilder.Build());
-            return ServiceProvider;
+            return new AutofacServiceProvider(_containerBuilder.Build());
         }
     }
 }

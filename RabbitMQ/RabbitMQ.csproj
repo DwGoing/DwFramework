@@ -2,25 +2,25 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
-    <RootNamespace>DwFramework.Rpc</RootNamespace>
     <PackOnBuild>true</PackOnBuild>
-    <PackageId>DwFramework.Rpc</PackageId>
-    <PackageVersion>0.1.8</PackageVersion>
+    <RootNamespace>DwFramework.RabbitMQ</RootNamespace>
+    <PackageId>DwFramework.RabbitMQ</PackageId>
+    <PackageVersion>0.1.2</PackageVersion>
     <Authors>DwGoing</Authors>
+    <Owners>DwGoing</Owners>
+    <Description>DwFramework RabbitMQ库</Description>
     <Copyright>DwGoing</Copyright>
     <DevelopmentDependency>true</DevelopmentDependency>
-    <NeutralLanguage>zh</NeutralLanguage>
-    <Owners>DwGoing</Owners>
-    <Summary>DwFramework Rpc库</Summary>
-    <Title>DwFramework.Rpc</Title>
-    <PackageLicenseUrl>https://licenses.nuget.org/MIT</PackageLicenseUrl>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <Description>DwFramework Rpc库</Description>
-    <PackageProjectUrl>https://github.com/Dwgoing/DwFramework/tree/master/Rpc</PackageProjectUrl>
+    <Summary>DwFramework RabbitMQ库</Summary>
+    <Title>DwFramework.RabbitMQ</Title>
+    <PackageLicenseUrl>https://licenses.nuget.org/MIT</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/Dwgoing/DwFramework/tree/master/RabbitMQ</PackageProjectUrl>
+    <NeutralLanguage>zh</NeutralLanguage>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Hprose.RPC" Version="3.0.10" />
+    <PackageReference Include="RabbitMQ.Client" Version="5.1.2" />
     <PackageReference Include="NuGet.Build.Packaging" Version="0.2.2">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
@@ -30,7 +30,6 @@
     <ProjectReference Include="..\Core\Core.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Models\" />
     <Folder Include="Extensions\" />
   </ItemGroup>
 </Project>

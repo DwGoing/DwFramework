@@ -16,7 +16,7 @@ namespace DwFramework.Core
         public Lifetime Lifetime { get; private set; }
         public bool IsAutoActivate { get; private set; }
 
-        public RegisterableAttribute(Type interfaceType, Lifetime lifetime = Lifetime.InstancePerDependency, bool isAutoActivate = false)
+        public RegisterableAttribute(Type interfaceType = null, Lifetime lifetime = Lifetime.InstancePerDependency, bool isAutoActivate = false)
         {
             InterfaceType = interfaceType;
             Lifetime = lifetime;

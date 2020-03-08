@@ -1,38 +1,16 @@
 ﻿using System;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using System.Reflection;
 
 using Hprose.RPC;
-using Microsoft.Extensions.Configuration;
-using Autofac.Extensions.DependencyInjection;
 
 using DwFramework.Core;
 using DwFramework.Core.Extensions;
 
 namespace DwFramework.Rpc
 {
-    public static class RpcServiceExtension
-    {
-        /// <summary>
-        /// 注册Rpc服务
-        /// </summary>
-        /// <param name="host"></param>
-        public static void RegisterRpcService(this ServiceHost host)
-        {
-            host.RegisterType<IRpcService, RpcService>().SingleInstance();
-        }
-
-        /// <summary>
-        /// 初始化Rpc服务
-        /// </summary>
-        /// <param name="provider"></param>
-        public static Task InitRpcServiceAsync(this AutofacServiceProvider provider)
-        {
-            return provider.GetService<IRpcService, RpcService>().OpenServiceAsync();
-        }
-    }
-
     public class RpcService : IRpcService
     {
         public class Config
@@ -40,7 +18,8 @@ namespace DwFramework.Rpc
             public string[] Prefixes { get; set; }
         }
 
-        private readonly IConfiguration _configuration;
+        private readonly IServiceProvider _provider;
+        private readonly IRunEnvironment _environment;
         private readonly Config _config;
 
         public Service Service { get; private set; }
@@ -48,11 +27,13 @@ namespace DwFramework.Rpc
         /// <summary>
         /// 构造函数
         /// </summary>
-        /// <param name="configuration"></param>
-        public RpcService(IConfiguration configuration)
+        /// <param name="provider"></param>
+        /// <param name="environment"></param>
+        public RpcService(IServiceProvider provider, IRunEnvironment environment)
         {
-            _configuration = configuration;
-            _config = _configuration.GetSection("Rpc").Get<Config>();
+            _provider = provider;
+            _environment = environment;
+            _config = _environment.GetConfiguration().GetSection<Config>("Rpc");
         }
 
         /// <summary>
@@ -71,7 +52,6 @@ namespace DwFramework.Rpc
                 listener.Start();
                 Service = new Service();
                 Service.Bind(listener);
-                Console.WriteLine($"Rpc Bind:\n{_config.Prefixes.ToJson()}");
             });
         }
 
@@ -95,11 +75,10 @@ namespace DwFramework.Rpc
         /// <summary>
         /// 从服务中注册Rpc函数
         /// </summary>
-        /// <typeparam name="I"></typeparam>
         /// <typeparam name="T"></typeparam>
-        public void RegisterFuncFromService<I, T>() where T : class where I : class
+        public void RegisterFuncFromService<T>() where T : class
         {
-            T service = ServiceHost.ServiceProvider.GetService<I, T>();
+            T service = _provider.GetService<T>();
             var methods = service.GetType().GetMethods();
             foreach (var item in methods)
             {
@@ -115,9 +94,9 @@ namespace DwFramework.Rpc
         /// 从服务中注册Rpc函数
         /// </summary>
         /// <typeparam name="I"></typeparam>
-        public void RegisterFuncFromService<I>() where I : class
+        public void RegisterFuncFromServices<I>() where I : class
         {
-            var services = ServiceHost.ServiceProvider.GetAllServices<I>();
+            var services = _provider.GetServices<I>();
             foreach (var service in services)
             {
                 var methods = service.GetType().GetMethods();
@@ -127,6 +106,62 @@ namespace DwFramework.Rpc
                     if (attr != null)
                     {
                         Service.AddMethod(method.Name, service, attr.CallName ?? "");
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// 从程序集中注册Rpc函数
+        /// 仅支持从程序集中注册的服务
+        /// </summary>
+        /// <param name="assemblyName"></param>
+        public void RegisterFuncFromAssembly(string assemblyName)
+        {
+            var assembly = AppDomain.CurrentDomain.GetAssemblies().Where(item => item.FullName.Split(",").First() == assemblyName).FirstOrDefault();
+            if (assembly == null)
+                throw new Exception("未找到该程序集");
+            var types = assembly.GetTypes();
+            foreach (var type in types)
+            {
+                var typeAttr = type.GetCustomAttribute<RegisterableAttribute>() as RegisterableAttribute;
+                if (typeAttr == null)
+                    continue;
+                var methods = type.GetMethods();
+                foreach (var method in methods)
+                {
+                    var methodAttr = method.GetCustomAttribute<RpcAttribute>() as RpcAttribute;
+                    if (methodAttr != null)
+                    {
+                        Service.AddMethod(method.Name, _provider.GetService(typeAttr.InterfaceType), methodAttr.CallName ?? "");
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// 从程序集中注册Rpc函数
+        /// 仅支持从程序集中注册的服务
+        /// </summary>
+        public void RegisterFuncFromAssemblies()
+        {
+            var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+            foreach (var assembly in assemblies)
+            {
+                var types = assembly.GetTypes();
+                foreach (var type in types)
+                {
+                    var typeAttr = type.GetCustomAttribute<RegisterableAttribute>() as RegisterableAttribute;
+                    if (typeAttr == null)
+                        continue;
+                    var methods = type.GetMethods();
+                    foreach (var method in methods)
+                    {
+                        var methodAttr = method.GetCustomAttribute<RpcAttribute>() as RpcAttribute;
+                        if (methodAttr != null)
+                        {
+                            Service.AddMethod(method.Name, _provider.GetService(typeAttr.InterfaceType), methodAttr.CallName ?? "");
+                        }
                     }
                 }
             }

@@ -1,5 +1,11 @@
 ﻿namespace DwFramework.Core
 {
+    public class ResultCode
+    {
+        public const int Ok = 200;
+        public const int Error = 400;
+    }
+
     public class ResultInfo
     {
         public int Code;
@@ -9,12 +15,12 @@
         {
             return new ResultInfo()
             {
-                Code = 200,
+                Code = ResultCode.Ok,
                 Message = message
             };
         }
 
-        public static ResultInfo Fail(string message, int code = 400)
+        public static ResultInfo Fail(string message, int code = ResultCode.Error)
         {
             return new ResultInfo()
             {
@@ -32,13 +38,13 @@
         {
             return new ResultInfo<T>()
             {
-                Code = 200,
+                Code = ResultCode.Ok,
                 Message = message,
                 Data = data
             };
         }
 
-        public static ResultInfo<T> Fail(string message, T data, int code = 400)
+        public static ResultInfo<T> Fail(string message, T data, int code = ResultCode.Error)
         {
             return new ResultInfo<T>()
             {

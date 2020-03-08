@@ -4,56 +4,34 @@ using System.Net;
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Autofac.Extensions.DependencyInjection;
 
 using DwFramework.Core;
 using DwFramework.Core.Extensions;
 
 namespace DwFramework.Http
 {
-    public static class HttpServiceExtension
-    {
-        /// <summary>
-        /// 注册Http服务
-        /// </summary>
-        /// <param name="host"></param>
-        public static void RegisterHttpService(this ServiceHost host)
-        {
-            host.RegisterType<IHttpService, HttpService>().SingleInstance();
-        }
-
-        /// <summary>
-        /// 初始化Http服务
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="provider"></param>
-        public static Task InitHttpServiceAsync<T>(this AutofacServiceProvider provider) where T : class, IHttpStartup
-        {
-            return provider.GetService<IHttpService, HttpService>().OpenServiceAsync<T>();
-        }
-    }
-
     public class HttpService : IHttpService
     {
         public class Config
         {
             public string ContentRoot { get; set; }
-            public string WebRoot { get; set; }
             public Dictionary<string, string> Listen { get; set; }
         }
 
-        private readonly IConfiguration _configuration;
+        private readonly IServiceProvider _provider;
+        private readonly IRunEnvironment _environment;
         private readonly Config _config;
 
         /// <summary>
         /// 构造函数
         /// </summary>
-        /// <param name="configuration"></param>
-        public HttpService(IConfiguration configuration)
+        /// <param name="provider"></param>
+        /// <param name="environment"></param>
+        public HttpService(IServiceProvider provider, IRunEnvironment environment)
         {
-            _configuration = configuration;
-            _config = _configuration.GetSection("Http").Get<Config>();
+            _provider = provider;
+            _environment = environment;
+            _config = _environment.GetConfiguration().GetSection<Config>("Http");
         }
 
         /// <summary>
@@ -65,10 +43,9 @@ namespace DwFramework.Http
             return Task.Run(() =>
             {
                 var builder = new WebHostBuilder()
+                    .UseDwServiceProvider(_provider)
                     // https证书路径
                     .UseContentRoot($"{AppDomain.CurrentDomain.BaseDirectory}{_config.ContentRoot}")
-                    // 页面路径
-                    .UseWebRoot($"{AppDomain.CurrentDomain.BaseDirectory}{_config.WebRoot}")
                     .UseKestrel(options =>
                     {
                         // 监听地址及端口

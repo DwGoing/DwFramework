@@ -8,42 +8,13 @@ using System.Text;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Http;
-using Autofac.Extensions.DependencyInjection;
 
 using DwFramework.Core;
 using DwFramework.Core.Extensions;
 
 namespace DwFramework.WebSocket
 {
-    public static class WebSocketServiceExtension
-    {
-        /// <summary>
-        /// 注册WebSocket服务
-        /// </summary>
-        /// <param name="host"></param>
-        public static void RegisterWebSocketService(this ServiceHost host)
-        {
-            host.RegisterType<IWebSocketService, WebSocketService>().SingleInstance();
-        }
-
-        /// <summary>
-        /// 初始化WebSocket服务
-        /// </summary>
-        /// <param name="provider"></param>
-        /// <param name="handler"></param>
-        public static Task InitWebSocketServiceAsync(this AutofacServiceProvider provider, OnConnectHandler onConnect = null, OnSendHandler onSend = null, OnReceiveHandler onReceive = null, OnCloseHandler onClose = null)
-        {
-            var service = provider.GetService<IWebSocketService, WebSocketService>();
-            if (onConnect != null) service.OnConnect += onConnect;
-            if (onSend != null) service.OnSend += onSend;
-            if (onReceive != null) service.OnReceive += onReceive;
-            if (onClose != null) service.OnClose += onClose;
-            return service.OpenServiceAsync();
-        }
-    }
-
     public class WebSocketService : IWebSocketService
     {
         public class Config
@@ -52,7 +23,8 @@ namespace DwFramework.WebSocket
             public Dictionary<string, string> Listen { get; set; }
         }
 
-        private readonly IConfiguration _configuration;
+        private readonly IServiceProvider _provider;
+        private readonly IRunEnvironment _environment;
         private readonly Config _config;
         private Dictionary<string, WebSocketClient> _clients;
 
@@ -60,15 +32,17 @@ namespace DwFramework.WebSocket
         public event OnSendHandler OnSend;
         public event OnReceiveHandler OnReceive;
         public event OnCloseHandler OnClose;
+        public event OnErrorHandler OnError;
 
         /// <summary>
         /// 构造函数
         /// </summary>
-        /// <param name="configuration"></param>
-        public WebSocketService(IConfiguration configuration)
+        /// <param name="environment"></param>
+        public WebSocketService(IServiceProvider provider, IRunEnvironment environment)
         {
-            _configuration = configuration;
-            _config = _configuration.GetSection("WebSocket").Get<Config>();
+            _provider = provider;
+            _environment = environment;
+            _config = environment.GetConfiguration().GetSection<Config>("WebSocket");
             _clients = new Dictionary<string, WebSocketClient>();
         }
 
@@ -81,6 +55,7 @@ namespace DwFramework.WebSocket
             return Task.Run(() =>
             {
                 var builder = new WebHostBuilder()
+                    .UseDwServiceProvider(_provider)
                     // wss证书路径
                     .UseContentRoot($"{AppDomain.CurrentDomain.BaseDirectory}{_config.ContentRoot}")
                     .UseKestrel(options =>
@@ -139,7 +114,7 @@ namespace DwFramework.WebSocket
                                 }
                                 catch (Exception ex)
                                 {
-                                    Console.WriteLine(ex.Message);
+                                    OnError?.Invoke(client, new OnErrorEventargs(ex));
                                 }
                                 finally
                                 {

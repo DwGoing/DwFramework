@@ -1,9 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Linq;
+using System.Collections.Generic;
 
-using Autofac.Builder;
 using Autofac.Extensions.DependencyInjection;
 using AutoFac.Extras.NLog.DotNetCore;
-using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace DwFramework.Core.Extensions
@@ -11,44 +12,37 @@ namespace DwFramework.Core.Extensions
     public static class AutofacExtension
     {
         /// <summary>
-        /// 注入配置
+        /// 服务是否注册
         /// </summary>
-        /// <param name="host"></param>
-        /// <param name="basePath"></param>
-        /// <param name="jsonFile"></param>
-        /// <returns></returns>
-        public static IRegistrationBuilder<IConfiguration, SimpleActivatorData, SingleRegistrationStyle> RegisterConfiguration(this ServiceHost host, string basePath, string jsonFile)
-        {
-            return host.RegisterInstance(new ConfigurationBuilder().SetBasePath(basePath).AddJsonFile(jsonFile).Build()).As<IConfiguration>().SingleInstance();
-        }
-
-        /// <summary>
-        /// 获取服务
-        /// </summary>
-        /// <typeparam name="I"></typeparam>
         /// <typeparam name="T"></typeparam>
         /// <param name="provider"></param>
         /// <returns></returns>
-        public static T GetService<I, T>(this AutofacServiceProvider provider) where T : class where I : class
+        public static bool IsRegistered<T>(this IServiceProvider provider) where T : class
         {
-            var services = provider.GetServices<I>();
-            foreach (var item in services)
-            {
-                if (item.GetType() == typeof(T))
-                    return item as T;
-            }
-            return default;
+            var services = provider.GetServices<T>();
+            return services.Count() > 0;
         }
 
         /// <summary>
         /// 获取服务
         /// </summary>
-        /// <typeparam name="I"></typeparam>
+        /// <typeparam name="T"></typeparam>
         /// <param name="provider"></param>
         /// <returns></returns>
-        public static IEnumerable<I> GetAllServices<I>(this AutofacServiceProvider provider) where I : class
+        public static T GetService<T>(this IServiceProvider provider) where T : class
         {
-            return provider.GetServices<I>();
+            return provider.GetService(typeof(T)) as T;
+        }
+
+        /// <summary>
+        /// 获取服务
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="provider"></param>
+        /// <returns></returns>
+        public static IEnumerable<T> GetServices<T>(this IServiceProvider provider) where T : class
+        {
+            return provider.GetServices(typeof(T)).Cast<T>();
         }
 
         /// <summary>
@@ -59,6 +53,21 @@ namespace DwFramework.Core.Extensions
         public static ServiceHost RegisterNLog(this ServiceHost host)
         {
             host.RegisterModule<NLogModule>();
+            return host;
+        }
+
+        /// <summary>
+        /// 注入上层服务
+        /// </summary>
+        /// <param name="host"></param>
+        /// <param name="provider"></param>
+        /// <returns></returns>
+        public static IWebHostBuilder UseDwServiceProvider(this IWebHostBuilder host, IServiceProvider provider)
+        {
+            host.ConfigureServices(services =>
+            {
+                services.AddSingleton(new DwServiceProvider(provider as AutofacServiceProvider));
+            });
             return host;
         }
     }

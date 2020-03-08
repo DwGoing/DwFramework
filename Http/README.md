@@ -1,5 +1,11 @@
 # DwFramework.Http
 
+```shell
+PM> Install-Package DwFramework.Http
+或
+> dotnet add package DwFramework.Http
+```
+
 ## DwFramework WebAPI库
 
 ### 0x1 配置

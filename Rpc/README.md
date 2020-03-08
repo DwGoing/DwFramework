@@ -1,5 +1,11 @@
 # DwFramework.Rpc
 
+```shell
+PM> Install-Package DwFramework.Rpc
+或
+> dotnet add package DwFramework.Rpc
+```
+
 ## DwFramework Rpc库
 
 ### 0x1 配置
