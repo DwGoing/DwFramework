@@ -14,11 +14,11 @@
 |      DwFramework.Core       |   核心组件    | [![](https://img.shields.io/badge/Nuget-0.1.12-brightgreen.svg)](https://www.nuget.org/packages/DwFramework.Core/) |
 |      DwFramework.Http       |  WebAPI组件   | [![](https://img.shields.io/badge/Nuget-0.1.11-brightgreen.svg)](https://www.nuget.org/packages/DwFramework.Http/) |
 |    DwFramework.WebSocket    | WebSocket组件 | [![](https://img.shields.io/badge/Nuget-0.1.9-brightgreen.svg)](https://www.nuget.org/packages/DwFramework.WebSocket/) |
-|    DwFramework.Database     |  数据库组件   | [![](https://img.shields.io/badge/Nuget-0.1.0-brightgreen.svg)](https://www.nuget.org/packages/DwFramework.Database/) |
+|    DwFramework.Database     |  数据库组件   | [![](https://img.shields.io/badge/Nuget-0.1.1-brightgreen.svg)](https://www.nuget.org/packages/DwFramework.Database/) |
 | DwFramework.MachineLearning | 机器学习组件  |                                                              |
 |       DwFramework.Rpc       |    Rpc组件    | [![](https://img.shields.io/badge/Nuget-0.1.8-brightgreen.svg)](https://www.nuget.org/packages/DwFramework.Rpc/) |
 |    DwFramework.RabbitMQ     | RabbitMQ组件  | [![](https://img.shields.io/badge/Nuget-0.1.2-brightgreen.svg)](https://www.nuget.org/packages/DwFramework.RabbitMQ/) |
-|  DwFramework.TaskSchedule   | 任务调度组件  | [![](https://img.shields.io/badge/Nuget-0.1.0-brightgreen.svg)](https://www.nuget.org/packages/DwFramework.TaskSchedule/) |
+|  DwFramework.TaskSchedule   | 任务调度组件  | [![](https://img.shields.io/badge/Nuget-0.1.1-brightgreen.svg)](https://www.nuget.org/packages/DwFramework.TaskSchedule/) |
 
 ---
 
