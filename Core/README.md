@@ -1,5 +1,11 @@
 # DwFramework.Core
 
+```shell
+PM> Install-Package DwFramework.Core
+或
+> dotnet add package DwFramework.Core
+```
+
 ## DwFramework 核心库
 
 ### 0x1 初始化

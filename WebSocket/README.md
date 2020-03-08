@@ -1,5 +1,11 @@
 # DwFramework.WebSocket
 
+```shell
+PM> Install-Package DwFramework.WebSocket
+或
+> dotnet add package DwFramework.WebSocket
+```
+
 ## DwFramework WebSocket库
 
 ### 0x1 配置
