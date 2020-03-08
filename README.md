@@ -9,14 +9,16 @@
 
 ### 0x2 组件列表
 
-|         组件          |     说明      | 示例 |
-| :-------------------: | :-----------: | :--: |
-|   DwFramework.Core    |   核心组件    |      |
-|   DwFramework.Http    |  WebAPI组件   |      |
-| DwFramework.WebSocket | WebSocket组件 |      |
-|                       |               |      |
-|                       |               |      |
-|                       |               |      |
+|            组件             |     说明      |                             状态                             |
+| :-------------------------: | :-----------: | :----------------------------------------------------------: |
+|      DwFramework.Core       |   核心组件    | ![](https://img.shields.io/badge/Nuget-0.1.12-brightgreen.svg) |
+|      DwFramework.Http       |  WebAPI组件   | ![](https://img.shields.io/badge/Nuget-0.1.11-brightgreen.svg) |
+|    DwFramework.WebSocket    | WebSocket组件 | ![](https://img.shields.io/badge/Nuget-0.1.9-brightgreen.svg) |
+|    DwFramework.Database     |  数据库组件   | ![](https://img.shields.io/badge/Nuget-0.1.0-brightgreen.svg) |
+| DwFramework.MachineLearning | 机器学习组件  |                                                              |
+|       DwFramework.Rpc       |    Rpc组件    | ![](https://img.shields.io/badge/Nuget-0.1.8-brightgreen.svg) |
+|    DwFramework.RabbitMQ     | RabbitMQ组件  | ![](https://img.shields.io/badge/Nuget-0.1.2-brightgreen.svg) |
+|  DwFramework.TaskSchedule   | 任务调度组件  | ![](https://img.shields.io/badge/Nuget-0.1.0-brightgreen.svg) |
 
 ---
 
