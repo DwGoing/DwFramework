@@ -11,7 +11,7 @@
 
 |            组件             |     说明      |                             状态                             |
 | :-------------------------: | :-----------: | :----------------------------------------------------------: |
-|      DwFramework.Core       |   核心组件    | ![](https://img.shields.io/badge/Nuget-0.1.12-brightgreen.svg) |
+|      DwFramework.Core       |   核心组件    | [![](https://img.shields.io/badge/Nuget-0.1.12-brightgreen.svg)](https://www.baidu.com) |
 |      DwFramework.Http       |  WebAPI组件   | ![](https://img.shields.io/badge/Nuget-0.1.11-brightgreen.svg) |
 |    DwFramework.WebSocket    | WebSocket组件 | ![](https://img.shields.io/badge/Nuget-0.1.9-brightgreen.svg) |
 |    DwFramework.Database     |  数据库组件   | ![](https://img.shields.io/badge/Nuget-0.1.0-brightgreen.svg) |
