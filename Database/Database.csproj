@@ -17,6 +17,7 @@
     <PackageLicenseUrl>https://licenses.nuget.org/MIT</PackageLicenseUrl>
     <NeutralLanguage>zh</NeutralLanguage>
     <PackOnBuild>true</PackOnBuild>
+    <ReleaseVersion>0.2</ReleaseVersion>
   </PropertyGroup>
 
   <ItemGroup>

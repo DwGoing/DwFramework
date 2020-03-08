@@ -17,6 +17,7 @@
     <Summary>DwFramework 核心库</Summary>
     <Title>DwFramework.Core</Title>
     <NeutralLanguage>zh</NeutralLanguage>
+    <ReleaseVersion>0.2</ReleaseVersion>
   </PropertyGroup>
 
   <ItemGroup>
