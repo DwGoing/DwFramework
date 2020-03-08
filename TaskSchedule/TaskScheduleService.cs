@@ -71,20 +71,6 @@ namespace DwFramework.TaskSchedule
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="schedulerKey"></param>
-        /// <param name="matchers"></param>
-        private void AddJobListener<T>(string schedulerKey, params IMatcher<JobKey>[] matchers) where T : JobListener, new()
-        {
-            var scheduler = AllSchedulers.Where(item => item.SchedulerName == schedulerKey).SingleOrDefault();
-            if (scheduler == null)
-                throw new Exception("未知调度器");
-            scheduler.ListenerManager.AddJobListener(new T(), matchers);
-        }
-
-        /// <summary>
-        /// 添加JobListener
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="schedulerKey"></param>
         public void AddJobListener<T>(string schedulerKey) where T : JobListener, new()
         {
             var scheduler = AllSchedulers.Where(item => item.SchedulerName == schedulerKey).SingleOrDefault();
