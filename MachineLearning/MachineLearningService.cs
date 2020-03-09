@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 using Microsoft.ML;
+using Microsoft.ML.Data;
+using Microsoft.ML.Transforms;
 
 namespace DwFramework.MachineLearning
 {
@@ -93,10 +96,20 @@ namespace DwFramework.MachineLearning
         }
 
         /// <summary>
-        /// 数据转换处理
+        /// 创建数据转换处理管道
         /// </summary>
-        /// <param name="handle"></param>
+        /// <param name="data"></param>
+        /// <param name="estimators"></param>
         /// <returns></returns>
-        public IEstimator<ITransformer> BuildDataTranferPipeline(Func<TransformsCatalog, IEstimator<ITransformer>> handle) => handle(Transforms);
+        public ITransformer BuildDataTransformPipeline(IDataView data, params IEstimator<ITransformer>[] estimators)
+        {
+            if (estimators.Length <= 0)
+                throw new Exception("参数错误");
+            var estimatorList = estimators.ToArray();
+            var estimator = estimators.First();
+            for (int i = 1; i < estimators.Count(); i++)
+                estimator = estimator.Append(estimatorList[i]);
+            return estimator.Fit(data);
+        }
     }
 }
