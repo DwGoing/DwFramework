@@ -59,15 +59,16 @@ var data = service.DataLoad(rows);
 // 分割数据
 var splitedData = service.DataOperations.TrainTestSplit(data, 0.2);
 // 创建数据处理管道
-var dataHandlePipeline = service.BuildDataTranferPipeline(catalog =>
-{
-		return catalog.Conversion.ConvertType(new[] {
+var dataHandlePipeline = service.BuildDataTransformPipeline(data,
+		service.Transforms.Conversion.ConvertType(new[]{
 				new InputOutputColumnPair("A"),
-				new InputOutputColumnPair("B"),
+				new InputOutputColumnPair("B")
+		}, DataKind.Single),
+		service.Transforms.Concatenate("Features", "A", "B"),
+		service.Transforms.NormalizeMinMax(new[] {
+				new InputOutputColumnPair("Features")
 		})
-		.Append(catalog.Concatenate("Features", "A", "B"))
-		.Append(catalog.NormalizeMinMax("Features"));
-}, splitedData.TrainSet);
+);
 // 数据处理
 var trainData = dataHandlePipeline.Transform(splitedData.TrainSet);
 var testData = dataHandlePipeline.Transform(splitedData.TestSet);
