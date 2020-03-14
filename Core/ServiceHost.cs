@@ -47,6 +47,18 @@ namespace DwFramework.Core
         /// <summary>
         /// 注册服务
         /// </summary>
+        /// <typeparam name="I"></typeparam>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="func"></param>
+        /// <returns></returns>
+        public IRegistrationBuilder<T, SimpleActivatorData, SingleRegistrationStyle> Register<I, T>(Func<IComponentContext, T> func)
+        {
+            return _containerBuilder.Register(func).As<I>();
+        }
+
+        /// <summary>
+        /// 注册服务
+        /// </summary>
         /// <param name="action"></param>
         public void RegisterService(Action<ServiceCollection> action)
         {

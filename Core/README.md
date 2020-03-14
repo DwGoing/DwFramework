@@ -115,3 +115,44 @@ public class TestClass1 : ITestInterface
 host.RegisterType<TestClass1>().As<ITestInterface>(); // Autofac原生模式
 host.RegisterType<ITestInterface, TestClass2>();
 ```
+
+### 0x4 使用拦截器
+
+```c#
+public interface ITest
+{
+    string A(string str);
+}
+
+public class CTest : ITest
+{
+  	// 要拦截的函数必须是虚函数或者重写函数
+    public virtual string A(string str)
+    {
+        Console.WriteLine(str);
+        return str;
+    }
+}
+
+// 构造拦截器
+// 1.继承BaseInterceptor
+// 2.重写OnCall(CallInfo info)函数
+public class TestInterceptor : BaseInterceptor
+{
+		public override void OnCall(CallInfo info)
+		{
+				// DoSomething
+        //在被拦截的方法执行完毕后 继续执行
+				info.Invocation.Proceed();
+				// DoSomething
+		}
+}
+
+// Main函数
+ServiceHost host = new ServiceHost(EnvironmentType.Develop);
+host.RegisterInterceptor<TestInterceptor>();
+host.RegisterType<CTest>().As<ITest>().addInterfaceInterceptors(typeof(TestInterceptor));
+var provider = host.Build();
+var service = provider.GetService<ITest>();
+service.A("Test");
+```
