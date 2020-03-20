@@ -17,6 +17,7 @@
     <Summary>DwFramework MachineLearning库</Summary>
     <Title>DwFramework.MachineLearning</Title>
     <PackOnBuild>true</PackOnBuild>
+    <PackageLicenseUrl>https://licenses.nuget.org/MIT</PackageLicenseUrl>
   </PropertyGroup>
 
   <ItemGroup>
