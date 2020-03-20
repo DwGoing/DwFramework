@@ -16,6 +16,7 @@
     <PackageProjectUrl>https://github.com/Dwgoing/DwFramework/tree/master/MachineLearning</PackageProjectUrl>
     <Summary>DwFramework MachineLearning库</Summary>
     <Title>DwFramework.MachineLearning</Title>
+    <PackOnBuild>true</PackOnBuild>
   </PropertyGroup>
 
   <ItemGroup>
