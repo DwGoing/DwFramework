@@ -13,23 +13,16 @@ PM> Install-Package DwFramework.Core
 当开始一个项目时，先要初始化服务主机ServiceHost。
 
 ```c#
-ServiceHost host = new ServiceHost();
+ServiceHost host = new ServiceHost(EnvironmentType.Develop, $"配置文件路径");
 ```
 
 ### 0x2 内置服务
 
-1. 一般我们在服务初始化阶段，会读取配置文件。
+1. 如果需要记录日志的话，我们提供了NLog组件来满足，只需在注册了NLog服务后在运行根目录中创建nlog.config文件即可。
 
 ```c#
-// 注册全局配置文件
-host.RegisterConfiguration({文件路径}, {文件名});
-```
-
-2. 如果需要记录日志的话，我们提供了NLog组件来满足，只需在注册了NLog服务后在运行根目录中创建nlog.config文件即可。
-
-```c#
-// 注册NLog组件
-host.RegisterNLog();
+// 注册Log组件
+host.RegisterLog();
 ```
 
 ### 0x3 服务注入
