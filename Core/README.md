@@ -25,6 +25,29 @@ ServiceHost host = new ServiceHost(EnvironmentType.Develop, $"配置文件路径
 host.RegisterLog();
 ```
 
+NLog.config示例
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<nlog xmlns="http://www.nlog-project.org/schemas/NLog.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <targets>
+        <!--使用可自定义的着色将日志消息写入控制台-->
+        <target name="ColorConsole" xsi:type="ColoredConsole" layout="[${date:format=HH\:mm\:ss}]:${message} ${exception:format=message}" />
+        <!--此部分中的所有目标将自动异步-->
+        <target name="AsyncFile" xsi:type="AsyncWrapper">
+            <!--项目日志保存文件路径说明fileName="${basedir}/保存目录，以年月日的格式创建/${shortdate}/${记录器名称}-${单级记录}-${shortdate}.txt"-->
+            <target name="log_file" xsi:type="File" fileName="${basedir}/Logs/${shortdate}/${logger}/${level}.txt" layout="[${level}] ${longdate} | ${message} ${onexception:${exception:format=message} ${newline} ${stacktrace} ${newline}" archiveFileName="${basedir}/archives/${logger}-${level}-${shortdate}-{#####}.txt" archiveAboveSize="102400" archiveNumbering="Sequence" concurrentWrites="true" keepFileOpen="false" />
+        </target>
+    </targets>
+    <!--规则配置,final - 最终规则匹配后不处理任何规则-->
+    <rules>
+        <logger name="*" minlevel="Debug" writeTo="ColorConsole" />
+        <logger name="*" minlevel="Info" writeTo="AsyncFile" />
+        <logger name="Microsoft.*" minlevel="Info" writeTo="" final="true" />
+    </rules>
+</nlog>
+```
+
 ### 0x3 服务注入
 
 ServiceHost提供了多种方式的服务注入，也是对Autofac的服务注入作了一定程度的封装，尽可能地使注入方式更容易让人理解其内部实现。为了方便后面的案例说明，我们先定义示例中使用到的接口和类型。类型TestClass1和TestCless2均实现了接口ITestInterface。
