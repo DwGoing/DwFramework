@@ -30,9 +30,14 @@ NLog.config示例
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
 <nlog xmlns="http://www.nlog-project.org/schemas/NLog.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <extensions>
+        <add assembly="NLog.MailKit" />
+    </extensions>
     <targets>
         <!--使用可自定义的着色将日志消息写入控制台-->
-        <target name="ColorConsole" xsi:type="ColoredConsole" layout="[${date:format=HH\:mm\:ss}]:${message} ${exception:format=message}" />
+        <target name="ColorConsole" xsi:type="ColoredConsole" layout="[${level}] ${date:format=yyyy\-MM\-dd HH\:mm\:ss}:${message} ${exception:format=message}" />
+        <target name="Mail" xsi:type="Mail" smtpServer="smtp.mxhichina.com" smtpPort="465" smtpAuthentication="Basic" smtpUserName="账号" smtpPassword="密码" enableSsl="true" addNewLines="true" from="斑码网络&lt;bancode@bancode.net&gt;"
+            to="260049383@qq.com" subject="邮件主题" header="===============" body="${newline}${message}${newline}" footer="================" />
         <!--此部分中的所有目标将自动异步-->
         <target name="AsyncFile" xsi:type="AsyncWrapper">
             <!--项目日志保存文件路径说明fileName="${basedir}/保存目录，以年月日的格式创建/${shortdate}/${记录器名称}-${单级记录}-${shortdate}.txt"-->
@@ -42,6 +47,7 @@ NLog.config示例
     <!--规则配置,final - 最终规则匹配后不处理任何规则-->
     <rules>
         <logger name="*" minlevel="Debug" writeTo="ColorConsole" />
+        <logger name="*" minlevel="Info" writeTo="Mail" />
         <logger name="*" minlevel="Info" writeTo="AsyncFile" />
         <logger name="Microsoft.*" minlevel="Info" writeTo="" final="true" />
     </rules>
