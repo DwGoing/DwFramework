@@ -34,7 +34,7 @@
     </PackageReference>
     <PackageReference Include="Polly" Version="7.2.0" />
     <PackageReference Include="Autofac.Extras.DynamicProxy" Version="5.0.0" />
-    <PackageReference Include="DwLock" Version="0.1.1" />
+    <PackageReference Include="DwLock" Version="0.1.2" />
     <PackageReference Include="Microsoft.AspNetCore.Hosting" Version="2.2.7" />
     <PackageReference Include="NLog" Version="4.7.0" />
     <PackageReference Include="NLog.Extensions.Logging" Version="1.6.2" />
