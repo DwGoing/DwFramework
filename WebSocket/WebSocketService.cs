@@ -42,7 +42,7 @@ namespace DwFramework.WebSocket
         {
             _provider = provider;
             _environment = environment;
-            _config = environment.GetConfiguration().GetSection<Config>("WebSocket");
+            _config = _environment.GetConfiguration().GetSection<Config>("WebSocket");
             _clients = new Dictionary<string, WebSocketClient>();
         }
 
