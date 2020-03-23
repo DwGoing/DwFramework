@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Logging;
 using Autofac.Extensions.DependencyInjection;
 using NLog.Extensions.Logging;
 
@@ -54,6 +55,8 @@ namespace DwFramework.Core.Extensions
         {
             host.RegisterService(services => services.AddLogging(builder =>
             {
+                builder.ClearProviders();
+                builder.SetMinimumLevel(LogLevel.Trace);
                 builder.AddNLog();
             }));
             return host;
