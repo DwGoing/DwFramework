@@ -25,7 +25,7 @@
       <CustomCommands>
         <Command>
           <type>AfterBuild</type>
-          <command>dotnet pack ${ProjectDir} -o Nugets</command>
+          <command>dotnet pack ${ProjectDir} -o Nugets/${ProjectName}</command>
           <workingdir>${SolutionDir}</workingdir>
         </Command>
       </CustomCommands>
