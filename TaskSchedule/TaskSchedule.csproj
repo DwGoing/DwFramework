@@ -17,6 +17,7 @@
     <PackageProjectUrl>https://github.com/Dwgoing/DwFramework/tree/master/TaskSchedule</PackageProjectUrl>
     <PackageLicenseUrl>https://licenses.nuget.org/MIT</PackageLicenseUrl>
     <PackOnBuild>true</PackOnBuild>
+    <ReleaseVersion>0.2</ReleaseVersion>
   </PropertyGroup>
 
   <ItemGroup>

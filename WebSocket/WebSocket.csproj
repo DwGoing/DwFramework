@@ -17,6 +17,7 @@
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <Description>DwFramework WebSocket库</Description>
     <PackageProjectUrl>https://github.com/Dwgoing/DwFramework/tree/master/WebSocket</PackageProjectUrl>
+    <ReleaseVersion>0.2</ReleaseVersion>
   </PropertyGroup>
 
   <ItemGroup>

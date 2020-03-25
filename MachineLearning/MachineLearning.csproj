@@ -10,6 +10,14 @@
     <DevelopmentDependency>true</DevelopmentDependency>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <NeutralLanguage>zh</NeutralLanguage>
+    <ReleaseVersion>0.2</ReleaseVersion>
+    <Copyright>DwGoing</Copyright>
+    <Owners>DwGoing</Owners>
+    <PackageProjectUrl>https://github.com/Dwgoing/DwFramework/tree/master/MachineLearning</PackageProjectUrl>
+    <Summary>DwFramework MachineLearning库</Summary>
+    <Title>DwFramework.MachineLearning</Title>
+    <PackOnBuild>true</PackOnBuild>
+    <PackageLicenseUrl>https://licenses.nuget.org/MIT</PackageLicenseUrl>
   </PropertyGroup>
 
   <ItemGroup>
@@ -21,6 +29,8 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.ML" Version="1.4.0" />
+    <PackageReference Include="Microsoft.ML.Recommender" Version="0.16.0" />
+    <PackageReference Include="Microsoft.ML.TimeSeries" Version="1.4.0" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Extensions\" />

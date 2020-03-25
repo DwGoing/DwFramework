@@ -288,7 +288,7 @@ namespace DwFramework.Core.Plugins
         public static BulkheadPolicy Bulkhead(int maxTasks)
         {
             if (maxTasks > 12 || maxTasks <= 0)
-                throw new Exception("不合适的任务数量");
+                throw new Exception("任务数量不能超过12");
             return Policy.Bulkhead(maxTasks);
         }
     }

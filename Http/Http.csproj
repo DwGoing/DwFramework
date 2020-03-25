@@ -17,6 +17,7 @@
     <Description>DwFramework WebAPI库</Description>
     <PackageProjectUrl>https://github.com/Dwgoing/DwFramework/tree/master/Http</PackageProjectUrl>
     <NeutralLanguage>zh</NeutralLanguage>
+    <ReleaseVersion>0.2</ReleaseVersion>
   </PropertyGroup>
 
   <ItemGroup>

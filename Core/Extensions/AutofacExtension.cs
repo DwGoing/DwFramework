@@ -2,10 +2,11 @@
 using System.Linq;
 using System.Collections.Generic;
 
-using Autofac.Extensions.DependencyInjection;
-using AutoFac.Extras.NLog.DotNetCore;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Logging;
+using Autofac.Extensions.DependencyInjection;
+using NLog.Extensions.Logging;
 
 namespace DwFramework.Core.Extensions
 {
@@ -46,13 +47,18 @@ namespace DwFramework.Core.Extensions
         }
 
         /// <summary>
-        /// 注册NLog服务
+        /// 注册Log服务
         /// </summary>
         /// <param name="builder"></param>
         /// <returns></returns>
-        public static ServiceHost RegisterNLog(this ServiceHost host)
+        public static ServiceHost RegisterLog(this ServiceHost host)
         {
-            host.RegisterModule<NLogModule>();
+            host.RegisterService(services => services.AddLogging(builder =>
+            {
+                builder.ClearProviders();
+                builder.SetMinimumLevel(LogLevel.Trace);
+                builder.AddNLog();
+            }));
             return host;
         }
 
