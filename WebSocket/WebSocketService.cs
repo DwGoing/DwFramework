@@ -52,82 +52,78 @@ namespace DwFramework.WebSocket
         /// <typeparam name="T"></typeparam>
         public Task OpenServiceAsync()
         {
-            return Task.Run(() =>
-            {
-                var builder = new WebHostBuilder()
-                    .UseDwServiceProvider(_provider)
-                    // wss证书路径
-                    .UseContentRoot($"{AppDomain.CurrentDomain.BaseDirectory}{_config.ContentRoot}")
-                    .UseKestrel(options =>
+            var builder = new WebHostBuilder()
+                .UseDwServiceProvider(_provider)
+                // wss证书路径
+                .UseContentRoot($"{AppDomain.CurrentDomain.BaseDirectory}{_config.ContentRoot}")
+                .UseKestrel(options =>
+                {
+                    // 监听地址及端口
+                    if (_config.Listen == null || _config.Listen.Count <= 0)
+                        options.Listen(IPAddress.Parse("0.0.0.0"), 5088);
+                    else
                     {
-                        // 监听地址及端口
-                        if (_config.Listen == null || _config.Listen.Count <= 0)
-                            options.Listen(IPAddress.Parse("0.0.0.0"), 5088);
-                        else
+                        if (_config.Listen.ContainsKey("ws"))
                         {
-                            if (_config.Listen.ContainsKey("ws"))
+                            string[] ipAndPort = _config.Listen["ws"].Split(":");
+                            options.Listen(IPAddress.Parse(ipAndPort[0]), int.Parse(ipAndPort[1]));
+                        }
+                        if (_config.Listen.ContainsKey("wss"))
+                        {
+                            string[] addrAndCert = _config.Listen["wss"].Split(";");
+                            string[] ipAndPort = addrAndCert[0].Split(":");
+                            options.Listen(IPAddress.Parse(ipAndPort[0]), int.Parse(ipAndPort[1]), listenOptions =>
                             {
-                                string[] ipAndPort = _config.Listen["ws"].Split(":");
-                                options.Listen(IPAddress.Parse(ipAndPort[0]), int.Parse(ipAndPort[1]));
+                                string[] certAndPassword = addrAndCert[1].Split(",");
+                                listenOptions.UseHttps(certAndPassword[0], certAndPassword[1]);
+                            });
+                        }
+                    }
+                })
+                .Configure(app =>
+                {
+                    app.UseWebSockets();
+                    // 请求预处理
+                    app.Use(async (context, next) =>
+                    {
+                        if (!context.WebSockets.IsWebSocketRequest)
+                        {
+                            await context.Response.WriteAsync(ResultInfo.Fail("非WebSocket请求").ToJson());
+                            return;
+                        }
+                        await next();
+                    });
+                    // 自定义处理
+                    app.Run(async context =>
+                    {
+                        int MAX_BYTES_COUNT = 1024 * 4;
+                        var webSocket = await context.WebSockets.AcceptWebSocketAsync();
+                        var client = new WebSocketClient(webSocket);
+                        _clients[client.ID] = client;
+                        OnConnect?.Invoke(client, new OnConnectEventargs() { });
+                        var buffer = new byte[MAX_BYTES_COUNT];
+                        var result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
+                        while (!result.CloseStatus.HasValue)
+                        {
+                            try
+                            {
+                                var msg = Encoding.UTF8.GetString(buffer, 0, result.Count);
+                                OnReceive?.Invoke(client, new OnReceiveEventargs(msg));
                             }
-                            if (_config.Listen.ContainsKey("wss"))
+                            catch (Exception ex)
                             {
-                                string[] addrAndCert = _config.Listen["wss"].Split(";");
-                                string[] ipAndPort = addrAndCert[0].Split(":");
-                                options.Listen(IPAddress.Parse(ipAndPort[0]), int.Parse(ipAndPort[1]), listenOptions =>
-                                {
-                                    string[] certAndPassword = addrAndCert[1].Split(",");
-                                    listenOptions.UseHttps(certAndPassword[0], certAndPassword[1]);
-                                });
+                                OnError?.Invoke(client, new OnErrorEventargs(ex));
+                            }
+                            finally
+                            {
+                                buffer = new byte[MAX_BYTES_COUNT];
+                                result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
                             }
                         }
-                    })
-                    .Configure(app =>
-                    {
-                        app.UseWebSockets();
-                        // 请求预处理
-                        app.Use(async (context, next) =>
-                        {
-                            if (!context.WebSockets.IsWebSocketRequest)
-                            {
-                                await context.Response.WriteAsync(ResultInfo.Fail("非WebSocket请求").ToJson());
-                                return;
-                            }
-                            await next();
-                        });
-                        // 自定义处理
-                        app.Run(async context =>
-                        {
-                            int MAX_BYTES_COUNT = 1024 * 4;
-                            var webSocket = await context.WebSockets.AcceptWebSocketAsync();
-                            var client = new WebSocketClient(webSocket);
-                            _clients[client.ID] = client;
-                            OnConnect?.Invoke(client, new OnConnectEventargs() { });
-                            var buffer = new byte[MAX_BYTES_COUNT];
-                            var result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
-                            while (!result.CloseStatus.HasValue)
-                            {
-                                try
-                                {
-                                    var msg = Encoding.UTF8.GetString(buffer, 0, result.Count);
-                                    OnReceive?.Invoke(client, new OnReceiveEventargs(msg));
-                                }
-                                catch (Exception ex)
-                                {
-                                    OnError?.Invoke(client, new OnErrorEventargs(ex));
-                                }
-                                finally
-                                {
-                                    buffer = new byte[MAX_BYTES_COUNT];
-                                    result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
-                                }
-                            }
-                            OnClose?.Invoke(client, new OnCloceEventargs() { });
-                        });
-                    })
-                    .Build();
-                builder.Run();
-            });
+                        OnClose?.Invoke(client, new OnCloceEventargs() { });
+                    });
+                });
+            return Task.Run(() => builder.Build().Run());
         }
 
         /// <summary>

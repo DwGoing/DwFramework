@@ -22,7 +22,7 @@ namespace DwFramework.Http.Extensions
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="provider"></param>
-        public static Task InitHttpServiceAsync<T>(this IServiceProvider provider) where T : class, IHttpStartup
+        public static Task InitHttpServiceAsync<T>(this IServiceProvider provider) where T : BaseStartup
         {
             return provider.GetService<HttpService>().OpenServiceAsync<T>();
         }

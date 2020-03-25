@@ -26,26 +26,31 @@ PM> Install-Package DwFramework.Http
 
 ### 0x2 注册服务及初始化
 
-WebAPI服务的初始化和AspDotCore原生WebAPI的配置方法一致，可以直接用Startup类来封装，但需要实现IHttpStartup接口。可以参考如下代码：
+WebAPI服务的初始化和AspDotCore原生WebAPI的配置方法一致，可以直接用Startup类来封装，但需要继承BaseStartup基类。可以参考如下代码：
 
 ```c#
 // Startup.cs
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 
+using DwFramework.Http;
+
 namespace Test
 {
-    public class Startup : IHttpStartup
+    public class Startup : BaseStartup
     {
-        public void ConfigureServices(IServiceCollection services)
+        public override void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddControllers();
         }
 
-        public void Configure(IApplicationBuilder app)
+        public override void Configure(IApplicationBuilder app)
         {
-            app.UseMvc();
+            app.UseRouting();
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+            });
         }
     }
 }
