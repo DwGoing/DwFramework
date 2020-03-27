@@ -86,7 +86,7 @@ namespace DwFramework.Http.Plugins
         /// <param name="onSuccess"></param>
         /// <param name="onFail"></param>
         /// <returns></returns>
-        public static IServiceCollection AddJWTAuthentication(this IServiceCollection services, ISecurityTokenValidator tokenValidator, Func<TokenValidatedContext, Task> onSuccess, Func<JwtBearerChallengeContext, Task> onFail)
+        public static IServiceCollection AddJwtAuthentication(this IServiceCollection services, ISecurityTokenValidator tokenValidator, Func<TokenValidatedContext, Task> onSuccess, Func<JwtBearerChallengeContext, Task> onFail)
         {
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
@@ -107,7 +107,7 @@ namespace DwFramework.Http.Plugins
         /// </summary>
         /// <param name="app"></param>
         /// <returns></returns>
-        public static IApplicationBuilder UseJWTAuthentication(this IApplicationBuilder app)
+        public static IApplicationBuilder UseJwtAuthentication(this IApplicationBuilder app)
         {
             app.UseAuthentication();
             app.UseAuthorization();
