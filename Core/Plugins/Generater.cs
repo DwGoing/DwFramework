@@ -3,7 +3,7 @@ using System.Text;
 
 namespace DwFramework.Core.Plugins
 {
-    public static class GeneraterPlugin
+    public static class Generater
     {
         /// <summary>
         /// 生成随机字符串

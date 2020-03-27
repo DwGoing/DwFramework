@@ -6,7 +6,7 @@ using DwFramework.Core.Extensions;
 
 namespace DwFramework.Core.Plugins
 {
-    public static class GoogleAuthenticatorPlugin
+    public static class GoogleAuthenticator
     {
         /// <summary>
         /// 获取手机端秘钥
