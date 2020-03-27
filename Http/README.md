@@ -46,12 +46,14 @@ namespace Test
                     return Task.CompletedTask;
                 });
             services.AddControllers();
+            services.AddSwagger("v1", "Test", "v1");
         }
 
         public override void Configure(IApplicationBuilder app)
         {
             app.UseRouting();
-            app.UseJWTAuthentication();
+            app.UseJWTAuthentication(); // 必须在UseRouting之后
+            app.UseSwagger("/swagger/v1/swagger.json", "My API V1");
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
@@ -95,3 +97,7 @@ public class TokenValidator : CustomSecurityTokenValidator
     }
 }
 ```
+
+2. Swagger
+
+只需在Startup中注入服务即可。
