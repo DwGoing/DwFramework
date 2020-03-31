@@ -1,50 +1,86 @@
 ﻿using System;
-using System.Net.WebSockets;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Net.WebSockets;
 using System.Text;
 
 namespace DwFramework.WebSocket
 {
     public class WebSocketClient
     {
-        public string ID { get; private set; }
-        public System.Net.WebSockets.WebSocket WebSocket { get; private set; }
+        public event OnConnectToServerHandler OnConnect;
+        public event OnSendToServerHandler OnSend;
+        public event OnReceiveFromServerHandler OnReceive;
+        public event OnCloseFromServerHandler OnClose;
+        public event OnErrorFromServerHandler OnError;
 
-        public WebSocketClient(System.Net.WebSockets.WebSocket webSocket)
+        private ClientWebSocket _client;
+        private int _bufferSize = 4096;
+        public int BufferSize
         {
-            ID = Guid.NewGuid().ToString();
-            WebSocket = webSocket;
+            get
+            {
+                return _bufferSize;
+            }
+            set
+            {
+                if (value <= 0) _bufferSize = 4096;
+                else _bufferSize = value;
+            }
         }
 
-        /// <summary>
-        /// 发送消息
-        /// </summary>
-        /// <param name="buffer"></param>
-        /// <returns></returns>
+        public WebSocketClient()
+        {
+            _client = new ClientWebSocket();
+
+        }
+
+        public Task ConnectAsync(string uri)
+        {
+            return _client.ConnectAsync(new Uri(uri), CancellationToken.None).ContinueWith(a =>
+            {
+                OnConnect?.Invoke(new OnConnectEventargs() { });
+                Task.Run(async () =>
+                {
+                    var buffer = new byte[_bufferSize];
+                    var result = await _client.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
+                    while (!result.CloseStatus.HasValue)
+                    {
+                        try
+                        {
+                            var msg = Encoding.UTF8.GetString(buffer, 0, result.Count);
+                            OnReceive?.Invoke(new OnReceiveEventargs(msg));
+                        }
+                        catch (Exception ex)
+                        {
+                            OnError?.Invoke(new OnErrorEventargs(ex));
+                        }
+                        finally
+                        {
+                            buffer = new byte[_bufferSize];
+                            result = await _client.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
+                        }
+                    }
+                    OnClose?.Invoke(new OnCloceEventargs() { });
+                });
+            });
+        }
+
         public Task SendAsync(byte[] buffer)
         {
-            return WebSocket.SendAsync(new ArraySegment<byte>(buffer), WebSocketMessageType.Text, true, CancellationToken.None);
+            return _client.SendAsync(buffer, WebSocketMessageType.Text, true, CancellationToken.None)
+                .ContinueWith(a => OnSend?.Invoke(new OnSendEventargs(Encoding.UTF8.GetString(buffer)) { }));
         }
 
-        /// <summary>
-        /// 发送消息
-        /// </summary>
-        /// <param name="msg"></param>
-        /// <returns></returns>
         public Task SendAsync(string msg)
         {
-            byte[] buffer = Encoding.UTF8.GetBytes(msg);
-            return SendAsync(buffer);
+            return _client.SendAsync(Encoding.UTF8.GetBytes(msg), WebSocketMessageType.Text, true, CancellationToken.None)
+                .ContinueWith(a => OnSend?.Invoke(new OnSendEventargs(msg) { }));
         }
 
-        /// <summary>
-        /// 断开连接
-        /// </summary>
-        /// <returns></returns>
         public Task CloseAsync()
         {
-            return WebSocket.CloseOutputAsync(WebSocketCloseStatus.NormalClosure, null, CancellationToken.None);
+            return _client.CloseAsync(WebSocketCloseStatus.NormalClosure, null, CancellationToken.None);
         }
     }
 }
