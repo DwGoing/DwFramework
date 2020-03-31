@@ -29,12 +29,19 @@ namespace DwFramework.WebSocket
             }
         }
 
+        /// <summary>
+        /// 构造函数
+        /// </summary>
         public WebSocketClient()
         {
             _client = new ClientWebSocket();
-
         }
 
+        /// <summary>
+        /// 建立连接
+        /// </summary>
+        /// <param name="uri"></param>
+        /// <returns></returns>
         public Task ConnectAsync(string uri)
         {
             return _client.ConnectAsync(new Uri(uri), CancellationToken.None).ContinueWith(a =>
@@ -66,18 +73,32 @@ namespace DwFramework.WebSocket
             });
         }
 
+        /// <summary>
+        /// 发送消息
+        /// </summary>
+        /// <param name="buffer"></param>
+        /// <returns></returns>
         public Task SendAsync(byte[] buffer)
         {
             return _client.SendAsync(buffer, WebSocketMessageType.Text, true, CancellationToken.None)
                 .ContinueWith(a => OnSend?.Invoke(new OnSendEventargs(Encoding.UTF8.GetString(buffer)) { }));
         }
 
+        /// <summary>
+        /// 发送消息
+        /// </summary>
+        /// <param name="msg"></param>
+        /// <returns></returns>
         public Task SendAsync(string msg)
         {
             return _client.SendAsync(Encoding.UTF8.GetBytes(msg), WebSocketMessageType.Text, true, CancellationToken.None)
                 .ContinueWith(a => OnSend?.Invoke(new OnSendEventargs(msg) { }));
         }
 
+        /// <summary>
+        /// 断开连接
+        /// </summary>
+        /// <returns></returns>
         public Task CloseAsync()
         {
             return _client.CloseAsync(WebSocketCloseStatus.NormalClosure, null, CancellationToken.None);
