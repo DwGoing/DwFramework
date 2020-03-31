@@ -15,7 +15,7 @@ using DwFramework.Core.Extensions;
 
 namespace DwFramework.WebSocket
 {
-    public class WebSocketService : IWebSocketService
+    public class WebSocketService : ServiceApplication
     {
         public class Config
         {
@@ -23,8 +23,6 @@ namespace DwFramework.WebSocket
             public Dictionary<string, string> Listen { get; set; }
         }
 
-        private readonly IServiceProvider _provider;
-        private readonly IRunEnvironment _environment;
         private readonly Config _config;
         private Dictionary<string, WebSocketClient> _clients;
 
@@ -37,11 +35,10 @@ namespace DwFramework.WebSocket
         /// <summary>
         /// 构造函数
         /// </summary>
+        /// <param name="provider"></param>
         /// <param name="environment"></param>
-        public WebSocketService(IServiceProvider provider, IRunEnvironment environment)
+        public WebSocketService(IServiceProvider provider, IRunEnvironment environment) : base(provider, environment)
         {
-            _provider = provider;
-            _environment = environment;
             _config = _environment.GetConfiguration().GetSection<Config>("WebSocket");
             _clients = new Dictionary<string, WebSocketClient>();
         }
@@ -49,7 +46,7 @@ namespace DwFramework.WebSocket
         /// <summary>
         /// 开启WebSocket服务
         /// </summary>
-        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
         public Task OpenServiceAsync()
         {
             var builder = new WebHostBuilder()
@@ -127,6 +124,20 @@ namespace DwFramework.WebSocket
         }
 
         /// <summary>
+        /// 检查客户端
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        private void RequireClient(string id)
+        {
+            if (!_clients.ContainsKey(id))
+                throw new Exception("该客户端不存在");
+            var client = _clients[id];
+            if (client.WebSocket.State != WebSocketState.Open)
+                throw new Exception("该客户端状态错误");
+        }
+
+        /// <summary>
         /// 发送消息
         /// </summary>
         /// <param name="id"></param>
@@ -134,11 +145,8 @@ namespace DwFramework.WebSocket
         /// <returns></returns>
         public Task SendAsync(string id, byte[] buffer)
         {
-            if (!_clients.ContainsKey(id))
-                throw new Exception("该客户端不存在");
+            RequireClient(id);
             var client = _clients[id];
-            if (client.WebSocket.State != WebSocketState.Open)
-                throw new Exception("发送失败");
             return client.SendAsync(buffer)
                 .ContinueWith(a => OnSend?.Invoke(client, new OnSendEventargs(Encoding.UTF8.GetString(buffer)) { }));
         }
@@ -151,7 +159,6 @@ namespace DwFramework.WebSocket
         /// <returns></returns>
         public Task SendAsync(string id, string msg)
         {
-
             byte[] buffer = Encoding.UTF8.GetBytes(msg);
             return SendAsync(id, buffer);
         }
@@ -161,7 +168,7 @@ namespace DwFramework.WebSocket
         /// </summary>
         /// <param name="msg"></param>
         /// <returns></returns>
-        public Task BroadCast(string msg)
+        public Task BroadCastAsync(string msg)
         {
             return Task.Run(() =>
             {
@@ -169,6 +176,33 @@ namespace DwFramework.WebSocket
                 foreach (var item in _clients.Values)
                 {
                     SendAsync(item.ID, buffer);
+                }
+            });
+        }
+
+        /// <summary>
+        /// 断开连接
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public Task CloseAsync(string id)
+        {
+            RequireClient(id);
+            var client = _clients[id];
+            return client.CloseAsync();
+        }
+
+        /// <summary>
+        /// 断开所有连接
+        /// </summary>
+        /// <returns></returns>
+        public Task CloseAllAsync()
+        {
+            return Task.Run(() =>
+            {
+                foreach (var item in _clients.Values)
+                {
+                    item.CloseAsync();
                 }
             });
         }

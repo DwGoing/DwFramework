@@ -10,7 +10,7 @@ using DwFramework.Database.Extensions;
 
 namespace DwFramework.Database
 {
-    public class DatabaseService : IDatabaseService
+    public class DatabaseService : ServiceApplication
     {
         public class Config
         {
@@ -18,7 +18,6 @@ namespace DwFramework.Database
             public string DbType { get; set; }
         }
 
-        private readonly IRunEnvironment _environment;
         private readonly Config _config;
         public SqlSugarClient Db { get; private set; }
 
@@ -28,9 +27,8 @@ namespace DwFramework.Database
         /// </summary>
         /// <param name="provider"></param>
         /// <param name="environment"></param>
-        public DatabaseService(IRunEnvironment environment)
+        public DatabaseService(IServiceProvider provider, IRunEnvironment environment) : base(provider, environment)
         {
-            _environment = environment;
             _config = _environment.GetConfiguration().GetSection<Config>("Database");
         }
 

@@ -15,14 +15,13 @@ using DwFramework.Core.Extensions;
 
 namespace DwFramework.TaskSchedule
 {
-    public class TaskScheduleService : ITaskScheduleService
+    public class TaskScheduleService : ServiceApplication
     {
         public class Config
         {
 
         }
 
-        private readonly IRunEnvironment _environment;
         private readonly Config _config;
         private readonly DirectSchedulerFactory _schedulerFactory;
 
@@ -33,9 +32,8 @@ namespace DwFramework.TaskSchedule
         /// </summary>
         /// <param name="provider"></param>
         /// <param name="environment"></param>
-        public TaskScheduleService(IRunEnvironment environment)
+        public TaskScheduleService(IServiceProvider provider, IRunEnvironment environment) : base(provider, environment)
         {
-            _environment = environment;
             _config = _environment.GetConfiguration().GetSection<Config>("TaskSchedule");
             _schedulerFactory = DirectSchedulerFactory.Instance;
         }

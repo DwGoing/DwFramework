@@ -11,7 +11,7 @@ using DwFramework.Core.Extensions;
 
 namespace DwFramework.Http
 {
-    public class HttpService : IHttpService
+    public class HttpService : ServiceApplication
     {
         public class Config
         {
@@ -19,8 +19,6 @@ namespace DwFramework.Http
             public Dictionary<string, string> Listen { get; set; }
         }
 
-        private readonly IServiceProvider _provider;
-        private readonly IRunEnvironment _environment;
         private readonly Config _config;
 
         /// <summary>
@@ -28,10 +26,8 @@ namespace DwFramework.Http
         /// </summary>
         /// <param name="provider"></param>
         /// <param name="environment"></param>
-        public HttpService(IServiceProvider provider, IRunEnvironment environment)
+        public HttpService(IServiceProvider provider, IRunEnvironment environment) : base(provider, environment)
         {
-            _provider = provider;
-            _environment = environment;
             _config = _environment.GetConfiguration().GetSection<Config>("Http");
         }
 

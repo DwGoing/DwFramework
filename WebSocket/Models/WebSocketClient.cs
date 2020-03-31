@@ -37,5 +37,14 @@ namespace DwFramework.WebSocket
             byte[] buffer = Encoding.UTF8.GetBytes(msg);
             return SendAsync(buffer);
         }
+
+        /// <summary>
+        /// 断开连接
+        /// </summary>
+        /// <returns></returns>
+        public Task CloseAsync()
+        {
+            return WebSocket.CloseOutputAsync(WebSocketCloseStatus.NormalClosure, null, CancellationToken.None);
+        }
     }
 }
