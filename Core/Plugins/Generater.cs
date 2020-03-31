@@ -42,9 +42,10 @@ namespace DwFramework.Core.Plugins
                 builder.Append('0');
             }
             builder.Append(value);
-            // 自定义号段1
+            // 自定义号段
+            if (customNum1.Length != 4 || customNum2.Length != 4)
+                throw new Exception("自定义号段长度错误");
             builder.Append(customNum1);
-            // 自定义号段2
             builder.Append(customNum2);
             return builder.ToString();
         }
