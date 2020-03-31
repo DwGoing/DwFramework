@@ -2,11 +2,21 @@
 
 namespace DwFramework.WebSocket
 {
-    public delegate void OnConnectHandler(WebSocketClient client, OnConnectEventargs args);
-    public delegate void OnSendHandler(WebSocketClient client, OnSendEventargs args);
-    public delegate void OnReceiveHandler(WebSocketClient client, OnReceiveEventargs args);
-    public delegate void OnCloseHandler(WebSocketClient client, OnCloceEventargs args);
-    public delegate void OnErrorHandler(WebSocketClient client, OnErrorEventargs args);
+    #region  服务端
+    public delegate void OnConnectHandler(WebSocketConnection connection, OnConnectEventargs args);
+    public delegate void OnSendHandler(WebSocketConnection connection, OnSendEventargs args);
+    public delegate void OnReceiveHandler(WebSocketConnection connection, OnReceiveEventargs args);
+    public delegate void OnCloseHandler(WebSocketConnection connection, OnCloceEventargs args);
+    public delegate void OnErrorHandler(WebSocketConnection connection, OnErrorEventargs args);
+    #endregion
+
+    #region 客户端
+    public delegate void OnConnectToServerHandler(OnConnectEventargs args);
+    public delegate void OnSendToServerHandler(OnSendEventargs args);
+    public delegate void OnReceiveFromServerHandler(OnReceiveEventargs args);
+    public delegate void OnCloseFromServerHandler(OnCloceEventargs args);
+    public delegate void OnErrorFromServerHandler(OnErrorEventargs args);
+    #endregion
 
     public class OnConnectEventargs : EventArgs
     {
