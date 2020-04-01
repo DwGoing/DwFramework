@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Reflection;
-using System.Threading.Tasks;
 
 using DwFramework.Core;
 
@@ -25,16 +23,6 @@ namespace DwFramework.Database.Extensions
                         host.RegisterType(type);
                 }
             }
-        }
-
-        /// <summary>
-        /// 初始化服务
-        /// </summary>
-        /// <param name="provider"></param>
-        /// <returns></returns>
-        public static Task InitRepositoriesAsync(this IServiceProvider provider)
-        {
-            return provider.InitDatabaseServiceAsync();
         }
     }
 }

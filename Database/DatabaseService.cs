@@ -26,8 +26,7 @@ namespace DwFramework.Database
         }
 
         private readonly Config _config;
-        public SqlSugarClient Db { get; private set; }
-
+        public SqlSugarClient DbConnection { get => CreateConnection(); }
 
         /// <summary>
         /// 构造函数
@@ -40,39 +39,38 @@ namespace DwFramework.Database
         }
 
         /// <summary>
-        /// 开启服务
+        /// 创建连接
         /// </summary>
         /// <returns></returns>
-        public Task OpenServiceAsync()
+        public SqlSugarClient CreateConnection()
         {
-            return Task.Run(() =>
+            var config = new ConnectionConfig()
             {
-                var config = new ConnectionConfig()
+                ConnectionString = _config.ConnectionString,//必填, 数据库连接字符串
+                DbType = _config.DbType.ParseDbType(),         //必填, 数据库类型
+                IsAutoCloseConnection = true,       //默认false, 时候知道关闭数据库连接, 设置为true无需使用using或者Close操作
+                InitKeyType = InitKeyType.SystemTable,    //默认SystemTable, 字段信息读取, 如：该属性是不是主键，是不是标识列等等信息
+                ConfigureExternalServices = new ConfigureExternalServices() // 配置扩展服务
                 {
-                    ConnectionString = _config.ConnectionString,//必填, 数据库连接字符串
-                    DbType = _config.DbType.ParseDbType(),         //必填, 数据库类型
-                    IsAutoCloseConnection = true,       //默认false, 时候知道关闭数据库连接, 设置为true无需使用using或者Close操作
-                    InitKeyType = InitKeyType.SystemTable,    //默认SystemTable, 字段信息读取, 如：该属性是不是主键，是不是标识列等等信息
-                    ConfigureExternalServices = new ConfigureExternalServices() // 配置扩展服务
-                    {
-                        DataInfoCacheService = new DataMemoryCache() // Memory缓存
-                    }
-                };
-                // 主从模式
-                if (_config.SlaveConnections != null && _config.SlaveConnections.Length > 0)
-                {
-                    config.SlaveConnectionConfigs = new List<SlaveConnectionConfig>();
-                    foreach (var item in _config.SlaveConnections)
-                    {
-                        config.SlaveConnectionConfigs.Add(new SlaveConnectionConfig()
-                        {
-                            ConnectionString = item.ConnectionString,
-                            HitRate = item.HitRate
-                        });
-                    }
+                    DataInfoCacheService = new DataMemoryCache() // Memory缓存
                 }
-                Db = new SqlSugarClient(config);
-            });
+            };
+            // 主从模式
+            if (_config.SlaveConnections != null && _config.SlaveConnections.Length > 0)
+            {
+                config.SlaveConnectionConfigs = new List<SlaveConnectionConfig>();
+                foreach (var item in _config.SlaveConnections)
+                {
+                    config.SlaveConnectionConfigs.Add(new SlaveConnectionConfig()
+                    {
+                        ConnectionString = item.ConnectionString,
+                        HitRate = item.HitRate
+                    });
+                }
+            }
+            var db = new SqlSugarClient(config);
+            if (db == null) throw new Exception("数据库连接创建异常");
+            return db;
         }
 
         /// <summary>
@@ -86,7 +84,7 @@ namespace DwFramework.Database
         {
             return Task.Run(() =>
             {
-                return Db.DbMaintenance.CreateTable(tableName, columns, isCreatePrimaryKey);
+                return DbConnection.DbMaintenance.CreateTable(tableName, columns, isCreatePrimaryKey);
             });
         }
 
@@ -99,7 +97,7 @@ namespace DwFramework.Database
         {
             return Task.Run(() =>
             {
-                return Db.DbMaintenance.DropTable(tableName);
+                return DbConnection.DbMaintenance.DropTable(tableName);
             });
         }
 
@@ -113,8 +111,8 @@ namespace DwFramework.Database
         {
             return Task.Run(() =>
             {
-                var columns = Db.DbMaintenance.GetColumnInfosByTableName(from);
-                return Db.DbMaintenance.CreateTable(to, columns);
+                var columns = DbConnection.DbMaintenance.GetColumnInfosByTableName(from);
+                return DbConnection.DbMaintenance.CreateTable(to, columns);
             });
         }
     }

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading.Tasks;
 
 using SqlSugar;
 
@@ -17,16 +16,6 @@ namespace DwFramework.Database.Extensions
         public static void RegisterDatabaseService(this ServiceHost host)
         {
             host.RegisterType<DatabaseService>().SingleInstance();
-        }
-
-        /// <summary>
-        /// 初始化服务
-        /// </summary>
-        /// <param name="provider"></param>
-        /// <returns></returns>
-        public static Task InitDatabaseServiceAsync(this IServiceProvider provider)
-        {
-            return provider.GetService<DatabaseService>().OpenServiceAsync();
         }
 
         /// <summary>

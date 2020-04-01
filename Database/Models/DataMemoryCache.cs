@@ -66,13 +66,7 @@ namespace DwFramework.Database
         /// <returns></returns>
         public T Get<T>(string key)
         {
-            return _cacheManager.GetOrCreate<T>(key, cache =>
-            {
-                // 防止高并发时的穿透
-                cache.SetAbsoluteExpiration(TimeSpan.FromSeconds(30));
-                cache.SetPriority(CacheItemPriority.Normal);
-                return default;
-            });
+            return _cacheManager.Get<T>(key);
         }
 
         /// <summary>
