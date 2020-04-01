@@ -14,8 +14,15 @@ namespace DwFramework.Database
     {
         public class Config
         {
+            public class SlaveConnectionConfig
+            {
+                public string ConnectionString { get; set; }
+                public int HitRate { get; set; }
+            }
+
             public string ConnectionString { get; set; }
             public string DbType { get; set; }
+            public SlaveConnectionConfig[] SlaveConnections { get; set; }
         }
 
         private readonly Config _config;
@@ -40,13 +47,27 @@ namespace DwFramework.Database
         {
             return Task.Run(() =>
             {
-                Db = new SqlSugarClient(new ConnectionConfig()
+                var config = new ConnectionConfig()
                 {
                     ConnectionString = _config.ConnectionString,//必填, 数据库连接字符串
                     DbType = _config.DbType.ParseDbType(),         //必填, 数据库类型
                     IsAutoCloseConnection = true,       //默认false, 时候知道关闭数据库连接, 设置为true无需使用using或者Close操作
                     InitKeyType = InitKeyType.SystemTable    //默认SystemTable, 字段信息读取, 如：该属性是不是主键，是不是标识列等等信息
-                });
+                };
+                // 主从模式
+                if (_config.SlaveConnections != null && _config.SlaveConnections.Length > 0)
+                {
+                    config.SlaveConnectionConfigs = new List<SlaveConnectionConfig>();
+                    foreach (var item in _config.SlaveConnections)
+                    {
+                        config.SlaveConnectionConfigs.Add(new SlaveConnectionConfig()
+                        {
+                            ConnectionString = item.ConnectionString,
+                            HitRate = item.HitRate
+                        });
+                    }
+                }
+                Db = new SqlSugarClient(config);
             });
         }
 

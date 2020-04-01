@@ -35,7 +35,7 @@
     <ProjectReference Include="..\Core\Core.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="sqlSugarCore" Version="5.0.0.11" />
+    <PackageReference Include="sqlSugarCore" Version="5.0.0.13" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Models\" />
