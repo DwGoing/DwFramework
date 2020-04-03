@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using System.Net.WebSockets;
 using System.Text;
 
-namespace DwFramework.WebSocket
+namespace DwFramework.Web
 {
     public class WebSocketClient
     {

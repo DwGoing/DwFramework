@@ -3,12 +3,11 @@
 using Autofac.Builder;
 using Autofac.Extras.DynamicProxy;
 
-using DwFramework.Core;
 using DwFramework.Core.Plugins;
 
 namespace DwFramework.Core.Extensions
 {
-    public static class AOPExtension
+    public static class AopExtension
     {
         /// <summary>
         /// 注册拦截器

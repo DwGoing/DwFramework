@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DwFramework.WebSocket
+namespace DwFramework.Web
 {
     #region  服务端
     public delegate void OnConnectHandler(WebSocketConnection connection, OnConnectEventargs args);

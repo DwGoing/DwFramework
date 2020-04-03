@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.Builder;
 
 using DwFramework.Core.Plugins;
 
-namespace DwFramework.Http.Plugins
+namespace DwFramework.Web.Plugins
 {
     public abstract class JwtTokenValidator : ISecurityTokenValidator
     {

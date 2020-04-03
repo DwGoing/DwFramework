@@ -6,23 +6,16 @@ namespace DwFramework.Core
 {
     public enum EnvironmentType
     {
-        UNKNOW = 0,
-        Develop = 1,
-        Produce = 2
+        Develop = 0,
+        Release = 1
     }
 
-    public interface IRunEnvironment
-    {
-        EnvironmentType GetEnvironmentType();
-        IConfiguration GetConfiguration();
-    }
-
-    public class RunEnvironment : IRunEnvironment
+    public class Environment : IEnvironment
     {
         public EnvironmentType EnvironmentType { get; private set; }
         public IConfiguration Configuration { get; private set; }
 
-        public RunEnvironment(EnvironmentType environmentType, IConfiguration configuration)
+        public Environment(EnvironmentType environmentType, IConfiguration configuration)
         {
             EnvironmentType = environmentType;
             Configuration = configuration;

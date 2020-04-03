@@ -30,7 +30,7 @@ namespace DwFramework.Core
             if (configFilePath != null && File.Exists(configFilePath))
                 configuration = new ConfigurationBuilder().AddJsonFile(configFilePath).Build();
             // 环境变量
-            RegisterInstance<IRunEnvironment, RunEnvironment>(new RunEnvironment(environmentType, configuration)).SingleInstance();
+            RegisterInstance<IEnvironment, Environment>(new Environment(environmentType, configuration)).SingleInstance();
         }
 
         /// <summary>
