@@ -7,7 +7,7 @@ using DwFramework.Core.Plugins;
 
 namespace DwFramework.Core.Extensions
 {
-    public static class AopExtension
+    public static class AopExtensiona
     {
         /// <summary>
         /// 注册拦截器
