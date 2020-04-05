@@ -28,15 +28,11 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.3" />
+    <PackageReference Include="Microsoft.AspNetCore.Hosting" Version="2.2.7" />
     <PackageReference Include="Microsoft.AspNetCore.Server.Kestrel" Version="2.2.0" />
-    <PackageReference Include="Microsoft.AspNetCore.WebSockets.Server" Version="0.1.0" />
     <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.5.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.3.1" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.5.0" />
   </ItemGroup>
-
-  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="del /q &quot;$(SolutionDir)Nugets\$(TargetName).*.nupkg&quot; &amp;&amp; dotnet pack &quot;$(ProjectPath)&quot; --no-build -o &quot;$(SolutionDir)Nugets&quot; &amp;&amp; copy &quot;$(SolutionDir)Nugets\$(TargetName).*.nupkg&quot; &quot;F:\DwGoing\Nugets&quot;" />
-  </Target>
 
 </Project>
