@@ -41,8 +41,4 @@
     <PackageReference Include="Polly" Version="7.2.0" />
   </ItemGroup>
 
-  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="del /q &quot;$(SolutionDir)Nugets\$(TargetName).*.nupkg&quot; &amp;&amp; dotnet pack &quot;$(ProjectPath)&quot; --no-build -o &quot;$(SolutionDir)Nugets&quot; &amp;&amp; copy &quot;$(SolutionDir)Nugets\$(TargetName).*.nupkg&quot; &quot;F:\DwGoing\Nugets&quot;" />
-  </Target>
-
 </Project>
