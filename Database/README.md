@@ -6,7 +6,7 @@ PM> Install-Package DwFramework.Database
 > dotnet add package DwFramework.Database
 ```
 
-## DwFramework Database库
+## DwFramework ORM库
 
 ### 0x1 配置
 
