@@ -13,6 +13,7 @@
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageProjectUrl>https://github.com/Dwgoing/DwFramework/tree/master/Web</PackageProjectUrl>
     <AssemblyName>DwFramework.Web</AssemblyName>
+    <Copyright>DwGoing</Copyright>
   </PropertyGroup>
 
   <ItemGroup>

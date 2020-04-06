@@ -11,6 +11,7 @@
     <Description>DwFramework ORM库</Description>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageProjectUrl>https://github.com/Dwgoing/DwFramework/tree/master/Database</PackageProjectUrl>
+    <Copyright>DwGoing</Copyright>
   </PropertyGroup>
 
   <ItemGroup>
