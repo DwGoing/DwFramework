@@ -6,13 +6,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="DwFramework.Core" Version="0.3.0" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Update="NLog.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Core\Core.csproj" />
+  </ItemGroup>
 </Project>

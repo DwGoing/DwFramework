@@ -6,13 +6,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="DwFramework.Web" Version="0.3.0" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Update="Config.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Web\Web.csproj" />
+  </ItemGroup>
 </Project>
