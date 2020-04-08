@@ -1,0 +1,11 @@
+{
+  "Web": {
+    "ContentRoot": "",
+    "HttpListen": {
+      "http": "0.0.0.0:10080"
+    },
+    "WebSocketListen": {
+      "ws": "0.0.0.0:10088"
+    }
+  }
+}
