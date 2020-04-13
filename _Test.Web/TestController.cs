@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+
+using Microsoft.AspNetCore.Mvc;
 
 namespace _Test.Web
 {
@@ -8,6 +10,7 @@ namespace _Test.Web
         [HttpGet("test")]
         public ActionResult Test()
         {
+            throw new Exception("异常测试");
             return Ok("ok");
         }
     }

@@ -2,8 +2,10 @@
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 
+using DwFramework.Web;
 using DwFramework.Web.Plugins;
 
 namespace _Test.Web
@@ -31,6 +33,16 @@ namespace _Test.Web
             app.UseRouting();
             app.UseJwtAuthentication(); // 必须在UseRouting之后
             app.UseSwagger("/swagger/v1/swagger.json", "My API V1");
+            app.UseRequestFilter(
+                context =>
+                {
+                    Console.WriteLine("Start");
+                },
+                context =>
+                {
+                    context.Response.WriteAsync($"End");
+                }
+                );
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
