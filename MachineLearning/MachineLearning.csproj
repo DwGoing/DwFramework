@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <Version>0.3.0.1</Version>
+    <Version>0.3.0.2</Version>
     <Authors>DwGoing</Authors>
     <Company>DwGoing</Company>
     <AssemblyName>DwFramework.MachineLearning</AssemblyName>

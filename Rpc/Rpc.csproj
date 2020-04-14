@@ -5,12 +5,12 @@
     <AssemblyName>DwFramework.Rpc</AssemblyName>
     <RootNamespace>DwFramework.Rpc</RootNamespace>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <Version>0.3.0.2</Version>
     <Authors>DwGoing</Authors>
     <Description>DwFramework Rpc库</Description>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageProjectUrl>https://github.com/Dwgoing/DwFramework/tree/master/Rpc</PackageProjectUrl>
     <Copyright>DwGoing</Copyright>
-    <Version>0.3.0.1</Version>
   </PropertyGroup>
 
   <ItemGroup>

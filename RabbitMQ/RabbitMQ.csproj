@@ -4,7 +4,7 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <AssemblyName>DwFramework.RabbitMQ</AssemblyName>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <Version>0.3.0.1</Version>
+    <Version>0.3.0.2</Version>
     <Authors>DwGoing</Authors>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageProjectUrl>https://github.com/Dwgoing/DwFramework/tree/master/RabbitMQ</PackageProjectUrl>
