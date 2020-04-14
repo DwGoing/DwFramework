@@ -69,9 +69,9 @@ namespace Test
     [Registerable(typeof(ITestInterface), Lifetime.Singleton)]
     public class TestClass1 : ITestInterface
     {
-        private readonly ILogger _logger;
+        private readonly ILogger<TestClass1> _logger;
 
-        public TestClass1(ILogger logger)
+        public TestClass1(ILogger<TestClass1> logger)
         {
             _logger = logger;
             _logger.Debug("TestClass1已注入");
@@ -86,9 +86,9 @@ namespace Test
     [Registerable(typeof(ITestInterface), Lifetime.Singleton)]
     public class TestClass2 : ITestInterface
     {
-        private readonly ILogger _logger;
+        private readonly ILogger<TestClass2> _logger;
 
-        public TestClass2(ILogger logger)
+        public TestClass2(ILogger<TestClass2> logger)
         {
             _logger = logger;
             _logger.Debug("TestClass2已注入");
