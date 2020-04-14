@@ -2,6 +2,8 @@
 
 using Microsoft.AspNetCore.Mvc;
 
+using DwFramework.Core;
+
 namespace _Test.Web
 {
     [Route("[controller]")]
@@ -10,8 +12,7 @@ namespace _Test.Web
         [HttpGet("test")]
         public ActionResult Test()
         {
-            throw new Exception("异常测试");
-            return Ok("ok");
+            return Ok(ResultInfo.Success("ok"));
         }
     }
 }

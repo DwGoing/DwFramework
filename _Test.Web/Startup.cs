@@ -34,15 +34,8 @@ namespace _Test.Web
             app.UseJwtAuthentication(); // 必须在UseRouting之后
             app.UseSwagger("/swagger/v1/swagger.json", "My API V1");
             app.UseRequestFilter(
-                context =>
-                {
-                    Console.WriteLine("Start");
-                },
-                context =>
-                {
-                    context.Response.WriteAsync($"End");
-                }
-                );
+                context => { },
+                context => { });
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

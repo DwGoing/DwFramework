@@ -8,8 +8,8 @@
 
     public class ResultInfo
     {
-        public int Code;
-        public string Message;
+        public int Code { get; set; }
+        public string Message { get; set; }
 
         public static ResultInfo Success(string message)
         {
