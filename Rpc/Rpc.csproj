@@ -10,7 +10,7 @@
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageProjectUrl>https://github.com/Dwgoing/DwFramework/tree/master/Rpc</PackageProjectUrl>
     <Copyright>DwGoing</Copyright>
-    <Version>0.3.0</Version>
+    <Version>0.3.0.1</Version>
   </PropertyGroup>
 
   <ItemGroup>

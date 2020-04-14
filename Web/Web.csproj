@@ -5,7 +5,7 @@
     <RootNamespace>DwFramework.Web</RootNamespace>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <PackageId>DwFramework.Web</PackageId>
-    <Version>0.3.0</Version>
+    <Version>0.3.0.1</Version>
     <Authors>DwGoing</Authors>
     <Company>DwGoing</Company>
     <Product>DwFramework.Web</Product>

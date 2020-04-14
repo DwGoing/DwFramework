@@ -5,7 +5,7 @@
     <AssemblyName>DwFramework.TaskSchedule</AssemblyName>
     <RootNamespace>DwFramework.TaskSchedule</RootNamespace>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <Version>0.3.0</Version>
+    <Version>0.3.0.1</Version>
     <Authors>DwGoing</Authors>
     <Copyright>DwGoing</Copyright>
     <Description>DwFramework 任务调度库</Description>
