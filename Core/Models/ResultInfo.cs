@@ -32,7 +32,7 @@
 
     public class ResultInfo<T> : ResultInfo
     {
-        public T Data;
+        public T Data { get; set; }
 
         public static ResultInfo<T> Success(string message, T data)
         {
