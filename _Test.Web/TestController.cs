@@ -10,7 +10,7 @@ namespace _Test.Web
     public class TestController : Controller
     {
         [HttpGet("test")]
-        public ActionResult Test()
+        public IActionResult Test()
         {
             return Ok(ResultInfo.Success("ok"));
         }

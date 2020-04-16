@@ -2,6 +2,8 @@
 
 using DwFramework.Core;
 using DwFramework.Core.Extensions;
+using Microsoft.Extensions.Logging;
+using NLog;
 
 namespace _Test.Core
 {
@@ -10,9 +12,10 @@ namespace _Test.Core
         static void Main(string[] args)
         {
             ServiceHost host = new ServiceHost();
-            host.RegisterType<ITest, CTest>();
+            host.RegisterLog();
+            host.RegisterType<CTest>();
             var provider = host.Build();
-            provider.GetService<ITest>().M();
+            provider.GetService<CTest>().M();
             Console.Read();
         }
     }
@@ -24,9 +27,16 @@ namespace _Test.Core
 
     public class CTest : ITest
     {
+        private readonly ILogger<CTest> _logger;
+
+        public CTest(ILogger<CTest> logger)
+        {
+            _logger = logger;
+        }
+
         public void M()
         {
-            Console.WriteLine("Helo");
+            _logger.LogInformation("Helo");
         }
     }
 }
