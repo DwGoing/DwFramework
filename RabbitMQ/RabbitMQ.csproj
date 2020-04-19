@@ -10,6 +10,7 @@
     <PackageProjectUrl>https://github.com/Dwgoing/DwFramework/tree/master/RabbitMQ</PackageProjectUrl>
     <Description>DwFramework RabbitMQ库</Description>
     <Copyright>DwGoing</Copyright>
+    <ReleaseVersion>0.2</ReleaseVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -20,7 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="RabbitMQ.Client" Version="5.1.2" />
+    <PackageReference Include="RabbitMQ.Client" Version="6.0.0" />
   </ItemGroup>
 
   <ItemGroup>
