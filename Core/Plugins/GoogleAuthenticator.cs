@@ -12,7 +12,7 @@ namespace DwFramework.Core.Plugins
         /// 获取手机端秘钥
         /// </summary>
         /// <returns></returns>
-        public static string GetMobilePhoneKey(string key)
+        public static string GenerateMobilePhoneKey(string key)
         {
             var baseCode = Encoding.UTF8.GetBytes(key).ToBase32String();
             return baseCode.TrimEnd('=');
