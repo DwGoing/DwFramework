@@ -4,7 +4,7 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <AssemblyName>DwFramework.Database</AssemblyName>
     <RootNamespace>DwFramework.Database</RootNamespace>
-    <Version>0.3.0.2</Version>
+    <Version>0.3.0.3</Version>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <Authors>DwGoing</Authors>
     <Company>DwGoing</Company>
