@@ -23,6 +23,7 @@ namespace DwFramework.Database
             public string ConnectionString { get; set; }
             public string DbType { get; set; }
             public SlaveConnectionConfig[] SlaveConnections { get; set; }
+            public bool UseMemoryCache { get; set; } = false;
         }
 
         private readonly Config _config;
@@ -51,10 +52,9 @@ namespace DwFramework.Database
                 IsAutoCloseConnection = true,       //默认false, 时候知道关闭数据库连接, 设置为true无需使用using或者Close操作
                 InitKeyType = InitKeyType.SystemTable,    //默认SystemTable, 字段信息读取, 如：该属性是不是主键，是不是标识列等等信息
                 ConfigureExternalServices = new ConfigureExternalServices() // 配置扩展服务
-                {
-                    DataInfoCacheService = new DataMemoryCache() // Memory缓存
-                }
             };
+            if (_config.UseMemoryCache)
+                config.ConfigureExternalServices.DataInfoCacheService = new DataMemoryCache(); // Memory缓存
             // 主从模式
             if (_config.SlaveConnections != null && _config.SlaveConnections.Length > 0)
             {
