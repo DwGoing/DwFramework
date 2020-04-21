@@ -1,40 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
-
-  <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
-    <RootNamespace>DwFramework.Web</RootNamespace>
-    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <PackageId>DwFramework.Web</PackageId>
-    <Version>0.3.0.2</Version>
-    <Authors>DwGoing</Authors>
-    <Company>DwGoing</Company>
-    <Product>DwFramework.Web</Product>
-    <Description>DwFramework Web库</Description>
-    <PackageLicenseFile>LICENSE</PackageLicenseFile>
-    <PackageProjectUrl>https://github.com/Dwgoing/DwFramework/tree/master/Web</PackageProjectUrl>
-    <AssemblyName>DwFramework.Web</AssemblyName>
-    <Copyright>DwGoing</Copyright>
-    <ReleaseVersion>0.2</ReleaseVersion>
-  </PropertyGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Core\Core.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="..\LICENSE">
-      <Pack>True</Pack>
-      <PackagePath></PackagePath>
-    </None>
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.3" />
-    <PackageReference Include="Microsoft.AspNetCore.Hosting" Version="2.2.7" />
-    <PackageReference Include="Microsoft.AspNetCore.Server.Kestrel" Version="2.2.0" />
-    <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.5.0" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="5.3.3" />
-    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.5.0" />
-  </ItemGroup>
-
+    <PropertyGroup>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <AssemblyName>DwFramework.Web</AssemblyName>
+        <RootNamespace>DwFramework.Web</RootNamespace>
+        <PackageId>DwFramework.Web</PackageId>
+        <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+        <PackageLicenseFile>LICENSE</PackageLicenseFile>
+        <PackageProjectUrl>https://github.com/Dwgoing/DwFramework/tree/master/Web</PackageProjectUrl>
+        <Version>0.3.0.3</Version>
+        <Authors>DwGoing</Authors>
+        <Description>DwFramework Web库</Description>
+        <Copyright>DwGoing</Copyright>
+    </PropertyGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\Core\Core.csproj" />
+    </ItemGroup>
+    <ItemGroup>
+        <None Include="..\LICENSE">
+            <Pack>True</Pack>
+            <PackagePath>
+            </PackagePath>
+        </None>
+    </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.3" />
+        <PackageReference Include="Microsoft.AspNetCore.Hosting" Version="2.2.7" />
+        <PackageReference Include="Microsoft.AspNetCore.Server.Kestrel" Version="2.2.0" />
+        <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.5.0" />
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="5.3.3" />
+        <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.5.0" />
+    </ItemGroup>
 </Project>

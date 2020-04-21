@@ -1,31 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
-
-  <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
-    <AssemblyName>DwFramework.Rpc</AssemblyName>
-    <RootNamespace>DwFramework.Rpc</RootNamespace>
-    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <Version>0.3.0.2</Version>
-    <Authors>DwGoing</Authors>
-    <Description>DwFramework Rpc库</Description>
-    <PackageLicenseFile>LICENSE</PackageLicenseFile>
-    <PackageProjectUrl>https://github.com/Dwgoing/DwFramework/tree/master/Rpc</PackageProjectUrl>
-    <Copyright>DwGoing</Copyright>
-  </PropertyGroup>
-
-  <ItemGroup>
-    <None Include="..\LICENSE">
-      <Pack>True</Pack>
-      <PackagePath></PackagePath>
-    </None>
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Hprose.RPC" Version="3.0.14" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Core\Core.csproj" />
-  </ItemGroup>
-
+    <PropertyGroup>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <AssemblyName>DwFramework.Rpc</AssemblyName>
+        <RootNamespace>DwFramework.Rpc</RootNamespace>
+        <PackageId>DwFramework.Rpc</PackageId>
+        <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+        <PackageLicenseFile>LICENSE</PackageLicenseFile>
+        <PackageProjectUrl>https://github.com/Dwgoing/DwFramework/tree/master/Rpc</PackageProjectUrl>
+        <Version>0.3.0.2</Version>
+        <Authors>DwGoing</Authors>
+        <Description>DwFramework Rpc库</Description>
+        <Copyright>DwGoing</Copyright>
+    </PropertyGroup>
+    <ItemGroup>
+        <None Include="..\LICENSE">
+            <Pack>True</Pack>
+            <PackagePath>
+            </PackagePath>
+        </None>
+    </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Hprose.RPC" Version="3.0.14" />
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\Core\Core.csproj" />
+    </ItemGroup>
 </Project>
