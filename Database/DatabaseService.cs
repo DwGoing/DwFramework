@@ -43,7 +43,7 @@ namespace DwFramework.Database
         /// 创建连接
         /// </summary>
         /// <returns></returns>
-        public SqlSugarClient CreateConnection()
+        private SqlSugarClient CreateConnection()
         {
             var config = new ConnectionConfig()
             {

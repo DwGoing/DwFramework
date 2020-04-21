@@ -9,6 +9,7 @@ namespace DwFramework.Database
     public abstract class BaseRepository<T> : IRepository<T> where T : class, new()
     {
         private readonly DatabaseService _databaseService;
+        protected SqlSugarClient DbConnection { get => _databaseService.DbConnection; }
 
         /// <summary>
         /// 构造函数
@@ -30,7 +31,7 @@ namespace DwFramework.Database
         {
             return Task.Run(() =>
             {
-                return _databaseService.DbConnection.Queryable<T>()
+                return DbConnection.Queryable<T>()
                     .WithCacheIF(cacheExpireSeconds > 0, cacheExpireSeconds)
                     .ToArray();
             });
@@ -46,7 +47,7 @@ namespace DwFramework.Database
         {
             return Task.Run(() =>
             {
-                return _databaseService.DbConnection.Queryable<T>()
+                return DbConnection.Queryable<T>()
                     .Where(expression)
                     .WithCacheIF(cacheExpireSeconds > 0, cacheExpireSeconds)
                     .ToArray();
@@ -61,7 +62,7 @@ namespace DwFramework.Database
         /// <returns></returns>
         public Task<T> FindSingleAsync(Expression<Func<T, bool>> expression, int cacheExpireSeconds = 0)
         {
-            return _databaseService.DbConnection.Queryable<T>()
+            return DbConnection.Queryable<T>()
                 .WithCacheIF(cacheExpireSeconds > 0, cacheExpireSeconds)
                 .FirstAsync(expression);
         }
@@ -73,7 +74,7 @@ namespace DwFramework.Database
         /// <returns></returns>
         public Task<T> InsertAsync(T newRecord)
         {
-            return _databaseService.DbConnection.Insertable(newRecord)
+            return DbConnection.Insertable(newRecord)
                 .RemoveDataCache()
                 .ExecuteReturnEntityAsync();
         }
@@ -85,7 +86,7 @@ namespace DwFramework.Database
         /// <returns></returns>
         public Task<int> InsertAsync(T[] newRecords)
         {
-            return _databaseService.DbConnection.Insertable(newRecords)
+            return DbConnection.Insertable(newRecords)
                 .RemoveDataCache()
                 .ExecuteCommandAsync();
         }
@@ -97,7 +98,7 @@ namespace DwFramework.Database
         /// <returns></returns>
         public Task<int> DeleteAsync(Expression<Func<T, bool>> expression)
         {
-            return _databaseService.DbConnection.Deleteable(expression)
+            return DbConnection.Deleteable(expression)
                 .RemoveDataCache()
                 .ExecuteCommandAsync();
         }
@@ -109,7 +110,7 @@ namespace DwFramework.Database
         /// <returns></returns>
         public Task<bool> UpdateAsync(T updatedRecord)
         {
-            return _databaseService.DbConnection.Updateable(updatedRecord)
+            return DbConnection.Updateable(updatedRecord)
                 .RemoveDataCache()
                 .ExecuteCommandHasChangeAsync();
         }
@@ -121,7 +122,7 @@ namespace DwFramework.Database
         /// <returns></returns>
         public Task<int> UpdateAsync(T[] updatedRecords)
         {
-            return _databaseService.DbConnection.Updateable(updatedRecords)
+            return DbConnection.Updateable(updatedRecords)
                 .RemoveDataCache()
                 .ExecuteCommandAsync();
         }
