@@ -51,12 +51,15 @@ namespace DwFramework.Web.Plugins
         /// <param name="url"></param>
         /// <param name="name"></param>
         /// <returns></returns>
-        public static IApplicationBuilder UseSwagger(this IApplicationBuilder app, string url, string name)
+        public static IApplicationBuilder UseSwagger(this IApplicationBuilder app, string name, string desc)
         {
-            app.UseSwagger();
+            app.UseSwagger(c =>
+            {
+                c.RouteTemplate = "{documentName}/swagger.json";
+            });
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint(url, name);
+                c.SwaggerEndpoint($"/{name}/swagger.json", desc);
             });
             return app;
         }
