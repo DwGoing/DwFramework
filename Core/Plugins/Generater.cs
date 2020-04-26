@@ -6,6 +6,15 @@ namespace DwFramework.Core.Plugins
     public static class Generater
     {
         /// <summary>
+        /// 生成GUID
+        /// </summary>
+        /// <returns></returns>
+        public static Guid GenerateGUID()
+        {
+            return Guid.NewGuid();
+        }
+
+        /// <summary>
         /// 生成随机字符串
         /// </summary>
         /// <param name="length"></param>
