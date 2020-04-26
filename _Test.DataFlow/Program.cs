@@ -17,11 +17,14 @@ namespace _Test.DataFlow
                 host.RegisterDataFlowService();
                 var provider = host.Build();
                 var service = provider.GetDataFlowService();
-                service.CreateTaskQueue("test", new TaskHandler(), new ResultHandler());
-                service.AddInput("test", 1);
-                service.AddInput("test", 2);
-                Thread.Sleep(1000);
-                Console.WriteLine(service.GetResult("test"));
+                var key = service.CreateTaskQueue(new TaskHandler(), new ResultHandler());
+                service.AddTaskStartHandler<int>(key, (input) => Console.WriteLine($"Start1:{input}"));
+                //service.AddTaskStartHandler<int>(key, (input) => Console.WriteLine($"Start2:{input}"));
+                service.AddTaskEndHandler<int, int, int>(key, (input, output, result) => Console.WriteLine($"End1:{input} {output} {result}"));
+                //service.AddTaskEndHandler<int, int, int>(key, (input, output, result) => Console.WriteLine($"End2:{input} {output} {result}"));
+                service.AddInput(key, 1);
+                service.AddInput(key, 2);
+                service.GetResult(key);
                 while (true) Thread.Sleep(1);
             }
             catch (Exception ex)
