@@ -18,12 +18,18 @@ namespace _Test.DataFlow
                 var provider = host.Build();
                 var service = provider.GetDataFlowService();
                 var key = service.CreateTaskQueue(new TaskHandler(), new ResultHandler());
-                service.AddTaskStartHandler<int>(key, (input) => Console.WriteLine($"Start1:{input}"));
-                //service.AddTaskStartHandler<int>(key, (input) => Console.WriteLine($"Start2:{input}"));
-                service.AddTaskEndHandler<int, int, int>(key, (input, output, result) => Console.WriteLine($"End1:{input} {output} {result}"));
-                //service.AddTaskEndHandler<int, int, int>(key, (input, output, result) => Console.WriteLine($"End2:{input} {output} {result}"));
+                service.AddTaskStartHandler<int>(key, (input) => Console.WriteLine($"------ Start ------\nInput=>{input}"));
+                service.AddTaskEndHandler<int, int, int>(key, (input, output, result) => Console.WriteLine($"------ End ------\nInput=>{input}\nOutput=>{output}\nResult=>{result}"));
                 service.AddInput(key, 1);
                 service.AddInput(key, 2);
+                service.AddInput(key, 3);
+                service.AddInput(key, 4);
+                service.AddInput(key, 5);
+                service.AddInput(key, 6);
+                service.AddInput(key, 7);
+                service.AddInput(key, 8);
+                service.AddInput(key, 9);
+                service.AddInput(key, 10);
                 service.GetResult(key);
                 while (true) Thread.Sleep(1);
             }
