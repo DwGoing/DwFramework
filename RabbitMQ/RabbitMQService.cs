@@ -44,26 +44,15 @@ namespace DwFramework.RabbitMQ
         public RabbitMQService(IServiceProvider provider, IEnvironment environment) : base(provider, environment)
         {
             _config = _environment.GetConfiguration().GetSection<Config>("RabbitMQ");
-        }
-
-        /// <summary>
-        /// 开启服务
-        /// </summary>
-        /// <returns></returns>
-        public Task OpenServiceAsync()
-        {
-            return Task.Run(() =>
+            _connectionFactory = new ConnectionFactory()
             {
-                _connectionFactory = new ConnectionFactory()
-                {
-                    HostName = _config.Host,
-                    Port = _config.Port,
-                    UserName = _config.UserName,
-                    Password = _config.Password,
-                    VirtualHost = _config.VirtualHost
-                };
-                _subscribers = new Dictionary<string, KeyValuePair<CancellationTokenSource, Task>>();
-            });
+                HostName = _config.Host,
+                Port = _config.Port,
+                UserName = _config.UserName,
+                Password = _config.Password,
+                VirtualHost = _config.VirtualHost
+            };
+            _subscribers = new Dictionary<string, KeyValuePair<CancellationTokenSource, Task>>();
         }
 
         /// <summary>
