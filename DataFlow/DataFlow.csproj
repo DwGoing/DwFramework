@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <AssemblyName>DwFramework.DataFlow</AssemblyName>
+        <RootNamespace>DwFramework.DataFlow</RootNamespace>
+        <PackageId>DwFramework.DataFlow</PackageId>
+        <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+        <PackageLicenseFile>LICENSE</PackageLicenseFile>
+        <PackageProjectUrl>https://github.com/Dwgoing/DwFramework/tree/master/DataFlow</PackageProjectUrl>
+        <Version>0.3.0.1</Version>
+        <Authors>DwGoing</Authors>
+        <Description>DwFramework 流式计算库</Description>
+        <Copyright>DwGoing</Copyright>
+        <ReleaseVersion>0.2</ReleaseVersion>
+    </PropertyGroup>
+    <ItemGroup>
+        <None Include="..\LICENSE">
+            <Pack>True</Pack>
+            <PackagePath>
+            </PackagePath>
+        </None>
+    </ItemGroup>
+    <ItemGroup>
+      <ProjectReference Include="..\Core\Core.csproj" />
+    </ItemGroup>
+    <ItemGroup>
+      <Folder Include="Extensions\" />
+      <Folder Include="Models\" />
+    </ItemGroup>
+</Project>
