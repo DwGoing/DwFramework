@@ -1,39 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
-
-  <PropertyGroup>
-    <TargetFramework>netcoreapp2.2</TargetFramework>
-    <PackageId>DwFramework.MachineLearning</PackageId>
-    <PackageVersion>0.1.0</PackageVersion>
-    <Authors>DwGoing</Authors>
-    <Description>DwFramework MachineLearning库</Description>
-    <RootNamespace>DwFramework.MachineLearning</RootNamespace>
-    <DevelopmentDependency>true</DevelopmentDependency>
-    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <NeutralLanguage>zh</NeutralLanguage>
-    <ReleaseVersion>0.2</ReleaseVersion>
-    <Copyright>DwGoing</Copyright>
-    <Owners>DwGoing</Owners>
-    <PackageProjectUrl>https://github.com/Dwgoing/DwFramework/tree/master/MachineLearning</PackageProjectUrl>
-    <Summary>DwFramework MachineLearning库</Summary>
-    <Title>DwFramework.MachineLearning</Title>
-    <PackOnBuild>true</PackOnBuild>
-    <PackageLicenseUrl>https://licenses.nuget.org/MIT</PackageLicenseUrl>
-  </PropertyGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Core\Core.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="NuGet.Build.Packaging" Version="0.2.2">
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
-    <PackageReference Include="Microsoft.ML" Version="1.4.0" />
-    <PackageReference Include="Microsoft.ML.Recommender" Version="0.16.0" />
-    <PackageReference Include="Microsoft.ML.TimeSeries" Version="1.4.0" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Extensions\" />
-    <Folder Include="Models\" />
-  </ItemGroup>
+    <PropertyGroup>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <AssemblyName>DwFramework.MachineLearning</AssemblyName>
+        <RootNamespace>DwFramework.MachineLearning</RootNamespace>
+        <PackageId>DwFramework.MachineLearning</PackageId>
+        <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+        <PackageLicenseFile>LICENSE</PackageLicenseFile>
+        <PackageProjectUrl>https://github.com/Dwgoing/DwFramework/tree/master/MachineLearning</PackageProjectUrl>
+        <Version>0.3.0.2</Version>
+        <Authors>DwGoing</Authors>
+        <Description>DwFramework 机器学习库</Description>
+        <Copyright>DwGoing</Copyright>
+        <ReleaseVersion>0.2</ReleaseVersion>
+    </PropertyGroup>
+    <ItemGroup>
+        <None Include="..\LICENSE">
+            <Pack>True</Pack>
+            <PackagePath>
+            </PackagePath>
+        </None>
+    </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Microsoft.ML" Version="1.4.0" />
+        <PackageReference Include="Microsoft.ML.Recommender" Version="0.16.0" />
+        <PackageReference Include="Microsoft.ML.TimeSeries" Version="1.4.0" />
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\Core\Core.csproj" />
+    </ItemGroup>
 </Project>

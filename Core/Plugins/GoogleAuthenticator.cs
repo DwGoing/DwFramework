@@ -6,13 +6,13 @@ using DwFramework.Core.Extensions;
 
 namespace DwFramework.Core.Plugins
 {
-    public static class GoogleAuthenticatorPlugin
+    public static class GoogleAuthenticator
     {
         /// <summary>
         /// 获取手机端秘钥
         /// </summary>
         /// <returns></returns>
-        public static string GetMobilePhoneKey(string key)
+        public static string GenerateMobilePhoneKey(string key)
         {
             var baseCode = Encoding.UTF8.GetBytes(key).ToBase32String();
             return baseCode.TrimEnd('=');

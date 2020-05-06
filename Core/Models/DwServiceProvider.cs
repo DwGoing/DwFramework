@@ -2,7 +2,7 @@
 
 namespace DwFramework.Core
 {
-    public class DwServiceProvider : AutofacServiceProvider, IDwServiceProvider
+    public class DwServiceProvider : AutofacServiceProvider
     {
         public DwServiceProvider(AutofacServiceProvider provider) : base(provider.LifetimeScope) { }
     }

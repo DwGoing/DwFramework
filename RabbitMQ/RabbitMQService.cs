@@ -20,7 +20,7 @@ namespace DwFramework.RabbitMQ
         public const string Topic = "topic";
     }
 
-    public class RabbitMQService : IRabbitMQService
+    public class RabbitMQService : BaseService
     {
         public class Config
         {
@@ -31,7 +31,6 @@ namespace DwFramework.RabbitMQ
             public string VirtualHost { get; set; }
         }
 
-        private readonly IRunEnvironment _environment;
         private readonly Config _config;
         private ConnectionFactory _connectionFactory;
         private Dictionary<string, KeyValuePair<CancellationTokenSource, Task>> _subscribers;
@@ -42,30 +41,18 @@ namespace DwFramework.RabbitMQ
         /// </summary>
         /// <param name="provider"></param>
         /// <param name="environment"></param>
-        public RabbitMQService(IRunEnvironment environment)
+        public RabbitMQService(IServiceProvider provider, IEnvironment environment) : base(provider, environment)
         {
-            _environment = environment;
             _config = _environment.GetConfiguration().GetSection<Config>("RabbitMQ");
-        }
-
-        /// <summary>
-        /// 开启服务
-        /// </summary>
-        /// <returns></returns>
-        public Task OpenServiceAsync()
-        {
-            return Task.Run(() =>
+            _connectionFactory = new ConnectionFactory()
             {
-                _connectionFactory = new ConnectionFactory()
-                {
-                    HostName = _config.Host,
-                    Port = _config.Port,
-                    UserName = _config.UserName,
-                    Password = _config.Password,
-                    VirtualHost = _config.VirtualHost
-                };
-                _subscribers = new Dictionary<string, KeyValuePair<CancellationTokenSource, Task>>();
-            });
+                HostName = _config.Host,
+                Port = _config.Port,
+                UserName = _config.UserName,
+                Password = _config.Password,
+                VirtualHost = _config.VirtualHost
+            };
+            _subscribers = new Dictionary<string, KeyValuePair<CancellationTokenSource, Task>>();
         }
 
         /// <summary>

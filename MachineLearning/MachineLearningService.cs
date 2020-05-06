@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 
 using Microsoft.ML;
-using Microsoft.ML.Data;
-using Microsoft.ML.Transforms;
+
+using DwFramework.Core;
 
 namespace DwFramework.MachineLearning
 {
-    public class MachineLearningService : IMachineLearningService
+    public class MachineLearningService : BaseService
     {
         public readonly MLContext MlContext;
         public DataOperationsCatalog DataOperations { get { return MlContext.Data; } }
@@ -40,7 +40,7 @@ namespace DwFramework.MachineLearning
         /// <summary>
         /// 构造函数
         /// </summary>
-        public MachineLearningService()
+        public MachineLearningService(IServiceProvider provider, IEnvironment environment) : base(provider, environment)
         {
             MlContext = new MLContext();
         }

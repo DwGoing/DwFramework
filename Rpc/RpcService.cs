@@ -11,15 +11,13 @@ using DwFramework.Core.Extensions;
 
 namespace DwFramework.Rpc
 {
-    public class RpcService : IRpcService
+    public class RpcService : BaseService
     {
         public class Config
         {
             public string[] Prefixes { get; set; }
         }
 
-        private readonly IServiceProvider _provider;
-        private readonly IRunEnvironment _environment;
         private readonly Config _config;
 
         public Service Service { get; private set; }
@@ -29,30 +27,17 @@ namespace DwFramework.Rpc
         /// </summary>
         /// <param name="provider"></param>
         /// <param name="environment"></param>
-        public RpcService(IServiceProvider provider, IRunEnvironment environment)
+        public RpcService(IServiceProvider provider, IEnvironment environment) : base(provider, environment)
         {
-            _provider = provider;
-            _environment = environment;
             _config = _environment.GetConfiguration().GetSection<Config>("Rpc");
-        }
-
-        /// <summary>
-        /// 开启Rpc服务
-        /// </summary>
-        /// <returns></returns>
-        public Task OpenServiceAsync()
-        {
-            return Task.Run(() =>
+            var listener = new HttpListener();
+            foreach (var item in _config.Prefixes)
             {
-                var listener = new HttpListener();
-                foreach (var item in _config.Prefixes)
-                {
-                    listener.Prefixes.Add(item.EndsWith("/") ? item : $"{item}/");
-                }
-                listener.Start();
-                Service = new Service();
-                Service.Bind(listener);
-            });
+                listener.Prefixes.Add(item.EndsWith("/") ? item : $"{item}/");
+            }
+            listener.Start();
+            Service = new Service();
+            Service.Bind(listener);
         }
 
         /// <summary>

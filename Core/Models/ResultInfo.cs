@@ -8,8 +8,8 @@
 
     public class ResultInfo
     {
-        public int Code;
-        public string Message;
+        public int Code { get; set; }
+        public string Message { get; set; }
 
         public static ResultInfo Success(string message)
         {
@@ -32,7 +32,7 @@
 
     public class ResultInfo<T> : ResultInfo
     {
-        public T Data;
+        public T Data { get; set; }
 
         public static ResultInfo<T> Success(string message, T data)
         {

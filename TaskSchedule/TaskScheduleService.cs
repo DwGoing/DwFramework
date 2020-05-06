@@ -15,14 +15,13 @@ using DwFramework.Core.Extensions;
 
 namespace DwFramework.TaskSchedule
 {
-    public class TaskScheduleService : ITaskScheduleService
+    public class TaskScheduleService : BaseService
     {
         public class Config
         {
 
         }
 
-        private readonly IRunEnvironment _environment;
         private readonly Config _config;
         private readonly DirectSchedulerFactory _schedulerFactory;
 
@@ -33,9 +32,8 @@ namespace DwFramework.TaskSchedule
         /// </summary>
         /// <param name="provider"></param>
         /// <param name="environment"></param>
-        public TaskScheduleService(IRunEnvironment environment)
+        public TaskScheduleService(IServiceProvider provider, IEnvironment environment) : base(provider, environment)
         {
-            _environment = environment;
             _config = _environment.GetConfiguration().GetSection<Config>("TaskSchedule");
             _schedulerFactory = DirectSchedulerFactory.Instance;
         }
@@ -48,7 +46,7 @@ namespace DwFramework.TaskSchedule
         /// <returns></returns>
         public Task CreateScheduler(string schedulerKey)
         {
-            _schedulerFactory.CreateScheduler(schedulerKey, GeneraterPlugin.GenerateRandomString(16), new DefaultThreadPool(), new RAMJobStore());
+            _schedulerFactory.CreateScheduler(schedulerKey, Generater.GenerateRandomString(16), new DefaultThreadPool(), new RAMJobStore());
             var scheduler = _schedulerFactory.GetScheduler(schedulerKey).Result;
             return scheduler.Start();
         }

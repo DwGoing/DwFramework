@@ -30,7 +30,7 @@ namespace DwFramework.Core
             if (configFilePath != null && File.Exists(configFilePath))
                 configuration = new ConfigurationBuilder().AddJsonFile(configFilePath).Build();
             // 环境变量
-            RegisterInstance<IRunEnvironment, RunEnvironment>(new RunEnvironment(environmentType, configuration)).SingleInstance();
+            RegisterInstance<IEnvironment, Environment>(new Environment(environmentType, configuration)).SingleInstance();
         }
 
         /// <summary>
@@ -39,7 +39,7 @@ namespace DwFramework.Core
         /// <typeparam name="T"></typeparam>
         /// <param name="func"></param>
         /// <returns></returns>
-        public IRegistrationBuilder<T, SimpleActivatorData, SingleRegistrationStyle> Register<T>(Func<IComponentContext, T> func)
+        public IRegistrationBuilder<T, SimpleActivatorData, SingleRegistrationStyle> Register<T>(Func<IComponentContext, T> func) where T : class
         {
             return _containerBuilder.Register(func);
         }
@@ -51,7 +51,7 @@ namespace DwFramework.Core
         /// <typeparam name="T"></typeparam>
         /// <param name="func"></param>
         /// <returns></returns>
-        public IRegistrationBuilder<T, SimpleActivatorData, SingleRegistrationStyle> Register<I, T>(Func<IComponentContext, T> func)
+        public IRegistrationBuilder<T, SimpleActivatorData, SingleRegistrationStyle> Register<I, T>(Func<IComponentContext, T> func) where I : class where T : class
         {
             return _containerBuilder.Register(func).As<I>();
         }
@@ -101,7 +101,7 @@ namespace DwFramework.Core
         /// <typeparam name="I"></typeparam>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public IRegistrationBuilder<T, ConcreteReflectionActivatorData, SingleRegistrationStyle> RegisterType<I, T>() where T : class
+        public IRegistrationBuilder<T, ConcreteReflectionActivatorData, SingleRegistrationStyle> RegisterType<I, T>() where I : class where T : class
         {
             return _containerBuilder.RegisterType<T>().As<I>();
         }
@@ -124,7 +124,7 @@ namespace DwFramework.Core
         /// <typeparam name="T"></typeparam>
         /// <param name="instance"></param>
         /// <returns></returns>
-        public IRegistrationBuilder<T, SimpleActivatorData, SingleRegistrationStyle> RegisterInstance<I, T>(T instance) where T : class
+        public IRegistrationBuilder<T, SimpleActivatorData, SingleRegistrationStyle> RegisterInstance<I, T>(T instance) where I : class where T : class
         {
             return _containerBuilder.RegisterInstance(instance).As<I>();
         }

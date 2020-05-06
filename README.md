@@ -9,16 +9,18 @@
 
 ### 0x2 组件列表
 
-|            组件             |     说明      |                             引用                             |                             状态                             |
-| :-------------------------: | :-----------: | :----------------------------------------------------------: | :----------------------------------------------------------: |
-|      DwFramework.Core       |   核心组件    | [![](https://img.shields.io/badge/Autofac-brightgreen.svg)](https://github.com/autofac/Autofac/tree/master) | [![](https://img.shields.io/badge/Nuget-0.1.12-brightgreen.svg)](https://www.nuget.org/packages/DwFramework.Core/) |
-|      DwFramework.Http       |  WebAPI组件   | [![](https://img.shields.io/badge/AspNetCore-brightgreen.svg)](https://github.com/dotnet/aspnetcore) | [![](https://img.shields.io/badge/Nuget-0.1.11-brightgreen.svg)](https://www.nuget.org/packages/DwFramework.Http/) |
-|    DwFramework.WebSocket    | WebSocket组件 | [![](https://img.shields.io/badge/AspNetCore-brightgreen.svg)](https://github.com/dotnet/aspnetcore) | [![](https://img.shields.io/badge/Nuget-0.1.9-brightgreen.svg)](https://www.nuget.org/packages/DwFramework.WebSocket/) |
-|    DwFramework.Database     |  数据库组件   | [![](https://img.shields.io/badge/SqlSugar-brightgreen.svg)](https://github.com/sunkaixuan/SqlSugar) | [![](https://img.shields.io/badge/Nuget-0.1.1-brightgreen.svg)](https://www.nuget.org/packages/DwFramework.Database/) |
-| DwFramework.MachineLearning | 机器学习组件  | [![](https://img.shields.io/badge/ML.Net-brightgreen.svg)](https://github.com/dotnet/machinelearning) | [![](https://img.shields.io/badge/Nuget-0.1.0-brightgreen.svg)](https://www.nuget.org/packages/DwFramework.MachineLearning/) |
-|       DwFramework.Rpc       |    Rpc组件    | [![](https://img.shields.io/badge/Hprose-brightgreen.svg)](https://github.com/hprose/hprose-dotnet) | [![](https://img.shields.io/badge/Nuget-0.1.8-brightgreen.svg)](https://www.nuget.org/packages/DwFramework.Rpc/) |
-|    DwFramework.RabbitMQ     | RabbitMQ组件  | [![](https://img.shields.io/badge/RabbitMQ-brightgreen.svg)](https://github.com/rabbitmq/rabbitmq-dotnet-client) | [![](https://img.shields.io/badge/Nuget-0.1.2-brightgreen.svg)](https://www.nuget.org/packages/DwFramework.RabbitMQ/) |
-|  DwFramework.TaskSchedule   | 任务调度组件  | [![](https://img.shields.io/badge/Quartz-brightgreen.svg)](https://github.com/quartznet/quartznet) | [![](https://img.shields.io/badge/Nuget-0.1.1-brightgreen.svg)](https://www.nuget.org/packages/DwFramework.TaskSchedule/) |
+版本说明：ReleaseVersion.NetCoreVersion.FrameworkVersion
+
+|            组件             |     说明     |                             引用                             |                             状态                             |
+| :-------------------------: | :----------: | :----------------------------------------------------------: | :----------------------------------------------------------: |
+|      DwFramework.Core       |   核心组件   | [![](https://img.shields.io/badge/Autofac-brightgreen.svg)](https://github.com/autofac/Autofac/tree/master) | [![](https://img.shields.io/badge/Nuget-0.3.1.5-brightgreen.svg)](https://www.nuget.org/packages/DwFramework.Core/) |
+|       DwFramework.Web       |   Web组件    | [![](https://img.shields.io/badge/AspNetCore-brightgreen.svg)](https://github.com/dotnet/aspnetcore) | [![](https://img.shields.io/badge/Nuget-0.3.0.4-brightgreen.svg)](https://www.nuget.org/packages/DwFramework.Http/) |
+|    DwFramework.Database     |   ORM组件    | [![](https://img.shields.io/badge/SqlSugar-brightgreen.svg)](https://github.com/sunkaixuan/SqlSugar) | [![](https://img.shields.io/badge/Nuget-0.3.0.5-brightgreen.svg)](https://www.nuget.org/packages/DwFramework.Database/) |
+| DwFramework.MachineLearning | 机器学习组件 | [![](https://img.shields.io/badge/ML.Net-brightgreen.svg)](https://github.com/dotnet/machinelearning) | [![](https://img.shields.io/badge/Nuget-0.3.0.2-brightgreen.svg)](https://www.nuget.org/packages/DwFramework.MachineLearning/) |
+|       DwFramework.Rpc       |   Rpc组件    | [![](https://img.shields.io/badge/Hprose-brightgreen.svg)](https://github.com/hprose/hprose-dotnet) | [![](https://img.shields.io/badge/Nuget-0.3.0.3-brightgreen.svg)](https://www.nuget.org/packages/DwFramework.Rpc/) |
+|    DwFramework.RabbitMQ     | RabbitMQ组件 | [![](https://img.shields.io/badge/RabbitMQ-brightgreen.svg)](https://github.com/rabbitmq/rabbitmq-dotnet-client) | [![](https://img.shields.io/badge/Nuget-0.3.0.3-brightgreen.svg)](https://www.nuget.org/packages/DwFramework.RabbitMQ/) |
+|  DwFramework.TaskSchedule   | 任务调度组件 | [![](https://img.shields.io/badge/Quartz-brightgreen.svg)](https://github.com/quartznet/quartznet) | [![](https://img.shields.io/badge/Nuget-0.3.0.3-brightgreen.svg)](https://www.nuget.org/packages/DwFramework.TaskSchedule/) |
+|    DwFramework.DataFlow     | 流式计算组件 |                                                              | [![](https://img.shields.io/badge/Nuget-0.3.0.1-brightgreen.svg)](https://www.nuget.org/packages/DwFramework.DataFlow/) |
 
 ---
 

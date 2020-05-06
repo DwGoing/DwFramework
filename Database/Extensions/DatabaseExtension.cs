@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading.Tasks;
 
 using SqlSugar;
 
@@ -20,16 +19,6 @@ namespace DwFramework.Database.Extensions
         }
 
         /// <summary>
-        /// 初始化服务
-        /// </summary>
-        /// <param name="provider"></param>
-        /// <returns></returns>
-        public static Task InitDatabaseServiceAsync(this IServiceProvider provider)
-        {
-            return provider.GetService<DatabaseService>().OpenServiceAsync();
-        }
-
-        /// <summary>
         /// 获取服务
         /// </summary>
         /// <param name="provider"></param>
@@ -46,10 +35,9 @@ namespace DwFramework.Database.Extensions
         /// <returns></returns>
         public static DbType ParseDbType(this string typeStr)
         {
-            typeStr = typeStr.ToLower();
             foreach (var item in Enum.GetValues(typeof(DbType)))
             {
-                if (item.ToString().ToLower() == typeStr)
+                if (string.Compare(item.ToString(), typeStr, true) == 0)
                     return (DbType)item;
             }
             throw new Exception("无法找到匹配的DbType");

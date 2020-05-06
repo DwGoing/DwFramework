@@ -8,9 +8,8 @@ namespace DwFramework.Database
 {
     public abstract class BaseRepository<T> : IRepository<T> where T : class, new()
     {
-        private DatabaseService _databaseService;
-
-        public SqlSugarClient Db { get => _databaseService.Db; }
+        private readonly DatabaseService _databaseService;
+        protected SqlSugarClient DbConnection { get => _databaseService.DbConnection; }
 
         /// <summary>
         /// 构造函数
@@ -26,30 +25,46 @@ namespace DwFramework.Database
         /// <summary>
         /// 查找所有记录
         /// </summary>
+        /// <param name="cacheExpireSeconds"></param>
         /// <returns></returns>
-        public Task<T[]> FindAllAsync()
+        public Task<T[]> FindAllAsync(int cacheExpireSeconds = 0)
         {
-            return Task.Run(() => Db.Queryable<T>().ToArray());
+            return Task.Run(() =>
+            {
+                return DbConnection.Queryable<T>()
+                    .WithCacheIF(cacheExpireSeconds > 0, cacheExpireSeconds)
+                    .ToArray();
+            });
         }
 
         /// <summary>
         /// 条件查找
         /// </summary>
         /// <param name="expression"></param>
+        /// <param name="cacheExpireSeconds"></param>
         /// <returns></returns>
-        public Task<T[]> FindAsync(Expression<Func<T, bool>> expression)
+        public Task<T[]> FindAsync(Expression<Func<T, bool>> expression, int cacheExpireSeconds = 0)
         {
-            return Task.Run(() => Db.Queryable<T>().Where(expression).ToArray());
+            return Task.Run(() =>
+            {
+                return DbConnection.Queryable<T>()
+                    .Where(expression)
+                    .WithCacheIF(cacheExpireSeconds > 0, cacheExpireSeconds)
+                    .ToArray();
+            });
         }
 
         /// <summary>
         /// 查找一条记录
         /// </summary>
         /// <param name="expression"></param>
+        /// <param name="cacheExpireSeconds"></param>
         /// <returns></returns>
-        public Task<T> FindSingleAsync(Expression<Func<T, bool>> expression)
+        public Task<T> FindSingleAsync(Expression<Func<T, bool>> expression, int cacheExpireSeconds = 0)
         {
-            return Db.Queryable<T>().FirstAsync(expression);
+            return DbConnection.Queryable<T>()
+                .WithCacheIF(cacheExpireSeconds > 0, cacheExpireSeconds)
+                .FirstAsync(expression);
         }
 
         /// <summary>
@@ -59,7 +74,9 @@ namespace DwFramework.Database
         /// <returns></returns>
         public Task<T> InsertAsync(T newRecord)
         {
-            return Db.Insertable(newRecord).ExecuteReturnEntityAsync();
+            return DbConnection.Insertable(newRecord)
+                .RemoveDataCache()
+                .ExecuteReturnEntityAsync();
         }
 
         /// <summary>
@@ -69,7 +86,9 @@ namespace DwFramework.Database
         /// <returns></returns>
         public Task<int> InsertAsync(T[] newRecords)
         {
-            return Db.Insertable(newRecords).ExecuteCommandAsync();
+            return DbConnection.Insertable(newRecords)
+                .RemoveDataCache()
+                .ExecuteCommandAsync();
         }
 
         /// <summary>
@@ -79,7 +98,9 @@ namespace DwFramework.Database
         /// <returns></returns>
         public Task<int> DeleteAsync(Expression<Func<T, bool>> expression)
         {
-            return Db.Deleteable(expression).ExecuteCommandAsync();
+            return DbConnection.Deleteable(expression)
+                .RemoveDataCache()
+                .ExecuteCommandAsync();
         }
 
         /// <summary>
@@ -89,7 +110,9 @@ namespace DwFramework.Database
         /// <returns></returns>
         public Task<bool> UpdateAsync(T updatedRecord)
         {
-            return Db.Updateable(updatedRecord).ExecuteCommandHasChangeAsync();
+            return DbConnection.Updateable(updatedRecord)
+                .RemoveDataCache()
+                .ExecuteCommandHasChangeAsync();
         }
 
         /// <summary>
@@ -99,7 +122,9 @@ namespace DwFramework.Database
         /// <returns></returns>
         public Task<int> UpdateAsync(T[] updatedRecords)
         {
-            return Db.Updateable(updatedRecords).ExecuteCommandAsync();
+            return DbConnection.Updateable(updatedRecords)
+                .RemoveDataCache()
+                .ExecuteCommandAsync();
         }
     }
 }

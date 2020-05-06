@@ -18,16 +18,6 @@ namespace DwFramework.RabbitMQ.Extensions
         }
 
         /// <summary>
-        /// 初始化服务
-        /// </summary>
-        /// <param name="provider"></param>
-        /// <returns></returns>
-        public static Task InitRabbitMQServiceAsync(this IServiceProvider provider)
-        {
-            return provider.GetService<RabbitMQService>().OpenServiceAsync();
-        }
-
-        /// <summary>
         /// 获取服务
         /// </summary>
         /// <param name="provider"></param>

@@ -12,7 +12,7 @@ using Polly.Bulkhead;
 
 namespace DwFramework.Core.Plugins
 {
-    public static class PollyPlugin
+    public static class PollyManager
     {
         /// <summary>
         /// 组合策略
