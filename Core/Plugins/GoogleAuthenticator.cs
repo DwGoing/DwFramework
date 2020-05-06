@@ -22,9 +22,9 @@ namespace DwFramework.Core.Plugins
         /// 生成认证码
         /// </summary>
         /// <returns>返回验证码</returns>
-        public static string GenerateCode(string key)
+        public static string GenerateCode(string key, int duration = 30)
         {
-            var counter = (long)(DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalSeconds / 30;
+            var counter = (long)(DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalSeconds / duration;
             return GenerateHashedCode(key, counter);
         }
 

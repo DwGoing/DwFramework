@@ -3,7 +3,6 @@
 using DwFramework.Core;
 using DwFramework.Core.Extensions;
 using Microsoft.Extensions.Logging;
-using NLog;
 
 namespace _Test.Core
 {
