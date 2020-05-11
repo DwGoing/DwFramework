@@ -34,7 +34,7 @@ namespace DwFramework.Web
         /// <param name="environment"></param>
         public WebService(IServiceProvider provider, IEnvironment environment) : base(provider, environment)
         {
-            _config = _environment.GetConfiguration().GetSection<Config>("Web");
+            _config = _environment.GetConfiguration().GetConfig<Config>("Web");
         }
 
         #region Http

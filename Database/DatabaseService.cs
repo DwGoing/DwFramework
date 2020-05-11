@@ -36,7 +36,7 @@ namespace DwFramework.Database
         /// <param name="environment"></param>
         public DatabaseService(IServiceProvider provider, IEnvironment environment) : base(provider, environment)
         {
-            _config = _environment.GetConfiguration().GetSection<Config>("Database");
+            _config = _environment.GetConfiguration().GetConfig<Config>("Database");
         }
 
         /// <summary>

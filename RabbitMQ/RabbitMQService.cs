@@ -43,7 +43,7 @@ namespace DwFramework.RabbitMQ
         /// <param name="environment"></param>
         public RabbitMQService(IServiceProvider provider, IEnvironment environment) : base(provider, environment)
         {
-            _config = _environment.GetConfiguration().GetSection<Config>("RabbitMQ");
+            _config = _environment.GetConfiguration().GetConfig<Config>("RabbitMQ");
             _connectionFactory = new ConnectionFactory()
             {
                 HostName = _config.Host,
