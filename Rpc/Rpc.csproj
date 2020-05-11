@@ -8,7 +8,7 @@
         <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
         <PackageLicenseFile>LICENSE</PackageLicenseFile>
         <PackageProjectUrl>https://github.com/Dwgoing/DwFramework/tree/master/Rpc</PackageProjectUrl>
-        <Version>0.3.0.3</Version>
+        <Version>0.3.0.4</Version>
         <Authors>DwGoing</Authors>
         <Description>DwFramework Rpc库</Description>
         <Copyright>DwGoing</Copyright>

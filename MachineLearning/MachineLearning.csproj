@@ -8,7 +8,7 @@
         <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
         <PackageLicenseFile>LICENSE</PackageLicenseFile>
         <PackageProjectUrl>https://github.com/Dwgoing/DwFramework/tree/master/MachineLearning</PackageProjectUrl>
-        <Version>0.3.0.2</Version>
+        <Version>0.3.0.3</Version>
         <Authors>DwGoing</Authors>
         <Description>DwFramework 机器学习库</Description>
         <Copyright>DwGoing</Copyright>

@@ -8,7 +8,7 @@
         <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
         <PackageLicenseFile>LICENSE</PackageLicenseFile>
         <PackageProjectUrl>https://github.com/Dwgoing/DwFramework/tree/master/DataFlow</PackageProjectUrl>
-        <Version>0.3.0.1</Version>
+        <Version>0.3.0.2</Version>
         <Authors>DwGoing</Authors>
         <Description>DwFramework 流式计算库</Description>
         <Copyright>DwGoing</Copyright>
