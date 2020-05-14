@@ -114,8 +114,7 @@ namespace DwFramework.RabbitMQ
         /// <param name="msg"></param>
         /// <param name="exchange"></param>
         /// <param name="routingKey"></param>
-        /// <param name="basicProperties"></param>
-        /// <returns></returns>
+        /// <param name="basicPropertiesSetting"></param>
         public void Publish(string msg, string exchange = "", string routingKey = "", Action<IBasicProperties> basicPropertiesSetting = null)
         {
             using (var connection = _connectionFactory.CreateConnection())
@@ -139,7 +138,7 @@ namespace DwFramework.RabbitMQ
         /// <param name="data"></param>
         /// <param name="exchange"></param>
         /// <param name="routingKey"></param>
-        /// <param name="basicProperties"></param>
+        /// <param name="basicPropertiesSetting"></param>
         public void Publish(object data, string exchange = "", string routingKey = "", Action<IBasicProperties> basicPropertiesSetting = null)
         {
             using (var connection = _connectionFactory.CreateConnection())
