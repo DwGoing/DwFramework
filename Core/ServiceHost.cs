@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Reflection;
 using System.Linq;
-using System.IO;
 
 using Autofac;
 using Autofac.Builder;
@@ -9,7 +8,6 @@ using Autofac.Core;
 using Autofac.Core.Registration;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Configuration;
 
 namespace DwFramework.Core
 {
@@ -25,12 +23,8 @@ namespace DwFramework.Core
         {
             _containerBuilder = new ContainerBuilder();
             _services = new ServiceCollection();
-            // 读取配置文件
-            IConfiguration configuration = null;
-            if (configFilePath != null && File.Exists(configFilePath))
-                configuration = new ConfigurationBuilder().AddJsonFile(configFilePath).Build();
             // 环境变量
-            RegisterInstance<IEnvironment, Environment>(new Environment(environmentType, configuration)).SingleInstance();
+            RegisterInstance<IEnvironment, Environment>(new Environment(environmentType, configFilePath)).SingleInstance();
         }
 
         /// <summary>

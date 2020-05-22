@@ -10,7 +10,7 @@ namespace _Test.Core
     {
         static void Main(string[] args)
         {
-            ServiceHost host = new ServiceHost();
+            ServiceHost host = new ServiceHost(configFilePath: $"{AppDomain.CurrentDomain.BaseDirectory}Config.json");
             host.RegisterLog();
             host.RegisterType<CTest>();
             var provider = host.Build();
@@ -28,9 +28,13 @@ namespace _Test.Core
     {
         private readonly ILogger<CTest> _logger;
 
-        public CTest(ILogger<CTest> logger)
+        public CTest(ILogger<CTest> logger, IEnvironment environment)
         {
             _logger = logger;
+            environment.GetConfiguration().SaveConfig("");
+            Console.WriteLine(environment.GetConfiguration().GetSection("Test").Value);
+            environment.GetConfiguration().GetSection("Test").Value = "abc";
+            Console.WriteLine(environment.GetConfiguration().GetSection("Test").Value);
         }
 
         public void M()
