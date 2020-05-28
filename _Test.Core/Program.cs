@@ -31,9 +31,8 @@ namespace _Test.Core
         public CTest(ILogger<CTest> logger, IEnvironment environment)
         {
             _logger = logger;
-            environment.GetConfiguration().SaveConfig("");
-            Console.WriteLine(environment.GetConfiguration().GetSection("Test").Value);
-            environment.GetConfiguration().GetSection("Test").Value = "abc";
+            var obj = environment.GetConfiguration().GetConfig("Test", new { A = "", B = 0 }.GetType());
+            environment.GetConfiguration().SetConfig("Test:A", new { a = "a", b = 1 });
             Console.WriteLine(environment.GetConfiguration().GetSection("Test").Value);
         }
 

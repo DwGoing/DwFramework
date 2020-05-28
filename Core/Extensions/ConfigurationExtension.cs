@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using System;
+
+using Microsoft.Extensions.Configuration;
 
 namespace DwFramework.Core.Extensions
 {
@@ -12,10 +14,6 @@ namespace DwFramework.Core.Extensions
         public static void SetConfig(this IConfiguration configuration, string key, object value)
         {
             configuration.GetSection(key).Value = value.ToJson();
-        }
-
-        public static void SaveConfig(this IConfiguration configuration, string path)
-        {
         }
     }
 }
