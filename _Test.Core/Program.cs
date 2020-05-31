@@ -1,7 +1,7 @@
 ﻿using System;
 
 using DwFramework.Core;
-using DwFramework.Core.Extensions;
+using DwFramework.Core.Plugins;
 using Microsoft.Extensions.Logging;
 
 namespace _Test.Core
@@ -10,12 +10,15 @@ namespace _Test.Core
     {
         static void Main(string[] args)
         {
-            ServiceHost host = new ServiceHost(configFilePath: $"{AppDomain.CurrentDomain.BaseDirectory}Config.json");
-            host.RegisterLog();
-            host.RegisterType<CTest>();
-            var provider = host.Build();
-            provider.GetService<CTest>().M();
-            Console.Read();
+            Timer.SetStartTime(DateTime.Parse("1970-01-01"));
+            Console.WriteLine(Timer.GetTotalSeconds());
+
+            //ServiceHost host = new ServiceHost(configFilePath: $"{AppDomain.CurrentDomain.BaseDirectory}Config.json");
+            //host.RegisterLog();
+            //host.RegisterType<CTest>();
+            //var provider = host.Build();
+            //provider.GetService<CTest>().M();
+            //Console.Read();
         }
     }
 

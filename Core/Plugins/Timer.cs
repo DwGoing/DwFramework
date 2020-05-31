@@ -4,7 +4,7 @@ namespace DwFramework.Core.Plugins
 {
     public static class Timer
     {
-        public static DateTime StartTime { get; private set; }
+        public static DateTime? StartTime { get; private set; } = null;
 
         /// <summary>
         /// 设置开始时间
@@ -21,7 +21,8 @@ namespace DwFramework.Core.Plugins
         /// <returns></returns>
         public static long GetTotalMilliseconds()
         {
-            return (long)(DateTime.UtcNow - StartTime).TotalMilliseconds;
+            if (!StartTime.HasValue) throw new Exception("未设置开始时间");
+            return (long)(DateTime.UtcNow - StartTime.Value).TotalMilliseconds;
         }
 
         /// <summary>
