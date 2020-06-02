@@ -37,7 +37,7 @@ namespace DwFramework.Database.Extensions
         {
             foreach (var item in Enum.GetValues(typeof(DbType)))
             {
-                if (string.Compare(item.ToString(), typeStr, true) == 0)
+                if (string.Compare(item.ToString().ToLower(), typeStr.ToLower(), true) == 0)
                     return (DbType)item;
             }
             throw new Exception("无法找到匹配的DbType");

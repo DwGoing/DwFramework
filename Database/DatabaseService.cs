@@ -102,6 +102,19 @@ namespace DwFramework.Database
         }
 
         /// <summary>
+        /// 重置表
+        /// </summary>
+        /// <param name="tableName"></param>
+        /// <returns></returns>
+        public Task<bool> TruncateTableAsync(string tableName)
+        {
+            return Task.Run(() =>
+            {
+                return DbConnection.DbMaintenance.TruncateTable(tableName);
+            });
+        }
+
+        /// <summary>
         /// 复制表结构
         /// </summary>
         /// <param name="from"></param>
