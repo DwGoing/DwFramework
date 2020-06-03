@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 
 namespace DwFramework.Core.Extensions
 {
@@ -132,6 +133,41 @@ namespace DwFramework.Core.Extensions
             }
 
             return new string(returnArray);
+        }
+
+        /// <summary>
+        /// 字节数组转Hex
+        /// </summary>
+        /// <param name="bytes"></param>
+        /// <returns></returns>
+        public static string ToHex(this byte[] bytes)
+        {
+            StringBuilder builder = new StringBuilder();
+            for (int i = 0; i < bytes.Length; i++)
+            {
+                builder.Append(bytes[i].ToString("x2"));
+            }
+            return builder.ToString();
+        }
+
+        /// <summary>
+        /// 转Base64字符串
+        /// </summary>
+        /// <param name="bytes"></param>
+        /// <returns></returns>
+        public static string ToBase64String(this byte[] bytes)
+        {
+            return Convert.ToBase64String(bytes, 0, bytes.Length);
+        }
+
+        /// <summary>
+        /// Base64转字符串
+        /// </summary>
+        /// <param name="base64String"></param>
+        /// <returns></returns>
+        public static byte[] FromBase64String(this string base64String)
+        {
+            return Convert.FromBase64String(base64String);
         }
     }
 }

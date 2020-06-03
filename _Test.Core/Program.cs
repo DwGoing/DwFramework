@@ -10,8 +10,10 @@ namespace _Test.Core
     {
         static void Main(string[] args)
         {
-            Timer.SetStartTime(DateTime.Parse("1970-01-01"));
-            Console.WriteLine(Timer.GetTotalSeconds());
+            var a = EncryptUtil.Aes.EncryptToBase64("kjsdifnownefinei", "FkdcRHwHMsvj1Ijh", "eotLNWogMH2RtDfc");
+            Console.WriteLine(a);
+            var b = EncryptUtil.Aes.DecryptFromBase64(a, "FkdcRHwHMsvj1Ijh", "eotLNWogMH2RtDfc");
+            Console.WriteLine(b);
         }
     }
 
