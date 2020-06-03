@@ -6,10 +6,10 @@ using DwFramework.Core;
 
 namespace _Test.Web
 {
-    [Route("[controller]")]
+    [Route("test")]
     public class TestController : Controller
     {
-        [HttpGet("test")]
+        [HttpGet("t1")]
         public IActionResult Test()
         {
             return Ok(ResultInfo.Success("ok"));

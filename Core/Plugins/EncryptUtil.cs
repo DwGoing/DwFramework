@@ -47,9 +47,6 @@ namespace DwFramework.Core.Plugins
 
         public class Aes
         {
-            private const string DefaultKey = "FkdcRHwHMsvj1Ijh";
-            private const string DefaultIv = "eotLNWogMH2RtDfc";
-
             /// <summary>
             /// 加密
             /// </summary>
@@ -142,6 +139,21 @@ namespace DwFramework.Core.Plugins
             public static string DecryptFromBase64(string base64String, string key, string iv, System.Security.Cryptography.CipherMode mode = System.Security.Cryptography.CipherMode.ECB, System.Security.Cryptography.PaddingMode padding = System.Security.Cryptography.PaddingMode.PKCS7, Encoding encoding = null)
             {
                 return Decrypt(base64String.FromBase64String(), key, iv, mode, padding, encoding);
+            }
+
+            /// <summary>
+            /// 解密
+            /// </summary>
+            /// <param name="hexString"></param>
+            /// <param name="key"></param>
+            /// <param name="iv"></param>
+            /// <param name="mode"></param>
+            /// <param name="padding"></param>
+            /// <param name="encoding"></param>
+            /// <returns></returns>
+            public static string DecryptFromHex(string hexString, string key, string iv, System.Security.Cryptography.CipherMode mode = System.Security.Cryptography.CipherMode.ECB, System.Security.Cryptography.PaddingMode padding = System.Security.Cryptography.PaddingMode.PKCS7, Encoding encoding = null)
+            {
+                return Decrypt(hexString.FromHex(), key, iv, mode, padding, encoding);
             }
         }
     }

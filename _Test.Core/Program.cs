@@ -10,10 +10,11 @@ namespace _Test.Core
     {
         static void Main(string[] args)
         {
-            var a = EncryptUtil.Aes.EncryptToBase64("kjsdifnownefinei", "FkdcRHwHMsvj1Ijh", "eotLNWogMH2RtDfc");
+            var a = EncryptUtil.Aes.EncryptToHex("kjsdifnownefinei", "FkdcRHwHMsvj1Ijh", "eotLNWogMH2RtDfc");
             Console.WriteLine(a);
-            var b = EncryptUtil.Aes.DecryptFromBase64(a, "FkdcRHwHMsvj1Ijh", "eotLNWogMH2RtDfc");
+            var b = EncryptUtil.Aes.DecryptFromHex(a, "FkdcRHwHMsvj1Ijh", "eotLNWogMH2RtDfc");
             Console.WriteLine(b);
+            Console.ReadLine();
         }
     }
 

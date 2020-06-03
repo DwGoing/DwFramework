@@ -169,5 +169,20 @@ namespace DwFramework.Core.Extensions
         {
             return Convert.FromBase64String(base64String);
         }
+
+        /// <summary>
+        /// Hex转字符串
+        /// </summary>
+        /// <param name="hexString"></param>
+        /// <returns></returns>
+        public static byte[] FromHex(this string hexString)
+        {
+            var bytes = new byte[hexString.Length / 2];
+            for (int i = 0; i < bytes.Length; i++)
+            {
+                bytes[i] = (byte)Convert.ToInt32(hexString.Substring(i * 2, 2), 16);
+            }
+            return bytes;
+        }
     }
 }
