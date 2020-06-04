@@ -2,6 +2,7 @@
 using System.Threading;
 
 using DwFramework.Core;
+using DwFramework.Core.Extensions;
 using DwFramework.Web.Extensions;
 
 namespace _Test.Web
@@ -13,6 +14,7 @@ namespace _Test.Web
             try
             {
                 ServiceHost host = new ServiceHost(configFilePath: $"{AppDomain.CurrentDomain.BaseDirectory}Config.json");
+                host.RegisterLog();
                 host.RegisterWebService();
                 var provider = host.Build();
                 provider.InitHttpServiceAsync<Startup>();
