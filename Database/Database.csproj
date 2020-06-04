@@ -8,7 +8,7 @@
         <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
         <PackageLicenseFile>LICENSE</PackageLicenseFile>
         <PackageProjectUrl>https://github.com/Dwgoing/DwFramework/tree/master/Database</PackageProjectUrl>
-        <Version>0.3.0.6</Version>
+        <Version>0.3.0.7</Version>
         <Authors>DwGoing</Authors>
         <Description>DwFramework ORM库</Description>
         <Copyright>DwGoing</Copyright>
