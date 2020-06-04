@@ -25,14 +25,14 @@ namespace _Test.Web
             //    return Task.CompletedTask;
             //});
             services.AddControllers();
-            services.AddSwagger("v1", "Test", "v1");
+            services.AddSwagger("Doc", "Test", "v1");
         }
 
         public void Configure(IApplicationBuilder app)
         {
             app.UseRouting();
             //app.UseJwtAuthentication(); // 必须在UseRouting之后
-            app.UseSwagger("/swagger/v1/swagger.json", "My API V1");
+            app.UseSwagger("Doc", "My API V1");
             //app.UseRequestFilter(
             //    context => { },
             //    context => { });

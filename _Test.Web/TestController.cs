@@ -9,7 +9,7 @@ namespace _Test.Web
     [Route("test")]
     public class TestController : Controller
     {
-        [HttpGet("t1")]
+        [HttpGet("t")]
         public IActionResult Test()
         {
             return Ok(ResultInfo.Success("ok"));
