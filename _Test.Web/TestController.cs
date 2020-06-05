@@ -27,7 +27,14 @@ namespace _Test.Web
             Console.WriteLine($"预下单信息:{order.ToJson()}");
             return Ok(ResultInfo.Success("ok"));
         }
+
+        [HttpGet("x")]
+        public IActionResult X()
+        {
+            return Ok("ok");
+        }
     }
+
 
     public class Body
     {

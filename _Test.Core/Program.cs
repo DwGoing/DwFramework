@@ -15,6 +15,7 @@ namespace _Test.Core
             //Console.WriteLine(a);
             //var b = EncryptUtil.Aes.DecryptFromHex(a, "FkdcRHwHMsvj1Ijh", "eotLNWogMH2RtDfc");
             //Console.WriteLine(b);
+            Console.WriteLine(Generater.GenerateUUID());
             Console.ReadLine();
         }
     }
