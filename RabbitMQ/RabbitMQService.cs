@@ -74,6 +74,7 @@ namespace DwFramework.RabbitMQ
             var connection = _connectionPool[_connectionPointer];
             if (!connection.IsOpen) _connectionPool[_connectionPointer] = _connectionFactory.CreateConnection();
             _connectionPointer++;
+            if (_connectionPointer >= _connectionPool.Length) _connectionPointer = 0;
             return connection;
         }
 
