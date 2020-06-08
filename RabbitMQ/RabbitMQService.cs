@@ -29,10 +29,13 @@ namespace DwFramework.RabbitMQ
             public string UserName { get; set; }
             public string Password { get; set; }
             public string VirtualHost { get; set; }
+            public int ConnectionPoolSize { get; set; }
         }
 
         private readonly Config _config;
         private ConnectionFactory _connectionFactory;
+        private int _connectionPointer = 0;
+        private IConnection[] _connectionPool;
         private Dictionary<string, KeyValuePair<CancellationTokenSource, Task>> _subscribers;
 
 
@@ -52,7 +55,25 @@ namespace DwFramework.RabbitMQ
                 Password = _config.Password,
                 VirtualHost = _config.VirtualHost
             };
+            _connectionPool = new IConnection[_config.ConnectionPoolSize == 0 ? 3 : _config.ConnectionPoolSize];
             _subscribers = new Dictionary<string, KeyValuePair<CancellationTokenSource, Task>>();
+
+            // 初始化连接池
+            for (int i = 0; i < _connectionPool.Length; i++)
+            {
+                _connectionPool[i] = _connectionFactory.CreateConnection();
+            }
+        }
+
+        /// <summary>
+        /// 获取连接
+        /// </summary>
+        /// <returns></returns>
+        private IConnection GetConnection()
+        {
+            var connection = _connectionPool[_connectionPointer];
+            _connectionPointer++;
+            return connection;
         }
 
         /// <summary>
@@ -66,7 +87,7 @@ namespace DwFramework.RabbitMQ
         /// <returns></returns>
         public void ExchangeDeclare(string exchange, string type, bool durable = false, bool autoDelete = false, IDictionary<string, object> arguments = null)
         {
-            using (var connection = _connectionFactory.CreateConnection())
+            using (var connection = GetConnection())
             using (var channel = connection.CreateModel())
             {
                 channel.ExchangeDeclare(exchange, type, durable, autoDelete, arguments);
@@ -84,7 +105,7 @@ namespace DwFramework.RabbitMQ
         /// <returns></returns>
         public void QueueDeclare(string queue, bool durable = false, bool exclusive = false, bool autoDelete = false, IDictionary<string, object> arguments = null)
         {
-            using (var connection = _connectionFactory.CreateConnection())
+            using (var connection = GetConnection())
             using (var channel = connection.CreateModel())
             {
                 channel.QueueDeclare(queue, durable, exclusive, autoDelete, arguments);
@@ -101,7 +122,7 @@ namespace DwFramework.RabbitMQ
         /// <returns></returns>
         public void QueueBind(string queue, string exchange, string routingKey = "", IDictionary<string, object> arguments = null)
         {
-            using (var connection = _connectionFactory.CreateConnection())
+            using (var connection = GetConnection())
             using (var channel = connection.CreateModel())
             {
                 channel.QueueBind(queue, exchange, routingKey, arguments);
@@ -117,7 +138,7 @@ namespace DwFramework.RabbitMQ
         /// <param name="basicPropertiesSetting"></param>
         public void Publish(string msg, string exchange = "", string routingKey = "", Action<IBasicProperties> basicPropertiesSetting = null)
         {
-            using (var connection = _connectionFactory.CreateConnection())
+            using (var connection = GetConnection())
             using (var channel = connection.CreateModel())
             {
 
@@ -141,7 +162,7 @@ namespace DwFramework.RabbitMQ
         /// <param name="basicPropertiesSetting"></param>
         public void Publish(object data, string exchange = "", string routingKey = "", Action<IBasicProperties> basicPropertiesSetting = null)
         {
-            using (var connection = _connectionFactory.CreateConnection())
+            using (var connection = GetConnection())
             using (var channel = connection.CreateModel())
             {
                 IBasicProperties basicProperties = null;
