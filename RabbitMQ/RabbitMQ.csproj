@@ -8,7 +8,7 @@
         <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
         <PackageLicenseFile>LICENSE</PackageLicenseFile>
         <PackageProjectUrl>https://github.com/Dwgoing/DwFramework/tree/master/RabbitMQ</PackageProjectUrl>
-        <Version>0.3.0.4</Version>
+        <Version>0.3.0.5</Version>
         <Authors>DwGoing</Authors>
         <Description>DwFramework RabbitMQ库</Description>
         <Copyright>DwGoing</Copyright>

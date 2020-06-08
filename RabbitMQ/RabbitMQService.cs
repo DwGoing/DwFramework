@@ -72,6 +72,7 @@ namespace DwFramework.RabbitMQ
         private IConnection GetConnection()
         {
             var connection = _connectionPool[_connectionPointer];
+            if (!connection.IsOpen) _connectionPool[_connectionPointer] = _connectionFactory.CreateConnection();
             _connectionPointer++;
             return connection;
         }
@@ -87,7 +88,7 @@ namespace DwFramework.RabbitMQ
         /// <returns></returns>
         public void ExchangeDeclare(string exchange, string type, bool durable = false, bool autoDelete = false, IDictionary<string, object> arguments = null)
         {
-            using (var connection = GetConnection())
+            var connection = GetConnection();
             using (var channel = connection.CreateModel())
             {
                 channel.ExchangeDeclare(exchange, type, durable, autoDelete, arguments);
@@ -105,7 +106,7 @@ namespace DwFramework.RabbitMQ
         /// <returns></returns>
         public void QueueDeclare(string queue, bool durable = false, bool exclusive = false, bool autoDelete = false, IDictionary<string, object> arguments = null)
         {
-            using (var connection = GetConnection())
+            var connection = GetConnection();
             using (var channel = connection.CreateModel())
             {
                 channel.QueueDeclare(queue, durable, exclusive, autoDelete, arguments);
@@ -122,7 +123,7 @@ namespace DwFramework.RabbitMQ
         /// <returns></returns>
         public void QueueBind(string queue, string exchange, string routingKey = "", IDictionary<string, object> arguments = null)
         {
-            using (var connection = GetConnection())
+            var connection = GetConnection();
             using (var channel = connection.CreateModel())
             {
                 channel.QueueBind(queue, exchange, routingKey, arguments);
@@ -138,7 +139,7 @@ namespace DwFramework.RabbitMQ
         /// <param name="basicPropertiesSetting"></param>
         public void Publish(string msg, string exchange = "", string routingKey = "", Action<IBasicProperties> basicPropertiesSetting = null)
         {
-            using (var connection = GetConnection())
+            var connection = GetConnection();
             using (var channel = connection.CreateModel())
             {
 
@@ -160,9 +161,10 @@ namespace DwFramework.RabbitMQ
         /// <param name="exchange"></param>
         /// <param name="routingKey"></param>
         /// <param name="basicPropertiesSetting"></param>
-        public void PublishAsync(string msg, string exchange = "", string routingKey = "", Action<IBasicProperties> basicPropertiesSetting = null)
+        /// <returns></returns>
+        public Task PublishAsync(string msg, string exchange = "", string routingKey = "", Action<IBasicProperties> basicPropertiesSetting = null)
         {
-            Task.Run(() => Publish(msg, exchange, routingKey, basicPropertiesSetting));
+            return Task.Run(() => Publish(msg, exchange, routingKey, basicPropertiesSetting));
         }
 
         /// <summary>
@@ -174,7 +176,7 @@ namespace DwFramework.RabbitMQ
         /// <param name="basicPropertiesSetting"></param>
         public void Publish(object data, string exchange = "", string routingKey = "", Action<IBasicProperties> basicPropertiesSetting = null)
         {
-            using (var connection = GetConnection())
+            var connection = GetConnection();
             using (var channel = connection.CreateModel())
             {
                 IBasicProperties basicProperties = null;
@@ -195,9 +197,10 @@ namespace DwFramework.RabbitMQ
         /// <param name="exchange"></param>
         /// <param name="routingKey"></param>
         /// <param name="basicPropertiesSetting"></param>
-        public void PublishAsync(object data, string exchange = "", string routingKey = "", Action<IBasicProperties> basicPropertiesSetting = null)
+        /// <returns></returns>
+        public Task PublishAsync(object data, string exchange = "", string routingKey = "", Action<IBasicProperties> basicPropertiesSetting = null)
         {
-            Task.Run(() => Publish(data, exchange, routingKey, basicPropertiesSetting));
+            return Task.Run(() => Publish(data, exchange, routingKey, basicPropertiesSetting));
         }
 
         /// <summary>
