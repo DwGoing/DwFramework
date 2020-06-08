@@ -156,6 +156,18 @@ namespace DwFramework.RabbitMQ
         /// <summary>
         /// 发布消息
         /// </summary>
+        /// <param name="msg"></param>
+        /// <param name="exchange"></param>
+        /// <param name="routingKey"></param>
+        /// <param name="basicPropertiesSetting"></param>
+        public void PublishAsync(string msg, string exchange = "", string routingKey = "", Action<IBasicProperties> basicPropertiesSetting = null)
+        {
+            Task.Run(() => Publish(msg, exchange, routingKey, basicPropertiesSetting));
+        }
+
+        /// <summary>
+        /// 发布消息
+        /// </summary>
         /// <param name="data"></param>
         /// <param name="exchange"></param>
         /// <param name="routingKey"></param>
@@ -174,6 +186,18 @@ namespace DwFramework.RabbitMQ
                 var body = Encoding.UTF8.GetBytes(data.ToJson());
                 channel.BasicPublish(exchange, routingKey, basicProperties, body);
             }
+        }
+
+        /// <summary>
+        /// 发布消息
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="exchange"></param>
+        /// <param name="routingKey"></param>
+        /// <param name="basicPropertiesSetting"></param>
+        public void PublishAsync(object data, string exchange = "", string routingKey = "", Action<IBasicProperties> basicPropertiesSetting = null)
+        {
+            Task.Run(() => Publish(data, exchange, routingKey, basicPropertiesSetting));
         }
 
         /// <summary>
