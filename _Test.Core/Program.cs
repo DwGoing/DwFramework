@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
 
 using DwFramework.Core;
 using DwFramework.Core.Plugins;
@@ -15,8 +17,22 @@ namespace _Test.Core
             //Console.WriteLine(a);
             //var b = EncryptUtil.Aes.DecryptFromHex(a, "FkdcRHwHMsvj1Ijh", "eotLNWogMH2RtDfc");
             //Console.WriteLine(b);
-            Console.WriteLine(Generater.GenerateUUID());
-            Console.ReadLine();
+            Task.Run(() =>
+            {
+                //var timer = new DwFramework.Core.Plugins.Timer();
+                DwFramework.Core.Plugins.Timer.Static.SetStartTime(DateTime.Now);
+                Thread.Sleep(5000);
+                Console.WriteLine(DwFramework.Core.Plugins.Timer.Static.GetTotalMilliseconds());
+            });
+            Thread.Sleep(1000);
+            Task.Run(() =>
+            {
+                //var timer = new DwFramework.Core.Plugins.Timer();
+                DwFramework.Core.Plugins.Timer.Static.SetStartTime(DateTime.Now);
+                Thread.Sleep(5000);
+                Console.WriteLine(DwFramework.Core.Plugins.Timer.Static.GetTotalMilliseconds());
+            });
+            Console.Read();
         }
     }
 
