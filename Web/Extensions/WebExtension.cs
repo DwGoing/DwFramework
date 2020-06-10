@@ -31,14 +31,14 @@ namespace DwFramework.Web.Extensions
         /// 初始化WebSocket服务
         /// </summary>
         /// <param name="provider"></param>
-        public static Task InitWebSocketServiceAsync(this IServiceProvider provider, OnConnectHandler onConnect = null, OnSendHandler onSend = null, OnReceiveHandler onReceive = null, OnCloseHandler onClose = null, OnErrorHandler onError = null)
+        public static Task InitWebSocketServiceAsync(this IServiceProvider provider, OnWebSocketConnectHandler onConnect = null, OnWebSocketSendHandler onSend = null, OnWebSocketReceiveHandler onReceive = null, OnWebSocketCloseHandler onClose = null, OnWebSocketErrorHandler onError = null)
         {
             var service = provider.GetWebService();
-            if (onConnect != null) service.OnConnect += onConnect;
-            if (onSend != null) service.OnSend += onSend;
-            if (onReceive != null) service.OnReceive += onReceive;
-            if (onClose != null) service.OnClose += onClose;
-            if (onError != null) service.OnError += onError;
+            if (onConnect != null) service.OnWebSocketConnect += onConnect;
+            if (onSend != null) service.OnWebSocketSend += onSend;
+            if (onReceive != null) service.OnWebSocketReceive += onReceive;
+            if (onClose != null) service.OnWebSocketClose += onClose;
+            if (onError != null) service.OnWebSocketError += onError;
             return service.OpenWebSocketServiceAsync();
         }
 

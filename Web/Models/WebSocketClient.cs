@@ -46,7 +46,7 @@ namespace DwFramework.Web
         {
             return _client.ConnectAsync(new Uri(uri), CancellationToken.None).ContinueWith(a =>
             {
-                OnConnect?.Invoke(new OnConnectEventargs() { });
+                OnConnect?.Invoke(new OnWebSocketConnectEventargs() { });
                 Task.Run(async () =>
                 {
                     var buffer = new byte[_bufferSize];
@@ -56,11 +56,11 @@ namespace DwFramework.Web
                         try
                         {
                             var msg = Encoding.UTF8.GetString(buffer, 0, result.Count);
-                            OnReceive?.Invoke(new OnReceiveEventargs(msg));
+                            OnReceive?.Invoke(new OnWebSocketReceiveEventargs(msg));
                         }
                         catch (Exception ex)
                         {
-                            OnError?.Invoke(new OnErrorEventargs(ex));
+                            OnError?.Invoke(new OnWebSocketErrorEventargs(ex));
                         }
                         finally
                         {
@@ -68,7 +68,7 @@ namespace DwFramework.Web
                             result = await _client.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
                         }
                     }
-                    OnClose?.Invoke(new OnCloceEventargs() { });
+                    OnClose?.Invoke(new OnWebSocketCloceEventargs() { });
                 });
             });
         }
@@ -81,7 +81,7 @@ namespace DwFramework.Web
         public Task SendAsync(byte[] buffer)
         {
             return _client.SendAsync(buffer, WebSocketMessageType.Text, true, CancellationToken.None)
-                .ContinueWith(a => OnSend?.Invoke(new OnSendEventargs(Encoding.UTF8.GetString(buffer)) { }));
+                .ContinueWith(a => OnSend?.Invoke(new OnWebSocketSendEventargs(Encoding.UTF8.GetString(buffer)) { }));
         }
 
         /// <summary>
@@ -92,7 +92,7 @@ namespace DwFramework.Web
         public Task SendAsync(string msg)
         {
             return _client.SendAsync(Encoding.UTF8.GetBytes(msg), WebSocketMessageType.Text, true, CancellationToken.None)
-                .ContinueWith(a => OnSend?.Invoke(new OnSendEventargs(msg) { }));
+                .ContinueWith(a => OnSend?.Invoke(new OnWebSocketSendEventargs(msg) { }));
         }
 
         /// <summary>
