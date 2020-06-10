@@ -37,6 +37,19 @@ namespace DwFramework.Web
             _config = _environment.GetConfiguration().GetConfig<Config>("Web");
         }
 
+        #region Socket
+        private Dictionary<string, WebSocketConnection> _socketConnections;
+
+        /// <summary>
+        /// 开启Socket服务
+        /// </summary>
+        /// <returns></returns>
+        public Task OpenSocketServiceAsync()
+        {
+            return Task.Run(() => { });
+        }
+        #endregion
+
         #region Http
         /// <summary>
         /// 开启Http服务
@@ -78,13 +91,13 @@ namespace DwFramework.Web
         #endregion
 
         #region WebSocket
-        private Dictionary<string, WebSocketConnection> _connections;
+        private Dictionary<string, WebSocketConnection> _webSocketConnections;
 
-        public event OnConnectHandler OnConnect;
-        public event OnSendHandler OnSend;
-        public event OnReceiveHandler OnReceive;
-        public event OnCloseHandler OnClose;
-        public event OnErrorHandler OnError;
+        public event OnWebSocketConnectHandler OnWebSocketConnect;
+        public event OnWebSocketSendHandler OnWebSocketSend;
+        public event OnWebSocketReceiveHandler OnWebSocketReceive;
+        public event OnWebSocketCloseHandler OnWebSocketClose;
+        public event OnWebSocketErrorHandler OnWebSocketError;
 
         /// <summary>
         /// 开启WebSocket服务
@@ -92,7 +105,7 @@ namespace DwFramework.Web
         /// <returns></returns>
         public Task OpenWebSocketServiceAsync()
         {
-            _connections = new Dictionary<string, WebSocketConnection>();
+            _webSocketConnections = new Dictionary<string, WebSocketConnection>();
             var builder = new WebHostBuilder()
                 .UseDwServiceProvider(_provider)
                 // wss证书路径
@@ -139,8 +152,8 @@ namespace DwFramework.Web
                     {
                         var webSocket = await context.WebSockets.AcceptWebSocketAsync();
                         var connection = new WebSocketConnection(webSocket);
-                        _connections[connection.ID] = connection;
-                        OnConnect?.Invoke(connection, new OnConnectEventargs() { });
+                        _webSocketConnections[connection.ID] = connection;
+                        OnWebSocketConnect?.Invoke(connection, new OnWebSocketConnectEventargs() { });
                         WebSocketReceiveResult result = null;
                         while (true)
                         {
@@ -151,17 +164,17 @@ namespace DwFramework.Web
                                 if (result.CloseStatus.HasValue)
                                     break;
                                 var msg = Encoding.UTF8.GetString(buffer, 0, result.Count);
-                                OnReceive?.Invoke(connection, new OnReceiveEventargs(msg));
+                                OnWebSocketReceive?.Invoke(connection, new OnWebSocketReceiveEventargs(msg));
                             }
                             catch (Exception ex)
                             {
-                                OnError?.Invoke(connection, new OnErrorEventargs(ex));
+                                OnWebSocketError?.Invoke(connection, new OnWebSocketErrorEventargs(ex));
                                 break;
                             }
                         }
-                        OnClose?.Invoke(connection, new OnCloceEventargs() { });
+                        OnWebSocketClose?.Invoke(connection, new OnWebSocketCloceEventargs() { });
                         connection.Dispose();
-                        _connections.Remove(connection.ID);
+                        _webSocketConnections.Remove(connection.ID);
                     });
                 });
             return Task.Run(() => builder.Build().Run());
@@ -174,9 +187,9 @@ namespace DwFramework.Web
         /// <returns></returns>
         private void RequireClient(string id)
         {
-            if (!_connections.ContainsKey(id))
+            if (!_webSocketConnections.ContainsKey(id))
                 throw new Exception("该客户端不存在");
-            var client = _connections[id];
+            var client = _webSocketConnections[id];
             if (client.WebSocket.State != WebSocketState.Open)
                 throw new Exception("该客户端状态错误");
         }
@@ -190,9 +203,9 @@ namespace DwFramework.Web
         public Task SendAsync(string id, byte[] buffer)
         {
             RequireClient(id);
-            var connection = _connections[id];
+            var connection = _webSocketConnections[id];
             return connection.SendAsync(buffer)
-                .ContinueWith(a => OnSend?.Invoke(connection, new OnSendEventargs(Encoding.UTF8.GetString(buffer)) { }));
+                .ContinueWith(a => OnWebSocketSend?.Invoke(connection, new OnWebSocketSendEventargs(Encoding.UTF8.GetString(buffer)) { }));
         }
 
         /// <summary>
@@ -217,7 +230,7 @@ namespace DwFramework.Web
             return Task.Run(() =>
             {
                 byte[] buffer = Encoding.UTF8.GetBytes(msg);
-                foreach (var item in _connections.Values)
+                foreach (var item in _webSocketConnections.Values)
                 {
                     SendAsync(item.ID, buffer);
                 }
@@ -232,7 +245,7 @@ namespace DwFramework.Web
         public Task CloseAsync(string id)
         {
             RequireClient(id);
-            var connection = _connections[id];
+            var connection = _webSocketConnections[id];
             return connection.CloseAsync();
         }
 
@@ -244,7 +257,7 @@ namespace DwFramework.Web
         {
             return Task.Run(() =>
             {
-                foreach (var item in _connections.Values)
+                foreach (var item in _webSocketConnections.Values)
                 {
                     item.CloseAsync();
                 }

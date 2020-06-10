@@ -2,59 +2,61 @@
 
 namespace DwFramework.Web
 {
+    #region WebSocket
     #region  服务端
-    public delegate void OnConnectHandler(WebSocketConnection connection, OnConnectEventargs args);
-    public delegate void OnSendHandler(WebSocketConnection connection, OnSendEventargs args);
-    public delegate void OnReceiveHandler(WebSocketConnection connection, OnReceiveEventargs args);
-    public delegate void OnCloseHandler(WebSocketConnection connection, OnCloceEventargs args);
-    public delegate void OnErrorHandler(WebSocketConnection connection, OnErrorEventargs args);
+    public delegate void OnWebSocketConnectHandler(WebSocketConnection connection, OnWebSocketConnectEventargs args);
+    public delegate void OnWebSocketSendHandler(WebSocketConnection connection, OnWebSocketSendEventargs args);
+    public delegate void OnWebSocketReceiveHandler(WebSocketConnection connection, OnWebSocketReceiveEventargs args);
+    public delegate void OnWebSocketCloseHandler(WebSocketConnection connection, OnWebSocketCloceEventargs args);
+    public delegate void OnWebSocketErrorHandler(WebSocketConnection connection, OnWebSocketErrorEventargs args);
     #endregion
 
     #region 客户端
-    public delegate void OnConnectToServerHandler(OnConnectEventargs args);
-    public delegate void OnSendToServerHandler(OnSendEventargs args);
-    public delegate void OnReceiveFromServerHandler(OnReceiveEventargs args);
-    public delegate void OnCloseFromServerHandler(OnCloceEventargs args);
-    public delegate void OnErrorFromServerHandler(OnErrorEventargs args);
+    public delegate void OnConnectToServerHandler(OnWebSocketConnectEventargs args);
+    public delegate void OnSendToServerHandler(OnWebSocketSendEventargs args);
+    public delegate void OnReceiveFromServerHandler(OnWebSocketReceiveEventargs args);
+    public delegate void OnCloseFromServerHandler(OnWebSocketCloceEventargs args);
+    public delegate void OnErrorFromServerHandler(OnWebSocketErrorEventargs args);
     #endregion
 
-    public class OnConnectEventargs : EventArgs
+    public class OnWebSocketConnectEventargs : EventArgs
     {
 
     }
 
-    public class OnSendEventargs : EventArgs
+    public class OnWebSocketSendEventargs : EventArgs
     {
         public string Message { get; private set; }
 
-        public OnSendEventargs(string msg)
+        public OnWebSocketSendEventargs(string msg)
         {
             Message = msg;
         }
     }
 
-    public class OnReceiveEventargs : EventArgs
+    public class OnWebSocketReceiveEventargs : EventArgs
     {
         public string Message { get; private set; }
 
-        public OnReceiveEventargs(string msg)
+        public OnWebSocketReceiveEventargs(string msg)
         {
             Message = msg;
         }
     }
 
-    public class OnCloceEventargs : EventArgs
+    public class OnWebSocketCloceEventargs : EventArgs
     {
 
     }
 
-    public class OnErrorEventargs : EventArgs
+    public class OnWebSocketErrorEventargs : EventArgs
     {
         public Exception Exception { get; private set; }
 
-        public OnErrorEventargs(Exception exception)
+        public OnWebSocketErrorEventargs(Exception exception)
         {
             Exception = exception;
         }
     }
+    #endregion
 }
