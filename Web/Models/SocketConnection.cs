@@ -17,7 +17,7 @@ namespace DwFramework.Web
         /// <param name="socket"></param>
         public SocketConnection(Socket socket)
         {
-            ID = Guid.NewGuid().ToString();
+            ID = EncryptUtil.Md5.Encode(Guid.NewGuid().ToString());
             Socket = socket;
         }
 

@@ -4,6 +4,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Text;
 
+using DwFramework.Core.Plugins;
+
 namespace DwFramework.Web
 {
     public class WebSocketConnection
@@ -17,7 +19,7 @@ namespace DwFramework.Web
         /// <param name="webSocket"></param>
         public WebSocketConnection(WebSocket webSocket)
         {
-            ID = Guid.NewGuid().ToString();
+            ID = EncryptUtil.Md5.Encode(Guid.NewGuid().ToString());
             WebSocket = webSocket;
         }
 

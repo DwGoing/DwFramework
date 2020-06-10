@@ -290,7 +290,7 @@ namespace DwFramework.Web
             WebSocketRequireClient(id);
             var connection = _webSocketConnections[id];
             return connection.SendAsync(buffer)
-                .ContinueWith(a => OnWebSocketSend?.Invoke(connection, new OnWebSocketSendEventargs(Encoding.UTF8.GetString(buffer)) { }));
+                .ContinueWith(a => OnWebSocketSend?.Invoke(connection, new OnWebSocketSendEventargs(Encoding.UTF8.GetString(buffer))));
         }
 
         /// <summary>
