@@ -1,24 +1,24 @@
 ﻿using System;
-using System.Net.WebSockets;
-using System.Threading;
-using System.Threading.Tasks;
+using System.Net;
+using System.Net.Sockets;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace DwFramework.Web
 {
-    public class WebSocketConnection
+    public class SocketConnection
     {
         public readonly string ID;
-        public readonly WebSocket WebSocket;
+        public readonly Socket Socket;
 
         /// <summary>
         /// 构造函数
         /// </summary>
-        /// <param name="webSocket"></param>
-        public WebSocketConnection(WebSocket webSocket)
+        /// <param name="socket"></param>
+        public SocketConnection(Socket socket)
         {
             ID = Guid.NewGuid().ToString();
-            WebSocket = webSocket;
+            Socket = socket;
         }
 
         /// <summary>
@@ -28,7 +28,7 @@ namespace DwFramework.Web
         /// <returns></returns>
         public Task SendAsync(byte[] buffer)
         {
-            return WebSocket.SendAsync(new ArraySegment<byte>(buffer), WebSocketMessageType.Text, true, CancellationToken.None);
+            return Task.Run(() => { Socket.Send(new ArraySegment<byte>(buffer)); });
         }
 
         /// <summary>
@@ -48,7 +48,7 @@ namespace DwFramework.Web
         /// <returns></returns>
         public Task CloseAsync()
         {
-            return WebSocket.CloseOutputAsync(WebSocketCloseStatus.NormalClosure, null, CancellationToken.None).ContinueWith(a => Dispose());
+            return Task.Run(() => { Socket.Close(); });
         }
 
         /// <summary>
@@ -56,8 +56,7 @@ namespace DwFramework.Web
         /// </summary>
         public void Dispose()
         {
-            WebSocket.Abort();
-            WebSocket.Dispose();
+            Socket.Dispose();
         }
     }
 }
