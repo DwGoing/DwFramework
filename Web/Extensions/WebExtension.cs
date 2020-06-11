@@ -1,40 +1,22 @@
 ﻿using System;
 using System.Threading.Tasks;
+using System.Linq;
 
 using DwFramework.Core;
 using DwFramework.Core.Extensions;
 
 namespace DwFramework.Web.Extensions
 {
-    public enum WebType
-    {
-        Unknow = 0,
-        Http = 1,
-        WebSocket = 2,
-        Socket = 3
-    }
-
     public static class WebExtension
     {
         /// <summary>
         /// 注册服务
         /// </summary>
         /// <param name="host"></param>
-        /// <param name="type"></param>
-        public static void RegisterWebService(this ServiceHost host, WebType type)
+        public static void RegisterWebService<T>(this ServiceHost host) where T : class
         {
-            switch (type)
-            {
-                case WebType.Http:
-                    host.RegisterType<HttpService>().SingleInstance();
-                    break;
-                case WebType.WebSocket:
-                    host.RegisterType<WebSocketService>().SingleInstance();
-                    break;
-                case WebType.Socket:
-                    host.RegisterType<SocketService>().SingleInstance();
-                    break;
-            }
+            RequireT(typeof(T));
+            host.RegisterType<T>().SingleInstance();
         }
 
         /// <summary>
@@ -44,7 +26,9 @@ namespace DwFramework.Web.Extensions
         /// <param name="provider"></param>
         public static Task InitHttpServiceAsync<T>(this IServiceProvider provider) where T : class
         {
-            return (provider.GetWebService(WebType.Http) as HttpService).OpenServiceAsync<T>();
+            var service = provider.GetWebService<HttpService>();
+            if (service == null) throw new Exception("服务未注册");
+            return service.OpenServiceAsync<T>();
         }
 
         /// <summary>
@@ -54,7 +38,9 @@ namespace DwFramework.Web.Extensions
         /// <returns></returns>
         public static Task InitWebSocketServiceAsync(this IServiceProvider provider)
         {
-            return (provider.GetWebService(WebType.WebSocket) as WebSocketService).OpenServiceAsync();
+            var service = provider.GetWebService<WebSocketService>();
+            if (service == null) throw new Exception("服务未注册");
+            return service.OpenServiceAsync();
         }
 
         /// <summary>
@@ -64,28 +50,36 @@ namespace DwFramework.Web.Extensions
         /// <returns></returns>
         public static Task InitSocketServiceAsync(this IServiceProvider provider)
         {
-            return (provider.GetWebService(WebType.Socket) as SocketService).OpenServiceAsync();
+            var service = provider.GetWebService<SocketService>();
+            if (service == null) throw new Exception("服务未注册");
+            return service.OpenServiceAsync();
         }
 
         /// <summary>
         /// 获取服务
         /// </summary>
+        /// <typeparam name="T"></typeparam>
         /// <param name="provider"></param>
-        /// <param name="type"></param>
         /// <returns></returns>
-        public static BaseService GetWebService(this IServiceProvider provider, WebType type)
+        public static T GetWebService<T>(this IServiceProvider provider) where T : class
         {
-            switch (type)
-            {
-                case WebType.Http:
-                    return provider.GetService<HttpService>();
-                case WebType.WebSocket:
-                    return provider.GetService<WebSocketService>();
-                case WebType.Socket:
-                    return provider.GetService<SocketService>();
-                default:
-                    return null;
-            }
+            RequireT(typeof(T));
+            return provider.GetService<T>();
+        }
+
+        /// <summary>
+        /// 类型验证
+        /// </summary>
+        /// <param name="type"></param>
+        private static void RequireT(Type type)
+        {
+            var services = new Type[] {
+                typeof(HttpService),
+                typeof(WebSocketService),
+                typeof(SocketService)
+            };
+            if (!services.Contains(type))
+                throw new Exception("无法获取该类型的服务");
         }
     }
 }

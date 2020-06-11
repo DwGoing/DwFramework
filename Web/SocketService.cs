@@ -20,7 +20,8 @@ namespace DwFramework.Web
     {
         public class Config
         {
-            public Dictionary<string, string> Listen { get; set; }
+            public string Listen { get; set; }
+            public int BackLog { get; set; } = 100;
             public int BufferSize { get; set; } = 1024 * 4;
         }
 
@@ -66,6 +67,8 @@ namespace DwFramework.Web
 
         private readonly Config _config;
         private readonly Dictionary<string, SocketConnection> _connections;
+        private byte[] _buffer;
+        private Socket _server;
 
         public event Action<SocketConnection, OnConnectEventargs> OnConnect;
         public event Action<SocketConnection, OnSendEventargs> OnSend;
@@ -81,6 +84,7 @@ namespace DwFramework.Web
         public SocketService(IServiceProvider provider, IEnvironment environment) : base(provider, environment)
         {
             _config = _environment.GetConfiguration().GetConfig<Config>("Web:Socket");
+            _connections = new Dictionary<string, SocketConnection>();
         }
 
         /// <summary>
@@ -89,7 +93,19 @@ namespace DwFramework.Web
         /// <returns></returns>
         public Task OpenServiceAsync()
         {
-            return Task.Run(() => { });
+            return Task.Run(() =>
+            {
+                _buffer = new byte[_config.BufferSize];
+                _server = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                if (string.IsNullOrEmpty(_config.Listen))
+                    _server.Bind(new IPEndPoint(IPAddress.Any, 10085));
+                else
+                {
+                    string[] ipAndPort = _config.Listen.Split(":");
+                    _server.Bind(new IPEndPoint(string.IsNullOrEmpty(ipAndPort[0]) ? IPAddress.Any : IPAddress.Parse(ipAndPort[0]), int.Parse(ipAndPort[1])));
+                }
+                _server.Listen(_config.BackLog);
+            });
         }
 
         /// <summary>

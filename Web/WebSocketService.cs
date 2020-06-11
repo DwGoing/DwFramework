@@ -92,25 +92,26 @@ namespace DwFramework.Web
         {
             var builder = new WebHostBuilder()
                 .UseDwServiceProvider(_provider)
+                .SuppressStatusMessages(true)
                 // wss证书路径
                 .UseContentRoot($"{AppDomain.CurrentDomain.BaseDirectory}{_config.ContentRoot}")
                 .UseKestrel(options =>
                 {
                     // 监听地址及端口
                     if (_config.Listen == null || _config.Listen.Count <= 0)
-                        options.Listen(IPAddress.Parse("0.0.0.0"), 5088);
+                        options.Listen(IPAddress.Any, 5088);
                     else
                     {
                         if (_config.Listen.ContainsKey("ws"))
                         {
                             string[] ipAndPort = _config.Listen["ws"].Split(":");
-                            options.Listen(IPAddress.Parse(ipAndPort[0]), int.Parse(ipAndPort[1]));
+                            options.Listen(string.IsNullOrEmpty(ipAndPort[0]) ? IPAddress.Any : IPAddress.Parse(ipAndPort[0]), int.Parse(ipAndPort[1]));
                         }
                         if (_config.Listen.ContainsKey("wss"))
                         {
                             string[] addrAndCert = _config.Listen["wss"].Split(";");
                             string[] ipAndPort = addrAndCert[0].Split(":");
-                            options.Listen(IPAddress.Parse(ipAndPort[0]), int.Parse(ipAndPort[1]), listenOptions =>
+                            options.Listen(string.IsNullOrEmpty(ipAndPort[0]) ? IPAddress.Any : IPAddress.Parse(ipAndPort[0]), int.Parse(ipAndPort[1]), listenOptions =>
                             {
                                 string[] certAndPassword = addrAndCert[1].Split(",");
                                 listenOptions.UseHttps(certAndPassword[0], certAndPassword[1]);
@@ -161,7 +162,7 @@ namespace DwFramework.Web
                         _connections.Remove(connection.ID);
                     });
                 });
-            return Task.Run(() => builder.Build().Run());
+            return builder.Build().RunAsync();
         }
 
         /// <summary>
