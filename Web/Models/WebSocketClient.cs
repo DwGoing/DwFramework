@@ -8,11 +8,51 @@ namespace DwFramework.Web
 {
     public class WebSocketClient
     {
-        public event OnConnectToServerHandler OnConnect;
-        public event OnSendToServerHandler OnSend;
-        public event OnReceiveFromServerHandler OnReceive;
-        public event OnCloseFromServerHandler OnClose;
-        public event OnErrorFromServerHandler OnError;
+        public class OnConnectEventargs : EventArgs
+        {
+
+        }
+
+        public class OnSendEventargs : EventArgs
+        {
+            public string Message { get; private set; }
+
+            public OnSendEventargs(string msg)
+            {
+                Message = msg;
+            }
+        }
+
+        public class OnReceiveEventargs : EventArgs
+        {
+            public string Message { get; private set; }
+
+            public OnReceiveEventargs(string msg)
+            {
+                Message = msg;
+            }
+        }
+
+        public class OnCloceEventargs : EventArgs
+        {
+
+        }
+
+        public class OnErrorEventargs : EventArgs
+        {
+            public Exception Exception { get; private set; }
+
+            public OnErrorEventargs(Exception exception)
+            {
+                Exception = exception;
+            }
+        }
+
+        public event Action<OnConnectEventargs> OnConnect;
+        public event Action<OnSendEventargs> OnSend;
+        public event Action<OnReceiveEventargs> OnReceive;
+        public event Action<OnCloceEventargs> OnClose;
+        public event Action<OnErrorEventargs> OnError;
 
         private ClientWebSocket _client;
         private int _bufferSize = 4096;
@@ -46,7 +86,7 @@ namespace DwFramework.Web
         {
             return _client.ConnectAsync(new Uri(uri), CancellationToken.None).ContinueWith(a =>
             {
-                OnConnect?.Invoke(new OnWebSocketConnectEventargs() { });
+                OnConnect?.Invoke(new OnConnectEventargs() { });
                 Task.Run(async () =>
                 {
                     var buffer = new byte[_bufferSize];
@@ -56,11 +96,11 @@ namespace DwFramework.Web
                         try
                         {
                             var msg = Encoding.UTF8.GetString(buffer, 0, result.Count);
-                            OnReceive?.Invoke(new OnWebSocketReceiveEventargs(msg));
+                            OnReceive?.Invoke(new OnReceiveEventargs(msg));
                         }
                         catch (Exception ex)
                         {
-                            OnError?.Invoke(new OnWebSocketErrorEventargs(ex));
+                            OnError?.Invoke(new OnErrorEventargs(ex));
                         }
                         finally
                         {
@@ -68,7 +108,7 @@ namespace DwFramework.Web
                             result = await _client.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
                         }
                     }
-                    OnClose?.Invoke(new OnWebSocketCloceEventargs() { });
+                    OnClose?.Invoke(new OnCloceEventargs() { });
                 });
             });
         }
@@ -81,7 +121,7 @@ namespace DwFramework.Web
         public Task SendAsync(byte[] buffer)
         {
             return _client.SendAsync(buffer, WebSocketMessageType.Text, true, CancellationToken.None)
-                .ContinueWith(a => OnSend?.Invoke(new OnWebSocketSendEventargs(Encoding.UTF8.GetString(buffer)) { }));
+                .ContinueWith(a => OnSend?.Invoke(new OnSendEventargs(Encoding.UTF8.GetString(buffer)) { }));
         }
 
         /// <summary>
@@ -91,8 +131,7 @@ namespace DwFramework.Web
         /// <returns></returns>
         public Task SendAsync(string msg)
         {
-            return _client.SendAsync(Encoding.UTF8.GetBytes(msg), WebSocketMessageType.Text, true, CancellationToken.None)
-                .ContinueWith(a => OnSend?.Invoke(new OnWebSocketSendEventargs(msg) { }));
+            return SendAsync(Encoding.UTF8.GetBytes(msg));
         }
 
         /// <summary>

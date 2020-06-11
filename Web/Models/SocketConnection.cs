@@ -4,6 +4,8 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 
+using DwFramework.Core.Plugins;
+
 namespace DwFramework.Web
 {
     public class SocketConnection
