@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Builder;
 
 using DwFramework.Core;
+using DwFramework.Core.Helper;
 using DwFramework.Core.Extensions;
 
 namespace DwFramework.Web
@@ -93,7 +94,7 @@ namespace DwFramework.Web
         /// <returns></returns>
         public Task OpenServiceAsync()
         {
-            return Task.Run(() =>
+            return ThreadHelper.CreateTask(() =>
             {
                 _buffer = new byte[_config.BufferSize];
                 _server = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
@@ -155,7 +156,7 @@ namespace DwFramework.Web
         /// <returns></returns>
         public Task SocketBroadCastAsync(string msg)
         {
-            return Task.Run(() =>
+            return ThreadHelper.CreateTask(() =>
             {
                 byte[] buffer = Encoding.UTF8.GetBytes(msg);
                 foreach (var item in _connections.Values)
@@ -183,7 +184,7 @@ namespace DwFramework.Web
         /// <returns></returns>
         public Task SocketCloseAllAsync()
         {
-            return Task.Run(() =>
+            return ThreadHelper.CreateTask(() =>
             {
                 foreach (var item in _connections.Values)
                 {

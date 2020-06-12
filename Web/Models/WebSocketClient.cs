@@ -4,6 +4,8 @@ using System.Threading.Tasks;
 using System.Net.WebSockets;
 using System.Text;
 
+using DwFramework.Core.Helper;
+
 namespace DwFramework.Web
 {
     public class WebSocketClient
@@ -87,7 +89,7 @@ namespace DwFramework.Web
             return _client.ConnectAsync(new Uri(uri), CancellationToken.None).ContinueWith(a =>
             {
                 OnConnect?.Invoke(new OnConnectEventargs() { });
-                Task.Run(async () =>
+                ThreadHelper.CreateTask(async () =>
                 {
                     var buffer = new byte[_bufferSize];
                     var result = await _client.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);

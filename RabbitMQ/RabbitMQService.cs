@@ -8,6 +8,7 @@ using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 
 using DwFramework.Core;
+using DwFramework.Core.Helper;
 using DwFramework.Core.Extensions;
 
 namespace DwFramework.RabbitMQ
@@ -165,7 +166,7 @@ namespace DwFramework.RabbitMQ
         /// <returns></returns>
         public Task PublishAsync(string msg, string exchange = "", string routingKey = "", Action<IBasicProperties> basicPropertiesSetting = null)
         {
-            return Task.Run(() => Publish(msg, exchange, routingKey, basicPropertiesSetting));
+            return ThreadHelper.CreateTask(() => Publish(msg, exchange, routingKey, basicPropertiesSetting));
         }
 
         /// <summary>
@@ -201,7 +202,7 @@ namespace DwFramework.RabbitMQ
         /// <returns></returns>
         public Task PublishAsync(object data, string exchange = "", string routingKey = "", Action<IBasicProperties> basicPropertiesSetting = null)
         {
-            return Task.Run(() => Publish(data, exchange, routingKey, basicPropertiesSetting));
+            return ThreadHelper.CreateTask(() => Publish(data, exchange, routingKey, basicPropertiesSetting));
         }
 
         /// <summary>
@@ -215,7 +216,7 @@ namespace DwFramework.RabbitMQ
         {
             var tokenSource = new CancellationTokenSource();
             var token = tokenSource.Token;
-            _subscribers[queue] = new KeyValuePair<CancellationTokenSource, Task>(tokenSource, Task.Run(() =>
+            _subscribers[queue] = new KeyValuePair<CancellationTokenSource, Task>(tokenSource, ThreadHelper.CreateTask(() =>
             {
                 using (var connection = _connectionFactory.CreateConnection())
                 using (var channel = connection.CreateModel())

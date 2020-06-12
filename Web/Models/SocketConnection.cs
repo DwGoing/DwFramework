@@ -1,10 +1,10 @@
 ﻿using System;
-using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 
 using DwFramework.Core.Plugins;
+using DwFramework.Core.Helper;
 
 namespace DwFramework.Web
 {
@@ -30,7 +30,7 @@ namespace DwFramework.Web
         /// <returns></returns>
         public Task SendAsync(byte[] buffer)
         {
-            return Task.Run(() => { Socket.Send(new ArraySegment<byte>(buffer)); });
+            return ThreadHelper.CreateTask(() => { Socket.Send(new ArraySegment<byte>(buffer)); });
         }
 
         /// <summary>
@@ -50,7 +50,6 @@ namespace DwFramework.Web
         /// <returns></returns>
         public Task CloseAsync()
         {
-            return Task.Run(() => { Socket.Close(); });
         }
 
         /// <summary>
