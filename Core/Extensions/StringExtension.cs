@@ -51,7 +51,7 @@ namespace DwFramework.Core.Extensions
         /// </summary>
         /// <param name="str"></param>
         /// <returns></returns>
-        public static byte[] ToBase32Bytes(this string str)
+        public static byte[] FromBase32String(this string str)
         {
             if (string.IsNullOrEmpty(str))
             {

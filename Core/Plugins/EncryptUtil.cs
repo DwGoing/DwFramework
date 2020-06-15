@@ -1,5 +1,4 @@
-﻿using System;
-using System.Text;
+﻿using System.Text;
 using System.Security.Cryptography;
 
 using RSAExtensions;
@@ -151,51 +150,120 @@ namespace DwFramework.Core.Plugins
         public class Rsa
         {
             /// <summary>
-            /// 私钥加密
+            /// 生成密钥对
             /// </summary>
-            /// <param name="str"></param>
-            /// <param name="privateKey"></param>
+            /// <param name="type"></param>
+            /// <param name="size"></param>
+            /// <param name="isPem"></param>
+            /// <returns></returns>
+            public static (string PrivateKey, string PublicKey) GenerateKeyPair(RSAKeyType type, int size = 1024, bool isPem = false)
+            {
+                using (var rsa = RSA.Create(size))
+                {
+                    return (rsa.ExportPrivateKey(type, isPem), rsa.ExportPublicKey(type, isPem));
+                }
+            }
+
+            /// <summary>
+            /// 公钥加密
+            /// </summary>
+            /// <param name="data"></param>
+            /// <param name="type"></param>
+            /// <param name="publicKey"></param>
+            /// <param name="isPem"></param>
+            /// <param name="padding"></param>
+            /// <returns></returns>
+            public static byte[] EncryptWithPublicKey(byte[] data, RSAKeyType type, string publicKey, bool isPem = false, RSAEncryptionPadding padding = null)
+            {
+                using (var rsa = RSA.Create())
+                {
+                    rsa.ImportPublicKey(type, publicKey, isPem);
+                    return rsa.Encrypt(data, padding ?? RSAEncryptionPadding.Pkcs1);
+                }
+            }
+
+            /// <summary>
+            /// 公钥加密
+            /// </summary>
+            /// <param name="data"></param>
+            /// <param name="type"></param>
+            /// <param name="publicKey"></param>
+            /// <param name="isPem"></param>
             /// <param name="padding"></param>
             /// <param name="encoding"></param>
             /// <returns></returns>
-            public static byte[] EncryptWithPrivateKey(string str, string privateKey, RSAEncryptionPadding padding = null, Encoding encoding = null)
+            public static string EncryptWithPublicKey(string data, RSAKeyType type, string publicKey, bool isPem = false, RSAEncryptionPadding padding = null, Encoding encoding = null)
             {
-                if (encoding == null)
-                    encoding = Encoding.UTF8;
+                if (encoding == null) encoding = Encoding.UTF8;
+                return EncryptWithPublicKey(encoding.GetBytes(data), type, publicKey, isPem, padding).ToBase64String();
+            }
+
+            /// <summary>
+            /// 私钥加密
+            /// </summary>
+            /// <param name="data"></param>
+            /// <param name="type"></param>
+            /// <param name="privateKey"></param>
+            /// <param name="isPem"></param>
+            /// <param name="padding"></param>
+            /// <returns></returns>
+            public static byte[] EncryptWithPrivateKey(byte[] data, RSAKeyType type, string privateKey, bool isPem = false, RSAEncryptionPadding padding = null)
+            {
                 using (var rsa = RSA.Create())
                 {
-                    rsa.ImportRSAPrivateKey(privateKey.FromBase64String(), out _);
-                    return rsa.Encrypt(encoding.GetBytes(str), padding ?? RSAEncryptionPadding.Pkcs1);
+                    rsa.ImportPrivateKey(type, privateKey, isPem);
+                    return rsa.Encrypt(data, padding ?? RSAEncryptionPadding.Pkcs1);
                 }
             }
 
             /// <summary>
             /// 私钥加密
             /// </summary>
-            /// <param name="str"></param>
+            /// <param name="data"></param>
+            /// <param name="type"></param>
             /// <param name="privateKey"></param>
+            /// <param name="isPem"></param>
             /// <param name="padding"></param>
             /// <param name="encoding"></param>
             /// <returns></returns>
-            public static string EncryptWithPrivateKeyToBase64(string str, string privateKey, RSAEncryptionPadding padding = null, Encoding encoding = null)
+            public static string EncryptWithPrivateKey(string data, RSAKeyType type, string privateKey, bool isPem = false, RSAEncryptionPadding padding = null, Encoding encoding = null)
             {
-                return EncryptWithPrivateKey(str, privateKey, padding, encoding).ToBase64String();
+                if (encoding == null) encoding = Encoding.UTF8;
+                return EncryptWithPrivateKey(encoding.GetBytes(data), type, privateKey, isPem, padding).ToBase64String();
             }
 
-            public static byte[] EncryptWithPublicKey(string str, string publicKey, RSAEncryptionPadding padding = null, Encoding encoding = null)
+            /// <summary>
+            /// 私钥解密
+            /// </summary>
+            /// <param name="encryptedData"></param>
+            /// <param name="type"></param>
+            /// <param name="privateKey"></param>
+            /// <param name="isPem"></param>
+            /// <param name="padding"></param>
+            /// <returns></returns>
+            public static byte[] Decrypt(byte[] encryptedData, RSAKeyType type, string privateKey, bool isPem = false, RSAEncryptionPadding padding = null)
             {
-                if (encoding == null)
-                    encoding = Encoding.UTF8;
                 using (var rsa = RSA.Create())
                 {
-                    rsa.ImportRSAPublicKey(publicKey.FromBase64String(), out _);
-                    return rsa.Encrypt(encoding.GetBytes(str), padding ?? RSAEncryptionPadding.Pkcs1);
+                    rsa.ImportPrivateKey(type, privateKey, isPem);
+                    return rsa.Decrypt(encryptedData, padding ?? RSAEncryptionPadding.Pkcs1);
                 }
             }
 
-            public static string EncryptWithPublicKeyToBase64(string str, string privateKey, RSAEncryptionPadding padding = null, Encoding encoding = null)
+            /// <summary>
+            /// 私钥解密
+            /// </summary>
+            /// <param name="encryptedData"></param>
+            /// <param name="type"></param>
+            /// <param name="privateKey"></param>
+            /// <param name="isPem"></param>
+            /// <param name="padding"></param>
+            /// <param name="encoding"></param>
+            /// <returns></returns>
+            public static string Decrypt(string encryptedData, RSAKeyType type, string privateKey, bool isPem = false, RSAEncryptionPadding padding = null, Encoding encoding = null)
             {
-                return EncryptWithPublicKey(str, privateKey, padding, encoding).ToBase64String();
+                if (encoding == null) encoding = Encoding.UTF8;
+                return encoding.GetString(Decrypt(encryptedData.FromBase64String(), type, privateKey, isPem, padding));
             }
         }
     }
