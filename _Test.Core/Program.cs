@@ -26,43 +26,25 @@ namespace _Test.Core
                 //Console.WriteLine(c);
                 //var d = EncryptUtil.Rsa.Decrypt(b, RSAExtensions.RSAKeyType.Pkcs1, keys.PrivateKey, true);
                 //Console.WriteLine(d);
-                var source = new CancellationTokenSource(5000);
-                TaskManager.CreateTask(token =>
+                var token = new CancellationTokenSource();
+                var task = Task.Run(() =>
                 {
-                    while (true)
-                    {
-                        if (token.IsCancellationRequested) return;
-                        Console.WriteLine("z");
-                        Thread.Sleep(1000);
-                    }
-                }, source.Token);
-                Console.WriteLine("x");
+                    Thread.Sleep(10000);
+                    token.Token.ThrowIfCancellationRequested();
+                    Console.WriteLine(123);
+                }, token.Token);
+                Task.Run(() =>
+                {
+                    Thread.Sleep(3000);
+                    token.Cancel();
+                });
+                task.Wait();
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
             }
             Console.Read();
-        }
-    }
-
-    public interface ITest
-    {
-        void M();
-    }
-
-    public class CTest : ITest
-    {
-        private readonly ILogger<CTest> _logger;
-
-        public CTest(ILogger<CTest> logger, IEnvironment environment)
-        {
-            _logger = logger;
-        }
-
-        public void M()
-        {
-            _logger.LogInformation("Helo");
         }
     }
 }

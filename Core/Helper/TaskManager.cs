@@ -17,6 +17,21 @@ namespace DwFramework.Core.Helper
         }
 
         /// <summary>
+        /// 创建限时任务
+        /// </summary>
+        /// <param name="taskAction"></param>
+        /// <param name="timeoutMilliSeconds"></param>
+        /// <returns></returns>
+        public static Task CreateTask(Action<CancellationToken> taskAction, int timeoutMilliSeconds)
+        {
+            var cancellationToken = new CancellationTokenSource(timeoutMilliSeconds);
+            return Task.Factory.StartNew(token =>
+            {
+                taskAction((CancellationToken)token);
+            }, cancellationToken.Token);
+        }
+
+        /// <summary>
         /// 创建可取消任务
         /// </summary>
         /// <param name="taskAction"></param>
@@ -57,6 +72,22 @@ namespace DwFramework.Core.Helper
         }
 
         /// <summary>
+        /// 创建限时任务
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="taskAction"></param>
+        /// <param name="timeoutMilliSeconds"></param>
+        /// <returns></returns>
+        public static Task<T> CreateTask<T>(Func<CancellationToken, T> taskAction, int timeoutMilliSeconds)
+        {
+            var cancellationToken = new CancellationTokenSource(timeoutMilliSeconds);
+            return Task.Factory.StartNew(token =>
+            {
+                return taskAction((CancellationToken)token);
+            }, cancellationToken.Token);
+        }
+
+        /// <summary>
         /// 创建可取消任务
         /// </summary>
         /// <typeparam name="T"></typeparam>
@@ -66,6 +97,21 @@ namespace DwFramework.Core.Helper
         public static Task<T> CreateTask<T>(Func<CancellationToken, T> taskAction, out CancellationTokenSource cancellationToken)
         {
             cancellationToken = new CancellationTokenSource();
+            return Task.Factory.StartNew(token =>
+            {
+                return taskAction((CancellationToken)token);
+            }, cancellationToken.Token);
+        }
+
+        /// <summary>
+        /// 创建可取消任务
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="taskAction"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        public static Task<T> CreateTask<T>(Func<CancellationToken, T> taskAction, CancellationTokenSource cancellationToken)
+        {
             return Task.Factory.StartNew(token =>
             {
                 return taskAction((CancellationToken)token);
