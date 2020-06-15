@@ -166,7 +166,7 @@ namespace DwFramework.RabbitMQ
         /// <returns></returns>
         public Task PublishAsync(string msg, string exchange = "", string routingKey = "", Action<IBasicProperties> basicPropertiesSetting = null)
         {
-            return ThreadHelper.CreateTask(() => Publish(msg, exchange, routingKey, basicPropertiesSetting));
+            return TaskManager.CreateTask(() => Publish(msg, exchange, routingKey, basicPropertiesSetting));
         }
 
         /// <summary>
@@ -202,7 +202,7 @@ namespace DwFramework.RabbitMQ
         /// <returns></returns>
         public Task PublishAsync(object data, string exchange = "", string routingKey = "", Action<IBasicProperties> basicPropertiesSetting = null)
         {
-            return ThreadHelper.CreateTask(() => Publish(data, exchange, routingKey, basicPropertiesSetting));
+            return TaskManager.CreateTask(() => Publish(data, exchange, routingKey, basicPropertiesSetting));
         }
 
         /// <summary>
@@ -216,7 +216,7 @@ namespace DwFramework.RabbitMQ
         {
             var tokenSource = new CancellationTokenSource();
             var token = tokenSource.Token;
-            _subscribers[queue] = new KeyValuePair<CancellationTokenSource, Task>(tokenSource, ThreadHelper.CreateTask(() =>
+            _subscribers[queue] = new KeyValuePair<CancellationTokenSource, Task>(tokenSource, TaskManager.CreateTask(() =>
             {
                 using (var connection = _connectionFactory.CreateConnection())
                 using (var channel = connection.CreateModel())
@@ -229,7 +229,7 @@ namespace DwFramework.RabbitMQ
                     };
                     while (!token.IsCancellationRequested) Thread.Sleep(1);
                 }
-            }, token));
+            }));
         }
 
         /// <summary>

@@ -30,7 +30,7 @@ namespace DwFramework.Web
         /// <returns></returns>
         public Task SendAsync(byte[] buffer)
         {
-            return ThreadHelper.CreateTask(() => { Socket.Send(new ArraySegment<byte>(buffer)); });
+            return TaskManager.CreateTask(() => { Socket.Send(new ArraySegment<byte>(buffer)); });
         }
 
         /// <summary>
@@ -50,6 +50,7 @@ namespace DwFramework.Web
         /// <returns></returns>
         public Task CloseAsync()
         {
+            return null;
         }
 
         /// <summary>

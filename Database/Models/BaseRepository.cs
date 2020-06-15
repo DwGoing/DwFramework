@@ -31,7 +31,7 @@ namespace DwFramework.Database
         /// <returns></returns>
         public Task<T[]> FindAllAsync(int cacheExpireSeconds = 0)
         {
-            return ThreadHelper.CreateTask(() =>
+            return TaskManager.CreateTask(() =>
             {
                 return DbConnection.Queryable<T>()
                     .WithCacheIF(cacheExpireSeconds > 0, cacheExpireSeconds)
@@ -47,7 +47,7 @@ namespace DwFramework.Database
         /// <returns></returns>
         public Task<T[]> FindAsync(Expression<Func<T, bool>> expression, int cacheExpireSeconds = 0)
         {
-            return ThreadHelper.CreateTask(() =>
+            return TaskManager.CreateTask(() =>
             {
                 return DbConnection.Queryable<T>()
                     .Where(expression)

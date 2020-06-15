@@ -213,7 +213,7 @@ namespace DwFramework.Web
         /// <returns></returns>
         public Task WebSocketBroadCastAsync(string msg)
         {
-            return ThreadHelper.CreateTask(() =>
+            return TaskManager.CreateTask(() =>
             {
                 byte[] buffer = Encoding.UTF8.GetBytes(msg);
                 foreach (var item in _connections.Values)
@@ -241,7 +241,7 @@ namespace DwFramework.Web
         /// <returns></returns>
         public Task WebSocketCloseAllAsync()
         {
-            return ThreadHelper.CreateTask(() =>
+            return TaskManager.CreateTask(() =>
             {
                 foreach (var item in _connections.Values)
                 {

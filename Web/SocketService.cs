@@ -94,7 +94,7 @@ namespace DwFramework.Web
         /// <returns></returns>
         public Task OpenServiceAsync()
         {
-            return ThreadHelper.CreateTask(() =>
+            return TaskManager.CreateTask(() =>
             {
                 _buffer = new byte[_config.BufferSize];
                 _server = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
@@ -156,7 +156,7 @@ namespace DwFramework.Web
         /// <returns></returns>
         public Task SocketBroadCastAsync(string msg)
         {
-            return ThreadHelper.CreateTask(() =>
+            return TaskManager.CreateTask(() =>
             {
                 byte[] buffer = Encoding.UTF8.GetBytes(msg);
                 foreach (var item in _connections.Values)
@@ -184,7 +184,7 @@ namespace DwFramework.Web
         /// <returns></returns>
         public Task SocketCloseAllAsync()
         {
-            return ThreadHelper.CreateTask(() =>
+            return TaskManager.CreateTask(() =>
             {
                 foreach (var item in _connections.Values)
                 {

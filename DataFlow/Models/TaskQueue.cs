@@ -50,7 +50,7 @@ namespace DwFramework.DataFlow
         public void Enable(bool isEnable)
         {
             _isEnable = isEnable;
-            if (_isEnable) ThreadHelper.CreateTask(TaskHandler);
+            if (_isEnable) TaskManager.CreateTask(TaskHandler);
         }
 
         /// <summary>
@@ -97,7 +97,7 @@ namespace DwFramework.DataFlow
             _inputs.Enqueue((TInput)input);
             if (_isEnable) return;
             _isEnable = true;
-            ThreadHelper.CreateTask(TaskHandler);
+            TaskManager.CreateTask(TaskHandler);
         }
 
         /// <summary>

@@ -83,7 +83,7 @@ namespace DwFramework.Database
         /// <returns></returns>
         public Task<bool> CreateTableAsync(string tableName, List<DbColumnInfo> columns, bool isCreatePrimaryKey = true)
         {
-            return ThreadHelper.CreateTask(() =>
+            return TaskManager.CreateTask(() =>
             {
                 return DbConnection.DbMaintenance.CreateTable(tableName, columns, isCreatePrimaryKey);
             });
@@ -96,7 +96,7 @@ namespace DwFramework.Database
         /// <returns></returns>
         public Task<bool> DropTableAsync(string tableName)
         {
-            return ThreadHelper.CreateTask(() =>
+            return TaskManager.CreateTask(() =>
             {
                 return DbConnection.DbMaintenance.DropTable(tableName);
             });
@@ -109,7 +109,7 @@ namespace DwFramework.Database
         /// <returns></returns>
         public Task<bool> TruncateTableAsync(string tableName)
         {
-            return ThreadHelper.CreateTask(() =>
+            return TaskManager.CreateTask(() =>
             {
                 return DbConnection.DbMaintenance.TruncateTable(tableName);
             });
@@ -123,7 +123,7 @@ namespace DwFramework.Database
         /// <returns></returns>
         public Task<bool> CopyTableStructAsync(string from, string to)
         {
-            return ThreadHelper.CreateTask(() =>
+            return TaskManager.CreateTask(() =>
             {
                 var columns = DbConnection.DbMaintenance.GetColumnInfosByTableName(from);
                 return DbConnection.DbMaintenance.CreateTable(to, columns);

@@ -89,7 +89,7 @@ namespace DwFramework.Web
             return _client.ConnectAsync(new Uri(uri), CancellationToken.None).ContinueWith(a =>
             {
                 OnConnect?.Invoke(new OnConnectEventargs() { });
-                ThreadHelper.CreateTask(async () =>
+                TaskManager.CreateTask(async () =>
                 {
                     var buffer = new byte[_bufferSize];
                     var result = await _client.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
