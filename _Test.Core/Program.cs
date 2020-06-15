@@ -26,18 +26,16 @@ namespace _Test.Core
                 //Console.WriteLine(c);
                 //var d = EncryptUtil.Rsa.Decrypt(b, RSAExtensions.RSAKeyType.Pkcs1, keys.PrivateKey, true);
                 //Console.WriteLine(d);
-                var task = TaskManager.CreateTask(() =>
+                var source = new CancellationTokenSource(5000);
+                TaskManager.CreateTask(token =>
                 {
-                    Thread.Sleep(10000);
-                    Console.WriteLine("z");
-                    return "ok";
-                }, out var token);
-                TaskManager.CreateTask(() =>
-                {
-                    Thread.Sleep(1000);
-                    token.Cancel();
-                });
-                task.Wait();
+                    while (true)
+                    {
+                        if (token.IsCancellationRequested) return;
+                        Console.WriteLine("z");
+                        Thread.Sleep(1000);
+                    }
+                }, source.Token);
                 Console.WriteLine("x");
             }
             catch (Exception ex)
