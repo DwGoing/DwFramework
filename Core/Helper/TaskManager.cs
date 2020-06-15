@@ -19,6 +19,7 @@ namespace DwFramework.Core.Helper
                 try
                 {
                     taskAction();
+                    tcs.SetResult(null);
                 }
                 catch (Exception ex)
                 {
@@ -34,19 +35,29 @@ namespace DwFramework.Core.Helper
         /// <param name="taskAction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public static Task CreateTask(Action<CancellationToken> taskAction, out CancellationTokenSource cancellationToken)
+        public static Task CreateTask(Action taskAction, out CancellationTokenSource cancellationToken)
         {
             cancellationToken = new CancellationTokenSource();
             var tcs = new TaskCompletionSource<object>();
-            Task.Factory.StartNew(token =>
+            var task = Task.Factory.StartNew(() =>
             {
                 try
                 {
-                    taskAction((CancellationToken)token);
+                    taskAction();
+                    tcs.SetResult(null);
                 }
                 catch (Exception ex)
                 {
                     tcs.SetException(ex);
+                }
+            });
+            Task.Factory.StartNew(token =>
+            {
+                while (!task.IsCompleted)
+                {
+                    if (((CancellationToken)token).IsCancellationRequested)
+                        tcs.SetException(new Exception("任务被取消"));
+                    Thread.Sleep(1);
                 }
             }, cancellationToken.Token);
             return tcs.Task;
@@ -82,19 +93,28 @@ namespace DwFramework.Core.Helper
         /// <param name="taskAction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public static Task<T> CreateTask<T>(Func<CancellationToken, T> taskAction, CancellationTokenSource cancellationToken)
+        public static Task<T> CreateTask<T>(Func<T> taskAction, out CancellationTokenSource cancellationToken)
         {
             cancellationToken = new CancellationTokenSource();
             var tcs = new TaskCompletionSource<T>();
-            Task.Factory.StartNew(token =>
+            var task = Task.Factory.StartNew(token =>
             {
                 try
                 {
-                    tcs.SetResult(taskAction((CancellationToken)token));
+                    tcs.SetResult(taskAction());
                 }
                 catch (Exception ex)
                 {
                     tcs.SetException(ex);
+                }
+            }, cancellationToken.Token);
+            Task.Factory.StartNew(token =>
+            {
+                while (!task.IsCompleted)
+                {
+                    if (((CancellationToken)token).IsCancellationRequested)
+                        tcs.SetException(new Exception("任务被取消"));
+                    Thread.Sleep(1);
                 }
             }, cancellationToken.Token);
             return tcs.Task;
