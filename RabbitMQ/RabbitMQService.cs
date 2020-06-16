@@ -214,9 +214,7 @@ namespace DwFramework.RabbitMQ
         /// <returns></returns>
         public void Subscribe(string queue, bool autoAck, Action<IModel, BasicDeliverEventArgs> handler)
         {
-            var tokenSource = new CancellationTokenSource();
-            var token = tokenSource.Token;
-            _subscribers[queue] = new KeyValuePair<CancellationTokenSource, Task>(tokenSource, TaskManager.CreateTask(() =>
+            var task = TaskManager.CreateTask(token =>
             {
                 using (var connection = _connectionFactory.CreateConnection())
                 using (var channel = connection.CreateModel())
@@ -229,7 +227,8 @@ namespace DwFramework.RabbitMQ
                     };
                     while (!token.IsCancellationRequested) Thread.Sleep(1);
                 }
-            }));
+            }, out var cancellationToken);
+            _subscribers[queue] = new KeyValuePair<CancellationTokenSource, Task>(cancellationToken, task);
         }
 
         /// <summary>
