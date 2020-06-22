@@ -22,9 +22,6 @@
         </None>
     </ItemGroup>
     <ItemGroup>
-      <ProjectReference Include="..\Core\Core.csproj" />
-    </ItemGroup>
-    <ItemGroup>
       <Folder Include="Extensions\" />
       <Folder Include="Models\" />
     </ItemGroup>

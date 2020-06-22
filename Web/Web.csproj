@@ -15,9 +15,6 @@
         <ReleaseVersion>0.2</ReleaseVersion>
     </PropertyGroup>
     <ItemGroup>
-        <ProjectReference Include="..\Core\Core.csproj" />
-    </ItemGroup>
-    <ItemGroup>
         <None Include="..\LICENSE">
             <Pack>True</Pack>
             <PackagePath>

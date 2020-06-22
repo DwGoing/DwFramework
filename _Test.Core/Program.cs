@@ -15,7 +15,7 @@ namespace _Test.Core
         {
             try
             {
-                
+                Console.WriteLine(Generater.GenerateUUID());
             }
             catch (Exception ex)
             {
