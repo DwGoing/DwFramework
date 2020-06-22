@@ -17,6 +17,10 @@ namespace DwFramework.Core.Plugins
         public object ReturnValue { get { return _invocation.ReturnValue; } }
         public Type TargetType { get { return _invocation.TargetType; } }
 
+        /// <summary>
+        /// 构造函数
+        /// </summary>
+        /// <param name="invocation"></param>
         public CallInfo(IInvocation invocation)
         {
             _invocation = invocation;

@@ -29,7 +29,7 @@ namespace DwFramework.Rpc
         /// <param name="environment"></param>
         public RpcService(IServiceProvider provider, IEnvironment environment) : base(provider, environment)
         {
-            _config = _environment.GetConfiguration().GetSection<Config>("Rpc");
+            _config = _environment.GetConfiguration().GetConfig<Config>("Rpc");
             var listener = new HttpListener();
             foreach (var item in _config.Prefixes)
             {

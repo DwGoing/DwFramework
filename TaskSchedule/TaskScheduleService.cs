@@ -34,7 +34,7 @@ namespace DwFramework.TaskSchedule
         /// <param name="environment"></param>
         public TaskScheduleService(IServiceProvider provider, IEnvironment environment) : base(provider, environment)
         {
-            _config = _environment.GetConfiguration().GetSection<Config>("TaskSchedule");
+            _config = _environment.GetConfiguration().GetConfig<Config>("TaskSchedule");
             _schedulerFactory = DirectSchedulerFactory.Instance;
         }
 

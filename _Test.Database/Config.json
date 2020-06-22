@@ -1,6 +1,11 @@
 {
   "Database": {
-    "ConnectionString": "server=192.168.10.100;port=3306;uid=root;pwd=Root1qaz@WSX;database=dwwallet;CharSet=utf8;Allow User Variables=True;Allow Zero Datetime=True;SslMode = none;",
-    "DbType": "MySql" // MySql
+    // MySql
+    // "ConnectionString": "server=192.168.10.100;port=3306;uid=root;pwd=Root1qaz@WSX;database=dwwallet;CharSet=utf8;Allow User Variables=True;Allow Zero Datetime=True;SslMode = none;",
+    // "DbType": "MySql"
+
+    // SqlLite
+    "ConnectionString": "Data Source=/Users/dwgoing/Desktop/Test.db",
+    "DbType": "Sqlite"
   }
 }

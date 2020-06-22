@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Builder;
 
-namespace DwFramework.Web
+namespace DwFramework.Web.Plugins
 {
     public static class RequestFilter
     {

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
+
+using DwFramework.Core.Helper;
 
 namespace DwFramework.DataFlow
 {
@@ -49,7 +50,7 @@ namespace DwFramework.DataFlow
         public void Enable(bool isEnable)
         {
             _isEnable = isEnable;
-            if (_isEnable) Task.Run(TaskHandler);
+            if (_isEnable) TaskManager.CreateTask(TaskHandler);
         }
 
         /// <summary>
@@ -96,7 +97,7 @@ namespace DwFramework.DataFlow
             _inputs.Enqueue((TInput)input);
             if (_isEnable) return;
             _isEnable = true;
-            Task.Run(TaskHandler);
+            TaskManager.CreateTask(TaskHandler);
         }
 
         /// <summary>

@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
 
 using DwFramework.Core;
-using DwFramework.Core.Extensions;
+using DwFramework.Core.Helper;
+using DwFramework.Core.Plugins;
 using Microsoft.Extensions.Logging;
-using NLog;
 
 namespace _Test.Core
 {
@@ -11,32 +13,15 @@ namespace _Test.Core
     {
         static void Main(string[] args)
         {
-            ServiceHost host = new ServiceHost();
-            host.RegisterLog();
-            host.RegisterType<CTest>();
-            var provider = host.Build();
-            provider.GetService<CTest>().M();
+            try
+            {
+                
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
             Console.Read();
-        }
-    }
-
-    public interface ITest
-    {
-        void M();
-    }
-
-    public class CTest : ITest
-    {
-        private readonly ILogger<CTest> _logger;
-
-        public CTest(ILogger<CTest> logger)
-        {
-            _logger = logger;
-        }
-
-        public void M()
-        {
-            _logger.LogInformation("Helo");
         }
     }
 }

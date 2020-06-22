@@ -8,7 +8,7 @@
         <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
         <PackageLicenseFile>LICENSE</PackageLicenseFile>
         <PackageProjectUrl>https://github.com/Dwgoing/DwFramework/tree/master/Rpc</PackageProjectUrl>
-        <Version>0.3.0.3</Version>
+        <Version>0.3.0.4</Version>
         <Authors>DwGoing</Authors>
         <Description>DwFramework Rpc库</Description>
         <Copyright>DwGoing</Copyright>
@@ -22,7 +22,7 @@
         </None>
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="Hprose.RPC" Version="3.0.15" />
+        <PackageReference Include="Hprose.RPC" Version="3.0.17" />
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\Core\Core.csproj" />

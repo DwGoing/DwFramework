@@ -34,7 +34,7 @@ namespace _Test.Database
     public class Account
     {
         [SugarColumn(ColumnName = "id", IsIdentity = true, IsPrimaryKey = true)]
-        public string ID { get; set; }
+        public int ID { get; set; }
         [SugarColumn(ColumnName = "create_time")]
         public DateTime CreateTime { get; set; }
         [SugarColumn(ColumnName = "user")]

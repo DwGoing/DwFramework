@@ -8,6 +8,7 @@ using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 
 using DwFramework.Core;
+using DwFramework.Core.Helper;
 using DwFramework.Core.Extensions;
 
 namespace DwFramework.RabbitMQ
@@ -29,10 +30,13 @@ namespace DwFramework.RabbitMQ
             public string UserName { get; set; }
             public string Password { get; set; }
             public string VirtualHost { get; set; }
+            public int ConnectionPoolSize { get; set; }
         }
 
         private readonly Config _config;
         private ConnectionFactory _connectionFactory;
+        private int _connectionPointer = 0;
+        private IConnection[] _connectionPool;
         private Dictionary<string, KeyValuePair<CancellationTokenSource, Task>> _subscribers;
 
 
@@ -43,7 +47,7 @@ namespace DwFramework.RabbitMQ
         /// <param name="environment"></param>
         public RabbitMQService(IServiceProvider provider, IEnvironment environment) : base(provider, environment)
         {
-            _config = _environment.GetConfiguration().GetSection<Config>("RabbitMQ");
+            _config = _environment.GetConfiguration().GetConfig<Config>("RabbitMQ");
             _connectionFactory = new ConnectionFactory()
             {
                 HostName = _config.Host,
@@ -52,7 +56,27 @@ namespace DwFramework.RabbitMQ
                 Password = _config.Password,
                 VirtualHost = _config.VirtualHost
             };
+            _connectionPool = new IConnection[_config.ConnectionPoolSize == 0 ? 3 : _config.ConnectionPoolSize];
             _subscribers = new Dictionary<string, KeyValuePair<CancellationTokenSource, Task>>();
+
+            // 初始化连接池
+            for (int i = 0; i < _connectionPool.Length; i++)
+            {
+                _connectionPool[i] = _connectionFactory.CreateConnection();
+            }
+        }
+
+        /// <summary>
+        /// 获取连接
+        /// </summary>
+        /// <returns></returns>
+        private IConnection GetConnection()
+        {
+            var connection = _connectionPool[_connectionPointer];
+            if (!connection.IsOpen) _connectionPool[_connectionPointer] = _connectionFactory.CreateConnection();
+            _connectionPointer++;
+            if (_connectionPointer >= _connectionPool.Length) _connectionPointer = 0;
+            return connection;
         }
 
         /// <summary>
@@ -66,7 +90,7 @@ namespace DwFramework.RabbitMQ
         /// <returns></returns>
         public void ExchangeDeclare(string exchange, string type, bool durable = false, bool autoDelete = false, IDictionary<string, object> arguments = null)
         {
-            using (var connection = _connectionFactory.CreateConnection())
+            var connection = GetConnection();
             using (var channel = connection.CreateModel())
             {
                 channel.ExchangeDeclare(exchange, type, durable, autoDelete, arguments);
@@ -84,7 +108,7 @@ namespace DwFramework.RabbitMQ
         /// <returns></returns>
         public void QueueDeclare(string queue, bool durable = false, bool exclusive = false, bool autoDelete = false, IDictionary<string, object> arguments = null)
         {
-            using (var connection = _connectionFactory.CreateConnection())
+            var connection = GetConnection();
             using (var channel = connection.CreateModel())
             {
                 channel.QueueDeclare(queue, durable, exclusive, autoDelete, arguments);
@@ -101,7 +125,7 @@ namespace DwFramework.RabbitMQ
         /// <returns></returns>
         public void QueueBind(string queue, string exchange, string routingKey = "", IDictionary<string, object> arguments = null)
         {
-            using (var connection = _connectionFactory.CreateConnection())
+            var connection = GetConnection();
             using (var channel = connection.CreateModel())
             {
                 channel.QueueBind(queue, exchange, routingKey, arguments);
@@ -114,11 +138,10 @@ namespace DwFramework.RabbitMQ
         /// <param name="msg"></param>
         /// <param name="exchange"></param>
         /// <param name="routingKey"></param>
-        /// <param name="basicProperties"></param>
-        /// <returns></returns>
+        /// <param name="basicPropertiesSetting"></param>
         public void Publish(string msg, string exchange = "", string routingKey = "", Action<IBasicProperties> basicPropertiesSetting = null)
         {
-            using (var connection = _connectionFactory.CreateConnection())
+            var connection = GetConnection();
             using (var channel = connection.CreateModel())
             {
 
@@ -136,13 +159,26 @@ namespace DwFramework.RabbitMQ
         /// <summary>
         /// 发布消息
         /// </summary>
+        /// <param name="msg"></param>
+        /// <param name="exchange"></param>
+        /// <param name="routingKey"></param>
+        /// <param name="basicPropertiesSetting"></param>
+        /// <returns></returns>
+        public Task PublishAsync(string msg, string exchange = "", string routingKey = "", Action<IBasicProperties> basicPropertiesSetting = null)
+        {
+            return TaskManager.CreateTask(() => Publish(msg, exchange, routingKey, basicPropertiesSetting));
+        }
+
+        /// <summary>
+        /// 发布消息
+        /// </summary>
         /// <param name="data"></param>
         /// <param name="exchange"></param>
         /// <param name="routingKey"></param>
-        /// <param name="basicProperties"></param>
+        /// <param name="basicPropertiesSetting"></param>
         public void Publish(object data, string exchange = "", string routingKey = "", Action<IBasicProperties> basicPropertiesSetting = null)
         {
-            using (var connection = _connectionFactory.CreateConnection())
+            var connection = GetConnection();
             using (var channel = connection.CreateModel())
             {
                 IBasicProperties basicProperties = null;
@@ -157,6 +193,19 @@ namespace DwFramework.RabbitMQ
         }
 
         /// <summary>
+        /// 发布消息
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="exchange"></param>
+        /// <param name="routingKey"></param>
+        /// <param name="basicPropertiesSetting"></param>
+        /// <returns></returns>
+        public Task PublishAsync(object data, string exchange = "", string routingKey = "", Action<IBasicProperties> basicPropertiesSetting = null)
+        {
+            return TaskManager.CreateTask(() => Publish(data, exchange, routingKey, basicPropertiesSetting));
+        }
+
+        /// <summary>
         /// 订阅消息
         /// </summary>
         /// <param name="queue"></param>
@@ -165,9 +214,7 @@ namespace DwFramework.RabbitMQ
         /// <returns></returns>
         public void Subscribe(string queue, bool autoAck, Action<IModel, BasicDeliverEventArgs> handler)
         {
-            var tokenSource = new CancellationTokenSource();
-            var token = tokenSource.Token;
-            _subscribers[queue] = new KeyValuePair<CancellationTokenSource, Task>(tokenSource, Task.Run(() =>
+            var task = TaskManager.CreateTask(token =>
             {
                 using (var connection = _connectionFactory.CreateConnection())
                 using (var channel = connection.CreateModel())
@@ -180,7 +227,8 @@ namespace DwFramework.RabbitMQ
                     };
                     while (!token.IsCancellationRequested) Thread.Sleep(1);
                 }
-            }, token));
+            }, out var cancellationToken);
+            _subscribers[queue] = new KeyValuePair<CancellationTokenSource, Task>(cancellationToken, task);
         }
 
         /// <summary>

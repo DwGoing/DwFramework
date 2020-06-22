@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 
 using Microsoft.Extensions.Configuration;
 
@@ -12,25 +13,31 @@ namespace DwFramework.Core
 
     public class Environment : IEnvironment
     {
-        public EnvironmentType EnvironmentType { get; private set; }
-        public IConfiguration Configuration { get; private set; }
+        private readonly EnvironmentType _environmentType;
+        private readonly IConfiguration _configuration;
 
-        public Environment(EnvironmentType environmentType, IConfiguration configuration)
+        public readonly string ConfigFilePath;
+
+        public Environment(EnvironmentType environmentType, string configFilePath = null)
         {
-            EnvironmentType = environmentType;
-            Configuration = configuration;
+            _environmentType = environmentType;
+            if (configFilePath != null && File.Exists(configFilePath))
+            {
+                ConfigFilePath = configFilePath;
+                _configuration = new ConfigurationBuilder().AddJsonFile(configFilePath).Build();
+            }
         }
 
         public EnvironmentType GetEnvironmentType()
         {
-            return EnvironmentType;
+            return _environmentType;
         }
 
         public IConfiguration GetConfiguration()
         {
-            if (Configuration == null)
+            if (_configuration == null)
                 throw new Exception("未读取到配置");
-            return Configuration;
+            return _configuration;
         }
     }
 }

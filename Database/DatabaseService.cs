@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using SqlSugar;
 
 using DwFramework.Core;
+using DwFramework.Core.Helper;
 using DwFramework.Core.Extensions;
 using DwFramework.Database.Extensions;
 
@@ -36,7 +37,7 @@ namespace DwFramework.Database
         /// <param name="environment"></param>
         public DatabaseService(IServiceProvider provider, IEnvironment environment) : base(provider, environment)
         {
-            _config = _environment.GetConfiguration().GetSection<Config>("Database");
+            _config = _environment.GetConfiguration().GetConfig<Config>("Database");
         }
 
         /// <summary>
@@ -82,7 +83,7 @@ namespace DwFramework.Database
         /// <returns></returns>
         public Task<bool> CreateTableAsync(string tableName, List<DbColumnInfo> columns, bool isCreatePrimaryKey = true)
         {
-            return Task.Run(() =>
+            return TaskManager.CreateTask(() =>
             {
                 return DbConnection.DbMaintenance.CreateTable(tableName, columns, isCreatePrimaryKey);
             });
@@ -95,9 +96,22 @@ namespace DwFramework.Database
         /// <returns></returns>
         public Task<bool> DropTableAsync(string tableName)
         {
-            return Task.Run(() =>
+            return TaskManager.CreateTask(() =>
             {
                 return DbConnection.DbMaintenance.DropTable(tableName);
+            });
+        }
+
+        /// <summary>
+        /// 重置表
+        /// </summary>
+        /// <param name="tableName"></param>
+        /// <returns></returns>
+        public Task<bool> TruncateTableAsync(string tableName)
+        {
+            return TaskManager.CreateTask(() =>
+            {
+                return DbConnection.DbMaintenance.TruncateTable(tableName);
             });
         }
 
@@ -109,7 +123,7 @@ namespace DwFramework.Database
         /// <returns></returns>
         public Task<bool> CopyTableStructAsync(string from, string to)
         {
-            return Task.Run(() =>
+            return TaskManager.CreateTask(() =>
             {
                 var columns = DbConnection.DbMaintenance.GetColumnInfosByTableName(from);
                 return DbConnection.DbMaintenance.CreateTable(to, columns);

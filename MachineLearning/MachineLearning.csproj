@@ -8,7 +8,7 @@
         <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
         <PackageLicenseFile>LICENSE</PackageLicenseFile>
         <PackageProjectUrl>https://github.com/Dwgoing/DwFramework/tree/master/MachineLearning</PackageProjectUrl>
-        <Version>0.3.0.2</Version>
+        <Version>0.3.0.3</Version>
         <Authors>DwGoing</Authors>
         <Description>DwFramework 机器学习库</Description>
         <Copyright>DwGoing</Copyright>
@@ -22,9 +22,9 @@
         </None>
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="Microsoft.ML" Version="1.4.0" />
-        <PackageReference Include="Microsoft.ML.Recommender" Version="0.16.0" />
-        <PackageReference Include="Microsoft.ML.TimeSeries" Version="1.4.0" />
+        <PackageReference Include="Microsoft.ML" Version="1.5.0" />
+        <PackageReference Include="Microsoft.ML.Recommender" Version="0.17.0" />
+        <PackageReference Include="Microsoft.ML.TimeSeries" Version="1.5.0" />
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\Core\Core.csproj" />

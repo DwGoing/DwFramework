@@ -8,7 +8,7 @@
         <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
         <PackageLicenseFile>LICENSE</PackageLicenseFile>
         <PackageProjectUrl>https://github.com/Dwgoing/DwFramework/tree/master/Database</PackageProjectUrl>
-        <Version>0.3.0.5</Version>
+        <Version>0.3.0.7</Version>
         <Authors>DwGoing</Authors>
         <Description>DwFramework ORM库</Description>
         <Copyright>DwGoing</Copyright>
@@ -22,8 +22,8 @@
         </None>
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="3.1.3" />
-        <PackageReference Include="sqlSugarCore" Version="5.0.0.14" />
+        <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="3.1.5" />
+        <PackageReference Include="sqlSugarCore" Version="5.0.0.15" />
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\Core\Core.csproj" />
