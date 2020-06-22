@@ -7,6 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DataFlow\DataFlow.csproj" />
+    <ProjectReference Include="..\Lib.DataFlow\Lib.DataFlow.csproj" />
   </ItemGroup>
 </Project>

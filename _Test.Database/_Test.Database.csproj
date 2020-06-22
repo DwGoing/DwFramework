@@ -13,6 +13,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Database\Database.csproj" />
+    <ProjectReference Include="..\Lib.Database\Lib.Database.csproj" />
   </ItemGroup>
 </Project>
