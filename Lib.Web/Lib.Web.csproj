@@ -5,13 +5,13 @@
     <AssemblyName>DwFramework.Web</AssemblyName>
     <RootNamespace>DwFramework.Web</RootNamespace>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <Version>0.3.0.6</Version>
+    <Version>1.2.1.1</Version>
     <Authors>DwGoing</Authors>
     <Company>DwGoing</Company>
     <Copyright>DwGoing</Copyright>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <Description>DwFramework Web库</Description>
-    <ReleaseVersion>0.2</ReleaseVersion>
+    <ReleaseVersion>1.0</ReleaseVersion>
   </PropertyGroup>
 
   <ItemGroup>

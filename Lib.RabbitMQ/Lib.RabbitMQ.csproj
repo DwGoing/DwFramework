@@ -4,12 +4,13 @@
     <TargetFramework>netstandard2.1</TargetFramework>
     <AssemblyName>DwFramework.RabbitMQ</AssemblyName>
     <RootNamespace>DwFramework.RabbitMQ</RootNamespace>
-    <Version>0.3.0.7</Version>
+    <Version>1.2.1.1</Version>
     <Authors>DwGoing</Authors>
     <Copyright>DwGoing</Copyright>
     <Description>DwFramework RabbitMQ库</Description>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <ReleaseVersion>1.0</ReleaseVersion>
   </PropertyGroup>
 
   <ItemGroup>

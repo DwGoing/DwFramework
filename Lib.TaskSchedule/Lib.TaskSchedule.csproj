@@ -5,12 +5,13 @@
     <AssemblyName>DwFramework.TaskSchedule</AssemblyName>
     <RootNamespace>DwFramework.TaskSchedule</RootNamespace>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <Version>0.3.0.4</Version>
+    <Version>1.2.1.1</Version>
     <Authors>DwGoing</Authors>
     <Company>DwGoing</Company>
     <Copyright>DwGoing</Copyright>
     <Description>DwFramework 任务调度库</Description>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <ReleaseVersion>1.0</ReleaseVersion>
   </PropertyGroup>
 
   <ItemGroup>

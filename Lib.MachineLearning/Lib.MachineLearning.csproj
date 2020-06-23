@@ -5,12 +5,13 @@
     <AssemblyName>DwFramework.MachineLearning</AssemblyName>
     <RootNamespace>DwFramework.MachineLearning</RootNamespace>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <Version>0.3.0.3</Version>
+    <Version>1.2.1.1</Version>
     <Authors>DwGoing</Authors>
     <Company>DwGoing</Company>
     <Copyright>DwGoing</Copyright>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <Description>DwFramework 机器学习库</Description>
+    <ReleaseVersion>1.0</ReleaseVersion>
   </PropertyGroup>
 
   <ItemGroup>
