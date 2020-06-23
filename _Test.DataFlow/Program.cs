@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading;
 
 using DwFramework.Core;
 using DwFramework.DataFlow;
@@ -15,23 +14,25 @@ namespace _Test.DataFlow
             {
                 ServiceHost host = new ServiceHost();
                 host.RegisterDataFlowService();
-                var provider = host.Build();
-                var service = provider.GetDataFlowService();
-                var key = service.CreateTaskQueue(new TaskHandler(), new ResultHandler());
-                service.AddTaskStartHandler<int>(key, (input) => Console.WriteLine($"------ Start ------\nInput=>{input}"));
-                service.AddTaskEndHandler<int, int, int>(key, (input, output, result) => Console.WriteLine($"------ End ------\nInput=>{input}\nOutput=>{output}\nResult=>{result}"));
-                service.AddInput(key, 1);
-                service.AddInput(key, 2);
-                service.AddInput(key, 3);
-                service.AddInput(key, 4);
-                service.AddInput(key, 5);
-                service.AddInput(key, 6);
-                service.AddInput(key, 7);
-                service.AddInput(key, 8);
-                service.AddInput(key, 9);
-                service.AddInput(key, 10);
-                service.GetResult(key);
-                while (true) Thread.Sleep(1);
+                host.InitService(provider =>
+                {
+                    var service = provider.GetDataFlowService();
+                    var key = service.CreateTaskQueue(new TaskHandler(), new ResultHandler());
+                    service.AddTaskStartHandler<int>(key, (input) => Console.WriteLine($"------ Start ------\nInput=>{input}"));
+                    service.AddTaskEndHandler<int, int, int>(key, (input, output, result) => Console.WriteLine($"------ End ------\nInput=>{input}\nOutput=>{output}\nResult=>{result}"));
+                    service.AddInput(key, 1);
+                    service.AddInput(key, 2);
+                    service.AddInput(key, 3);
+                    service.AddInput(key, 4);
+                    service.AddInput(key, 5);
+                    service.AddInput(key, 6);
+                    service.AddInput(key, 7);
+                    service.AddInput(key, 8);
+                    service.AddInput(key, 9);
+                    service.AddInput(key, 10);
+                    service.GetResult(key);
+                });
+                host.Run();
             }
             catch (Exception ex)
             {

@@ -142,7 +142,7 @@ namespace DwFramework.Core
             var types = assembly.GetTypes();
             foreach (var type in types)
             {
-                var attr = type.GetCustomAttribute<RegisterableAttribute>() as RegisterableAttribute;
+                var attr = type.GetCustomAttribute<RegisterableAttribute>();
                 if (attr == null)
                     continue;
                 var builder = _containerBuilder.RegisterType(type);
@@ -174,7 +174,7 @@ namespace DwFramework.Core
                 var types = assembly.GetTypes();
                 foreach (var type in types)
                 {
-                    var attr = type.GetCustomAttribute<RegisterableAttribute>() as RegisterableAttribute;
+                    var attr = type.GetCustomAttribute<RegisterableAttribute>();
                     if (attr == null)
                         continue;
                     var builder = _containerBuilder.RegisterType(type);

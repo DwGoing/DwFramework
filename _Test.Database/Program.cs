@@ -18,10 +18,12 @@ namespace _Test.Database
             {
                 ServiceHost host = new ServiceHost(configFilePath: $"{AppDomain.CurrentDomain.BaseDirectory}Config.json");
                 host.RegisterRepositories();
-                var provider = host.Build();
-                var service = provider.GetService<AccountRepository>();
-                Console.WriteLine(service.FindAllAsync().Result.ToJson());
-                while (true) Thread.Sleep(1);
+                host.InitService(provider =>
+                {
+                    var service = provider.GetService<AccountRepository>();
+                    Console.WriteLine(service.FindAllAsync().Result.ToJson());
+                });
+                host.Run();
             }
             catch (Exception ex)
             {
