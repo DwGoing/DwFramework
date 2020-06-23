@@ -16,6 +16,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Web\Web.csproj" />
+    <ProjectReference Include="..\Lib.Web\Lib.Web.csproj" />
   </ItemGroup>
 </Project>

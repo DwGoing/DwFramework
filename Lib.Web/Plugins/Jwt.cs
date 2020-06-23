@@ -3,13 +3,9 @@ using System.Text;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Security.Claims;
 
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Builder;
 
 using DwFramework.Core.Plugins;
 
@@ -57,30 +53,6 @@ namespace DwFramework.Web.Plugins
     public static class JwtManager
     {
         /// <summary>
-        /// 注入JWT服务
-        /// </summary>
-        /// <param name="services"></param>
-        /// <param name="tokenValidator"></param>
-        /// <param name="onSuccess"></param>
-        /// <param name="onFail"></param>
-        /// <returns></returns>
-        public static IServiceCollection AddJwtAuthentication(this IServiceCollection services, ISecurityTokenValidator tokenValidator, Func<TokenValidatedContext, Task> onSuccess, Func<JwtBearerChallengeContext, Task> onFail)
-        {
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddJwtBearer(options =>
-                {
-                    options.SecurityTokenValidators.Clear();
-                    options.SecurityTokenValidators.Add(tokenValidator);
-                    options.Events = new JwtBearerEvents
-                    {
-                        OnTokenValidated = onSuccess,
-                        OnChallenge = onFail
-                    };
-                });
-            return services;
-        }
-
-        /// <summary>
         /// 默认验证器
         /// </summary>
         public class DefaultJwtTokenValidator : JwtTokenValidator
@@ -98,41 +70,6 @@ namespace DwFramework.Web.Plugins
                 validationParameters.ValidateIssuerSigningKey = true;
                 validationParameters.IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_securityKey));
             }
-        }
-
-        /// <summary>
-        /// 注入JWT服务
-        /// </summary>
-        /// <param name="services"></param>
-        /// <param name="onSuccess"></param>
-        /// <param name="onFail"></param>
-        /// <returns></returns>
-        public static IServiceCollection AddJwtAuthentication(this IServiceCollection services, string securityKey, Func<TokenValidatedContext, Task> onSuccess = null, Func<JwtBearerChallengeContext, Task> onFail = null)
-        {
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddJwtBearer(options =>
-                {
-                    options.SecurityTokenValidators.Clear();
-                    options.SecurityTokenValidators.Add(new DefaultJwtTokenValidator(securityKey));
-                    options.Events = new JwtBearerEvents
-                    {
-                        OnTokenValidated = onSuccess,
-                        OnChallenge = onFail
-                    };
-                });
-            return services;
-        }
-
-        /// <summary>
-        /// 使用JWT服务
-        /// </summary>
-        /// <param name="app"></param>
-        /// <returns></returns>
-        public static IApplicationBuilder UseJwtAuthentication(this IApplicationBuilder app)
-        {
-            app.UseAuthentication();
-            app.UseAuthorization();
-            return app;
         }
 
         public static string Tag { get; private set; }

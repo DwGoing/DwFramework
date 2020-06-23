@@ -15,15 +15,13 @@ namespace _Test.Web
         {
             try
             {
-                var jwt = JwtManager.DecodeToken("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IumalOWjgeiAgeeOiyIsImlhdCI6MTUxNjIzOTAyMn0.huj1R4oYsSxbIpecRwGcDBzqFkL9dXA88P2ouM5xhT8");
-
-                //ServiceHost host = new ServiceHost(configFilePath: $"{AppDomain.CurrentDomain.BaseDirectory}Config.json");
+                ServiceHost host = new ServiceHost(configFilePath: $"{AppDomain.CurrentDomain.BaseDirectory}Config.json");
                 //host.RegisterLog();
-                //host.RegisterWebService<HttpService>();
+                host.RegisterWebService<HttpService>();
                 //host.RegisterWebService<WebSocketService>();
                 //host.RegisterWebService<SocketService>();
-                //var provider = host.Build();
-                //provider.InitHttpServiceAsync<Startup>();
+                var provider = host.Build();
+                provider.InitHttpServiceAsync<Startup>();
                 //provider.InitWebSocketServiceAsync();
                 //var websocket = provider.GetWebService<WebSocketService>();
                 //websocket.OnConnect += (c, a) =>
@@ -43,7 +41,7 @@ namespace _Test.Web
                 //    Console.WriteLine($"{c.ID}已断开");
                 //};
                 //provider.InitSocketServiceAsync();
-                //while (true) Thread.Sleep(1);
+                while (true) Thread.Sleep(1);
             }
             catch (Exception ex)
             {
