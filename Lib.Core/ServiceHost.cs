@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Reflection;
 using System.Linq;
+using System.Collections.Generic;
+using System.Threading;
 
 using Autofac;
 using Autofac.Builder;
@@ -15,6 +17,9 @@ namespace DwFramework.Core
     {
         private readonly ContainerBuilder _containerBuilder;
         private readonly ServiceCollection _services;
+        private readonly List<Action<AutofacServiceProvider>> _initActions;
+
+        public static AutofacServiceProvider Provider;
 
         /// <summary>
         /// 构造函数
@@ -23,6 +28,7 @@ namespace DwFramework.Core
         {
             _containerBuilder = new ContainerBuilder();
             _services = new ServiceCollection();
+            _initActions = new List<Action<AutofacServiceProvider>>();
             // 环境变量
             RegisterInstance<IEnvironment, Environment>(new Environment(environmentType, configFilePath)).SingleInstance();
         }
@@ -190,13 +196,24 @@ namespace DwFramework.Core
         }
 
         /// <summary>
-        /// 构建服务主机
+        /// 初始化服务
         /// </summary>
-        /// <returns></returns>
-        public AutofacServiceProvider Build()
+        /// <param name="initAction"></param>
+        public void InitService(Action<AutofacServiceProvider> initAction)
+        {
+            _initActions.Add(initAction);
+        }
+
+        /// <summary>
+        /// 运行服务主机
+        /// </summary>
+        public void Run()
         {
             _containerBuilder.Populate(_services);
-            return new AutofacServiceProvider(_containerBuilder.Build());
+            Provider = new AutofacServiceProvider(_containerBuilder.Build());
+            foreach (var item in _initActions) item.Invoke(Provider);
+            Console.WriteLine("Services Is Running,Please Enter \"Ctrl + C\" To Stop!");
+            while (true) Thread.Sleep(1);
         }
     }
 }

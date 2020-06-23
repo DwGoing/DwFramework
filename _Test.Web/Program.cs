@@ -18,30 +18,32 @@ namespace _Test.Web
                 ServiceHost host = new ServiceHost(configFilePath: $"{AppDomain.CurrentDomain.BaseDirectory}Config.json");
                 //host.RegisterLog();
                 host.RegisterWebService<HttpService>();
-                //host.RegisterWebService<WebSocketService>();
+                host.RegisterWebService<WebSocketService>();
                 //host.RegisterWebService<SocketService>();
-                var provider = host.Build();
-                provider.InitHttpServiceAsync<Startup>();
-                //provider.InitWebSocketServiceAsync();
-                //var websocket = provider.GetWebService<WebSocketService>();
-                //websocket.OnConnect += (c, a) =>
-                //{
-                //    Console.WriteLine($"{c.ID}已连接");
-                //};
-                //websocket.OnSend += (c, a) =>
-                //{
-                //    Console.WriteLine($"向{c.ID}消息：{a.Message}");
-                //};
-                //websocket.OnReceive += (c, a) =>
-                //{
-                //    Console.WriteLine($"收到{c.ID}发来的消息：{a.Message}");
-                //};
-                //websocket.OnClose += (c, a) =>
-                //{
-                //    Console.WriteLine($"{c.ID}已断开");
-                //};
+                host.InitService(provider => provider.InitHttpServiceAsync<Startup>());
+                host.InitService(provider =>
+                {
+                    provider.InitWebSocketServiceAsync();
+                    var service = provider.GetWebService<WebSocketService>();
+                    service.OnConnect += (c, a) =>
+                    {
+                        Console.WriteLine($"{c.ID}已连接");
+                    };
+                    service.OnSend += (c, a) =>
+                    {
+                        Console.WriteLine($"向{c.ID}消息：{a.Message}");
+                    };
+                    service.OnReceive += (c, a) =>
+                    {
+                        Console.WriteLine($"收到{c.ID}发来的消息：{a.Message}");
+                    };
+                    service.OnClose += (c, a) =>
+                    {
+                        Console.WriteLine($"{c.ID}已断开");
+                    };
+                });
                 //provider.InitSocketServiceAsync();
-                while (true) Thread.Sleep(1);
+                host.Run();
             }
             catch (Exception ex)
             {
