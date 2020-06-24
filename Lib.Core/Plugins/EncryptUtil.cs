@@ -153,6 +153,18 @@ namespace DwFramework.Core.Plugins
         public class Rsa
         {
             /// <summary>
+            /// 填充位数
+            /// </summary>
+            private static readonly Dictionary<RSAEncryptionPadding, int> PaddingLength = new Dictionary<RSAEncryptionPadding, int>()
+            {
+                [RSAEncryptionPadding.Pkcs1] = 11,
+                [RSAEncryptionPadding.OaepSHA1] = 42,
+                [RSAEncryptionPadding.OaepSHA256] = 66,
+                [RSAEncryptionPadding.OaepSHA384] = 98,
+                [RSAEncryptionPadding.OaepSHA512] = 130
+            };
+
+            /// <summary>
             /// 生成密钥对
             /// </summary>
             /// <param name="type"></param>
@@ -179,7 +191,19 @@ namespace DwFramework.Core.Plugins
                 padding ??= RSAEncryptionPadding.Pkcs1;
                 byte[] result;
                 // 长数据分割
-                if (rsa.KeySize < data.Length * 8) result = Encoding.UTF8.GetBytes(rsa.EncryptBigData(Encoding.UTF8.GetString(data), padding));
+                if (rsa.KeySize < data.Length * 8 - PaddingLength[padding])
+                {
+                    int step = rsa.KeySize / 8 - PaddingLength[padding];
+                    int pointer = 0;
+                    List<byte> resBytes = new List<byte>();
+                    while (pointer < data.Length)
+                    {
+                        var length = pointer + step > data.Length ? data.Length - pointer : step;
+                        resBytes.AddRange(rsa.Encrypt(data.Skip(pointer).Take(length).ToArray(), padding));
+                        pointer += step;
+                    }
+                    result = resBytes.ToArray();
+                }
                 else result = rsa.Encrypt(data, padding);
                 return result;
             }
@@ -196,7 +220,18 @@ namespace DwFramework.Core.Plugins
                 padding ??= RSAEncryptionPadding.Pkcs1;
                 byte[] result;
                 // 长数据分割
-                if (rsa.KeySize != encryptedData.Length * 8) result = Encoding.UTF8.GetBytes(rsa.DecryptBigData(Encoding.UTF8.GetString(encryptedData), padding));
+                if (rsa.KeySize != encryptedData.Length * 8)
+                {
+                    int step = rsa.KeySize / 8;
+                    int pointer = 0;
+                    List<byte> resBytes = new List<byte>();
+                    while (pointer < encryptedData.Length)
+                    {
+                        resBytes.AddRange(rsa.Decrypt(encryptedData.Skip(pointer).Take(step).ToArray(), padding));
+                        pointer += step;
+                    }
+                    result = resBytes.ToArray();
+                }
                 else result = rsa.Decrypt(encryptedData, padding);
                 return result;
             }
