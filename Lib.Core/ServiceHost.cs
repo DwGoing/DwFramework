@@ -45,6 +45,7 @@ namespace DwFramework.Core
             foreach (var item in _initActions) item.Invoke(Provider);
             Console.WriteLine("Services Is Running,Please Enter \"Ctrl + C\" To Stop!");
             _autoResetEvent.WaitOne();
+            Console.WriteLine("Services Is Stop!");
         }
 
         /// <summary>
@@ -53,7 +54,6 @@ namespace DwFramework.Core
         public void Stop()
         {
             _autoResetEvent.Set();
-            Console.WriteLine("Services Is Stop!");
         }
 
         /// <summary>
