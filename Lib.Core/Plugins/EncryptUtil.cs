@@ -1,5 +1,8 @@
-﻿using System.Text;
+﻿using System;
+using System.Text;
 using System.Security.Cryptography;
+using System.Linq;
+using System.Collections.Generic;
 
 using RSAExtensions;
 
@@ -165,6 +168,68 @@ namespace DwFramework.Core.Plugins
             }
 
             /// <summary>
+            /// 加密
+            /// </summary>
+            /// <param name="rsa"></param>
+            /// <param name="data"></param>
+            /// <param name="padding"></param>
+            /// <returns></returns>
+            private static byte[] Encrypt(RSA rsa, byte[] data, RSAEncryptionPadding padding = null)
+            {
+                padding ??= RSAEncryptionPadding.Pkcs1;
+                byte[] result;
+                // 数据分割
+                if (rsa.KeySize < data.Length * 8)
+                {
+                    int count = (int)Math.Ceiling(data.Length * 8.0 / rsa.KeySize);
+                    int step = data.Length / count;
+                    List<byte> resBytes = new List<byte>();
+                    for (int i = 0; i < count; i++)
+                    {
+                        var partBytes = rsa.Encrypt(data.Skip(i * step).Take(step).ToArray(), padding);
+                        resBytes.AddRange(partBytes);
+                    }
+                    result = resBytes.ToArray();
+                }
+                else
+                {
+                    result = rsa.Encrypt(data, padding);
+                }
+                return result;
+            }
+
+            /// <summary>
+            /// 解密
+            /// </summary>
+            /// <param name="rsa"></param>
+            /// <param name="encryptedData"></param>
+            /// <param name="padding"></param>
+            /// <returns></returns>
+            private static byte[] Decrypt(RSA rsa, byte[] encryptedData, RSAEncryptionPadding padding = null)
+            {
+                padding ??= RSAEncryptionPadding.Pkcs1;
+                byte[] result;
+                // 数据分割
+                if (rsa.KeySize != encryptedData.Length * 8)
+                {
+                    int count = encryptedData.Length * 8 / rsa.KeySize;
+                    int step = rsa.KeySize / 8;
+                    List<byte> resBytes = new List<byte>();
+                    for (int i = 0; i < count; i++)
+                    {
+                        var partBytes = rsa.Decrypt(encryptedData.Skip(i * step).Take(step).ToArray(), padding);
+                        resBytes.AddRange(partBytes);
+                    }
+                    result = resBytes.ToArray();
+                }
+                else
+                {
+                    result = rsa.Decrypt(encryptedData, padding);
+                }
+                return result;
+            }
+
+            /// <summary>
             /// 公钥加密
             /// </summary>
             /// <param name="data"></param>
@@ -178,7 +243,7 @@ namespace DwFramework.Core.Plugins
                 using (var rsa = RSA.Create())
                 {
                     rsa.ImportPublicKey(type, publicKey, isPem);
-                    return rsa.Encrypt(data, padding ?? RSAEncryptionPadding.Pkcs1);
+                    return Encrypt(rsa, data, padding);
                 }
             }
 
@@ -212,7 +277,7 @@ namespace DwFramework.Core.Plugins
                 using (var rsa = RSA.Create())
                 {
                     rsa.ImportPrivateKey(type, privateKey, isPem);
-                    return rsa.Encrypt(data, padding ?? RSAEncryptionPadding.Pkcs1);
+                    return Encrypt(rsa, data, padding);
                 }
             }
 
@@ -246,7 +311,7 @@ namespace DwFramework.Core.Plugins
                 using (var rsa = RSA.Create())
                 {
                     rsa.ImportPrivateKey(type, privateKey, isPem);
-                    return rsa.Decrypt(encryptedData, padding ?? RSAEncryptionPadding.Pkcs1);
+                    return Decrypt(rsa, encryptedData, padding);
                 }
             }
 
