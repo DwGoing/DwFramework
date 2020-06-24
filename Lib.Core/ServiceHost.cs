@@ -3,6 +3,7 @@ using System.Reflection;
 using System.Linq;
 using System.Collections.Generic;
 using System.Threading;
+using System.Threading.Tasks;
 
 using Autofac;
 using Autofac.Builder;
@@ -15,6 +16,7 @@ namespace DwFramework.Core
 {
     public class ServiceHost
     {
+        private readonly AutoResetEvent _autoResetEvent;
         private readonly ContainerBuilder _containerBuilder;
         private readonly ServiceCollection _services;
         private readonly List<Action<AutofacServiceProvider>> _initActions;
@@ -26,11 +28,33 @@ namespace DwFramework.Core
         /// </summary>
         public ServiceHost(EnvironmentType environmentType = EnvironmentType.Develop, string configFilePath = null)
         {
+            _autoResetEvent = new AutoResetEvent(false);
             _containerBuilder = new ContainerBuilder();
             _services = new ServiceCollection();
             _initActions = new List<Action<AutofacServiceProvider>>();
             // 环境变量
             RegisterInstance<IEnvironment, Environment>(new Environment(environmentType, configFilePath)).SingleInstance();
+        }
+
+        /// <summary>
+        /// 开启服务
+        /// </summary>
+        public void Run()
+        {
+            _containerBuilder.Populate(_services);
+            Provider = new AutofacServiceProvider(_containerBuilder.Build());
+            foreach (var item in _initActions) item.Invoke(Provider);
+            Console.WriteLine("Services Is Running,Please Enter \"Ctrl + C\" To Stop!");
+            _autoResetEvent.WaitOne();
+        }
+
+        /// <summary>
+        /// 停止服务
+        /// </summary>
+        public void Stop()
+        {
+            _autoResetEvent.Set();
+            Console.WriteLine("Services Is Stop!");
         }
 
         /// <summary>
@@ -202,18 +226,6 @@ namespace DwFramework.Core
         public void InitService(Action<AutofacServiceProvider> initAction)
         {
             _initActions.Add(initAction);
-        }
-
-        /// <summary>
-        /// 运行服务主机
-        /// </summary>
-        public void Run()
-        {
-            _containerBuilder.Populate(_services);
-            Provider = new AutofacServiceProvider(_containerBuilder.Build());
-            foreach (var item in _initActions) item.Invoke(Provider);
-            Console.WriteLine("Services Is Running,Please Enter \"Ctrl + C\" To Stop!");
-            while (true) Thread.Sleep(1);
         }
     }
 }
