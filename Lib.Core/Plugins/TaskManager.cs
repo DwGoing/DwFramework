@@ -2,7 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace DwFramework.Core.Helper
+namespace DwFramework.Core.Plugins
 {
     public static class TaskManager
     {
