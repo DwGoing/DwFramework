@@ -173,7 +173,7 @@ public class TestInterceptor : BaseInterceptor
 // Main函数
 ServiceHost host = new ServiceHost(EnvironmentType.Develop);
 host.RegisterInterceptor<TestInterceptor>();
-host.RegisterType<CTest>().As<ITest>().addInterfaceInterceptors(typeof(TestInterceptor));
+host.RegisterType<CTest>().As<ITest>().AddInterfaceInterceptors(typeof(TestInterceptor));
 var provider = host.Build();
 var service = provider.GetService<ITest>();
 service.A("Test");

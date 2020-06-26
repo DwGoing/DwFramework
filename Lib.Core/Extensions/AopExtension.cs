@@ -61,7 +61,7 @@ namespace DwFramework.Core.Extensions
         /// <typeparam name="T"></typeparam>
         /// <param name="builder"></param>
         /// <param name="interceptors"></param>
-        public static void addInterfaceInterceptors<T>(this IRegistrationBuilder<T, ConcreteReflectionActivatorData, SingleRegistrationStyle> builder, params Type[] interceptors)
+        public static void AddInterfaceInterceptors<T>(this IRegistrationBuilder<T, ConcreteReflectionActivatorData, SingleRegistrationStyle> builder, params Type[] interceptors)
         {
             builder.InterceptedBy(interceptors).EnableInterfaceInterceptors();
         }
@@ -72,7 +72,7 @@ namespace DwFramework.Core.Extensions
         /// <typeparam name="T"></typeparam>
         /// <param name="builder"></param>
         /// <param name="interceptors"></param>
-        public static void addInterfaceInterceptors<T>(this IRegistrationBuilder<T, SimpleActivatorData, SingleRegistrationStyle> builder, params Type[] interceptors)
+        public static void AddInterfaceInterceptors<T>(this IRegistrationBuilder<T, SimpleActivatorData, SingleRegistrationStyle> builder, params Type[] interceptors)
         {
             builder.InterceptedBy(interceptors).EnableInterfaceInterceptors();
         }
