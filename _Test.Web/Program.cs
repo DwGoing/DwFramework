@@ -43,7 +43,7 @@ namespace _Test.Web
                     };
                 });
                 //provider.InitSocketServiceAsync();
-                System.Threading.Tasks.Task.Run(() => { Thread.Sleep(10000); host.Stop(); });
+                //System.Threading.Tasks.Task.Run(() => { Thread.Sleep(10000); host.Stop(); });
                 host.Run();
             }
             catch (Exception ex)

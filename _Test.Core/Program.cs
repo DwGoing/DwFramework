@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 using System.IO;
-
+using Microsoft.Extensions.Logging;
 using DwFramework.Core;
 using DwFramework.Core.Plugins;
 using DwFramework.Core.Extensions;
-using Microsoft.Extensions.Logging;
+using System.Text;
 
 namespace _Test.Core
 {
@@ -16,19 +17,17 @@ namespace _Test.Core
         {
             try
             {
-                var t = new Transaction();
-                t.AddAction(() => { Console.WriteLine(1); }, ex => { Console.WriteLine(1 + ex.Message); });
-                t.AddAction(() => { Console.WriteLine(2); }, ex => { Console.WriteLine(2 + ex.Message); });
-                t.AddAction(() => { Console.WriteLine(3); throw new Exception("Test Exception!"); }, ex => { Console.WriteLine(3 + ex.Message); });
-                t.AddAction(() => { Console.WriteLine(4); }, ex => { Console.WriteLine(4 + ex.Message); });
-                t.AddAction(() => { Console.WriteLine(5); }, ex => { Console.WriteLine(5 + ex.Message); });
-                t.Invoke();
-                //var value = "osnfweiniocnownowenionweoinoiwneoidweonedowneoiweendwiondowne lwei we cweindenfwelinfiwlenfsfjoiwejdweifnfosnfweiniocnownowenionweoinoiwneoidweonedowneoiweendwiondowne lwei we cweindenfwelinfiwlenfsfjoiwejdweifnfosnfweiniocnownowenionweoinoiwneoidweonedowneoiweendwiondowne lwei we cweindenfwelinfiwlenfsfjoiwejdweifnfosnfweiniocnownowenionweoinoiwneoidweonedowneoiweendwiondowne lwei we cweindenfwelinfiwlenfsfjoiwejdweifnfosnfweiniocnownowenionweoinoiwneoidweonedowneoiweendwiondowne lwei we cweindenfwelinfiwlenfsfjoiwejdweifnfosnfweiniocnownowenionweoinoiwneoidweonedowneoiweendwiondowne lwei we cweindenfwelinfiwlenfsfjoiwejdweifnfosnfweiniocnownowenionweoinoiwneoidweonedowneoiweendwiondowne lwei we cweindenfwelinfiwlenfsfj1282689";
-                //var keys = EncryptUtil.Rsa.GenerateKeyPair(RSAExtensions.RSAKeyType.Pkcs1, 1024);
-                //var s1 = EncryptUtil.Rsa.EncryptWithPrivateKey(value, RSAExtensions.RSAKeyType.Pkcs1, keys.PrivateKey);
-                //Console.WriteLine(s1);
-                //var s2 = EncryptUtil.Rsa.Decrypt(s1, RSAExtensions.RSAKeyType.Pkcs1, keys.PrivateKey);
-                //Console.WriteLine(s2);
+                // Save
+                //var dataBytes = File.ReadAllBytes(@"C:\Users\DwGoing\Desktop\1.mp4");
+                //var builder = new StringBuilder();
+                //builder.Append($"mp4|{dataBytes.Length}|");
+                //builder.Append(dataBytes.ToBase64String());
+                //File.WriteAllText(@"C:\Users\DwGoing\Desktop\1", builder.ToString());
+                // Road
+                var fileText = File.ReadAllText(@"C:\Users\DwGoing\Desktop\1");
+                var tmp = fileText.Split("|");
+                File.WriteAllBytes($"C:\\Users\\DwGoing\\Desktop\\2.{tmp[0]}", tmp[2].FromBase64String());
+                Console.WriteLine("Finished");
             }
             catch (Exception ex)
             {
