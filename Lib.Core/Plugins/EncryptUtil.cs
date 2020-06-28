@@ -190,17 +190,17 @@ namespace DwFramework.Core.Plugins
             {
                 padding ??= RSAEncryptionPadding.Pkcs1;
                 byte[] result;
+                int maxLength = rsa.KeySize / 8 - PaddingLength[padding];
                 // 长数据分割
-                if (rsa.KeySize < data.Length * 8 - PaddingLength[padding])
+                if (maxLength < data.Length)
                 {
-                    int step = rsa.KeySize / 8 - PaddingLength[padding];
                     int pointer = 0;
                     List<byte> resBytes = new List<byte>();
                     while (pointer < data.Length)
                     {
-                        var length = pointer + step > data.Length ? data.Length - pointer : step;
+                        var length = pointer + maxLength > data.Length ? data.Length - pointer : maxLength;
                         resBytes.AddRange(rsa.Encrypt(data.Skip(pointer).Take(length).ToArray(), padding));
-                        pointer += step;
+                        pointer += maxLength;
                     }
                     result = resBytes.ToArray();
                 }
@@ -219,10 +219,10 @@ namespace DwFramework.Core.Plugins
             {
                 padding ??= RSAEncryptionPadding.Pkcs1;
                 byte[] result;
+                int step = rsa.KeySize / 8;
                 // 长数据分割
-                if (rsa.KeySize != encryptedData.Length * 8)
+                if (step != encryptedData.Length)
                 {
-                    int step = rsa.KeySize / 8;
                     int pointer = 0;
                     List<byte> resBytes = new List<byte>();
                     while (pointer < encryptedData.Length)
