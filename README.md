@@ -82,9 +82,9 @@ class Program
         ServiceHost host = new ServiceHost();
         host.RegisterFromAssembly("Test"); // 从程序集注入
         host.InitService(provider=>{
-  				var service = provider.GetService<ITest>();
-					service.A("Test");
-				});
+            var service = provider.GetService<ITest>();
+            service.A("Test");
+        });
       	host.Run();
     }
 }
