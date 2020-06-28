@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Builder;
 
 using DwFramework.Core;
-using DwFramework.Core.Helper;
+using DwFramework.Core.Plugins;
 using DwFramework.Core.Extensions;
 
 namespace DwFramework.Web

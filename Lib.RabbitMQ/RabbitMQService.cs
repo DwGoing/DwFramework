@@ -8,7 +8,7 @@ using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 
 using DwFramework.Core;
-using DwFramework.Core.Helper;
+using DwFramework.Core.Plugins;
 using DwFramework.Core.Extensions;
 
 namespace DwFramework.RabbitMQ

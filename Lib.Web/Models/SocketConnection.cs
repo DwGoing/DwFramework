@@ -4,7 +4,6 @@ using System.Text;
 using System.Threading.Tasks;
 
 using DwFramework.Core.Plugins;
-using DwFramework.Core.Helper;
 
 namespace DwFramework.Web
 {

@@ -8,6 +8,7 @@
     <Authors>DwGoing</Authors>
     <Copyright>DwGoing</Copyright>
     <Description>DwFramework 流式计算库</Description>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <ReleaseVersion>1.0</ReleaseVersion>
   </PropertyGroup>

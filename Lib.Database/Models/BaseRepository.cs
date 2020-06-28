@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 using SqlSugar;
 
-using DwFramework.Core.Helper;
+using DwFramework.Core.Plugins;
 
 namespace DwFramework.Database
 {
