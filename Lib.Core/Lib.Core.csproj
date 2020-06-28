@@ -1,18 +1,23 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
     <AssemblyName>DwFramework.Core</AssemblyName>
     <RootNamespace>DwFramework.Core</RootNamespace>
     <Version>1.2.1.1</Version>
     <Authors>DwGoing</Authors>
-    <Description>DwFramework 核心库</Description>
     <Copyright>DwGoing</Copyright>
+    <Description>DwFramework 核心库</Description>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <ReleaseVersion>1.0</ReleaseVersion>
+    <PackageProjectUrl>https://github.com/Dwgoing/DwFramework/tree/master/Lib.Core</PackageProjectUrl>
   </PropertyGroup>
-
+  <ItemGroup>
+    <None Include="..\LICENSE" Link="LICENSE">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Autofac" Version="5.2.0" />
     <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="6.0.0" />
@@ -29,12 +34,4 @@
     <PackageReference Include="Polly" Version="7.2.1" />
     <PackageReference Include="RSAExtensions" Version="1.0.3" />
   </ItemGroup>
-
-  <ItemGroup>
-    <None Include="..\LICENSE">
-      <Pack>True</Pack>
-      <PackagePath></PackagePath>
-    </None>
-  </ItemGroup>
-
 </Project>
