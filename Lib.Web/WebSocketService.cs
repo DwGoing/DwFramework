@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.WebSockets;
 using System.Threading.Tasks;
+using System.Linq;
 
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Hosting;
@@ -140,17 +141,20 @@ namespace DwFramework.Web
                         var connection = new WebSocketConnection(webSocket);
                         _connections[connection.ID] = connection;
                         OnConnect?.Invoke(connection, new OnConnectEventargs() { });
-                        WebSocketReceiveResult result = null;
+                        var dataBytes = new List<byte>();
                         while (true)
                         {
                             try
                             {
                                 var buffer = new byte[_config.BufferSize];
-                                result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
+                                var result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
                                 if (result.CloseStatus.HasValue)
                                     break;
-                                var msg = Encoding.UTF8.GetString(buffer, 0, result.Count);
+                                dataBytes.AddRange(buffer.Take(result.Count));
+                                if (!result.EndOfMessage) continue;
+                                var msg = Encoding.UTF8.GetString(dataBytes.ToArray());
                                 OnReceive?.Invoke(connection, new OnReceiveEventargs(msg));
+                                dataBytes.Clear();
                             }
                             catch (Exception ex)
                             {

@@ -17,10 +17,10 @@ namespace _Test.Web
             {
                 ServiceHost host = new ServiceHost(configFilePath: $"{AppDomain.CurrentDomain.BaseDirectory}Config.json");
                 //host.RegisterLog();
-                host.RegisterWebService<HttpService>();
+                //host.RegisterWebService<HttpService>();
                 host.RegisterWebService<WebSocketService>();
                 //host.RegisterWebService<SocketService>();
-                host.InitService(provider => provider.InitHttpServiceAsync<Startup>());
+                //host.InitService(provider => provider.InitHttpServiceAsync<Startup>());
                 host.InitService(provider =>
                 {
                     provider.InitWebSocketServiceAsync();
