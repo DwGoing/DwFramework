@@ -13,7 +13,7 @@
 
 |            组件             |     说明     |                             引用                             |                             状态                             |
 | :-------------------------: | :----------: | :----------------------------------------------------------: | :----------------------------------------------------------: |
-|      DwFramework.Core       |   核心组件   | [![](https://img.shields.io/badge/Autofac-brightgreen.svg)](https://github.com/autofac/Autofac/tree/master) | [![](https://img.shields.io/badge/Nuget-0.3.1.5-brightgreen.svg)](https://www.nuget.org/packages/DwFramework.Core/) |
+|      DwFramework.Core       |   核心组件   | [![](https://img.shields.io/badge/Autofac-brightgreen.svg)](https://github.com/autofac/Autofac/tree/master) | [![](https://img.shields.io/badge/Nuget-1.2.1.1-brightgreen.svg)](https://www.nuget.org/packages/DwFramework.Core/) |
 |       DwFramework.Web       |   Web组件    | [![](https://img.shields.io/badge/AspNetCore-brightgreen.svg)](https://github.com/dotnet/aspnetcore) | [![](https://img.shields.io/badge/Nuget-0.3.0.4-brightgreen.svg)](https://www.nuget.org/packages/DwFramework.Http/) |
 |    DwFramework.Database     |   ORM组件    | [![](https://img.shields.io/badge/SqlSugar-brightgreen.svg)](https://github.com/sunkaixuan/SqlSugar) | [![](https://img.shields.io/badge/Nuget-0.3.0.5-brightgreen.svg)](https://www.nuget.org/packages/DwFramework.Database/) |
 | DwFramework.MachineLearning | 机器学习组件 | [![](https://img.shields.io/badge/ML.Net-brightgreen.svg)](https://github.com/dotnet/machinelearning) | [![](https://img.shields.io/badge/Nuget-0.3.0.2-brightgreen.svg)](https://www.nuget.org/packages/DwFramework.MachineLearning/) |
@@ -81,9 +81,11 @@ class Program
     {
         ServiceHost host = new ServiceHost();
         host.RegisterFromAssembly("Test"); // 从程序集注入
-        var provider = host.Build();
-        var service = provider.GetService<ITestInterface, TestClass1>();
-        service.TestMethod("helo");
+        host.InitService(provider=>{
+  				var service = provider.GetService<ITest>();
+					service.A("Test");
+				});
+      	host.Run();
     }
 }
 ```

@@ -174,7 +174,9 @@ public class TestInterceptor : BaseInterceptor
 ServiceHost host = new ServiceHost(EnvironmentType.Develop);
 host.RegisterInterceptor<TestInterceptor>();
 host.RegisterType<CTest>().As<ITest>().AddInterfaceInterceptors(typeof(TestInterceptor));
-var provider = host.Build();
-var service = provider.GetService<ITest>();
-service.A("Test");
+host.InitService(provider=>{
+  var service = provider.GetService<ITest>();
+	service.A("Test");
+});
+host.Run();
 ```
