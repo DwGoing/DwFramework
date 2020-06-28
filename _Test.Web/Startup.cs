@@ -26,16 +26,6 @@ namespace _Test.Web
 
         public void ConfigureServices(IServiceCollection services)
         {
-            // JWT插件
-            //services.AddJwtAuthentication(new JwtManager.DefaultJwtTokenValidator("fc3d06d9b75f92b648ab4e372dfd22f2"), context =>
-            //{
-            //    Console.WriteLine("Success");
-            //    return Task.CompletedTask;
-            //}, context =>
-            //{
-            //    Console.WriteLine("Fail");
-            //    return Task.CompletedTask;
-            //});
             services.AddControllers();
             services.AddSwagger("Doc", "Test", "v1");
         }

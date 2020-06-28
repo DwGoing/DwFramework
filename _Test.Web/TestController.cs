@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using DwFramework.Core;
 using DwFramework.Core.Extensions;
 using DwFramework.Core.Plugins;
+using DwFramework.Web.Plugins;
 
 namespace _Test.Web
 {
@@ -15,31 +16,23 @@ namespace _Test.Web
         [HttpPost("t")]
         public IActionResult Test(Body body)
         {
-
-            var order = new
+            ResultInfo result = null;
+            try
             {
-                ID = Generater.GenerateUUID(),
-                PayType = body.payType,
-                OutTradeNo = body.outTradeNo,
-                Fee = 0.01,
-                TotalAmount = body.totalAmount
-            };
-            Console.WriteLine($"预下单信息:{order.ToJson()}");
-            return Ok(ResultInfo.Success("ok"));
-        }
-
-        [HttpGet("x")]
-        public IActionResult X()
-        {
-            return Ok("ok");
+                var jwt = JwtManager.DecodeToken(body.Jwt);
+                result = ResultInfo.Success("ok");
+            }
+            catch (Exception ex)
+            {
+                result = ResultInfo.Fail(ex.Message);
+            }
+            return Ok(result);
         }
     }
 
 
     public class Body
     {
-        public int payType { get; set; }
-        public string outTradeNo { get; set; }
-        public string totalAmount { get; set; }
+        public string Jwt { get; set; }
     }
 }
