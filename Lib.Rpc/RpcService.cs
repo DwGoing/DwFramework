@@ -136,13 +136,13 @@ namespace DwFramework.Rpc
                 var types = assembly.GetTypes();
                 foreach (var type in types)
                 {
-                    var typeAttr = type.GetCustomAttribute<RegisterableAttribute>() as RegisterableAttribute;
+                    var typeAttr = type.GetCustomAttribute<RegisterableAttribute>();
                     if (typeAttr == null)
                         continue;
                     var methods = type.GetMethods();
                     foreach (var method in methods)
                     {
-                        var methodAttr = method.GetCustomAttribute<RpcAttribute>() as RpcAttribute;
+                        var methodAttr = method.GetCustomAttribute<RpcAttribute>();
                         if (methodAttr != null)
                         {
                             Service.AddMethod(method.Name, _provider.GetService(typeAttr.InterfaceType), methodAttr.CallName ?? "");
