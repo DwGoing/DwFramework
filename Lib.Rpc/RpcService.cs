@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Net;
-using System.Threading.Tasks;
 using System.Reflection;
 
 using Hprose.RPC;
@@ -49,7 +48,7 @@ namespace DwFramework.Rpc
             var methods = instance.GetType().GetMethods();
             foreach (var item in methods)
             {
-                var attr = item.GetCustomAttribute<RpcAttribute>() as RpcAttribute;
+                var attr = item.GetCustomAttribute<RpcAttribute>();
                 if (attr != null)
                 {
                     Service.AddMethod(item.Name, instance, attr.CallName ?? "");
@@ -67,7 +66,7 @@ namespace DwFramework.Rpc
             var methods = service.GetType().GetMethods();
             foreach (var item in methods)
             {
-                var attr = item.GetCustomAttribute<RpcAttribute>() as RpcAttribute;
+                var attr = item.GetCustomAttribute<RpcAttribute>();
                 if (attr != null)
                 {
                     Service.AddMethod(item.Name, service, attr.CallName ?? "");
@@ -87,7 +86,7 @@ namespace DwFramework.Rpc
                 var methods = service.GetType().GetMethods();
                 foreach (var method in methods)
                 {
-                    var attr = method.GetCustomAttribute<RpcAttribute>() as RpcAttribute;
+                    var attr = method.GetCustomAttribute<RpcAttribute>();
                     if (attr != null)
                     {
                         Service.AddMethod(method.Name, service, attr.CallName ?? "");
