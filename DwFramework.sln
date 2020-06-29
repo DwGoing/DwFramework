@@ -24,9 +24,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lib.RabbitMQ", "Lib.RabbitM
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lib.Rpc", "Lib.Rpc\Lib.Rpc.csproj", "{23560FBC-5E90-432D-9C29-A09CE832CA1B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lib.TaskSchedule", "Lib.TaskSchedule\Lib.TaskSchedule.csproj", "{BD33CF91-FAA8-4DDF-8B63-E98A1EA0505B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lib.TaskSchedule", "Lib.TaskSchedule\Lib.TaskSchedule.csproj", "{BD33CF91-FAA8-4DDF-8B63-E98A1EA0505B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lib.Web", "Lib.Web\Lib.Web.csproj", "{358F26C4-DE41-40CD-B088-288967678B22}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lib.Web", "Lib.Web\Lib.Web.csproj", "{358F26C4-DE41-40CD-B088-288967678B22}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "_Test.Rpc", "_Test.Rpc\_Test.Rpc.csproj", "{93554DFC-C77C-4E53-8848-7F1CD21D32AD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -86,6 +88,10 @@ Global
 		{358F26C4-DE41-40CD-B088-288967678B22}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{358F26C4-DE41-40CD-B088-288967678B22}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{358F26C4-DE41-40CD-B088-288967678B22}.Release|Any CPU.Build.0 = Release|Any CPU
+		{93554DFC-C77C-4E53-8848-7F1CD21D32AD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{93554DFC-C77C-4E53-8848-7F1CD21D32AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{93554DFC-C77C-4E53-8848-7F1CD21D32AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{93554DFC-C77C-4E53-8848-7F1CD21D32AD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
