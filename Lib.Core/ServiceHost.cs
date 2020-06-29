@@ -32,7 +32,7 @@ namespace DwFramework.Core
             _services = new ServiceCollection();
             _initActions = new List<Action<AutofacServiceProvider>>();
             // 环境变量
-            RegisterInstance<IEnvironment, Environment>(new Environment(environmentType, configFilePath)).SingleInstance();
+            RegisterInstance<Environment, IEnvironment>(new Environment(environmentType, configFilePath)).SingleInstance();
         }
 
         /// <summary>
@@ -70,11 +70,11 @@ namespace DwFramework.Core
         /// <summary>
         /// 注册服务
         /// </summary>
-        /// <typeparam name="I"></typeparam>
         /// <typeparam name="T"></typeparam>
+        /// <typeparam name="I"></typeparam>
         /// <param name="func"></param>
         /// <returns></returns>
-        public IRegistrationBuilder<T, SimpleActivatorData, SingleRegistrationStyle> Register<I, T>(Func<IComponentContext, T> func) where I : class where T : class
+        public IRegistrationBuilder<T, SimpleActivatorData, SingleRegistrationStyle> Register<T, I>(Func<IComponentContext, T> func) where T : class where I : class
         {
             return _containerBuilder.Register(func).As<I>();
         }
@@ -105,7 +105,7 @@ namespace DwFramework.Core
         /// <returns></returns>
         public IRegistrationBuilder<T, ConcreteReflectionActivatorData, SingleRegistrationStyle> RegisterType<T>() where T : class
         {
-            return _containerBuilder.RegisterType<T>();
+            return _containerBuilder.RegisterType<T>().As<T>();
         }
 
         /// <summary>
@@ -115,16 +115,16 @@ namespace DwFramework.Core
         /// <returns></returns>
         public IRegistrationBuilder<object, ConcreteReflectionActivatorData, SingleRegistrationStyle> RegisterType(Type type)
         {
-            return _containerBuilder.RegisterType(type);
+            return _containerBuilder.RegisterType(type).As(type);
         }
 
         /// <summary>
         /// 注册服务
         /// </summary>
-        /// <typeparam name="I"></typeparam>
         /// <typeparam name="T"></typeparam>
+        /// <typeparam name="I"></typeparam>
         /// <returns></returns>
-        public IRegistrationBuilder<T, ConcreteReflectionActivatorData, SingleRegistrationStyle> RegisterType<I, T>() where I : class where T : class
+        public IRegistrationBuilder<T, ConcreteReflectionActivatorData, SingleRegistrationStyle> RegisterType<T, I>() where T : class where I : class
         {
             return _containerBuilder.RegisterType<T>().As<I>();
         }
@@ -143,11 +143,11 @@ namespace DwFramework.Core
         /// <summary>
         /// 注册服务
         /// </summary>
-        /// <typeparam name="I"></typeparam>
         /// <typeparam name="T"></typeparam>
+        /// <typeparam name="I"></typeparam>
         /// <param name="instance"></param>
         /// <returns></returns>
-        public IRegistrationBuilder<T, SimpleActivatorData, SingleRegistrationStyle> RegisterInstance<I, T>(T instance) where I : class where T : class
+        public IRegistrationBuilder<T, SimpleActivatorData, SingleRegistrationStyle> RegisterInstance<T, I>(T instance) where T : class where I : class
         {
             return _containerBuilder.RegisterInstance(instance).As<I>();
         }
