@@ -34,7 +34,7 @@ using DwFramework.Core.Models;
 
 namespace Test
 {
-  	public interface ITestInterface
+    public interface ITestInterface
     {
         void TestMethod(string str);
     }

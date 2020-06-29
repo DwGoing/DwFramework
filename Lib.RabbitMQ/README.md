@@ -32,9 +32,6 @@ PM> Install-Package DwFramework.RabbitMQ
 ```c#
 // 注册服务
 host.RegisterRabbitMQService();
-// 初始化
-var provider = host.Build();
-provider.InitRabbitMQServiceAsync();
 ```
 
 ### 0x3 基本使用方法

@@ -135,7 +135,7 @@ public class TestClass1 : ITestInterface
 
 ```c#
 host.RegisterType<TestClass1>().As<ITestInterface>(); // Autofac原生模式
-host.RegisterType<ITestInterface, TestClass2>();
+host.RegisterType<TestClass2, ITestInterface>();
 ```
 
 ### 0x4 使用拦截器
