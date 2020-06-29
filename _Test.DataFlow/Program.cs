@@ -18,8 +18,8 @@ namespace _Test.DataFlow
                 {
                     var service = provider.GetDataFlowService();
                     var key = service.CreateTaskQueue(new TaskHandler(), new ResultHandler());
-                    service.AddTaskStartHandler<int>(key, (input) => Console.WriteLine($"------ Start ------\nInput=>{input}"));
-                    service.AddTaskEndHandler<int, int, int>(key, (input, output, result) => Console.WriteLine($"------ End ------\nInput=>{input}\nOutput=>{output}\nResult=>{result}"));
+                    service.AddTaskStartHandler<int>(key, input => Console.WriteLine($"------ Start ------\nInput=>{input}"));
+                    service.AddTaskEndHandler<int, int, int>(key, (input, output, result) => Console.WriteLine($"Output=>{output}\nResult=>{result}\n------ End ------"));
                     service.AddInput(key, 1);
                     service.AddInput(key, 2);
                     service.AddInput(key, 3);
