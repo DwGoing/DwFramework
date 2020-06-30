@@ -23,15 +23,15 @@ namespace _Test.Rpc
                 host.InitService(provider =>
                 {
                     var rpc = provider.GetRpcService();
-                    rpc.Service.AddMethod("AA", provider.GetService<A>());
+                    rpc.RegisterFuncFromInstance(provider.GetService<A>());
                     rpc.Service.Add(B.BB);
-                    rpc.RegisterFuncFromInstance(provider.GetService<C>());
+                    rpc.Service.AddMethod("CC", provider.GetService<C>());
                 });
                 Task.Run(() =>
                 {
                     Thread.Sleep(5000);
                     var client = new Client("http://127.0.0.1:10100");
-                    client.Invoke("AA");
+                    client.Invoke("AA", new object[] { 1 });
                     client.Invoke("BB");
                     client.Invoke("CC");
                 });
@@ -48,9 +48,14 @@ namespace _Test.Rpc
     public class A
     {
         [Rpc("AA")]
-        public void AA()
+        public void AA(int a)
         {
             Console.WriteLine("aa");
+        }
+
+        public void AA(string s)
+        {
+            Console.WriteLine(s == null);
         }
     }
 
