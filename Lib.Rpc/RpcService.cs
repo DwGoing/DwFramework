@@ -51,7 +51,7 @@ namespace DwFramework.Rpc
                 var attr = item.GetCustomAttribute<RpcAttribute>();
                 if (attr != null)
                 {
-                    Service.AddMethod(item.Name, instance, attr.CallName ?? "");
+                    Service.Add(item, attr.CallName ?? "", instance);
                 }
             }
         }
@@ -69,7 +69,7 @@ namespace DwFramework.Rpc
                 var attr = item.GetCustomAttribute<RpcAttribute>();
                 if (attr != null)
                 {
-                    Service.AddMethod(item.Name, service, attr.CallName ?? "");
+                    Service.Add(item, attr.CallName ?? "", service);
                 }
             }
         }
@@ -84,12 +84,12 @@ namespace DwFramework.Rpc
             foreach (var service in services)
             {
                 var methods = service.GetType().GetMethods();
-                foreach (var method in methods)
+                foreach (var item in methods)
                 {
-                    var attr = method.GetCustomAttribute<RpcAttribute>();
+                    var attr = item.GetCustomAttribute<RpcAttribute>();
                     if (attr != null)
                     {
-                        Service.AddMethod(method.Name, service, attr.CallName ?? "");
+                        Service.Add(item, attr.CallName ?? "", service);
                     }
                 }
             }
@@ -108,16 +108,16 @@ namespace DwFramework.Rpc
             var types = assembly.GetTypes();
             foreach (var type in types)
             {
-                var typeAttr = type.GetCustomAttribute<RegisterableAttribute>() as RegisterableAttribute;
+                var typeAttr = type.GetCustomAttribute<RegisterableAttribute>();
                 if (typeAttr == null)
                     continue;
                 var methods = type.GetMethods();
-                foreach (var method in methods)
+                foreach (var item in methods)
                 {
-                    var methodAttr = method.GetCustomAttribute<RpcAttribute>() as RpcAttribute;
+                    var methodAttr = item.GetCustomAttribute<RpcAttribute>();
                     if (methodAttr != null)
                     {
-                        Service.AddMethod(method.Name, _provider.GetService(typeAttr.InterfaceType), methodAttr.CallName ?? "");
+                        Service.Add(item, methodAttr.CallName ?? "", _provider.GetService(typeAttr.InterfaceType));
                     }
                 }
             }
@@ -139,12 +139,12 @@ namespace DwFramework.Rpc
                     if (typeAttr == null)
                         continue;
                     var methods = type.GetMethods();
-                    foreach (var method in methods)
+                    foreach (var item in methods)
                     {
-                        var methodAttr = method.GetCustomAttribute<RpcAttribute>();
+                        var methodAttr = item.GetCustomAttribute<RpcAttribute>();
                         if (methodAttr != null)
                         {
-                            Service.AddMethod(method.Name, _provider.GetService(typeAttr.InterfaceType), methodAttr.CallName ?? "");
+                            Service.Add(item, methodAttr.CallName ?? "", _provider.GetService(typeAttr.InterfaceType));
                         }
                     }
                 }
