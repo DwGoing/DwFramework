@@ -3,7 +3,7 @@
     <TargetFramework>netstandard2.1</TargetFramework>
     <AssemblyName>DwFramework.Rpc</AssemblyName>
     <RootNamespace>DwFramework.Rpc</RootNamespace>
-    <Version>1.2.1.1</Version>
+    <Version>1.2.1.2</Version>
     <Authors>DwGoing</Authors>
     <Copyright>DwGoing</Copyright>
     <Description>DwFramework Rpc库</Description>
