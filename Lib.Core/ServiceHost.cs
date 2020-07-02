@@ -19,6 +19,7 @@ namespace DwFramework.Core
         private readonly ContainerBuilder _containerBuilder;
         private readonly ServiceCollection _services;
         private readonly List<Action<AutofacServiceProvider>> _initActions;
+        private readonly List<Action<AutofacServiceProvider>> _stopActions;
 
         public static AutofacServiceProvider Provider;
 
@@ -31,6 +32,7 @@ namespace DwFramework.Core
             _containerBuilder = new ContainerBuilder();
             _services = new ServiceCollection();
             _initActions = new List<Action<AutofacServiceProvider>>();
+            _stopActions = new List<Action<AutofacServiceProvider>>();
             // 环境变量
             RegisterInstance<Environment, IEnvironment>(new Environment(environmentType, configFilePath)).SingleInstance();
         }
@@ -43,7 +45,7 @@ namespace DwFramework.Core
             _containerBuilder.Populate(_services);
             Provider = new AutofacServiceProvider(_containerBuilder.Build());
             foreach (var item in _initActions) item.Invoke(Provider);
-            Console.WriteLine("Services Is Running,Please Enter \"Ctrl + C\" To Stop!");
+            Console.WriteLine("Services is running,Please enter \"Ctrl + C\" to stop!");
             Console.CancelKeyPress += (sender, args) => Stop();
             _autoResetEvent.WaitOne();
         }
@@ -53,7 +55,9 @@ namespace DwFramework.Core
         /// </summary>
         public void Stop()
         {
-            Console.WriteLine("Services Is Stop!");
+            Console.WriteLine("Services is Stopping!");
+            foreach (var item in _stopActions) item.Invoke(Provider);
+            Console.WriteLine("Services is stopped!");
             _autoResetEvent.Set();
         }
 
@@ -226,6 +230,15 @@ namespace DwFramework.Core
         public void InitService(Action<AutofacServiceProvider> initAction)
         {
             _initActions.Add(initAction);
+        }
+
+        /// <summary>
+        /// 停止服务
+        /// </summary>
+        /// <param name="stopAction"></param>
+        public void StopService(Action<AutofacServiceProvider> stopAction)
+        {
+            _stopActions.Add(stopAction);
         }
     }
 }
