@@ -175,7 +175,7 @@ namespace DwFramework.Web
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        private void WebSocketRequireClient(string id)
+        private void RequireClient(string id)
         {
             if (!_connections.ContainsKey(id))
                 throw new Exception("该客户端不存在");
@@ -190,9 +190,9 @@ namespace DwFramework.Web
         /// <param name="id"></param>
         /// <param name="buffer"></param>
         /// <returns></returns>
-        public Task WebSocketSendAsync(string id, byte[] buffer)
+        public Task SendAsync(string id, byte[] buffer)
         {
-            WebSocketRequireClient(id);
+            RequireClient(id);
             var connection = _connections[id];
             return connection.SendAsync(buffer)
                 .ContinueWith(a => OnSend?.Invoke(connection, new OnSendEventargs(Encoding.UTF8.GetString(buffer))));
@@ -204,10 +204,10 @@ namespace DwFramework.Web
         /// <param name="id"></param>
         /// <param name="msg"></param>
         /// <returns></returns>
-        public Task WebSocketSendAsync(string id, string msg)
+        public Task SendAsync(string id, string msg)
         {
             byte[] buffer = Encoding.UTF8.GetBytes(msg);
-            return WebSocketSendAsync(id, buffer);
+            return SendAsync(id, buffer);
         }
 
         /// <summary>
@@ -215,14 +215,14 @@ namespace DwFramework.Web
         /// </summary>
         /// <param name="msg"></param>
         /// <returns></returns>
-        public Task WebSocketBroadCastAsync(string msg)
+        public Task BroadCastAsync(string msg)
         {
             return TaskManager.CreateTask(() =>
             {
                 byte[] buffer = Encoding.UTF8.GetBytes(msg);
                 foreach (var item in _connections.Values)
                 {
-                    WebSocketSendAsync(item.ID, buffer);
+                    SendAsync(item.ID, buffer);
                 }
             });
         }
@@ -232,9 +232,9 @@ namespace DwFramework.Web
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public Task WebSocketCloseAsync(string id)
+        public Task CloseAsync(string id)
         {
-            WebSocketRequireClient(id);
+            RequireClient(id);
             var connection = _connections[id];
             return connection.CloseAsync();
         }
@@ -243,7 +243,7 @@ namespace DwFramework.Web
         /// 断开所有连接
         /// </summary>
         /// <returns></returns>
-        public Task WebSocketCloseAllAsync()
+        public Task CloseAllAsync()
         {
             return TaskManager.CreateTask(() =>
             {

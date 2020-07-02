@@ -114,7 +114,7 @@ namespace DwFramework.Web
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        private void SocketRequireClient(string id)
+        private void RequireClient(string id)
         {
             if (!_connections.ContainsKey(id))
                 throw new Exception("该客户端不存在");
@@ -129,9 +129,9 @@ namespace DwFramework.Web
         /// <param name="id"></param>
         /// <param name="buffer"></param>
         /// <returns></returns>
-        public Task SocketSendAsync(string id, byte[] buffer)
+        public Task SendAsync(string id, byte[] buffer)
         {
-            SocketRequireClient(id);
+            RequireClient(id);
             var connection = _connections[id];
             return connection.SendAsync(buffer)
                 .ContinueWith(a => OnSend?.Invoke(connection, new OnSendEventargs(Encoding.UTF8.GetString(buffer))));
@@ -143,10 +143,10 @@ namespace DwFramework.Web
         /// <param name="id"></param>
         /// <param name="msg"></param>
         /// <returns></returns>
-        public Task SocketSendAsync(string id, string msg)
+        public Task SendAsync(string id, string msg)
         {
             byte[] buffer = Encoding.UTF8.GetBytes(msg);
-            return SocketSendAsync(id, buffer);
+            return SendAsync(id, buffer);
         }
 
         /// <summary>
@@ -154,14 +154,14 @@ namespace DwFramework.Web
         /// </summary>
         /// <param name="msg"></param>
         /// <returns></returns>
-        public Task SocketBroadCastAsync(string msg)
+        public Task BroadCastAsync(string msg)
         {
             return TaskManager.CreateTask(() =>
             {
                 byte[] buffer = Encoding.UTF8.GetBytes(msg);
                 foreach (var item in _connections.Values)
                 {
-                    SocketSendAsync(item.ID, buffer);
+                    SendAsync(item.ID, buffer);
                 }
             });
         }
@@ -173,7 +173,7 @@ namespace DwFramework.Web
         /// <returns></returns>
         public Task SocketCloseAsync(string id)
         {
-            SocketRequireClient(id);
+            RequireClient(id);
             var connection = _connections[id];
             return connection.CloseAsync();
         }
@@ -182,7 +182,7 @@ namespace DwFramework.Web
         /// 断开所有连接
         /// </summary>
         /// <returns></returns>
-        public Task SocketCloseAllAsync()
+        public Task CloseAllAsync()
         {
             return TaskManager.CreateTask(() =>
             {
