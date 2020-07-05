@@ -25,12 +25,12 @@ namespace DwFramework.RabbitMQ
     {
         public class Config
         {
-            public string Host { get; set; }
-            public int Port { get; set; }
+            public string Host { get; set; } = "localhost";
+            public int Port { get; set; } = 5672;
             public string UserName { get; set; }
             public string Password { get; set; }
-            public string VirtualHost { get; set; }
-            public int ConnectionPoolSize { get; set; }
+            public string VirtualHost { get; set; } = "/";
+            public int ConnectionPoolSize { get; set; } = 3;
         }
 
         private readonly Config _config;
@@ -56,7 +56,7 @@ namespace DwFramework.RabbitMQ
                 Password = _config.Password,
                 VirtualHost = _config.VirtualHost
             };
-            _connectionPool = new IConnection[_config.ConnectionPoolSize == 0 ? 3 : _config.ConnectionPoolSize];
+            _connectionPool = new IConnection[_config.ConnectionPoolSize];
             _subscribers = new Dictionary<string, KeyValuePair<CancellationTokenSource, Task>>();
 
             // 初始化连接池

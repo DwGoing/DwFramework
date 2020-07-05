@@ -14,7 +14,7 @@ namespace DwFramework.Rpc
     {
         public class Config
         {
-            public string[] Prefixes { get; set; }
+            public string[] Prefixes { get; set; } = new[] { "http://*:10100" };
         }
 
         private readonly Config _config;

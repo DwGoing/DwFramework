@@ -16,7 +16,7 @@ namespace DwFramework.Web
         public class Config
         {
             public string ContentRoot { get; set; }
-            public Dictionary<string, string> Listen { get; set; }
+            public Dictionary<string, string> Listen { get; set; } = new Dictionary<string, string>() { { "http", "0.0.0.0:10080" } };
         }
 
         private readonly Config _config;
@@ -46,25 +46,20 @@ namespace DwFramework.Web
                 .UseKestrel(options =>
                 {
                     // 监听地址及端口
-                    if (_config.Listen == null || _config.Listen.Count <= 0)
-                        options.Listen(IPAddress.Any, 5080);
-                    else
+                    if (_config.Listen.ContainsKey("http"))
                     {
-                        if (_config.Listen.ContainsKey("http"))
+                        string[] ipAndPort = _config.Listen["http"].Split(":");
+                        options.Listen(string.IsNullOrEmpty(ipAndPort[0]) ? IPAddress.Any : IPAddress.Parse(ipAndPort[0]), int.Parse(ipAndPort[1]));
+                    }
+                    if (_config.Listen.ContainsKey("https"))
+                    {
+                        string[] addrAndCert = _config.Listen["https"].Split(";");
+                        string[] ipAndPort = addrAndCert[0].Split(":");
+                        options.Listen(string.IsNullOrEmpty(ipAndPort[0]) ? IPAddress.Any : IPAddress.Parse(ipAndPort[0]), int.Parse(ipAndPort[1]), listenOptions =>
                         {
-                            string[] ipAndPort = _config.Listen["http"].Split(":");
-                            options.Listen(string.IsNullOrEmpty(ipAndPort[0]) ? IPAddress.Any : IPAddress.Parse(ipAndPort[0]), int.Parse(ipAndPort[1]));
-                        }
-                        if (_config.Listen.ContainsKey("https"))
-                        {
-                            string[] addrAndCert = _config.Listen["https"].Split(";");
-                            string[] ipAndPort = addrAndCert[0].Split(":");
-                            options.Listen(string.IsNullOrEmpty(ipAndPort[0]) ? IPAddress.Any : IPAddress.Parse(ipAndPort[0]), int.Parse(ipAndPort[1]), listenOptions =>
-                            {
-                                string[] certAndPassword = addrAndCert[1].Split(",");
-                                listenOptions.UseHttps(certAndPassword[0], certAndPassword[1]);
-                            });
-                        }
+                            string[] certAndPassword = addrAndCert[1].Split(",");
+                            listenOptions.UseHttps(certAndPassword[0], certAndPassword[1]);
+                        });
                     }
                 })
                 .UseStartup<T>();
