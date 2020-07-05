@@ -95,7 +95,7 @@ host.Run();
 
 ### 0x3 插件
 
-引用DwFramework.Http.Plugins来使用Http插件
+引用DwFramework.Web.Plugins来使用Web插件
 
 1. Swagger
 
