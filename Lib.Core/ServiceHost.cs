@@ -154,7 +154,7 @@ namespace DwFramework.Core
         /// <returns></returns>
         public IRegistrationBuilder<T, SimpleActivatorData, SingleRegistrationStyle> RegisterInstance<T, I>(T instance) where T : class where I : class
         {
-            return RegisterInstance(instance).AsSelf().As<I>();
+            return RegisterInstance(instance).As<I>();
         }
 
         /// <summary>
