@@ -69,7 +69,7 @@ namespace DwFramework.Core
         /// <returns></returns>
         public IRegistrationBuilder<T, SimpleActivatorData, SingleRegistrationStyle> Register<T>(Func<IComponentContext, T> func) where T : class
         {
-            return _containerBuilder.Register(func);
+            return _containerBuilder.Register(func).AsSelf();
         }
 
         /// <summary>
@@ -81,7 +81,7 @@ namespace DwFramework.Core
         /// <returns></returns>
         public IRegistrationBuilder<T, SimpleActivatorData, SingleRegistrationStyle> Register<T, I>(Func<IComponentContext, T> func) where T : class where I : class
         {
-            return _containerBuilder.Register(func).As<I>();
+            return Register(func).As<I>();
         }
 
         /// <summary>
@@ -110,7 +110,7 @@ namespace DwFramework.Core
         /// <returns></returns>
         public IRegistrationBuilder<T, ConcreteReflectionActivatorData, SingleRegistrationStyle> RegisterType<T>() where T : class
         {
-            return _containerBuilder.RegisterType<T>().As<T>();
+            return _containerBuilder.RegisterType<T>().AsSelf();
         }
 
         /// <summary>
@@ -120,7 +120,7 @@ namespace DwFramework.Core
         /// <returns></returns>
         public IRegistrationBuilder<object, ConcreteReflectionActivatorData, SingleRegistrationStyle> RegisterType(Type type)
         {
-            return _containerBuilder.RegisterType(type).As(type);
+            return _containerBuilder.RegisterType(type).AsSelf();
         }
 
         /// <summary>
@@ -131,7 +131,7 @@ namespace DwFramework.Core
         /// <returns></returns>
         public IRegistrationBuilder<T, ConcreteReflectionActivatorData, SingleRegistrationStyle> RegisterType<T, I>() where T : class where I : class
         {
-            return _containerBuilder.RegisterType<T>().As<I>();
+            return RegisterType<T>().As<I>();
         }
 
         /// <summary>
@@ -142,7 +142,7 @@ namespace DwFramework.Core
         /// <returns></returns>
         public IRegistrationBuilder<T, SimpleActivatorData, SingleRegistrationStyle> RegisterInstance<T>(T instance) where T : class
         {
-            return _containerBuilder.RegisterInstance(instance);
+            return _containerBuilder.RegisterInstance(instance).AsSelf();
         }
 
         /// <summary>
@@ -154,7 +154,7 @@ namespace DwFramework.Core
         /// <returns></returns>
         public IRegistrationBuilder<T, SimpleActivatorData, SingleRegistrationStyle> RegisterInstance<T, I>(T instance) where T : class where I : class
         {
-            return _containerBuilder.RegisterInstance(instance).As<I>();
+            return RegisterInstance(instance).AsSelf().As<I>();
         }
 
         /// <summary>
