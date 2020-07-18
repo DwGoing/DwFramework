@@ -19,7 +19,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Hprose.RPC" Version="3.0.17" />
+    <PackageReference Include="Hprose.RPC" Version="3.0.18" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Lib.Core\Lib.Core.csproj" />
