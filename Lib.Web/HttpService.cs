@@ -4,7 +4,6 @@ using System.Net;
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Builder;
 
 using DwFramework.Core;
 using DwFramework.Core.Extensions;
@@ -16,7 +15,7 @@ namespace DwFramework.Web
         public class Config
         {
             public string ContentRoot { get; set; }
-            public Dictionary<string, string> Listen { get; set; } = new Dictionary<string, string>() { { "http", "0.0.0.0:10080" } };
+            public Dictionary<string, string> Listen { get; set; }
         }
 
         private readonly Config _config;
@@ -45,6 +44,7 @@ namespace DwFramework.Web
                 .UseContentRoot($"{AppDomain.CurrentDomain.BaseDirectory}{_config.ContentRoot}")
                 .UseKestrel(options =>
                 {
+                    if (_config.Listen == null || _config.Listen.Count <= 0) throw new Exception("缺少Listen配置");
                     // 监听地址及端口
                     if (_config.Listen.ContainsKey("http"))
                     {
