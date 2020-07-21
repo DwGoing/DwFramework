@@ -4,7 +4,6 @@ using System.Text;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
-using System.Net.WebSockets;
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Http;
@@ -21,7 +20,7 @@ namespace DwFramework.Web
     {
         public class Config
         {
-            public string Listen { get; set; }
+            public string Listen { get; set; } = null;
             public int BackLog { get; set; } = 100;
             public int BufferSize { get; set; } = 1024 * 4;
         }
@@ -86,6 +85,7 @@ namespace DwFramework.Web
         {
             _config = _environment.GetConfiguration().GetConfig<Config>("Web:Socket");
             _connections = new Dictionary<string, SocketConnection>();
+            _buffer = new byte[_config.BufferSize];
         }
 
         /// <summary>
@@ -96,16 +96,12 @@ namespace DwFramework.Web
         {
             return TaskManager.CreateTask(() =>
             {
-                _buffer = new byte[_config.BufferSize];
                 _server = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-                if (string.IsNullOrEmpty(_config.Listen))
-                    _server.Bind(new IPEndPoint(IPAddress.Any, 10085));
-                else
-                {
-                    string[] ipAndPort = _config.Listen.Split(":");
-                    _server.Bind(new IPEndPoint(string.IsNullOrEmpty(ipAndPort[0]) ? IPAddress.Any : IPAddress.Parse(ipAndPort[0]), int.Parse(ipAndPort[1])));
-                }
+                if (_config.Listen == null) throw new Exception("缺少Listen配置");
+                string[] ipAndPort = _config.Listen.Split(":");
+                _server.Bind(new IPEndPoint(string.IsNullOrEmpty(ipAndPort[0]) ? IPAddress.Any : IPAddress.Parse(ipAndPort[0]), int.Parse(ipAndPort[1])));
                 _server.Listen(_config.BackLog);
+                Console.WriteLine($"Socket服务已开启 => 监听地址:{_config.Listen}");
             });
         }
 

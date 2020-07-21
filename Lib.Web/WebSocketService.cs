@@ -100,11 +100,13 @@ namespace DwFramework.Web
                 .UseKestrel(options =>
                 {
                     if (_config.Listen == null || _config.Listen.Count <= 0) throw new Exception("缺少Listen配置");
+                    string listen = "";
                     // 监听地址及端口
                     if (_config.Listen.ContainsKey("ws"))
                     {
                         string[] ipAndPort = _config.Listen["ws"].Split(":");
                         options.Listen(string.IsNullOrEmpty(ipAndPort[0]) ? IPAddress.Any : IPAddress.Parse(ipAndPort[0]), int.Parse(ipAndPort[1]));
+                        listen += $"ws://{_config.Listen["ws"]}";
                     }
                     if (_config.Listen.ContainsKey("wss"))
                     {
@@ -115,7 +117,10 @@ namespace DwFramework.Web
                             string[] certAndPassword = addrAndCert[1].Split(",");
                             listenOptions.UseHttps(certAndPassword[0], certAndPassword[1]);
                         });
+                        if (!string.IsNullOrEmpty(listen)) listen += ",";
+                        listen += $"wss://{_config.Listen["wss"]}";
                     }
+                    Console.WriteLine($"WebSocket服务已开启 => 监听地址:{listen}");
                 })
                 .Configure(app =>
                 {
