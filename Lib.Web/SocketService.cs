@@ -20,7 +20,7 @@ namespace DwFramework.Web
     {
         public class Config
         {
-            public string Listen { get; set; } = null;
+            public string Listen { get; set; }
             public int BackLog { get; set; } = 100;
             public int BufferSize { get; set; } = 1024 * 4;
         }
