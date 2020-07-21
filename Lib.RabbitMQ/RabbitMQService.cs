@@ -34,9 +34,10 @@ namespace DwFramework.RabbitMQ
         }
 
         private readonly Config _config;
-        private ConnectionFactory _connectionFactory;
+        private readonly ConnectionFactory _connectionFactory;
         private int _connectionPointer = 0;
-        private IConnection[] _connectionPool;
+        private readonly IConnection[] _connectionPool;
+        private readonly byte[] _connectionPoolLock = new byte[0];
         private Dictionary<string, KeyValuePair<CancellationTokenSource, Task>> _subscribers;
 
 
@@ -60,10 +61,8 @@ namespace DwFramework.RabbitMQ
             _subscribers = new Dictionary<string, KeyValuePair<CancellationTokenSource, Task>>();
 
             // 初始化连接池
-            for (int i = 0; i < _connectionPool.Length; i++)
-            {
-                _connectionPool[i] = _connectionFactory.CreateConnection();
-            }
+            // 预创建3条链接
+            for (int i = 0; i < 3; i++) _connectionPool[i] = _connectionFactory.CreateConnection();
         }
 
         /// <summary>
@@ -72,11 +71,14 @@ namespace DwFramework.RabbitMQ
         /// <returns></returns>
         private IConnection GetConnection()
         {
-            var connection = _connectionPool[_connectionPointer];
-            if (!connection.IsOpen) _connectionPool[_connectionPointer] = _connectionFactory.CreateConnection();
-            _connectionPointer++;
-            if (_connectionPointer >= _connectionPool.Length) _connectionPointer = 0;
-            return connection;
+            lock (_connectionPoolLock)
+            {
+                var connection = _connectionPool[_connectionPointer];
+                if (connection == null || !connection.IsOpen) _connectionPool[_connectionPointer] = _connectionFactory.CreateConnection();
+                _connectionPointer++;
+                if (_connectionPointer >= _connectionPool.Length) _connectionPointer = 0;
+                return connection;
+            }
         }
 
         /// <summary>
