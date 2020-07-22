@@ -24,11 +24,9 @@ namespace DwFramework.Rpc
         /// <summary>
         /// 构造函数
         /// </summary>
-        /// <param name="provider"></param>
-        /// <param name="environment"></param>
-        public RpcService(IServiceProvider provider, IEnvironment environment) : base(provider, environment)
+        public RpcService()
         {
-            _config = _environment.GetConfiguration().GetConfig<Config>("Rpc");
+            _config = ServiceHost.Environment.GetConfiguration().GetConfig<Config>("Rpc");
             var listener = new HttpListener();
             foreach (var item in _config.Prefixes)
             {
@@ -62,7 +60,7 @@ namespace DwFramework.Rpc
         /// <typeparam name="T"></typeparam>
         public void RegisterFuncFromService<T>() where T : class
         {
-            T service = _provider.GetService<T>();
+            T service = ServiceHost.Provider.GetService<T>();
             var methods = service.GetType().GetMethods();
             foreach (var item in methods)
             {
@@ -80,7 +78,7 @@ namespace DwFramework.Rpc
         /// <typeparam name="I"></typeparam>
         public void RegisterFuncFromServices<I>() where I : class
         {
-            var services = _provider.GetServices<I>();
+            var services = ServiceHost.Provider.GetServices<I>();
             foreach (var service in services)
             {
                 var methods = service.GetType().GetMethods();
@@ -117,7 +115,7 @@ namespace DwFramework.Rpc
                     var methodAttr = item.GetCustomAttribute<RpcAttribute>();
                     if (methodAttr != null)
                     {
-                        Service.Add(item, methodAttr.CallName ?? "", _provider.GetService(typeAttr.InterfaceType));
+                        Service.Add(item, methodAttr.CallName ?? "", ServiceHost.Provider.GetService(typeAttr.InterfaceType));
                     }
                 }
             }
@@ -144,7 +142,7 @@ namespace DwFramework.Rpc
                         var methodAttr = item.GetCustomAttribute<RpcAttribute>();
                         if (methodAttr != null)
                         {
-                            Service.Add(item, methodAttr.CallName ?? "", _provider.GetService(typeAttr.InterfaceType));
+                            Service.Add(item, methodAttr.CallName ?? "", ServiceHost.Provider.GetService(typeAttr.InterfaceType));
                         }
                     }
                 }

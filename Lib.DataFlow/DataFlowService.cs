@@ -1,13 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
 
+using DwFramework.Core;
 using DwFramework.Core.Plugins;
 
 namespace DwFramework.DataFlow
 {
-    public class DataFlowService
+    public class DataFlowService : BaseService
     {
         private readonly Dictionary<string, ITaskQueue> _taskQueues = new Dictionary<string, ITaskQueue>();
+
+        /// <summary>
+        /// 构造函数
+        /// </summary>
+        public DataFlowService()
+        {
+
+        }
 
         /// <summary>
         /// 创建任务队列

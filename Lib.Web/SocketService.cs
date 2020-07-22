@@ -79,11 +79,9 @@ namespace DwFramework.Web
         /// <summary>
         /// 构造函数
         /// </summary>
-        /// <param name="provider"></param>
-        /// <param name="environment"></param>
-        public SocketService(IServiceProvider provider, IEnvironment environment) : base(provider, environment)
+        public SocketService()
         {
-            _config = _environment.GetConfiguration().GetConfig<Config>("Web:Socket");
+            _config = ServiceHost.Environment.GetConfiguration().GetConfig<Config>("Web:Socket");
             _connections = new Dictionary<string, SocketConnection>();
             _buffer = new byte[_config.BufferSize];
         }

@@ -32,7 +32,7 @@ namespace DwFramework.RabbitMQ
             public string VirtualHost { get; set; } = "/";
             public int ConnectionPoolSize { get; set; } = 3;
         }
-        
+
         private readonly Config _config;
         private readonly ConnectionFactory _connectionFactory;
         private int _connectionPointer = 0;
@@ -44,11 +44,9 @@ namespace DwFramework.RabbitMQ
         /// <summary>
         /// 构造函数
         /// </summary>
-        /// <param name="provider"></param>
-        /// <param name="environment"></param>
-        public RabbitMQService(IServiceProvider provider, IEnvironment environment) : base(provider, environment)
+        public RabbitMQService()
         {
-            _config = _environment.GetConfiguration().GetConfig<Config>("RabbitMQ");
+            _config = ServiceHost.Environment.GetConfiguration().GetConfig<Config>("RabbitMQ");
             _connectionFactory = new ConnectionFactory()
             {
                 HostName = _config.Host,

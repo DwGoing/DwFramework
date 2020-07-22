@@ -3,9 +3,7 @@ using System.Linq;
 using System.Collections.Generic;
 
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Logging;
-using Autofac.Extensions.DependencyInjection;
 using NLog.Extensions.Logging;
 
 namespace DwFramework.Core.Extensions
@@ -59,21 +57,6 @@ namespace DwFramework.Core.Extensions
                 builder.SetMinimumLevel(LogLevel.Trace);
                 builder.AddNLog();
             }));
-            return host;
-        }
-
-        /// <summary>
-        /// 注入上层服务
-        /// </summary>
-        /// <param name="host"></param>
-        /// <param name="provider"></param>
-        /// <returns></returns>
-        public static IWebHostBuilder UseDwServiceProvider(this IWebHostBuilder host, IServiceProvider provider)
-        {
-            host.ConfigureServices(services =>
-            {
-                services.AddSingleton(new DwServiceProvider(provider as AutofacServiceProvider));
-            });
             return host;
         }
     }

@@ -78,11 +78,9 @@ namespace DwFramework.Web
         /// <summary>
         /// 构造函数
         /// </summary>
-        /// <param name="provider"></param>
-        /// <param name="environment"></param>
-        public WebSocketService(IServiceProvider provider, IEnvironment environment) : base(provider, environment)
+        public WebSocketService()
         {
-            _config = _environment.GetConfiguration().GetConfig<Config>("Web:WebSocket");
+            _config = ServiceHost.Environment.GetConfiguration().GetConfig<Config>("Web:WebSocket");
             _connections = new Dictionary<string, WebSocketConnection>();
         }
 
@@ -93,7 +91,6 @@ namespace DwFramework.Web
         public Task OpenServiceAsync()
         {
             var builder = new WebHostBuilder()
-                .UseDwServiceProvider(_provider)
                 .SuppressStatusMessages(true)
                 // wss证书路径
                 .UseContentRoot($"{AppDomain.CurrentDomain.BaseDirectory}{_config.ContentRoot}")

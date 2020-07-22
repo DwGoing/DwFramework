@@ -24,11 +24,9 @@ namespace DwFramework.Web
         /// <summary>
         /// 构造函数
         /// </summary>
-        /// <param name="provider"></param>
-        /// <param name="environment"></param>
-        public HttpService(IServiceProvider provider, IEnvironment environment) : base(provider, environment)
+        public HttpService()
         {
-            _config = _environment.GetConfiguration().GetConfig<Config>("Web:Http");
+            _config = ServiceHost.Environment.GetConfiguration().GetConfig<Config>("Web:Http");
         }
 
         /// <summary>
@@ -40,7 +38,6 @@ namespace DwFramework.Web
         {
             var builder = new WebHostBuilder()
                 .SuppressStatusMessages(true)
-                .UseDwServiceProvider(_provider)
                 // https证书路径
                 .UseContentRoot($"{AppDomain.CurrentDomain.BaseDirectory}{_config.ContentRoot}")
                 .UseKestrel(options =>

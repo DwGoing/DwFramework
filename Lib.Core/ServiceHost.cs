@@ -21,11 +21,14 @@ namespace DwFramework.Core
         private readonly List<Action<AutofacServiceProvider>> _initActions;
         private readonly List<Action<AutofacServiceProvider>> _stopActions;
 
-        public static AutofacServiceProvider Provider;
+        public static Environment Environment { get; private set; }
+        public static AutofacServiceProvider Provider { get; private set; }
 
         /// <summary>
         /// 构造函数
         /// </summary>
+        /// <param name="environmentType"></param>
+        /// <param name="configFilePath"></param>
         public ServiceHost(EnvironmentType environmentType = EnvironmentType.Develop, string configFilePath = null)
         {
             _autoResetEvent = new AutoResetEvent(false);
@@ -34,7 +37,7 @@ namespace DwFramework.Core
             _initActions = new List<Action<AutofacServiceProvider>>();
             _stopActions = new List<Action<AutofacServiceProvider>>();
             // 环境变量
-            RegisterInstance<Environment, IEnvironment>(new Environment(environmentType, configFilePath)).SingleInstance();
+            Environment = new Environment(environmentType, configFilePath);
         }
 
         /// <summary>
