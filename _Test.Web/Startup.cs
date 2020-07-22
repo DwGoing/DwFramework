@@ -27,7 +27,7 @@ namespace _Test.Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            services.AddSwagger("Doc", "Test", "v1");
+            services.AddSwagger("Doc", "Test", "v1", xmlPath: $"{AppDomain.CurrentDomain.BaseDirectory}_Test.Web.xml");
         }
 
         public void Configure(IApplicationBuilder app)

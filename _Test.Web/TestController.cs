@@ -10,13 +10,15 @@ using DwFramework.Web.Plugins;
 
 namespace _Test.Web
 {
-    /// <summary>
-    /// 测试
-    /// </summary>
     [ApiController]
     [Route("test")]
     public class TestController : Controller
     {
+        /// <summary>
+        /// 测试
+        /// </summary>
+        /// <param name="body">数据</param>
+        /// <returns></returns>
         [HttpPost("t")]
         public IActionResult Test(Body body)
         {
