@@ -14,14 +14,18 @@ namespace _Test.Web
     [Route("test")]
     public class TestController : Controller
     {
+        /// <summary>
+        /// 测试
+        /// </summary>
+        /// <param name="body">数据</param>
+        /// <returns></returns>
         [HttpPost("t")]
         public IActionResult Test(Body body)
         {
-            ResultInfo result = null;
+            ResultInfo result;
             try
             {
-                var jwt = JwtManager.DecodeToken(body.Jwt);
-                result = ResultInfo.Success("ok");
+                result = ResultInfo<object>.Success("ok", JwtManager.DecodeToken(body.Jwt));
             }
             catch (Exception ex)
             {

@@ -29,8 +29,10 @@ namespace DwFramework.Web.Plugins
         /// <param name="name"></param>
         /// <param name="title"></param>
         /// <param name="version"></param>
+        /// <param name="description"></param>
+        /// <param name="xmlPath"></param>
         /// <returns></returns>
-        public static IServiceCollection AddSwagger(this IServiceCollection services, string name, string title, string version, string description = null)
+        public static IServiceCollection AddSwagger(this IServiceCollection services, string name, string title, string version, string description = null, string xmlPath = null)
         {
             services.AddSwaggerGen(c =>
             {
@@ -40,6 +42,7 @@ namespace DwFramework.Web.Plugins
                     Version = version,
                     Description = description
                 });
+                if (xmlPath != null) c.IncludeXmlComments(xmlPath);
             });
             return services;
         }

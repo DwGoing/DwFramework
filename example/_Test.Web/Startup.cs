@@ -27,13 +27,12 @@ namespace _Test.Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            services.AddSwagger("Doc", "Test", "v1");
+            services.AddSwagger("Doc", "Test", "v1", xmlPath: $"{AppDomain.CurrentDomain.BaseDirectory}_Test.Web.xml");
         }
 
         public void Configure(IApplicationBuilder app)
         {
             app.UseRouting();
-            //app.UseJwtAuthentication(); // 必须在UseRouting之后
             app.UseSwagger("Doc", "My API V1");
             app.UseRequestFilter(new Dictionary<string, Action<HttpContext>>
             {

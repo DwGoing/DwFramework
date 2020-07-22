@@ -22,6 +22,7 @@ namespace _Test.Database
                 {
                     var service = provider.GetService<AccountRepository>();
                     Console.WriteLine(service.FindAllAsync().Result.ToJson());
+                    service.FindAsync(item => item.ID == 0);
                 });
                 host.Run();
             }
