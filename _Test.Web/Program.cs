@@ -2,6 +2,7 @@
 using System.Threading;
 
 using DwFramework.Core;
+using DwFramework.Core.Plugins;
 using DwFramework.Core.Extensions;
 using DwFramework.Web;
 using DwFramework.Web.Extensions;
@@ -9,6 +10,16 @@ using DwFramework.Web.Plugins;
 
 namespace _Test.Web
 {
+    public class C
+    {
+        public string id;
+
+        public C()
+        {
+            id = Generater.GenerateUUID();
+        }
+    }
+
     class Program
     {
         static void Main(string[] args)

@@ -243,5 +243,24 @@ namespace DwFramework.Core
         {
             _stopActions.Add(stopAction);
         }
+
+        /// <summary>
+        /// 创建生命周期
+        /// </summary>
+        /// <returns></returns>
+        public static ILifetimeScope CreateLifetimeScope()
+        {
+            return Provider.LifetimeScope.BeginLifetimeScope();
+        }
+
+        /// <summary>
+        /// 创建生命周期
+        /// </summary>
+        /// <param name="tag"></param>
+        /// <returns></returns>
+        public static ILifetimeScope CreateLifetimeScope(object tag)
+        {
+            return Provider.LifetimeScope.BeginLifetimeScope(tag);
+        }
     }
 }
