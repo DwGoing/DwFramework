@@ -22,11 +22,10 @@ namespace _Test.Web
         [HttpPost("t")]
         public IActionResult Test(Body body)
         {
-            ResultInfo result = null;
+            ResultInfo result;
             try
             {
-                var jwt = JwtManager.DecodeToken(body.Jwt);
-                result = ResultInfo.Success("ok");
+                result = ResultInfo<object>.Success("ok", JwtManager.DecodeToken(body.Jwt));
             }
             catch (Exception ex)
             {

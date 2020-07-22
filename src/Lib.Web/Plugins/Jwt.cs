@@ -57,7 +57,7 @@ namespace DwFramework.Web.Plugins
         /// </summary>
         public class DefaultJwtTokenValidator : JwtTokenValidator
         {
-            private string _securityKey;
+            private readonly string _securityKey;
 
             public DefaultJwtTokenValidator(string securityKey) => _securityKey = securityKey;
 

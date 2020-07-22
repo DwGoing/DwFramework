@@ -2,33 +2,33 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29926.136
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "_Test.Web", "_Test.Web\_Test.Web.csproj", "{3B12281E-6455-43AC-87FB-C2510C0CDD91}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "_Test.Rpc", "example\_Test.Rpc\_Test.Rpc.csproj", "{93554DFC-C77C-4E53-8848-7F1CD21D32AD}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "_Test.Database", "_Test.Database\_Test.Database.csproj", "{4398206D-9905-4F00-94F2-6D43E3481A42}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "_Test.Web", "example\_Test.Web\_Test.Web.csproj", "{3B12281E-6455-43AC-87FB-C2510C0CDD91}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "_Test.Core", "_Test.Core\_Test.Core.csproj", "{84AED4CB-ADF4-4308-9E1D-FFB9969B3BEF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "_Test.Database", "example\_Test.Database\_Test.Database.csproj", "{4398206D-9905-4F00-94F2-6D43E3481A42}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "_Test.DataFlow", "_Test.DataFlow\_Test.DataFlow.csproj", "{C6B44378-ED0A-4A22-8076-53120AB7AB95}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "_Test.Core", "example\_Test.Core\_Test.Core.csproj", "{84AED4CB-ADF4-4308-9E1D-FFB9969B3BEF}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "_Test.Unit", "_Test.Unit\_Test.Unit.csproj", "{0C5333F0-2B98-4B0F-A642-0A3A86DF4A5C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "_Test.DataFlow", "example\_Test.DataFlow\_Test.DataFlow.csproj", "{C6B44378-ED0A-4A22-8076-53120AB7AB95}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lib.Core", "Lib.Core\Lib.Core.csproj", "{E26E7207-D0B7-4210-84A5-93B001F5C1DC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "_Test.Unit", "example\_Test.Unit\_Test.Unit.csproj", "{0C5333F0-2B98-4B0F-A642-0A3A86DF4A5C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lib.Database", "Lib.Database\Lib.Database.csproj", "{CF13F53C-EB73-4A5F-B025-34E939AB1ED7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lib.Database", "src\Lib.Database\Lib.Database.csproj", "{CF13F53C-EB73-4A5F-B025-34E939AB1ED7}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lib.DataFlow", "Lib.DataFlow\Lib.DataFlow.csproj", "{6F7255C0-D2C7-4866-B599-D40B6FBFAB8F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lib.DataFlow", "src\Lib.DataFlow\Lib.DataFlow.csproj", "{6F7255C0-D2C7-4866-B599-D40B6FBFAB8F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lib.MachineLearning", "Lib.MachineLearning\Lib.MachineLearning.csproj", "{5D350D0E-4BB1-427E-8239-7545240D4AFE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lib.MachineLearning", "src\Lib.MachineLearning\Lib.MachineLearning.csproj", "{5D350D0E-4BB1-427E-8239-7545240D4AFE}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lib.RabbitMQ", "Lib.RabbitMQ\Lib.RabbitMQ.csproj", "{C591B20D-6C97-4BB9-90AF-D1172EA07848}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lib.RabbitMQ", "src\Lib.RabbitMQ\Lib.RabbitMQ.csproj", "{C591B20D-6C97-4BB9-90AF-D1172EA07848}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lib.Rpc", "Lib.Rpc\Lib.Rpc.csproj", "{23560FBC-5E90-432D-9C29-A09CE832CA1B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lib.Rpc", "src\Lib.Rpc\Lib.Rpc.csproj", "{23560FBC-5E90-432D-9C29-A09CE832CA1B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lib.TaskSchedule", "Lib.TaskSchedule\Lib.TaskSchedule.csproj", "{BD33CF91-FAA8-4DDF-8B63-E98A1EA0505B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lib.TaskSchedule", "src\Lib.TaskSchedule\Lib.TaskSchedule.csproj", "{BD33CF91-FAA8-4DDF-8B63-E98A1EA0505B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lib.Web", "Lib.Web\Lib.Web.csproj", "{358F26C4-DE41-40CD-B088-288967678B22}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lib.Web", "src\Lib.Web\Lib.Web.csproj", "{358F26C4-DE41-40CD-B088-288967678B22}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "_Test.Rpc", "_Test.Rpc\_Test.Rpc.csproj", "{93554DFC-C77C-4E53-8848-7F1CD21D32AD}"
+Project("{9344BDBB-3E7F-41FC-A0DD-8665D75EE146}") = "Lib.Core", "src\Lib.Core\Lib.Core.csproj", "{BD976D28-A39B-4087-932B-52229A868FAC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -56,10 +56,6 @@ Global
 		{0C5333F0-2B98-4B0F-A642-0A3A86DF4A5C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0C5333F0-2B98-4B0F-A642-0A3A86DF4A5C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0C5333F0-2B98-4B0F-A642-0A3A86DF4A5C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E26E7207-D0B7-4210-84A5-93B001F5C1DC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E26E7207-D0B7-4210-84A5-93B001F5C1DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E26E7207-D0B7-4210-84A5-93B001F5C1DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E26E7207-D0B7-4210-84A5-93B001F5C1DC}.Release|Any CPU.Build.0 = Release|Any CPU
 		{CF13F53C-EB73-4A5F-B025-34E939AB1ED7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{CF13F53C-EB73-4A5F-B025-34E939AB1ED7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CF13F53C-EB73-4A5F-B025-34E939AB1ED7}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -92,6 +88,10 @@ Global
 		{93554DFC-C77C-4E53-8848-7F1CD21D32AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{93554DFC-C77C-4E53-8848-7F1CD21D32AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{93554DFC-C77C-4E53-8848-7F1CD21D32AD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BD976D28-A39B-4087-932B-52229A868FAC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BD976D28-A39B-4087-932B-52229A868FAC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BD976D28-A39B-4087-932B-52229A868FAC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BD976D28-A39B-4087-932B-52229A868FAC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
