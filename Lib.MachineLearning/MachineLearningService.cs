@@ -40,7 +40,7 @@ namespace DwFramework.MachineLearning
         /// <summary>
         /// 构造函数
         /// </summary>
-        public MachineLearningService(IServiceProvider provider, IEnvironment environment) : base(provider, environment)
+        public MachineLearningService()
         {
             MlContext = new MLContext();
         }

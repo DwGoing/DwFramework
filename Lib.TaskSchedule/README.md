@@ -15,8 +15,6 @@ PM> Install-Package DwFramework.TaskSchedule
 ```c#
 // 注册服务
 host.RegisterTaskScheduleService();
-// 初始化
-var provider = host.Build();
 ```
 
 ### 0x2 基本使用方法

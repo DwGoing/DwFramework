@@ -11,7 +11,7 @@ namespace DwFramework.Core
         Release = 1
     }
 
-    public class Environment : IEnvironment
+    public class Environment
     {
         private readonly EnvironmentType _environmentType;
         private readonly IConfiguration _configuration;

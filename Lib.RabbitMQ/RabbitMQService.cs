@@ -25,29 +25,28 @@ namespace DwFramework.RabbitMQ
     {
         public class Config
         {
-            public string Host { get; set; }
-            public int Port { get; set; }
+            public string Host { get; set; } = "localhost";
+            public int Port { get; set; } = 5672;
             public string UserName { get; set; }
             public string Password { get; set; }
-            public string VirtualHost { get; set; }
-            public int ConnectionPoolSize { get; set; }
+            public string VirtualHost { get; set; } = "/";
+            public int ConnectionPoolSize { get; set; } = 3;
         }
 
         private readonly Config _config;
-        private ConnectionFactory _connectionFactory;
+        private readonly ConnectionFactory _connectionFactory;
         private int _connectionPointer = 0;
-        private IConnection[] _connectionPool;
+        private readonly IConnection[] _connectionPool;
+        private static readonly object _connectionPoolLock = new object();
         private Dictionary<string, KeyValuePair<CancellationTokenSource, Task>> _subscribers;
 
 
         /// <summary>
         /// 构造函数
         /// </summary>
-        /// <param name="provider"></param>
-        /// <param name="environment"></param>
-        public RabbitMQService(IServiceProvider provider, IEnvironment environment) : base(provider, environment)
+        public RabbitMQService()
         {
-            _config = _environment.GetConfiguration().GetConfig<Config>("RabbitMQ");
+            _config = ServiceHost.Environment.GetConfiguration().GetConfig<Config>("RabbitMQ");
             _connectionFactory = new ConnectionFactory()
             {
                 HostName = _config.Host,
@@ -56,14 +55,12 @@ namespace DwFramework.RabbitMQ
                 Password = _config.Password,
                 VirtualHost = _config.VirtualHost
             };
-            _connectionPool = new IConnection[_config.ConnectionPoolSize == 0 ? 3 : _config.ConnectionPoolSize];
+            _connectionPool = new IConnection[_config.ConnectionPoolSize];
             _subscribers = new Dictionary<string, KeyValuePair<CancellationTokenSource, Task>>();
 
             // 初始化连接池
-            for (int i = 0; i < _connectionPool.Length; i++)
-            {
-                _connectionPool[i] = _connectionFactory.CreateConnection();
-            }
+            // 预创建3条链接
+            for (int i = 0; i < 3; i++) _connectionPool[i] = _connectionFactory.CreateConnection();
         }
 
         /// <summary>
@@ -72,11 +69,14 @@ namespace DwFramework.RabbitMQ
         /// <returns></returns>
         private IConnection GetConnection()
         {
-            var connection = _connectionPool[_connectionPointer];
-            if (!connection.IsOpen) _connectionPool[_connectionPointer] = _connectionFactory.CreateConnection();
-            _connectionPointer++;
-            if (_connectionPointer >= _connectionPool.Length) _connectionPointer = 0;
-            return connection;
+            lock (_connectionPoolLock)
+            {
+                var connection = _connectionPool[_connectionPointer];
+                if (connection == null || !connection.IsOpen) _connectionPool[_connectionPointer] = _connectionFactory.CreateConnection();
+                _connectionPointer++;
+                if (_connectionPointer >= _connectionPool.Length) _connectionPointer = 0;
+                return connection;
+            }
         }
 
         /// <summary>

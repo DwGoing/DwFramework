@@ -48,7 +48,7 @@ public class ResultHandler : IResultHandler<int, int>
 
 ```c#
 // 任务开始时
-service.AddTaskStartHandler<int>(key, (input) => Console.WriteLine($"任务开始:{input}"));
+service.AddTaskStartHandler<int>(key, input => Console.WriteLine($"任务开始:{input}"));
 // 任务结束时
 service.AddTaskEndHandler<int, int, int>(key, (input, output, result) => Console.WriteLine($"任务结束:{input} {output} {result}"));
 ```

@@ -15,12 +15,21 @@ PM> Install-Package DwFramework.Web
 ```json
 {
   "Web": {
-    "ContentRoot": "",
-    "HttpListen": {
-      "http": "0.0.0.0:10080"
+    "Http": {
+      "ContentRoot": "",
+      "Listen": {
+        "http": "0.0.0.0:10080"
+      }
     },
-    "WebSocketListen": {
-      "ws": "0.0.0.0:10088"
+    "WebSocket": {
+      "ContentRoot": "",
+      "Listen": {
+        "ws": "0.0.0.0:10090"
+      },
+      "BufferSize": 100
+    },
+    "Socket": {
+      "Listen": "0.0.0.0:10100"
     }
   }
 }
@@ -38,25 +47,14 @@ namespace Test
     {
         public override void ConfigureServices(IServiceCollection services)
         {
-          	// JWT插件
-            services.AddJWTAuthentication(new TokenValidator(), context =>
-                {
-                    Console.WriteLine("Success");
-                    return Task.CompletedTask;
-                }, context =>
-                {
-                    Console.WriteLine("Fail");
-                    return Task.CompletedTask;
-                });
             services.AddControllers();
-            services.AddSwagger("v1", "Test", "v1");
+            services.AddSwagger("Doc", "Test", "v1");
         }
 
         public override void Configure(IApplicationBuilder app)
         {
             app.UseRouting();
-            app.UseJWTAuthentication(); // 必须在UseRouting之后
-            app.UseSwagger("/swagger/v1/swagger.json", "My API V1");
+            app.UseSwagger("Doc", "My API V1");
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
@@ -68,35 +66,38 @@ namespace Test
 
 ```c#
 // 注册服务
-host.RegisterWebService();
-// 初始化
-var provider = host.Build();
-provider.InitHttpServiceAsync<Startup>();
-provider.InitWebSocketServiceAsync(
-	onConnect: (c, a) =>
-	{
-		Console.WriteLine($"{c.ID}已连接");
-	},
-	onSend: (c, a) =>
-	{
-		Console.WriteLine($"向{c.ID}消息：{a.Message}");
-	},
-	onReceive: (c, a) =>
-	{
-		Console.WriteLine($"收到{c.ID}发来的消息：{a.Message}");
-	},
-	onClose: (c, a) =>
-	{
-		Console.WriteLine($"{c.ID}已断开");
-	}
-);
+host.RegisterWebService<HttpService>();
+host.RegisterWebService<WebSocketService>();
+host.InitService(provider => provider.InitHttpServiceAsync<Startup>());
+host.InitService(provider =>
+{
+    provider.InitWebSocketServiceAsync();
+    var service = provider.GetWebService<WebSocketService>();
+    service.OnConnect += (c, a) =>
+    {
+        Console.WriteLine($"{c.ID}已连接");
+    };
+    service.OnSend += (c, a) =>
+    {
+        Console.WriteLine($"向{c.ID}消息：{a.Message}");
+    };
+    service.OnReceive += (c, a) =>
+    {
+        Console.WriteLine($"收到{c.ID}发来的消息：{a.Message}");
+    };
+    service.OnClose += (c, a) =>
+    {
+        Console.WriteLine($"{c.ID}已断开");
+    };
+});
+host.Run();
 ```
 
 ### 0x3 插件
 
-引用DwFramework.Http.Plugins来使用Http插件
+引用DwFramework.Web.Plugins来使用Web插件
 
-1. JWT
+1. Swagger
 
 ```c#
 public class Startup
@@ -110,45 +111,25 @@ public class Startup
     public void Configure(IApplicationBuilder app)
     {
         app.UseRouting();
-        //app.UseJwtAuthentication(); // 必须在UseRouting之后
         app.UseSwagger("Doc", "My API V1");
-        app.UseRequestFilter(new Dictionary<string, Action<HttpContext>>
-        {
-          {"/*",context =>{
-            // 请求日志
-            Console.WriteLine($"接收到请求:{context.Request.Path} ({GetIP(context)})");
-            //_logger.LogInformation($"接收到请求:{context.Request.Path} ({GetIP(context)})");
-          }}
-        });
-      	app.UseEndpoints(endpoints =>
-        {
-          endpoints.MapControllers();
-        });
-    }
-}
-```
-
-2. Swagger
-
-只需在Startup中注入服务即可。
-
-```c#
-public class Startup
-{
-    public void ConfigureServices(IServiceCollection services)
-    {
-        services.AddControllers();
-        services.AddSwagger("v1", "Test", "v1");
-    }
-
-    public void Configure(IApplicationBuilder app)
-    {
-        app.UseRouting();
-        app.UseSwagger("/swagger/v1/swagger.json", "My API V1");
         app.UseEndpoints(endpoints =>
         {
             endpoints.MapControllers();
         });
     }
 }
+```
+
+2. RequestFilter 请求过滤器
+
+```c#
+app.UseRequestFilter(new Dictionary<string, Action<HttpContext>>
+{
+    {"/*",context =>{
+        // 请求日志
+        _logger.LogInformation($"接收到请求:{context.Request.Path} ({GetIP(context)})");
+        // 自定义类型预处理
+        CustomContentTypeHandler(context);
+    }}
+});
 ```

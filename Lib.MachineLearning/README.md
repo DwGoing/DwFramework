@@ -15,8 +15,6 @@ PM> Install-Package DwFramework.MachineLearning
 ```c#
 // 注册服务
 host.RegisterMachineLearningService();
-// 初始化
-var provider = host.Build();
 ```
 
 ### 0x2 关键操作
@@ -128,12 +126,12 @@ Accuracy:100.00%
 AreaUnderRocCurve:100.00%
 F1Score:100.00%
   
-A			B			PredictedRes == item.Res
+A		B		PredictedRes == item.Res
 79		66		True
-86		9			True
+86		9		True
 33		19		True
 63		55		True
-63		0			True
+63		0		True
 74		61		True
 43		40		True
 54		86		True

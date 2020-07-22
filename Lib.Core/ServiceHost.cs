@@ -19,20 +19,25 @@ namespace DwFramework.Core
         private readonly ContainerBuilder _containerBuilder;
         private readonly ServiceCollection _services;
         private readonly List<Action<AutofacServiceProvider>> _initActions;
+        private readonly List<Action<AutofacServiceProvider>> _stopActions;
 
-        public static AutofacServiceProvider Provider;
+        public static Environment Environment { get; private set; }
+        public static AutofacServiceProvider Provider { get; private set; }
 
         /// <summary>
         /// 构造函数
         /// </summary>
+        /// <param name="environmentType"></param>
+        /// <param name="configFilePath"></param>
         public ServiceHost(EnvironmentType environmentType = EnvironmentType.Develop, string configFilePath = null)
         {
             _autoResetEvent = new AutoResetEvent(false);
             _containerBuilder = new ContainerBuilder();
             _services = new ServiceCollection();
             _initActions = new List<Action<AutofacServiceProvider>>();
+            _stopActions = new List<Action<AutofacServiceProvider>>();
             // 环境变量
-            RegisterInstance<IEnvironment, Environment>(new Environment(environmentType, configFilePath)).SingleInstance();
+            Environment = new Environment(environmentType, configFilePath);
         }
 
         /// <summary>
@@ -43,9 +48,9 @@ namespace DwFramework.Core
             _containerBuilder.Populate(_services);
             Provider = new AutofacServiceProvider(_containerBuilder.Build());
             foreach (var item in _initActions) item.Invoke(Provider);
-            Console.WriteLine("Services Is Running,Please Enter \"Ctrl + C\" To Stop!");
+            Console.WriteLine("Services is running,Please enter \"Ctrl + C\" to stop!");
+            Console.CancelKeyPress += (sender, args) => Stop();
             _autoResetEvent.WaitOne();
-            Console.WriteLine("Services Is Stop!");
         }
 
         /// <summary>
@@ -53,6 +58,9 @@ namespace DwFramework.Core
         /// </summary>
         public void Stop()
         {
+            Console.WriteLine("Services is Stopping!");
+            foreach (var item in _stopActions) item.Invoke(Provider);
+            Console.WriteLine("Services is stopped!");
             _autoResetEvent.Set();
         }
 
@@ -64,19 +72,19 @@ namespace DwFramework.Core
         /// <returns></returns>
         public IRegistrationBuilder<T, SimpleActivatorData, SingleRegistrationStyle> Register<T>(Func<IComponentContext, T> func) where T : class
         {
-            return _containerBuilder.Register(func);
+            return _containerBuilder.Register(func).AsSelf();
         }
 
         /// <summary>
         /// 注册服务
         /// </summary>
-        /// <typeparam name="I"></typeparam>
         /// <typeparam name="T"></typeparam>
+        /// <typeparam name="I"></typeparam>
         /// <param name="func"></param>
         /// <returns></returns>
-        public IRegistrationBuilder<T, SimpleActivatorData, SingleRegistrationStyle> Register<I, T>(Func<IComponentContext, T> func) where I : class where T : class
+        public IRegistrationBuilder<T, SimpleActivatorData, SingleRegistrationStyle> Register<T, I>(Func<IComponentContext, T> func) where T : class where I : class
         {
-            return _containerBuilder.Register(func).As<I>();
+            return Register(func).As<I>();
         }
 
         /// <summary>
@@ -105,7 +113,7 @@ namespace DwFramework.Core
         /// <returns></returns>
         public IRegistrationBuilder<T, ConcreteReflectionActivatorData, SingleRegistrationStyle> RegisterType<T>() where T : class
         {
-            return _containerBuilder.RegisterType<T>();
+            return _containerBuilder.RegisterType<T>().AsSelf();
         }
 
         /// <summary>
@@ -115,18 +123,18 @@ namespace DwFramework.Core
         /// <returns></returns>
         public IRegistrationBuilder<object, ConcreteReflectionActivatorData, SingleRegistrationStyle> RegisterType(Type type)
         {
-            return _containerBuilder.RegisterType(type);
+            return _containerBuilder.RegisterType(type).AsSelf();
         }
 
         /// <summary>
         /// 注册服务
         /// </summary>
-        /// <typeparam name="I"></typeparam>
         /// <typeparam name="T"></typeparam>
+        /// <typeparam name="I"></typeparam>
         /// <returns></returns>
-        public IRegistrationBuilder<T, ConcreteReflectionActivatorData, SingleRegistrationStyle> RegisterType<I, T>() where I : class where T : class
+        public IRegistrationBuilder<T, ConcreteReflectionActivatorData, SingleRegistrationStyle> RegisterType<T, I>() where T : class where I : class
         {
-            return _containerBuilder.RegisterType<T>().As<I>();
+            return RegisterType<T>().As<I>();
         }
 
         /// <summary>
@@ -137,19 +145,19 @@ namespace DwFramework.Core
         /// <returns></returns>
         public IRegistrationBuilder<T, SimpleActivatorData, SingleRegistrationStyle> RegisterInstance<T>(T instance) where T : class
         {
-            return _containerBuilder.RegisterInstance(instance);
+            return _containerBuilder.RegisterInstance(instance).AsSelf();
         }
 
         /// <summary>
         /// 注册服务
         /// </summary>
-        /// <typeparam name="I"></typeparam>
         /// <typeparam name="T"></typeparam>
+        /// <typeparam name="I"></typeparam>
         /// <param name="instance"></param>
         /// <returns></returns>
-        public IRegistrationBuilder<T, SimpleActivatorData, SingleRegistrationStyle> RegisterInstance<I, T>(T instance) where I : class where T : class
+        public IRegistrationBuilder<T, SimpleActivatorData, SingleRegistrationStyle> RegisterInstance<T, I>(T instance) where T : class where I : class
         {
-            return _containerBuilder.RegisterInstance(instance).As<I>();
+            return RegisterInstance(instance).As<I>();
         }
 
         /// <summary>
@@ -225,6 +233,34 @@ namespace DwFramework.Core
         public void InitService(Action<AutofacServiceProvider> initAction)
         {
             _initActions.Add(initAction);
+        }
+
+        /// <summary>
+        /// 停止服务
+        /// </summary>
+        /// <param name="stopAction"></param>
+        public void StopService(Action<AutofacServiceProvider> stopAction)
+        {
+            _stopActions.Add(stopAction);
+        }
+
+        /// <summary>
+        /// 创建生命周期
+        /// </summary>
+        /// <returns></returns>
+        public static ILifetimeScope CreateLifetimeScope()
+        {
+            return Provider.LifetimeScope.BeginLifetimeScope();
+        }
+
+        /// <summary>
+        /// 创建生命周期
+        /// </summary>
+        /// <param name="tag"></param>
+        /// <returns></returns>
+        public static ILifetimeScope CreateLifetimeScope(object tag)
+        {
+            return Provider.LifetimeScope.BeginLifetimeScope(tag);
         }
     }
 }

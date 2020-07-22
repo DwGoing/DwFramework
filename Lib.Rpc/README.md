@@ -27,9 +27,6 @@ PM> Install-Package DwFramework.Rpc
 ```c#
 // 注册服务
 host.RegisterRpcService();
-// 初始化
-var provider = host.Build();
-provider.InitRpcServiceAsync();
 ```
 
 ### 0x3 注册Rpc函数
@@ -37,7 +34,7 @@ provider.InitRpcServiceAsync();
 该库支持Hprose.RPC库原生的函数注册方式，可通过如下方式使用：
 
 ```c#
-var rpc = provider.GetService<IRpcService, RpcService>();
+var rpc = provider.GetRpcService();
 // 函数原生注册
 rpc.Service.Add(() => { Console.WriteLine("Hello World!")});
 rpc.Service.Add<{返回类型}>(() => { Console.WriteLine("Hello World!")});

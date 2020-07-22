@@ -29,9 +29,7 @@ PM> Install-Package DwFramework.Database
 ```c#
 // 注册服务
 host.RegisterDatabaseService();
-// 初始化
-var provider = host.Build();
-provider.InitDatabaseServiceAsync();
+host.RegisterRepositories(); // 或者直接注入仓储服务
 ```
 
 ### 0x3 使用仓储模版
@@ -79,7 +77,7 @@ Task<bool> UpdateAsync(T newRecord);
 Task<int> UpdateAsync(T[] newRecords);
 ```
 
-若需要自定义操作或者使用更低层的数据库操作，可以通过基类中的Db来实现。如下面的代码可以实现事务操作：
+若需要自定义操作或者使用更底层的数据库操作，可以通过基类中的Db来实现。如下面的代码可以实现事务操作：
 
 ```c#
 public class UserRepository : BaseRepository<User>

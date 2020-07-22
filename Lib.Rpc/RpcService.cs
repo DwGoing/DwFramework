@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Net;
-using System.Threading.Tasks;
 using System.Reflection;
 
 using Hprose.RPC;
@@ -15,7 +14,7 @@ namespace DwFramework.Rpc
     {
         public class Config
         {
-            public string[] Prefixes { get; set; }
+            public string[] Prefixes { get; set; } = new[] { "http://*:10100" };
         }
 
         private readonly Config _config;
@@ -25,11 +24,9 @@ namespace DwFramework.Rpc
         /// <summary>
         /// 构造函数
         /// </summary>
-        /// <param name="provider"></param>
-        /// <param name="environment"></param>
-        public RpcService(IServiceProvider provider, IEnvironment environment) : base(provider, environment)
+        public RpcService()
         {
-            _config = _environment.GetConfiguration().GetConfig<Config>("Rpc");
+            _config = ServiceHost.Environment.GetConfiguration().GetConfig<Config>("Rpc");
             var listener = new HttpListener();
             foreach (var item in _config.Prefixes)
             {
@@ -49,10 +46,10 @@ namespace DwFramework.Rpc
             var methods = instance.GetType().GetMethods();
             foreach (var item in methods)
             {
-                var attr = item.GetCustomAttribute<RpcAttribute>() as RpcAttribute;
+                var attr = item.GetCustomAttribute<RpcAttribute>();
                 if (attr != null)
                 {
-                    Service.AddMethod(item.Name, instance, attr.CallName ?? "");
+                    Service.Add(item, attr.CallName ?? "", instance);
                 }
             }
         }
@@ -63,14 +60,14 @@ namespace DwFramework.Rpc
         /// <typeparam name="T"></typeparam>
         public void RegisterFuncFromService<T>() where T : class
         {
-            T service = _provider.GetService<T>();
+            T service = ServiceHost.Provider.GetService<T>();
             var methods = service.GetType().GetMethods();
             foreach (var item in methods)
             {
-                var attr = item.GetCustomAttribute<RpcAttribute>() as RpcAttribute;
+                var attr = item.GetCustomAttribute<RpcAttribute>();
                 if (attr != null)
                 {
-                    Service.AddMethod(item.Name, service, attr.CallName ?? "");
+                    Service.Add(item, attr.CallName ?? "", service);
                 }
             }
         }
@@ -81,16 +78,16 @@ namespace DwFramework.Rpc
         /// <typeparam name="I"></typeparam>
         public void RegisterFuncFromServices<I>() where I : class
         {
-            var services = _provider.GetServices<I>();
+            var services = ServiceHost.Provider.GetServices<I>();
             foreach (var service in services)
             {
                 var methods = service.GetType().GetMethods();
-                foreach (var method in methods)
+                foreach (var item in methods)
                 {
-                    var attr = method.GetCustomAttribute<RpcAttribute>() as RpcAttribute;
+                    var attr = item.GetCustomAttribute<RpcAttribute>();
                     if (attr != null)
                     {
-                        Service.AddMethod(method.Name, service, attr.CallName ?? "");
+                        Service.Add(item, attr.CallName ?? "", service);
                     }
                 }
             }
@@ -109,16 +106,16 @@ namespace DwFramework.Rpc
             var types = assembly.GetTypes();
             foreach (var type in types)
             {
-                var typeAttr = type.GetCustomAttribute<RegisterableAttribute>() as RegisterableAttribute;
+                var typeAttr = type.GetCustomAttribute<RegisterableAttribute>();
                 if (typeAttr == null)
                     continue;
                 var methods = type.GetMethods();
-                foreach (var method in methods)
+                foreach (var item in methods)
                 {
-                    var methodAttr = method.GetCustomAttribute<RpcAttribute>() as RpcAttribute;
+                    var methodAttr = item.GetCustomAttribute<RpcAttribute>();
                     if (methodAttr != null)
                     {
-                        Service.AddMethod(method.Name, _provider.GetService(typeAttr.InterfaceType), methodAttr.CallName ?? "");
+                        Service.Add(item, methodAttr.CallName ?? "", ServiceHost.Provider.GetService(typeAttr.InterfaceType));
                     }
                 }
             }
@@ -136,16 +133,16 @@ namespace DwFramework.Rpc
                 var types = assembly.GetTypes();
                 foreach (var type in types)
                 {
-                    var typeAttr = type.GetCustomAttribute<RegisterableAttribute>() as RegisterableAttribute;
+                    var typeAttr = type.GetCustomAttribute<RegisterableAttribute>();
                     if (typeAttr == null)
                         continue;
                     var methods = type.GetMethods();
-                    foreach (var method in methods)
+                    foreach (var item in methods)
                     {
-                        var methodAttr = method.GetCustomAttribute<RpcAttribute>() as RpcAttribute;
+                        var methodAttr = item.GetCustomAttribute<RpcAttribute>();
                         if (methodAttr != null)
                         {
-                            Service.AddMethod(method.Name, _provider.GetService(typeAttr.InterfaceType), methodAttr.CallName ?? "");
+                            Service.Add(item, methodAttr.CallName ?? "", ServiceHost.Provider.GetService(typeAttr.InterfaceType));
                         }
                     }
                 }
