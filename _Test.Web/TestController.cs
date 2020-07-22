@@ -31,7 +31,6 @@ namespace _Test.Web
         }
     }
 
-
     public class Body
     {
         public string Jwt { get; set; }
