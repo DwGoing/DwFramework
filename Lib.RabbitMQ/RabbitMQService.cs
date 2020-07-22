@@ -32,12 +32,12 @@ namespace DwFramework.RabbitMQ
             public string VirtualHost { get; set; } = "/";
             public int ConnectionPoolSize { get; set; } = 3;
         }
-
+        
         private readonly Config _config;
         private readonly ConnectionFactory _connectionFactory;
         private int _connectionPointer = 0;
         private readonly IConnection[] _connectionPool;
-        private readonly byte[] _connectionPoolLock = new byte[0];
+        private static readonly object _connectionPoolLock = new object();
         private Dictionary<string, KeyValuePair<CancellationTokenSource, Task>> _subscribers;
 
 
