@@ -33,7 +33,6 @@ namespace _Test.Web
         public void Configure(IApplicationBuilder app)
         {
             app.UseRouting();
-            //app.UseJwtAuthentication(); // 必须在UseRouting之后
             app.UseSwagger("Doc", "My API V1");
             app.UseRequestFilter(new Dictionary<string, Action<HttpContext>>
             {

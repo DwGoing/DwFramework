@@ -10,6 +10,9 @@ using DwFramework.Web.Plugins;
 
 namespace _Test.Web
 {
+    /// <summary>
+    /// 测试
+    /// </summary>
     [ApiController]
     [Route("test")]
     public class TestController : Controller
