@@ -42,7 +42,10 @@ namespace _Test.Web
                 //        Console.WriteLine($"{c.ID}已断开");
                 //    };
                 //});
-                //provider.InitSocketServiceAsync();
+                //host.InitService(provider =>
+                //{
+                //    provider.InitSocketServiceAsync();
+                //});
                 //System.Threading.Tasks.Task.Run(() => { Thread.Sleep(10000); host.Stop(); });
                 host.Run();
             }
