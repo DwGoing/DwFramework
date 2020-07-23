@@ -14,7 +14,8 @@
       "BufferSize": 100
     },
     "Socket": {
-      "Listen": "0.0.0.0:10100"
+      "Listen": "0.0.0.0:10100",
+      "BufferSize": 1000
     }
   }
 }

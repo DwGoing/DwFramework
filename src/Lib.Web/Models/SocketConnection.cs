@@ -9,17 +9,30 @@ namespace DwFramework.Web
 {
     public class SocketConnection
     {
+        public bool IsClose { get; private set; } = false;
         public readonly string ID;
         public readonly Socket Socket;
+        public byte[] Buffer { get; private set; }
 
         /// <summary>
         /// 构造函数
         /// </summary>
         /// <param name="socket"></param>
-        public SocketConnection(Socket socket)
+        public SocketConnection(Socket socket, int bufferSize)
         {
             ID = EncryptUtil.Md5.Encode(Guid.NewGuid().ToString());
             Socket = socket;
+            Buffer = new byte[bufferSize];
+        }
+
+        /// <summary>
+        /// 检查连接
+        /// </summary>
+        /// <returns></returns>
+        public bool CheckConnection()
+        {
+            if (IsClose) return false;
+            return !Socket.Poll(1000, SelectMode.SelectRead);
         }
 
         /// <summary>
@@ -29,7 +42,7 @@ namespace DwFramework.Web
         /// <returns></returns>
         public Task SendAsync(byte[] buffer)
         {
-            return TaskManager.CreateTask(() => { Socket.Send(new ArraySegment<byte>(buffer)); });
+            return TaskManager.CreateTask(() => Socket.Send(new ArraySegment<byte>(buffer)));
         }
 
         /// <summary>
@@ -49,7 +62,8 @@ namespace DwFramework.Web
         /// <returns></returns>
         public Task CloseAsync()
         {
-            return null;
+            IsClose = true;
+            return TaskManager.CreateTask(() => Socket.Close());
         }
 
         /// <summary>
@@ -57,6 +71,7 @@ namespace DwFramework.Web
         /// </summary>
         public void Dispose()
         {
+            Buffer = null;
             Socket.Dispose();
         }
     }

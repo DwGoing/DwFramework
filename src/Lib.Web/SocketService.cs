@@ -32,21 +32,21 @@ namespace DwFramework.Web
 
         public class OnSendEventargs : EventArgs
         {
-            public string Message { get; private set; }
+            public byte[] Data { get; private set; }
 
-            public OnSendEventargs(string msg)
+            public OnSendEventargs(byte[] data)
             {
-                Message = msg;
+                Data = data;
             }
         }
 
         public class OnReceiveEventargs : EventArgs
         {
-            public string Message { get; private set; }
+            public byte[] Data { get; private set; }
 
-            public OnReceiveEventargs(string msg)
+            public OnReceiveEventargs(byte[] data)
             {
-                Message = msg;
+                Data = data;
             }
         }
 
@@ -67,7 +67,6 @@ namespace DwFramework.Web
 
         private readonly Config _config;
         private readonly Dictionary<string, SocketConnection> _connections;
-        private byte[] _buffer;
         private Socket _server;
 
         public event Action<SocketConnection, OnConnectEventargs> OnConnect;
@@ -83,7 +82,6 @@ namespace DwFramework.Web
         {
             _config = ServiceHost.Environment.GetConfiguration().GetConfig<Config>("Web:Socket");
             _connections = new Dictionary<string, SocketConnection>();
-            _buffer = new byte[_config.BufferSize];
         }
 
         /// <summary>
@@ -99,8 +97,53 @@ namespace DwFramework.Web
                 string[] ipAndPort = _config.Listen.Split(":");
                 _server.Bind(new IPEndPoint(string.IsNullOrEmpty(ipAndPort[0]) ? IPAddress.Any : IPAddress.Parse(ipAndPort[0]), int.Parse(ipAndPort[1])));
                 _server.Listen(_config.BackLog);
+                _server.BeginAccept(OnConnectHandler, _server);
                 Console.WriteLine($"Socket服务已开启 => 监听地址:{_config.Listen}");
             });
+        }
+
+        /// <summary>
+        /// 创建连接处理
+        /// </summary>
+        /// <param name="ar"></param>
+        private void OnConnectHandler(IAsyncResult ar)
+        {
+            var connection = new SocketConnection(_server.EndAccept(ar), _config.BufferSize);
+            _server.BeginAccept(OnConnectHandler, _server);
+            _connections[connection.ID] = connection;
+            OnConnect?.Invoke(connection, new OnConnectEventargs() { });
+            connection.Socket.BeginReceive(connection.Buffer, 0, connection.Buffer.Length, SocketFlags.None, OnReceiveHandler, connection);
+        }
+
+        /// <summary>
+        /// 接收消息处理
+        /// </summary>
+        /// <param name="ar"></param>
+        private void OnReceiveHandler(IAsyncResult ar)
+        {
+            var connection = ar.AsyncState as SocketConnection;
+            if (!connection.CheckConnection())
+            {
+                OnCloseHandler(connection);
+                return;
+            }
+            var len = connection.Socket.EndReceive(ar);
+            var message = Encoding.UTF8.GetString(connection.Buffer, 0, len);
+            var data = new byte[len];
+            Array.Copy(connection.Buffer, data, len);
+            OnReceive?.Invoke(connection, new OnReceiveEventargs(data));
+            connection.Socket.BeginReceive(connection.Buffer, 0, connection.Buffer.Length, SocketFlags.None, OnReceiveHandler, connection);
+        }
+
+        /// <summary>
+        /// 关闭连接处理
+        /// </summary>
+        /// <param name="connection"></param>
+        private void OnCloseHandler(SocketConnection connection)
+        {
+            OnClose?.Invoke(connection, new OnCloceEventargs() { });
+            connection.Dispose();
+            _connections.Remove(connection.ID);
         }
 
         /// <summary>
@@ -112,8 +155,8 @@ namespace DwFramework.Web
         {
             if (!_connections.ContainsKey(id))
                 throw new Exception("该客户端不存在");
-            var client = _connections[id];
-            if (client.Socket.Poll(1000, SelectMode.SelectRead))
+            var connection = _connections[id];
+            if (!connection.CheckConnection())
                 throw new Exception("该客户端状态错误");
         }
 
@@ -128,7 +171,7 @@ namespace DwFramework.Web
             RequireClient(id);
             var connection = _connections[id];
             return connection.SendAsync(buffer)
-                .ContinueWith(a => OnSend?.Invoke(connection, new OnSendEventargs(Encoding.UTF8.GetString(buffer))));
+                .ContinueWith(a => OnSend?.Invoke(connection, new OnSendEventargs(buffer)));
         }
 
         /// <summary>
