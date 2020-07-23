@@ -7,6 +7,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NLog.Extensions.Logging;
 
+using DwFramework.Core.Plugins;
+
 namespace DwFramework.Core.Extensions
 {
     public static class AutofacExtension
@@ -56,6 +58,7 @@ namespace DwFramework.Core.Extensions
             return scope.Resolve<T>();
         }
 
+        #region Plugins
         /// <summary>
         /// 注册Log服务
         /// </summary>
@@ -71,5 +74,17 @@ namespace DwFramework.Core.Extensions
             }));
             return host;
         }
+
+        /// <summary>
+        /// 注册MemoryCache服务
+        /// </summary>
+        /// <param name="builder"></param>
+        /// <returns></returns>
+        public static ServiceHost RegisterMemoryCache(this ServiceHost host)
+        {
+            host.RegisterType<MemoryCache>().SingleInstance();
+            return host;
+        }
+        #endregion
     }
 }
