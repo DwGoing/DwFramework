@@ -6,7 +6,15 @@ namespace DwFramework.Core.Plugins
     {
         public readonly string Key;
         public readonly object Value;
-        public DateTime ExpireAt { get; private set; }
+        public DateTime? ExpireAt { get; private set; } = null;
+        public bool IsExpired
+        {
+            get
+            {
+                if (ExpireAt == null) return false;
+                return ExpireAt <= DateTime.UtcNow;
+            }
+        }
 
         /// <summary>
         /// 构造函数

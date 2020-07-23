@@ -38,7 +38,7 @@ namespace DwFramework.Core.Plugins
                 var keys = _Datas.Keys;
                 foreach (var key in keys)
                 {
-                    if (_Datas[key].ExpireAt <= currentTime)
+                    if (_Datas[key].IsExpired)
                         _Datas.Remove(key);
                 }
                 IsClean = false;
@@ -55,7 +55,7 @@ namespace DwFramework.Core.Plugins
         {
             if (!_Datas.ContainsKey(key)) return default;
             var data = _Datas[key];
-            if (_Datas[key].ExpireAt <= DateTime.UtcNow)
+            if (_Datas[key].IsExpired)
             {
                 _Datas.Remove(key);
                 return default;
