@@ -80,9 +80,9 @@ namespace DwFramework.Core.Extensions
         /// </summary>
         /// <param name="builder"></param>
         /// <returns></returns>
-        public static ServiceHost RegisterMemoryCache(this ServiceHost host)
+        public static ServiceHost RegisterMemoryCache(this ServiceHost host, int storeCount = 6)
         {
-            host.RegisterType<MemoryCache>().SingleInstance();
+            host.RegisterInstance(new MemoryCache(storeCount)).As<ICache>().SingleInstance();
             return host;
         }
         #endregion
