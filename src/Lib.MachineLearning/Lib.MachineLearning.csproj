@@ -1,29 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <TargetFramework>netstandard2.1</TargetFramework>
-    <AssemblyName>DwFramework.MachineLearning</AssemblyName>
-    <RootNamespace>DwFramework.MachineLearning</RootNamespace>
-    <Version>1.2.1.1</Version>
-    <Authors>DwGoing</Authors>
-    <Copyright>DwGoing</Copyright>
-    <Description>DwFramework 机器学习库</Description>
-    <PackageLicenseFile>LICENSE</PackageLicenseFile>
-    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <ReleaseVersion>1.0</ReleaseVersion>
-    <PackageProjectUrl>https://github.com/Dwgoing/DwFramework/tree/master/Lib.MachineLearning</PackageProjectUrl>
-  </PropertyGroup>
-  <ItemGroup>
-    <None Include="..\LICENSE" Link="LICENSE">
-      <Pack>True</Pack>
-      <PackagePath></PackagePath>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="Microsoft.ML" Version="1.5.1" />
-    <PackageReference Include="Microsoft.ML.Recommender" Version="0.17.1" />
-    <PackageReference Include="Microsoft.ML.TimeSeries" Version="1.5.1" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Lib.Core\Lib.Core.csproj" />
-  </ItemGroup>
+    <PropertyGroup>
+        <TargetFramework>netstandard2.1</TargetFramework>
+        <AssemblyName>DwFramework.MachineLearning</AssemblyName>
+        <RootNamespace>DwFramework.MachineLearning</RootNamespace>
+        <Version>1.2.1.1</Version>
+        <Authors>DwGoing</Authors>
+        <Copyright>DwGoing</Copyright>
+        <Description>DwFramework 机器学习库</Description>
+        <PackageLicenseFile>LICENSE</PackageLicenseFile>
+        <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+        <ReleaseVersion>1.0</ReleaseVersion>
+        <PackageProjectUrl>https://github.com/Dwgoing/DwFramework/tree/master/Lib.MachineLearning</PackageProjectUrl>
+    </PropertyGroup>
+    <ItemGroup>
+        <None Include="..\..\LICENSE" Link="LICENSE">
+            <Pack>True</Pack>
+            <PackagePath>
+            </PackagePath>
+        </None>
+    </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Microsoft.ML" Version="1.5.1" />
+        <PackageReference Include="Microsoft.ML.Recommender" Version="0.17.1" />
+        <PackageReference Include="Microsoft.ML.TimeSeries" Version="1.5.1" />
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\Lib.Core\Lib.Core.csproj" />
+    </ItemGroup>
 </Project>

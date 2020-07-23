@@ -1,27 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <TargetFramework>netstandard2.1</TargetFramework>
-    <AssemblyName>DwFramework.Rpc</AssemblyName>
-    <RootNamespace>DwFramework.Rpc</RootNamespace>
-    <Version>1.2.1.2</Version>
-    <Authors>DwGoing</Authors>
-    <Copyright>DwGoing</Copyright>
-    <Description>DwFramework Rpc库</Description>
-    <PackageLicenseFile>LICENSE</PackageLicenseFile>
-    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <ReleaseVersion>1.0</ReleaseVersion>
-    <PackageProjectUrl>https://github.com/Dwgoing/DwFramework/tree/master/Lib.Rpc</PackageProjectUrl>
-  </PropertyGroup>
-  <ItemGroup>
-    <None Include="..\LICENSE" Link="LICENSE">
-      <Pack>True</Pack>
-      <PackagePath></PackagePath>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="Hprose.RPC" Version="3.0.18" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Lib.Core\Lib.Core.csproj" />
-  </ItemGroup>
+    <PropertyGroup>
+        <TargetFramework>netstandard2.1</TargetFramework>
+        <AssemblyName>DwFramework.Rpc</AssemblyName>
+        <RootNamespace>DwFramework.Rpc</RootNamespace>
+        <Version>1.2.1.2</Version>
+        <Authors>DwGoing</Authors>
+        <Copyright>DwGoing</Copyright>
+        <Description>DwFramework Rpc库</Description>
+        <PackageLicenseFile>LICENSE</PackageLicenseFile>
+        <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+        <ReleaseVersion>1.0</ReleaseVersion>
+        <PackageProjectUrl>https://github.com/Dwgoing/DwFramework/tree/master/Lib.Rpc</PackageProjectUrl>
+    </PropertyGroup>
+    <ItemGroup>
+        <None Include="..\..\LICENSE" Link="LICENSE">
+            <Pack>True</Pack>
+            <PackagePath>
+            </PackagePath>
+        </None>
+    </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Hprose.RPC" Version="3.0.18" />
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\Lib.Core\Lib.Core.csproj" />
+    </ItemGroup>
 </Project>

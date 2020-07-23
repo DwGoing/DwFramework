@@ -7,7 +7,6 @@
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DocumentationFile>bin\Debug\netcoreapp3.1\_Test.Web.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <None Update="Config.json">
@@ -19,6 +18,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Lib.Web\Lib.Web.csproj" />
+    <ProjectReference Include="..\..\src\Lib.Web\Lib.Web.csproj" />
   </ItemGroup>
 </Project>
