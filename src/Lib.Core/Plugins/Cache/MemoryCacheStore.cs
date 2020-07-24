@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace DwFramework.Core.Plugins
 {
@@ -109,7 +110,7 @@ namespace DwFramework.Core.Plugins
                 Del(key);
                 return default;
             }
-            if (data.Value.GetType() != typeof(T)) return default;
+            if (data.Value.GetType() is T) return default;
             return (T)data.Value;
         }
 
@@ -144,8 +145,25 @@ namespace DwFramework.Core.Plugins
         {
             var table = Get<Hashtable>(key);
             if (table == null) return default;
-            if (!table.ContainsKey(field) || table[field].GetType() != typeof(T)) return default;
+            if (!table.ContainsKey(field) || table[field].GetType() is T) return default;
             return (T)table[field];
+        }
+
+        /// <summary>
+        /// 获取所有数据（Hash）
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public Dictionary<string, object> HGetAll(string key)
+        {
+            var table = Get<Hashtable>(key);
+            if (table == null) return default;
+            var dic = new Dictionary<string, object>();
+            foreach (DictionaryEntry item in table)
+            {
+                dic.Add((string)item.Key, item.Value);
+            }
+            return dic;
         }
 
         /// <summary>

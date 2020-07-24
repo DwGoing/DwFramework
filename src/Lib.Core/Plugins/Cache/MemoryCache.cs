@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace DwFramework.Core.Plugins
 {
@@ -82,7 +83,7 @@ namespace DwFramework.Core.Plugins
         }
 
         /// <summary>
-        /// 获取数据（Hash）
+        /// 添加数据（Hash）
         /// </summary>
         /// <param name="key"></param>
         /// <param name="field"></param>
@@ -102,6 +103,17 @@ namespace DwFramework.Core.Plugins
         public T HGet<T>(string key, string field)
         {
             return GetMemoryCacheStore(key).HGet<T>(key, field);
+        }
+
+        /// <summary>
+        /// 获取所有数据（Hash）
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public Dictionary<string, object> HGetAll(string key)
+        {
+            return GetMemoryCacheStore(key).HGetAll(key);
         }
 
         /// <summary>

@@ -28,11 +28,14 @@ namespace _Test.Core
                     {
                         using (var scope = ServiceHost.CreateLifetimeScope())
                         {
-                            scope.GetService<A>().AddData();
+                            var cache = scope.GetService<ICache>();
+                            cache.HSet("test", "1", 1);
+                            cache.HSet("test", "2", "2");
                         }
                         using (var scope = ServiceHost.CreateLifetimeScope())
                         {
-                            scope.GetService<A>().GetData();
+                            var cache = scope.GetService<ICache>();
+                            Console.WriteLine(cache.HGetAll("test")["1"].ToJson());
                         }
                     });
                 });
@@ -43,32 +46,6 @@ namespace _Test.Core
                 Console.WriteLine(ex);
             }
             Console.ReadKey();
-        }
-    }
-
-    [Registerable(typeof(A))]
-    public class A
-    {
-        readonly ICache _cache;
-
-        public A(ICache cache)
-        {
-            _cache = cache;
-        }
-
-        public void AddData()
-        {
-            var timer = new DwFramework.Core.Plugins.Timer();
-            for (int i = 0; i < 1000000; i++)
-            {
-                _cache.Set(i.ToString(), i);
-            }
-            Console.WriteLine(timer.GetTotalMilliseconds() + "ms");
-        }
-
-        public void GetData()
-        {
-            Console.WriteLine(_cache.Get<int>("34986"));
         }
     }
 }

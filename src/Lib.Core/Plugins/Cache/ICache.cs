@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace DwFramework.Core.Plugins
 {
@@ -13,6 +14,7 @@ namespace DwFramework.Core.Plugins
         // Hash操作
         public void HSet(string key, string field, object value);
         public T HGet<T>(string key, string field);
+        public Dictionary<string, object> HGetAll(string key);
         public void HDel(string key, string field);
         // 生命周期
         public void SetExpireTime(string key, DateTime expireAt);
