@@ -45,11 +45,12 @@ namespace _Test.Core
         public A(ICache cache)
         {
             _cache = cache;
-            _cache.HSet("hash", "v1", "123");
-            _cache.HSet("hash", "v2", 456);
-            _cache.HDel("hash", "v1");
-            Console.WriteLine(_cache.HGet<string>("hash", "v1"));
-            Console.WriteLine(_cache.HGet<int>("hash", "v2"));
+            var timer = new DwFramework.Core.Plugins.Timer();
+            for (int i = 0; i < 1000000; i++)
+            {
+                _cache.Set(i.ToString(), i);
+            }
+            Console.WriteLine(timer.GetTotalMilliseconds() + "ms");
         }
     }
 }

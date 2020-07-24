@@ -46,24 +46,17 @@ namespace DwFramework.Core.Plugins
         }
 
         /// <summary>
-        /// 添加数据
+        /// 添加数据（对象）
         /// </summary>
         /// <param name="data"></param>
-        private void Set(MemoryCacheData data)
-        {
-            _Datas[data.Key] = data;
-        }
+        private void Set(MemoryCacheData data) => _Datas[data.Key] = data;
 
         /// <summary>
-        /// 获取数据
+        /// 获取数据（对象）
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
-        private MemoryCacheData Get(string key)
-        {
-            if (!_Datas.ContainsKey(key)) return null;
-            return (MemoryCacheData)_Datas[key];
-        }
+        private MemoryCacheData Get(string key) => (MemoryCacheData)_Datas[key];
 
         /// <summary>
         /// 添加数据（对象）
@@ -102,20 +95,6 @@ namespace DwFramework.Core.Plugins
         }
 
         /// <summary>
-        /// 添加数据（Hash）
-        /// </summary>
-        /// <param name="key"></param>
-        /// <param name="field"></param>
-        /// <param name="value"></param>
-        public void HSet(string key, string field, object value)
-        {
-            MemoryCacheData data = Get(key);
-            if (data == null) data = new MemoryCacheData(key, new Hashtable());
-            (data.Value as Hashtable).Add(field, value);
-            Set(data);
-        }
-
-        /// <summary>
         /// 获取数据（对象）
         /// </summary>
         /// <typeparam name="T"></typeparam>
@@ -135,6 +114,26 @@ namespace DwFramework.Core.Plugins
         }
 
         /// <summary>
+        /// 删除数据（对象）
+        /// </summary>
+        /// <param name="key"></param>
+        public void Del(string key) => _Datas.Remove(key);
+
+        /// <summary>
+        /// 添加数据（Hash）
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="field"></param>
+        /// <param name="value"></param>
+        public void HSet(string key, string field, object value)
+        {
+            MemoryCacheData data = Get(key);
+            if (data == null) data = new MemoryCacheData(key, new Hashtable());
+            (data.Value as Hashtable).Add(field, value);
+            Set(data);
+        }
+
+        /// <summary>
         /// 获取数据（Hash）
         /// </summary>
         /// <typeparam name="T"></typeparam>
@@ -150,16 +149,6 @@ namespace DwFramework.Core.Plugins
         }
 
         /// <summary>
-        /// 删除数据（对象）
-        /// </summary>
-        /// <param name="key"></param>
-        public void Del(string key)
-        {
-            if (!_Datas.ContainsKey(key)) return;
-            _Datas.Remove(key);
-        }
-
-        /// <summary>
         /// 删除数据（Hash）
         /// </summary>
         /// <param name="key"></param>
@@ -168,7 +157,6 @@ namespace DwFramework.Core.Plugins
         {
             var table = Get<Hashtable>(key);
             if (table == null) return;
-            if (!table.ContainsKey(field)) return;
             table.Remove(field);
         }
 

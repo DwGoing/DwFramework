@@ -24,7 +24,8 @@ namespace DwFramework.Core.Plugins
         /// <returns></returns>
         private MemoryCacheStore GetMemoryCacheStore(string key)
         {
-            var index = key.GetHashCode() & int.MaxValue % _memoryCacheStores.Length;
+            var hashCode = key.GetHashCode();
+            var index = (hashCode < 0 ? -hashCode : hashCode) % _memoryCacheStores.Length;
             return _memoryCacheStores[index];
         }
 
