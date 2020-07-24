@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 
 namespace DwFramework.Core.Plugins
 {
     public class MemoryCacheStore
     {
-        private readonly Dictionary<string, MemoryCacheData> _Datas;
+        private readonly Hashtable _Datas;
         private readonly System.Timers.Timer _Timer;
         private bool IsClean = false;
 
@@ -15,7 +14,7 @@ namespace DwFramework.Core.Plugins
         /// </summary>
         public MemoryCacheStore()
         {
-            _Datas = new Dictionary<string, MemoryCacheData>();
+            _Datas = new Hashtable();
             _Timer = new System.Timers.Timer(30 * 1000)
             {
                 AutoReset = true
@@ -39,8 +38,8 @@ namespace DwFramework.Core.Plugins
                 var keys = _Datas.Keys;
                 foreach (var key in keys)
                 {
-                    if (_Datas[key].IsExpired)
-                        _Datas.Remove(key);
+                    var data = (MemoryCacheData)_Datas[key];
+                    if (data.IsExpired) Del((string)key);
                 }
                 IsClean = false;
             });
@@ -63,7 +62,7 @@ namespace DwFramework.Core.Plugins
         private MemoryCacheData Get(string key)
         {
             if (!_Datas.ContainsKey(key)) return null;
-            return _Datas[key];
+            return (MemoryCacheData)_Datas[key];
         }
 
         /// <summary>
