@@ -128,7 +128,7 @@ namespace DwFramework.Core.Plugins
         public void HSet(string key, string field, object value)
         {
             MemoryCacheData data = Get(key);
-            if (data == null) data = new MemoryCacheData(key, new Hashtable());
+            if (data == null) data = new MemoryCacheData(key, Hashtable.Synchronized(new Hashtable()));
             (data.Value as Hashtable).Add(field, value);
             Set(data);
         }
