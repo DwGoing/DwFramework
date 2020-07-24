@@ -16,45 +16,7 @@ PM> Install-Package DwFramework.Core
 ServiceHost host = new ServiceHost(EnvironmentType.Develop, $"配置文件路径");
 ```
 
-### 0x2 内置服务
-
-1. 如果需要记录日志的话，我们提供了NLog组件来满足，只需在注册了NLog服务后在运行根目录中创建nlog.config文件即可。
-
-```c#
-// 注册Log组件
-host.RegisterLog();
-```
-
-NLog.config示例
-
-```xml
-<?xml version="1.0" encoding="utf-8"?>
-<nlog xmlns="http://www.nlog-project.org/schemas/NLog.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-    <extensions>
-        <add assembly="NLog.MailKit" />
-    </extensions>
-    <targets>
-        <!--使用可自定义的着色将日志消息写入控制台-->
-        <target name="ColorConsole" xsi:type="ColoredConsole" layout="[${level}] ${date:format=yyyy\-MM\-dd HH\:mm\:ss}:${message} ${exception:format=message}" />
-        <target name="Mail" xsi:type="Mail" smtpServer="smtp.mxhichina.com" smtpPort="465" smtpAuthentication="Basic" smtpUserName="账号" smtpPassword="密码" enableSsl="true" addNewLines="true" from="斑码网络&lt;bancode@bancode.net&gt;"
-            to="260049383@qq.com" subject="邮件主题" header="===============" body="${newline}${message}${newline}" footer="================" />
-        <!--此部分中的所有目标将自动异步-->
-        <target name="AsyncFile" xsi:type="AsyncWrapper">
-            <!--项目日志保存文件路径说明fileName="${basedir}/保存目录，以年月日的格式创建/${shortdate}/${记录器名称}-${单级记录}-${shortdate}.txt"-->
-            <target name="log_file" xsi:type="File" fileName="${basedir}/Logs/${shortdate}/${logger}/${level}.txt" layout="[${level}] ${longdate} | ${message} ${onexception:${exception:format=message} ${newline} ${stacktrace} ${newline}" archiveFileName="${basedir}/archives/${logger}-${level}-${shortdate}-{#####}.txt" archiveAboveSize="102400" archiveNumbering="Sequence" concurrentWrites="true" keepFileOpen="false" />
-        </target>
-    </targets>
-    <!--规则配置,final - 最终规则匹配后不处理任何规则-->
-    <rules>
-        <logger name="*" minlevel="Debug" writeTo="ColorConsole" />
-        <logger name="*" minlevel="Info" writeTo="Mail" />
-        <logger name="*" minlevel="Info" writeTo="AsyncFile" />
-        <logger name="Microsoft.*" minlevel="Info" writeTo="" final="true" />
-    </rules>
-</nlog>
-```
-
-### 0x3 服务注入
+### 0x2 服务注入
 
 ServiceHost提供了多种方式的服务注入，也是对Autofac的服务注入作了一定程度的封装，尽可能地使注入方式更容易让人理解其内部实现。为了方便后面的案例说明，我们先定义示例中使用到的接口和类型。类型TestClass1和TestCless2均实现了接口ITestInterface。
 
@@ -138,7 +100,11 @@ host.RegisterType<TestClass1>().As<ITestInterface>(); // Autofac原生模式
 host.RegisterType<TestClass2, ITestInterface>();
 ```
 
-### 0x4 使用拦截器
+### 0x3 使用插件
+
+核心服务中内置了很多插件，为开发者提供便利。
+
+##### 0x1 拦截器
 
 ```c#
 public interface ITest
@@ -180,3 +146,71 @@ host.InitService(provider=>{
 });
 host.Run();
 ```
+
+##### 0x2 NLog
+
+```c#
+// 注册Log组件
+host.RegisterLog();
+```
+
+```xml
+<!-- NLog.config示例 -->
+<?xml version="1.0" encoding="utf-8"?>
+<nlog xmlns="http://www.nlog-project.org/schemas/NLog.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <extensions>
+        <add assembly="NLog.MailKit" />
+    </extensions>
+    <targets>
+        <!--使用可自定义的着色将日志消息写入控制台-->
+        <target name="ColorConsole" xsi:type="ColoredConsole" layout="[${level}] ${date:format=yyyy\-MM\-dd HH\:mm\:ss}:${message} ${exception:format=message}" />
+        <target name="Mail" xsi:type="Mail" smtpServer="smtp.mxhichina.com" smtpPort="465" smtpAuthentication="Basic" smtpUserName="账号" smtpPassword="密码" enableSsl="true" addNewLines="true" from="斑码网络&lt;bancode@bancode.net&gt;"
+            to="***@***" subject="邮件主题" header="===============" body="${newline}${message}${newline}" footer="================" />
+        <!--此部分中的所有目标将自动异步-->
+        <target name="AsyncFile" xsi:type="AsyncWrapper">
+            <!--项目日志保存文件路径说明fileName="${basedir}/保存目录，以年月日的格式创建/${shortdate}/${记录器名称}-${单级记录}-${shortdate}.txt"-->
+            <target name="log_file" xsi:type="File" fileName="${basedir}/Logs/${shortdate}/${logger}/${level}.txt" layout="[${level}] ${longdate} | ${message} ${onexception:${exception:format=message} ${newline} ${stacktrace} ${newline}" archiveFileName="${basedir}/archives/${logger}-${level}-${shortdate}-{#####}.txt" archiveAboveSize="102400" archiveNumbering="Sequence" concurrentWrites="true" keepFileOpen="false" />
+        </target>
+    </targets>
+    <!--规则配置,final - 最终规则匹配后不处理任何规则-->
+    <rules>
+        <logger name="*" minlevel="Debug" writeTo="ColorConsole" />
+        <logger name="*" minlevel="Info" writeTo="Mail" />
+        <logger name="*" minlevel="Info" writeTo="AsyncFile" />
+        <logger name="Microsoft.*" minlevel="Info" writeTo="" final="true" />
+    </rules>
+</nlog>
+```
+
+##### 0x3 MemoryCache
+
+```c#
+// 注册MemoryCache服务
+// Hash容器数量默认为6，可根据主机配置设置
+host.RegisterMemoryCache({Hash容器数量}, {是否为全局缓存}});
+
+// 在实例中使用
+public class A
+{
+  private readonly ICache _cache;
+  
+  public A(ICache cache)
+  {
+    _cache = cache;
+    var timer = new DwFramework.Core.Plugins.Timer();
+    for (int i = 0; i < 1000000; i++)
+    {
+      // 插入数据
+      _cache.Set(i.ToString(), i);
+    }
+    Console.WriteLine(timer.GetTotalMilliseconds() + "ms");
+    for (int i = 0; i < 1000000; i++)
+    {
+      // 获取数据
+      _cache.Get<int>(i.ToString());
+    }
+    Console.WriteLine(timer.GetTotalMilliseconds() + "ms");
+  }
+}
+```
+
