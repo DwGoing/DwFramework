@@ -14,7 +14,7 @@ namespace DwFramework.Core.Plugins
         /// </summary>
         public MemoryCacheStore()
         {
-            _Datas = new Hashtable();
+            _Datas = Hashtable.Synchronized(new Hashtable());
             _Timer = new System.Timers.Timer(30 * 1000)
             {
                 AutoReset = true

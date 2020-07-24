@@ -59,7 +59,7 @@ namespace _Test.Core
         public void AddData()
         {
             var timer = new DwFramework.Core.Plugins.Timer();
-            for (int i = 0; i < 100000; i++)
+            for (int i = 0; i < 1000000; i++)
             {
                 _cache.Set(i.ToString(), i);
             }

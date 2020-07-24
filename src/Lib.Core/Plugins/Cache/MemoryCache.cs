@@ -61,11 +61,6 @@ namespace DwFramework.Core.Plugins
             GetMemoryCacheStore(key).Set(key, value, expireTime);
         }
 
-        public void HSet(string key, string field, object value)
-        {
-            GetMemoryCacheStore(key).HSet(key, field, value);
-        }
-
         /// <summary>
         /// 获取数据（对象）
         /// </summary>
@@ -77,11 +72,6 @@ namespace DwFramework.Core.Plugins
             return GetMemoryCacheStore(key).Get<T>(key);
         }
 
-        public T HGet<T>(string key, string field)
-        {
-            return GetMemoryCacheStore(key).HGet<T>(key, field);
-        }
-
         /// <summary>
         /// 删除数据（对象）
         /// </summary>
@@ -89,6 +79,29 @@ namespace DwFramework.Core.Plugins
         public void Del(string key)
         {
             GetMemoryCacheStore(key).Del(key);
+        }
+
+        /// <summary>
+        /// 获取数据（Hash）
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="field"></param>
+        /// <param name="value"></param>
+        public void HSet(string key, string field, object value)
+        {
+            GetMemoryCacheStore(key).HSet(key, field, value);
+        }
+
+        /// <summary>
+        /// 获取数据（Hash）
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="key"></param>
+        /// <param name="field"></param>
+        /// <returns></returns>
+        public T HGet<T>(string key, string field)
+        {
+            return GetMemoryCacheStore(key).HGet<T>(key, field);
         }
 
         /// <summary>
