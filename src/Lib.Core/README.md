@@ -190,27 +190,32 @@ host.RegisterLog();
 host.RegisterMemoryCache({Hash容器数量}, {是否为全局缓存}});
 
 // 在实例中使用
+[Registerable(typeof(A))]
 public class A
 {
-  private readonly ICache _cache;
+    readonly ICache _cache;
+
+    public A(ICache cache)
+    {
+        _cache = cache;
+    }
   
-  public A(ICache cache)
-  {
-    _cache = cache;
-    var timer = new DwFramework.Core.Plugins.Timer();
-    for (int i = 0; i < 1000000; i++)
+    public void AddData()
     {
-      // 插入数据
-      _cache.Set(i.ToString(), i);
+        var timer = new DwFramework.Core.Plugins.Timer();
+        for (int i = 0; i < 1000000; i++)
+        {
+            // 插入数据
+            _cache.Set(i.ToString(), i);
+        }
+        Console.WriteLine(timer.GetTotalMilliseconds() + "ms");
     }
-    Console.WriteLine(timer.GetTotalMilliseconds() + "ms");
-    for (int i = 0; i < 1000000; i++)
+
+    public void GetData()
     {
-      // 获取数据
-      _cache.Get<int>(i.ToString());
+        // 获取数据
+        Console.WriteLine(_cache.Get<int>("34986"));
     }
-    Console.WriteLine(timer.GetTotalMilliseconds() + "ms");
-  }
 }
 ```
 
