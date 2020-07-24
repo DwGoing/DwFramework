@@ -51,6 +51,11 @@ namespace _Test.Core
                 _cache.Set(i.ToString(), i);
             }
             Console.WriteLine(timer.GetTotalMilliseconds() + "ms");
+            for (int i = 0; i < 1000000; i++)
+            {
+                _cache.Get<int>(i.ToString());
+            }
+            Console.WriteLine(timer.GetTotalMilliseconds() + "ms");
         }
     }
 }
