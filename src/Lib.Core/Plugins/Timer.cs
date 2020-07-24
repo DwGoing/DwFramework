@@ -4,7 +4,16 @@ namespace DwFramework.Core.Plugins
 {
     public class Timer
     {
-        public DateTime? StartTime { get; private set; } = null;
+        public DateTime StartTime { get; private set; }
+
+        /// <summary>
+        /// 构造函数
+        /// </summary>
+        /// <param name="startTime"></param>
+        public Timer(DateTime? startTime = null)
+        {
+            SetStartTime(startTime);
+        }
 
         /// <summary>
         /// 设置开始时间
@@ -12,7 +21,7 @@ namespace DwFramework.Core.Plugins
         /// <param name="startTime"></param>
         public void SetStartTime(DateTime? startTime = null)
         {
-            StartTime = startTime ?? DateTime.UtcNow;
+            StartTime = startTime.HasValue ? startTime.Value.ToUniversalTime() : DateTime.UtcNow;
         }
 
         /// <summary>
@@ -21,8 +30,7 @@ namespace DwFramework.Core.Plugins
         /// <returns></returns>
         public long GetTotalMilliseconds()
         {
-            if (!StartTime.HasValue) throw new Exception("未设置开始时间");
-            return (long)(DateTime.UtcNow - StartTime.Value.ToUniversalTime()).TotalMilliseconds;
+            return (long)(DateTime.UtcNow - StartTime).TotalMilliseconds;
         }
 
         /// <summary>
@@ -36,7 +44,15 @@ namespace DwFramework.Core.Plugins
 
         public static class Static
         {
-            public static DateTime? StartTime { get; private set; } = null;
+            public static DateTime StartTime { get; private set; }
+
+            /// <summary>
+            /// 构造函数
+            /// </summary>
+            static Static()
+            {
+                SetStartTime(DateTime.Now);
+            }
 
             /// <summary>
             /// 设置开始时间
@@ -44,7 +60,7 @@ namespace DwFramework.Core.Plugins
             /// <param name="startTime"></param>
             public static void SetStartTime(DateTime? startTime = null)
             {
-                StartTime = startTime ?? DateTime.UtcNow;
+                StartTime = startTime.HasValue ? startTime.Value.ToUniversalTime() : DateTime.UtcNow;
             }
 
             /// <summary>
@@ -53,8 +69,7 @@ namespace DwFramework.Core.Plugins
             /// <returns></returns>
             public static long GetTotalMilliseconds()
             {
-                if (!StartTime.HasValue) throw new Exception("未设置开始时间");
-                return (long)(DateTime.UtcNow - StartTime.Value.ToUniversalTime()).TotalMilliseconds;
+                return (long)(DateTime.UtcNow - StartTime).TotalMilliseconds;
             }
 
             /// <summary>
