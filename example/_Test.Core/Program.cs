@@ -45,15 +45,11 @@ namespace _Test.Core
         public A(ICache cache)
         {
             _cache = cache;
-            _cache.Set("1", 123, TimeSpan.FromSeconds(10));
-            TaskManager.CreateTask(() =>
-            {
-                while (true)
-                {
-                    Thread.Sleep(1000);
-                    Console.WriteLine(cache.Get<int>("1"));
-                }
-            });
+            _cache.HSet("hash", "v1", "123");
+            _cache.HSet("hash", "v2", 456);
+            _cache.HDel("hash", "v1");
+            Console.WriteLine(_cache.HGet<string>("hash", "v1"));
+            Console.WriteLine(_cache.HGet<int>("hash", "v2"));
         }
     }
 }
