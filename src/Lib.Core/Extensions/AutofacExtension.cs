@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NLog.Extensions.Logging;
 
+using DwFramework.Core;
 using DwFramework.Core.Plugins;
 
 namespace DwFramework.Core.Extensions
@@ -73,6 +74,17 @@ namespace DwFramework.Core.Extensions
                 builder.AddNLog();
             }));
             return host;
+        }
+
+        /// <summary>
+        /// 获取Log服务
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="provider"></param>
+        /// <returns></returns>
+        public static ILogger<T> GetLogger<T>(this IServiceProvider provider)
+        {
+            return provider.GetService<ILogger<T>>();
         }
 
         /// <summary>

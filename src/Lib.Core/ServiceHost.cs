@@ -37,7 +37,8 @@ namespace DwFramework.Core
             _initActions = new List<Action<AutofacServiceProvider>>();
             _stopActions = new List<Action<AutofacServiceProvider>>();
             // 环境变量
-            Environment = new Environment(environmentType, configFilePath);
+            Environment = new Environment(environmentType);
+            if (configFilePath != null) Environment.LoadConfiguration("ServiceHost", configFilePath);
         }
 
         /// <summary>

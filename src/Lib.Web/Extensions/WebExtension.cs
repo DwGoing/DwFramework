@@ -15,7 +15,7 @@ namespace DwFramework.Web.Extensions
         /// <param name="host"></param>
         public static void RegisterWebService<T>(this ServiceHost host) where T : class
         {
-            RequireT(typeof(T));
+            RequireType(typeof(T));
             host.RegisterType<T>().SingleInstance();
         }
 
@@ -63,7 +63,7 @@ namespace DwFramework.Web.Extensions
         /// <returns></returns>
         public static T GetWebService<T>(this IServiceProvider provider) where T : class
         {
-            RequireT(typeof(T));
+            RequireType(typeof(T));
             return provider.GetService<T>();
         }
 
@@ -71,7 +71,7 @@ namespace DwFramework.Web.Extensions
         /// 类型验证
         /// </summary>
         /// <param name="type"></param>
-        private static void RequireT(Type type)
+        private static void RequireType(Type type)
         {
             var services = new Type[] {
                 typeof(HttpService),

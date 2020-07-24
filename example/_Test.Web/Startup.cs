@@ -8,8 +8,11 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Ocelot.DependencyInjection;
+using Ocelot.Middleware;
 
-using DwFramework.Core.Plugins;
+using DwFramework.Core;
+using DwFramework.Core.Extensions;
 using DwFramework.Web;
 using DwFramework.Web.Plugins;
 
@@ -19,15 +22,15 @@ namespace _Test.Web
     {
         private readonly ILogger<Startup> _logger;
 
-        public Startup(ILogger<Startup> logger)
+        public Startup()
         {
-            _logger = logger;
+            _logger = ServiceHost.Provider.GetLogger<Startup>();
         }
 
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            services.AddSwagger("Doc", "Test", "v1", xmlPath: $"{AppDomain.CurrentDomain.BaseDirectory}_Test.Web.xml");
+            services.AddSwagger("Doc", "Test", "v1");
         }
 
         public void Configure(IApplicationBuilder app)
@@ -38,8 +41,8 @@ namespace _Test.Web
             {
                 {"/*",context =>{
                     // 请求日志
-                    Console.WriteLine($"接收到请求:{context.Request.Path} ({GetIP(context)})");
-                    //_logger.LogInformation($"接收到请求:{context.Request.Path} ({GetIP(context)})");
+                    //Console.WriteLine($"接收到请求:{context.Request.Path} ({GetIP(context)})");
+                    _logger.LogInformation($"接收到请求:{context.Request.Path} ({GetIP(context)})");
                 }}
             });
             app.UseEndpoints(endpoints =>

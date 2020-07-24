@@ -26,7 +26,7 @@ namespace DwFramework.Rpc
         /// </summary>
         public RpcService()
         {
-            _config = ServiceHost.Environment.GetConfiguration().GetConfig<Config>("Rpc");
+            _config = ServiceHost.Environment.GetConfiguration("ServiceHost").GetConfig<Config>("Rpc");
             var listener = new HttpListener();
             foreach (var item in _config.Prefixes)
             {

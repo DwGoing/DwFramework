@@ -46,7 +46,7 @@ namespace DwFramework.RabbitMQ
         /// </summary>
         public RabbitMQService()
         {
-            _config = ServiceHost.Environment.GetConfiguration().GetConfig<Config>("RabbitMQ");
+            _config = ServiceHost.Environment.GetConfiguration("ServiceHost").GetConfig<Config>("RabbitMQ");
             _connectionFactory = new ConnectionFactory()
             {
                 HostName = _config.Host,

@@ -26,7 +26,7 @@ namespace DwFramework.Web
         /// </summary>
         public HttpService()
         {
-            _config = ServiceHost.Environment.GetConfiguration().GetConfig<Config>("Web:Http");
+            _config = ServiceHost.Environment.GetConfiguration("ServiceHost").GetConfig<Config>("Web:Http");
         }
 
         /// <summary>

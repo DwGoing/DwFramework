@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Collections.Generic;
 
 using Microsoft.Extensions.Configuration;
 
@@ -14,30 +15,46 @@ namespace DwFramework.Core
     public class Environment
     {
         private readonly EnvironmentType _environmentType;
-        private readonly IConfiguration _configuration;
+        private readonly Dictionary<string, IConfiguration> _configurations = new Dictionary<string, IConfiguration>();
 
-        public readonly string ConfigFilePath;
-
-        public Environment(EnvironmentType environmentType, string configFilePath = null)
+        /// <summary>
+        /// 构造函数
+        /// </summary>
+        /// <param name="environmentType"></param>
+        public Environment(EnvironmentType environmentType)
         {
             _environmentType = environmentType;
-            if (configFilePath != null && File.Exists(configFilePath))
-            {
-                ConfigFilePath = configFilePath;
-                _configuration = new ConfigurationBuilder().AddJsonFile(configFilePath).Build();
-            }
         }
 
+        /// <summary>
+        /// 获取环境类型
+        /// </summary>
+        /// <returns></returns>
         public EnvironmentType GetEnvironmentType()
         {
             return _environmentType;
         }
 
-        public IConfiguration GetConfiguration()
+        /// <summary>
+        /// 添加配置
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="configFilePath"></param>
+        public void LoadConfiguration(string key, string configFilePath)
         {
-            if (_configuration == null)
-                throw new Exception("未读取到配置");
-            return _configuration;
+            if (key == "ServiceHost") throw new Exception("ServiceHost为系统保留Key");
+            if (File.Exists(configFilePath)) _configurations[key] = new ConfigurationBuilder().AddJsonFile(configFilePath).Build();
+        }
+
+        /// <summary>
+        /// 获取配置
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public IConfiguration GetConfiguration(string key)
+        {
+            if (!_configurations.ContainsKey(key)) throw new Exception("未读取到配置");
+            return _configurations[key];
         }
     }
 }

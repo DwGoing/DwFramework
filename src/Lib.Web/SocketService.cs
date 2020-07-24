@@ -75,7 +75,7 @@ namespace DwFramework.Web
         /// </summary>
         public SocketService()
         {
-            _config = ServiceHost.Environment.GetConfiguration().GetConfig<Config>("Web:Socket");
+            _config = ServiceHost.Environment.GetConfiguration("ServiceHost").GetConfig<Config>("Web:Socket");
             _connections = new Dictionary<string, SocketConnection>();
         }
 
