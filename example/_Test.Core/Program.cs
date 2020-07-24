@@ -22,6 +22,11 @@ namespace _Test.Core
                 var host = new ServiceHost();
                 host.RegisterMemoryCache(3);
                 host.RegisterFromAssemblies();
+                TaskManager.CreateTask(() =>
+                {
+                    Thread.Sleep(5000);
+                    ServiceHost.Provider.GetService<B>().T();
+                });
                 host.Run();
 
                 //var value = @"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";
@@ -40,7 +45,7 @@ namespace _Test.Core
     [Registerable(typeof(A), Lifetime.Singleton, isAutoActivate: true)]
     public class A
     {
-        ICache _cache;
+        readonly ICache _cache;
 
         public A(ICache cache)
         {
@@ -51,11 +56,23 @@ namespace _Test.Core
                 _cache.Set(i.ToString(), i);
             }
             Console.WriteLine(timer.GetTotalMilliseconds() + "ms");
-            for (int i = 0; i < 1000000; i++)
-            {
-                _cache.Get<int>(i.ToString());
-            }
-            Console.WriteLine(timer.GetTotalMilliseconds() + "ms");
+            Console.WriteLine(_cache.Get<int>("934986"));
+        }
+    }
+
+    [Registerable(typeof(B), Lifetime.Singleton)]
+    public class B
+    {
+        readonly ICache _cache;
+
+        public B(ICache cache)
+        {
+            _cache = cache;
+        }
+
+        public void T()
+        {
+            Console.WriteLine(_cache.Get<int>("934986"));
         }
     }
 }

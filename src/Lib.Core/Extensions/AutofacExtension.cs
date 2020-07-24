@@ -78,11 +78,14 @@ namespace DwFramework.Core.Extensions
         /// <summary>
         /// 注册MemoryCache服务
         /// </summary>
-        /// <param name="builder"></param>
+        /// <param name="host"></param>
+        /// <param name="storeCount"></param>
+        /// <param name="isGlobal"></param>
         /// <returns></returns>
-        public static ServiceHost RegisterMemoryCache(this ServiceHost host, int storeCount = 6)
+        public static ServiceHost RegisterMemoryCache(this ServiceHost host, int storeCount = 6, bool isGlobal = true)
         {
-            host.RegisterInstance(new MemoryCache(storeCount)).As<ICache>().SingleInstance();
+            var builder = host.Register(context => new MemoryCache(storeCount)).As<ICache>();
+            if (isGlobal) builder.SingleInstance();
             return host;
         }
         #endregion
