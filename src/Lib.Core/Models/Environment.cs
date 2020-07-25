@@ -21,9 +21,11 @@ namespace DwFramework.Core
         /// 构造函数
         /// </summary>
         /// <param name="environmentType"></param>
-        public Environment(EnvironmentType environmentType)
+        /// <param name="configFilePath"></param>
+        public Environment(EnvironmentType environmentType, string configFilePath = null)
         {
             _environmentType = environmentType;
+            if (configFilePath != null && File.Exists(configFilePath)) _configurations["ServiceHost"] = new ConfigurationBuilder().AddJsonFile(configFilePath).Build();
         }
 
         /// <summary>
@@ -40,10 +42,16 @@ namespace DwFramework.Core
         /// </summary>
         /// <param name="key"></param>
         /// <param name="configFilePath"></param>
-        public void LoadConfiguration(string key, string configFilePath)
+        public IConfiguration LoadConfiguration(string key, string configFilePath)
         {
             if (key == "ServiceHost") throw new Exception("ServiceHost为系统保留Key");
-            if (File.Exists(configFilePath)) _configurations[key] = new ConfigurationBuilder().AddJsonFile(configFilePath).Build();
+            IConfiguration config = null;
+            if (File.Exists(configFilePath))
+            {
+                config = new ConfigurationBuilder().AddJsonFile(configFilePath).Build();
+                _configurations[key] = config;
+            }
+            return config;
         }
 
         /// <summary>

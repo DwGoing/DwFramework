@@ -8,8 +8,6 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Ocelot.DependencyInjection;
-using Ocelot.Middleware;
 
 using DwFramework.Core;
 using DwFramework.Core.Extensions;
@@ -29,6 +27,7 @@ namespace _Test.Web
 
         public void ConfigureServices(IServiceCollection services)
         {
+            //services.AddOcelot($"{AppDomain.CurrentDomain.BaseDirectory}Ocelot.json");
             services.AddControllers();
             services.AddSwagger("Doc", "Test", "v1");
         }

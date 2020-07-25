@@ -50,16 +50,6 @@ namespace DwFramework.Web
 
         }
 
-        public class OnErrorEventargs : EventArgs
-        {
-            public Exception Exception { get; private set; }
-
-            public OnErrorEventargs(Exception exception)
-            {
-                Exception = exception;
-            }
-        }
-
         private readonly Config _config;
         private readonly Dictionary<string, SocketConnection> _connections;
         private Socket _server;
@@ -68,7 +58,6 @@ namespace DwFramework.Web
         public event Action<SocketConnection, OnSendEventargs> OnSend;
         public event Action<SocketConnection, OnReceiveEventargs> OnReceive;
         public event Action<SocketConnection, OnCloceEventargs> OnClose;
-        public event Action<SocketConnection, OnErrorEventargs> OnError;
 
         /// <summary>
         /// 构造函数
