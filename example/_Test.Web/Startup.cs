@@ -27,7 +27,6 @@ namespace _Test.Web
 
         public void ConfigureServices(IServiceCollection services)
         {
-            //services.AddOcelot($"{AppDomain.CurrentDomain.BaseDirectory}Ocelot.json");
             services.AddControllers();
             services.AddSwagger("Doc", "Test", "v1");
         }
