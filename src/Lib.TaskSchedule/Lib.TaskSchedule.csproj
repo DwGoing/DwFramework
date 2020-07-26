@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <TargetFramework>netstandard2.1</TargetFramework>
@@ -22,7 +22,7 @@
         </None>
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="Quartz" Version="3.0.7" />
+        <PackageReference Include="Quartz" Version="3.1.0" />
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\Lib.Core\Lib.Core.csproj" />
