@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Net;
 using System.Linq;
@@ -11,7 +10,6 @@ using Microsoft.Extensions.Logging;
 
 using DwFramework.Core;
 using DwFramework.Core.Extensions;
-using DwFramework.Web;
 using DwFramework.Web.Plugins;
 
 namespace _Test.Web

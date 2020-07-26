@@ -24,7 +24,6 @@
         <PackageReference Include="Microsoft.AspNetCore.Hosting" Version="2.2.7" />
         <PackageReference Include="Microsoft.AspNetCore.Server.Kestrel" Version="2.2.0" />
         <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.7.1" />
-        <PackageReference Include="Ocelot" Version="13.5.2" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="5.5.1" />
         <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.7.1" />
         <PackageReference Include="Microsoft.AspNetCore.WebSockets" Version="2.2.1" />
