@@ -5,20 +5,20 @@ using System.Threading.Tasks;
 
 using DwFramework.Core.Plugins;
 
-namespace DwFramework.Web
+namespace DwFramework.Socket
 {
     public class SocketConnection
     {
         public bool IsClose { get; private set; } = false;
         public readonly string ID;
-        public readonly Socket Socket;
+        public readonly System.Net.Sockets.Socket Socket;
         public byte[] Buffer { get; private set; }
 
         /// <summary>
         /// 构造函数
         /// </summary>
         /// <param name="socket"></param>
-        public SocketConnection(Socket socket, int bufferSize)
+        public SocketConnection(System.Net.Sockets.Socket socket, int bufferSize)
         {
             ID = EncryptUtil.Md5.Encode(Guid.NewGuid().ToString());
             Socket = socket;

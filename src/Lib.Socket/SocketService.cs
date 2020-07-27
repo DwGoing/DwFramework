@@ -9,7 +9,7 @@ using DwFramework.Core;
 using DwFramework.Core.Plugins;
 using DwFramework.Core.Extensions;
 
-namespace DwFramework.Web
+namespace DwFramework.Socket
 {
     public class SocketService : BaseService
     {
@@ -52,7 +52,7 @@ namespace DwFramework.Web
 
         private readonly Config _config;
         private readonly Dictionary<string, SocketConnection> _connections;
-        private Socket _server;
+        private System.Net.Sockets.Socket _server;
 
         public event Action<SocketConnection, OnConnectEventargs> OnConnect;
         public event Action<SocketConnection, OnSendEventargs> OnSend;
@@ -64,7 +64,7 @@ namespace DwFramework.Web
         /// </summary>
         public SocketService()
         {
-            _config = ServiceHost.Environment.GetConfiguration("ServiceHost").GetConfig<Config>("Web:Socket");
+            _config = ServiceHost.Environment.GetConfiguration("ServiceHost").GetConfig<Config>("Socket");
             _connections = new Dictionary<string, SocketConnection>();
         }
 
@@ -76,7 +76,7 @@ namespace DwFramework.Web
         {
             return TaskManager.CreateTask(() =>
             {
-                _server = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                _server = new System.Net.Sockets.Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
                 if (_config.Listen == null) throw new Exception("缺少Listen配置");
                 string[] ipAndPort = _config.Listen.Split(":");
                 _server.Bind(new IPEndPoint(string.IsNullOrEmpty(ipAndPort[0]) ? IPAddress.Any : IPAddress.Parse(ipAndPort[0]), int.Parse(ipAndPort[1])));
