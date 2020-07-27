@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Threading;
-using System.Net;
 using System.Text;
 
 using DwFramework.Core;
-using DwFramework.Core.Plugins;
 using DwFramework.Core.Extensions;
-using DwFramework.Socket;
 using DwFramework.Socket.Extensions;
 
 namespace _Test.Socket
@@ -29,7 +25,7 @@ namespace _Test.Socket
                     };
                     service.OnSend += (c, a) =>
                     {
-                        Console.WriteLine($"向{c.ID}消息：{Encoding.UTF8.GetString(a.Data)}");
+                        Console.WriteLine($"向{c.ID}发送消息：{Encoding.UTF8.GetString(a.Data)}");
                     };
                     service.OnReceive += (c, a) =>
                     {

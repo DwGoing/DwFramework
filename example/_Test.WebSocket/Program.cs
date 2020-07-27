@@ -25,7 +25,7 @@ namespace _Test.WebSocket
                     };
                     service.OnSend += (c, a) =>
                     {
-                        Console.WriteLine($"向{c.ID}消息：{a.Message}");
+                        Console.WriteLine($"向{c.ID}发送消息：{a.Message}");
                     };
                     service.OnReceive += (c, a) =>
                     {
