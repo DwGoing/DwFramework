@@ -16,4 +16,14 @@
 </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Lib.Core\Lib.Core.csproj" />
+    <ProjectReference Include="..\..\src\Lib.Database\Lib.Database.csproj" />
+    <ProjectReference Include="..\..\src\Lib.DataFlow\Lib.DataFlow.csproj" />
+    <ProjectReference Include="..\..\src\Lib.MachineLearning\Lib.MachineLearning.csproj" />
+    <ProjectReference Include="..\..\src\Lib.RabbitMQ\Lib.RabbitMQ.csproj" />
+    <ProjectReference Include="..\..\src\Lib.Rpc\Lib.Rpc.csproj" />
+    <ProjectReference Include="..\..\src\Lib.TaskSchedule\Lib.TaskSchedule.csproj" />
+    <ProjectReference Include="..\..\src\Lib.Web\Lib.Web.csproj" />
+  </ItemGroup>
 </Project>
