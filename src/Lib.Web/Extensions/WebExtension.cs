@@ -44,18 +44,6 @@ namespace DwFramework.Web.Extensions
         }
 
         /// <summary>
-        /// 初始化Socket服务
-        /// </summary>
-        /// <param name="provider"></param>
-        /// <returns></returns>
-        public static Task InitSocketServiceAsync(this IServiceProvider provider)
-        {
-            var service = provider.GetWebService<SocketService>();
-            if (service == null) throw new Exception("服务未注册");
-            return service.OpenServiceAsync();
-        }
-
-        /// <summary>
         /// 获取服务
         /// </summary>
         /// <typeparam name="T"></typeparam>
@@ -76,7 +64,6 @@ namespace DwFramework.Web.Extensions
             var services = new Type[] {
                 typeof(HttpService),
                 typeof(WebSocketService),
-                typeof(SocketService)
             };
             if (!services.Contains(type))
                 throw new Exception("无法获取该类型的服务");
