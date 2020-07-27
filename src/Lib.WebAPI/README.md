@@ -1,12 +1,12 @@
-# DwFramework.Web
+# DwFramework.WebAPI
 
 ```shell
-PM> Install-Package DwFramework.Web
+PM> Install-Package DwFramework.WebAPI
 或
-> dotnet add package DwFramework.Web
+> dotnet add package DwFramework.WebAPI
 ```
 
-## DwFramework Web库
+## DwFramework WebAPI库
 
 ### 0x1 配置
 
@@ -14,22 +14,10 @@ PM> Install-Package DwFramework.Web
 
 ```json
 {
-  "Web": {
-    "Http": {
-      "ContentRoot": "",
-      "Listen": {
-        "http": "0.0.0.0:10080"
-      }
-    },
-    "WebSocket": {
-      "ContentRoot": "",
-      "Listen": {
-        "ws": "0.0.0.0:10090"
-      },
-      "BufferSize": 100
-    },
-    "Socket": {
-      "Listen": "0.0.0.0:10100"
+  "WebAPI": {
+    "ContentRoot": "",
+    "Listen": {
+      "http": "0.0.0.0:10080"
     }
   }
 }
@@ -66,30 +54,10 @@ namespace Test
 
 ```c#
 // 注册服务
-host.RegisterWebService<HttpService>();
-host.RegisterWebService<WebSocketService>();
-host.InitService(provider => provider.InitHttpServiceAsync<Startup>());
-host.InitService(provider =>
-{
-    provider.InitWebSocketServiceAsync();
-    var service = provider.GetWebService<WebSocketService>();
-    service.OnConnect += (c, a) =>
-    {
-        Console.WriteLine($"{c.ID}已连接");
-    };
-    service.OnSend += (c, a) =>
-    {
-        Console.WriteLine($"向{c.ID}消息：{a.Message}");
-    };
-    service.OnReceive += (c, a) =>
-    {
-        Console.WriteLine($"收到{c.ID}发来的消息：{a.Message}");
-    };
-    service.OnClose += (c, a) =>
-    {
-        Console.WriteLine($"{c.ID}已断开");
-    };
-});
+ServiceHost host = new ServiceHost(configFilePath: $"{AppDomain.CurrentDomain.BaseDirectory}Config.json");
+host.RegisterLog();
+host.RegisterWebAPIService();
+host.InitService(provider => provider.InitWebAPIServiceAsync<Startup>());
 host.Run();
 ```
 
