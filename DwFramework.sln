@@ -2,7 +2,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29926.136
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "_Test.Rpc", "example\_Test.Rpc\_Test.Rpc.csproj", "{93554DFC-C77C-4E53-8848-7F1CD21D32AD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "_Test.Rpc", "example\_Test.Rpc\_Test.Rpc.csproj", "{93554DFC-C77C-4E53-8848-7F1CD21D32AD}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "_Test.Web", "example\_Test.Web\_Test.Web.csproj", "{3B12281E-6455-43AC-87FB-C2510C0CDD91}"
 EndProject
@@ -28,15 +28,19 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lib.TaskSchedule", "src\Lib
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lib.Web", "src\Lib.Web\Lib.Web.csproj", "{358F26C4-DE41-40CD-B088-288967678B22}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lib.Core", "src\Lib.Core\Lib.Core.csproj", "{BD976D28-A39B-4087-932B-52229A868FAC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lib.Core", "src\Lib.Core\Lib.Core.csproj", "{BD976D28-A39B-4087-932B-52229A868FAC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lib.Socket", "src\Lib.Socket\Lib.Socket.csproj", "{A3B93ED8-3091-4F04-8BA0-49AE19B7EB17}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lib.Socket", "src\Lib.Socket\Lib.Socket.csproj", "{A3B93ED8-3091-4F04-8BA0-49AE19B7EB17}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "_Test.Socket", "example\_Test.Socket\_Test.Socket.csproj", "{F54CE068-CF7E-4158-B3E6-8D9709FFA624}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "_Test.Socket", "example\_Test.Socket\_Test.Socket.csproj", "{F54CE068-CF7E-4158-B3E6-8D9709FFA624}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lib.WebAPI", "src\Lib.WebAPI\Lib.WebAPI.csproj", "{B4A8E83C-5FA8-4631-96C4-B315D16724E2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lib.WebAPI", "src\Lib.WebAPI\Lib.WebAPI.csproj", "{B4A8E83C-5FA8-4631-96C4-B315D16724E2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "_Test.WebAPI", "example\_Test.WebAPI\_Test.WebAPI.csproj", "{39AD75FD-93C5-432B-86E0-FF48E10BD571}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "_Test.WebAPI", "example\_Test.WebAPI\_Test.WebAPI.csproj", "{39AD75FD-93C5-432B-86E0-FF48E10BD571}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lib.WebSocket", "src\Lib.WebSocket\Lib.WebSocket.csproj", "{57E4D9A1-8F61-4B30-9B25-54FCE02AF031}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "_Test.WebSocket", "example\_Test.WebSocket\_Test.WebSocket.csproj", "{FE6169FC-8649-43B8-B95B-7D816EFF2AEB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -44,6 +48,10 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{93554DFC-C77C-4E53-8848-7F1CD21D32AD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{93554DFC-C77C-4E53-8848-7F1CD21D32AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{93554DFC-C77C-4E53-8848-7F1CD21D32AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{93554DFC-C77C-4E53-8848-7F1CD21D32AD}.Release|Any CPU.Build.0 = Release|Any CPU
 		{3B12281E-6455-43AC-87FB-C2510C0CDD91}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{3B12281E-6455-43AC-87FB-C2510C0CDD91}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3B12281E-6455-43AC-87FB-C2510C0CDD91}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -92,10 +100,6 @@ Global
 		{358F26C4-DE41-40CD-B088-288967678B22}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{358F26C4-DE41-40CD-B088-288967678B22}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{358F26C4-DE41-40CD-B088-288967678B22}.Release|Any CPU.Build.0 = Release|Any CPU
-		{93554DFC-C77C-4E53-8848-7F1CD21D32AD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{93554DFC-C77C-4E53-8848-7F1CD21D32AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{93554DFC-C77C-4E53-8848-7F1CD21D32AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{93554DFC-C77C-4E53-8848-7F1CD21D32AD}.Release|Any CPU.Build.0 = Release|Any CPU
 		{BD976D28-A39B-4087-932B-52229A868FAC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{BD976D28-A39B-4087-932B-52229A868FAC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BD976D28-A39B-4087-932B-52229A868FAC}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -116,6 +120,14 @@ Global
 		{39AD75FD-93C5-432B-86E0-FF48E10BD571}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{39AD75FD-93C5-432B-86E0-FF48E10BD571}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{39AD75FD-93C5-432B-86E0-FF48E10BD571}.Release|Any CPU.Build.0 = Release|Any CPU
+		{57E4D9A1-8F61-4B30-9B25-54FCE02AF031}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{57E4D9A1-8F61-4B30-9B25-54FCE02AF031}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{57E4D9A1-8F61-4B30-9B25-54FCE02AF031}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{57E4D9A1-8F61-4B30-9B25-54FCE02AF031}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FE6169FC-8649-43B8-B95B-7D816EFF2AEB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FE6169FC-8649-43B8-B95B-7D816EFF2AEB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FE6169FC-8649-43B8-B95B-7D816EFF2AEB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FE6169FC-8649-43B8-B95B-7D816EFF2AEB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
