@@ -16,6 +16,5 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\Lib.Core\Lib.Core.csproj" />
-    <ProjectReference Include="..\..\src\Lib.Web\Lib.Web.csproj" />
   </ItemGroup>
 </Project>
