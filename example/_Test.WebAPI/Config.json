@@ -1,0 +1,8 @@
+{
+  "WebAPI": {
+    "ContentRoot": "",
+    "Listen": {
+      "http": "0.0.0.0:10080"
+    }
+  }
+}

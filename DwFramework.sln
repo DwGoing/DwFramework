@@ -34,6 +34,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lib.Socket", "src\Lib.Socke
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "_Test.Socket", "example\_Test.Socket\_Test.Socket.csproj", "{F54CE068-CF7E-4158-B3E6-8D9709FFA624}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lib.WebAPI", "src\Lib.WebAPI\Lib.WebAPI.csproj", "{B4A8E83C-5FA8-4631-96C4-B315D16724E2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "_Test.WebAPI", "example\_Test.WebAPI\_Test.WebAPI.csproj", "{39AD75FD-93C5-432B-86E0-FF48E10BD571}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -104,6 +108,14 @@ Global
 		{F54CE068-CF7E-4158-B3E6-8D9709FFA624}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F54CE068-CF7E-4158-B3E6-8D9709FFA624}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F54CE068-CF7E-4158-B3E6-8D9709FFA624}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B4A8E83C-5FA8-4631-96C4-B315D16724E2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B4A8E83C-5FA8-4631-96C4-B315D16724E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B4A8E83C-5FA8-4631-96C4-B315D16724E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B4A8E83C-5FA8-4631-96C4-B315D16724E2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{39AD75FD-93C5-432B-86E0-FF48E10BD571}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{39AD75FD-93C5-432B-86E0-FF48E10BD571}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{39AD75FD-93C5-432B-86E0-FF48E10BD571}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{39AD75FD-93C5-432B-86E0-FF48E10BD571}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

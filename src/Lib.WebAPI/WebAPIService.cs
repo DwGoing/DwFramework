@@ -9,9 +9,9 @@ using Microsoft.Extensions.Hosting;
 using DwFramework.Core;
 using DwFramework.Core.Extensions;
 
-namespace DwFramework.Web
+namespace DwFramework.WebAPI
 {
-    public class HttpService : BaseService
+    public class WebAPIService : BaseService
     {
         public class Config
         {
@@ -24,9 +24,9 @@ namespace DwFramework.Web
         /// <summary>
         /// 构造函数
         /// </summary>
-        public HttpService()
+        public WebAPIService()
         {
-            _config = ServiceHost.Environment.GetConfiguration("ServiceHost").GetConfig<Config>("Web:Http");
+            _config = ServiceHost.Environment.GetConfiguration("ServiceHost").GetConfig<Config>("WebAPI");
         }
 
         /// <summary>
@@ -63,7 +63,7 @@ namespace DwFramework.Web
                         if (!string.IsNullOrEmpty(listen)) listen += ",";
                         listen += $"https://{_config.Listen["https"]}";
                     }
-                    Console.WriteLine($"Http服务已开启 => 监听地址:{listen}");
+                    Console.WriteLine($"WebAPI服务已开启 => 监听地址:{listen}");
                 })
                 .UseStartup<T>();
             return builder.Build().RunAsync();
