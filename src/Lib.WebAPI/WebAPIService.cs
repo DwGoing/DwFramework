@@ -48,20 +48,24 @@ namespace DwFramework.WebAPI
                     if (_config.Listen.ContainsKey("http"))
                     {
                         string[] ipAndPort = _config.Listen["http"].Split(":");
-                        options.Listen(string.IsNullOrEmpty(ipAndPort[0]) ? IPAddress.Any : IPAddress.Parse(ipAndPort[0]), int.Parse(ipAndPort[1]));
-                        listen += $"http://{_config.Listen["http"]}";
+                        var ip = string.IsNullOrEmpty(ipAndPort[0]) ? IPAddress.Any : IPAddress.Parse(ipAndPort[0]);
+                        var port = int.Parse(ipAndPort[1]);
+                        options.Listen(ip, port);
+                        listen += $"http://{ip}:{port}";
                     }
                     if (_config.Listen.ContainsKey("https"))
                     {
                         string[] addrAndCert = _config.Listen["https"].Split(";");
                         string[] ipAndPort = addrAndCert[0].Split(":");
-                        options.Listen(string.IsNullOrEmpty(ipAndPort[0]) ? IPAddress.Any : IPAddress.Parse(ipAndPort[0]), int.Parse(ipAndPort[1]), listenOptions =>
+                        var ip = string.IsNullOrEmpty(ipAndPort[0]) ? IPAddress.Any : IPAddress.Parse(ipAndPort[0]);
+                        var port = int.Parse(ipAndPort[1]);
+                        options.Listen(ip, port, listenOptions =>
                         {
                             string[] certAndPassword = addrAndCert[1].Split(",");
                             listenOptions.UseHttps(certAndPassword[0], certAndPassword[1]);
                         });
                         if (!string.IsNullOrEmpty(listen)) listen += ",";
-                        listen += $"https://{_config.Listen["https"]}";
+                        listen += $"https://{ip}:{port}";
                     }
                     Console.WriteLine($"WebAPI服务已开启 => 监听地址:{listen}");
                 })
