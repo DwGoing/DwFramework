@@ -58,9 +58,10 @@ namespace DwFramework.Rpc
                     var ip = string.IsNullOrEmpty(ipAndPort[0]) ? "0.0.0.0" : ipAndPort[0];
                     var port = int.Parse(ipAndPort[1]);
                     string[] certPaths = addrAndCert[1].Split(",");
-                    var rootCert = File.ReadAllText(certPaths[0]);
-                    var certChain = File.ReadAllText(certPaths[1]);
-                    var privateKey = File.ReadAllText(certPaths[2]);
+                    var rootPath = $"{AppDomain.CurrentDomain.BaseDirectory}{_config.ContentRoot}";
+                    var rootCert = File.ReadAllText($"{rootPath}{certPaths[0]}");
+                    var certChain = File.ReadAllText($"{rootPath}{certPaths[1]}");
+                    var privateKey = File.ReadAllText($"{rootPath}{certPaths[2]}");
                     var serverCredentials = new SslServerCredentials(new[] { new KeyCertificatePair(certChain, privateKey) }, rootCert, false);
                     _server.Ports.Add(new ServerPort(ip, port, serverCredentials));
                     if (!string.IsNullOrEmpty(listen)) listen += ",";
