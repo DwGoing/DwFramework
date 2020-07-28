@@ -15,88 +15,69 @@ PM> Install-Package DwFramework.Rpc
 ```json
 {
   "Rpc": {
-    "Prefixes": [ "http://*:10010" ]
+    "Listen": {
+      "http": "localhost:5000"
+    }
   }
 }
 ```
 
 ### 0x2 注册服务及初始化
 
-该库是整合了Hprose.RPC库的功能。
-
 ```c#
 // 注册服务
 host.RegisterRpcService();
+// 初始化服务
+host.InitService(provider => provider.InitRpcService());
 ```
 
 ### 0x3 注册Rpc函数
 
-该库支持Hprose.RPC库原生的函数注册方式，可通过如下方式使用：
+该库是基于gRPC实现的，首先需要编写.proto文件来生成服务端及客户端代码，如下：
 
-```c#
-var rpc = provider.GetRpcService();
-// 函数原生注册
-rpc.Service.Add(() => { Console.WriteLine("Hello World!")});
-rpc.Service.Add<{返回类型}>(() => { Console.WriteLine("Hello World!")});
-rpc.Service.AddMethod({函数名}, {目标实例});
-// ...
-```
+```protobuf
+syntax = "proto3";
 
-也可以使用该库封装的函数注册方式，不过需要在函数定义时加上[Rpc]标签，可参考下列代码：
-
-```c#
-public interface ITestInterface
-{
-    void TestMethod(string str);
+service A {
+  rpc Do (Request) returns (Response);
 }
 
-public class TestClass1 : ITestInterface
-{
-    public TestClass1()
-    {
-        Console.WriteLine("TestClass1已注入");
-    }
-
-  	// 若注册了多个相同接口的服务，可在此区分调用的函数
-  	// 若不指定Rpc函数名称，则默认为函数签名名称
-    [Rpc("Method1")]
-    public void TestMethod(string str)
-    {
-        Console.WriteLine($"TestClass1:{str}");
-    }
+message Request {
+  string message = 1;
 }
 
-public class TestClass2 : ITestInterface
-{
-    public TestClass2()
-    {
-        Console.WriteLine("TestClass2已注入");
-    }
-
-    [Rpc("Method2")]
-    public void TestMethod(string str)
-    {
-        Console.WriteLine($"TestClass2:{str}");
-    }
+message Response {
+  string message = 1;
 }
+
 ```
+
+如果使用VS IDE，可引用Google.Protobuf、Grpc.Tools、Grpc.Core包来生成代码A.cs、AGrpc.cs。需要注意的是，生成时注意配置生成Server还是Client。
 
 ```c#
-// 从实例中注册Rpc函数
-rpc.RegisterFuncFromInstance({实例}, {调用名称});
-// 从服务中注册Rpc函数
-rpc.RegisterFuncFromService<{接口类型},{实例类型}>();
-rpc.RegisterFuncFromService<{接口类型}>();
+// a.proto的实现类
+// 需要在host中注册
+// host.RegisterType<AService>();
+[Rpc(typeof(A))]
+public class AService : A.ABase
+{
+  public override Task<Response> Do(Request request, ServerCallContext context)
+  {
+    return Task.FromResult(new Response()
+    {
+      Message = request.Message
+    });
+  }
+}
 ```
-
-其中需要特别注意的是，RegisterFuncFromService<{接口类型}>()会把实现相同接口的服务中所有Rpc函数都进行注册，如果在Rpc标签中对函数调用名称不进行区分，可能在调用时出现“调非所调”的情况。所以，我们建议当使用Rpc标签时尽量都标识调用名称。
 
 ### 0x4 函数调用
 
-该库并为对Rpc客户端进行封装，你可以直接引用Hprose.RPC，使用其自带的客户端来调用函数。
+可通过gRPC常规调用方法来调用，不同语言的调用可参考：https://github.com/grpc/grpc
 
 ```c#
-var client = new Client("http://127.0.0.1:10010/");
-client.Invoke("Method1", new object[] { "helo" });
-client.Invoke("Method2", new object[] { "helo" });
+var channel = new Channel("localhost:5000", ChannelCredentials.Insecure);
+var client = new A.AClient(channel);
+Console.WriteLine(client.Do(new Request() { Message = "123" }).Message);
+channel.ShutdownAsync();
 ```

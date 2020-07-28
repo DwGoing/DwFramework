@@ -6,6 +6,10 @@
         <ReleaseVersion>1.0</ReleaseVersion>
     </PropertyGroup>
     <ItemGroup>
+        <None Remove="Protos\a.proto" />
+        <None Remove="Protos\a.proto" />
+    </ItemGroup>
+    <ItemGroup>
         <None Update="Config.json">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
@@ -22,6 +26,8 @@
         </PackageReference>
     </ItemGroup>
     <ItemGroup>
-        <Protobuf Include="Protos\a.proto" GrpcServices="Server" />
+        <Protobuf Include="Protos\a.proto">
+            <GrpcServices>Server</GrpcServices>
+        </Protobuf>
     </ItemGroup>
 </Project>
