@@ -32,11 +32,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lib.WebSocket", "src\Lib.We
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "_Test.WebSocket", "example\_Test.WebSocket\_Test.WebSocket.csproj", "{FE6169FC-8649-43B8-B95B-7D816EFF2AEB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "_Test.Socket", "example\_Test.Socket\_Test.Socket.csproj", "{75D6547F-D01C-44D6-8F06-28250DF5BA6F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "_Test.Socket", "example\_Test.Socket\_Test.Socket.csproj", "{BDDD0993-3E61-48A5-BFBC-F955A35AA744}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "_Test.WebAPI", "example\_Test.WebAPI\_Test.WebAPI.csproj", "{AC46B5AB-881E-40C5-BC11-58E20B961286}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "_Test.WebAPI", "example\_Test.WebAPI\_Test.WebAPI.csproj", "{F58DFA8E-60D2-4525-8AB9-6B6A9981F460}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lib.Socket", "src\Lib.Socket\Lib.Socket.csproj", "{02BA3179-E810-46EF-9B23-A44050B89E24}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lib.Socket", "src\Lib.Socket\Lib.Socket.csproj", "{2E2BAC16-3324-4659-947B-84A1E1D61192}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -104,18 +104,18 @@ Global
 		{FE6169FC-8649-43B8-B95B-7D816EFF2AEB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FE6169FC-8649-43B8-B95B-7D816EFF2AEB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FE6169FC-8649-43B8-B95B-7D816EFF2AEB}.Release|Any CPU.Build.0 = Release|Any CPU
-		{75D6547F-D01C-44D6-8F06-28250DF5BA6F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{75D6547F-D01C-44D6-8F06-28250DF5BA6F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{75D6547F-D01C-44D6-8F06-28250DF5BA6F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{75D6547F-D01C-44D6-8F06-28250DF5BA6F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{AC46B5AB-881E-40C5-BC11-58E20B961286}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{AC46B5AB-881E-40C5-BC11-58E20B961286}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{AC46B5AB-881E-40C5-BC11-58E20B961286}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{AC46B5AB-881E-40C5-BC11-58E20B961286}.Release|Any CPU.Build.0 = Release|Any CPU
-		{02BA3179-E810-46EF-9B23-A44050B89E24}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{02BA3179-E810-46EF-9B23-A44050B89E24}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{02BA3179-E810-46EF-9B23-A44050B89E24}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{02BA3179-E810-46EF-9B23-A44050B89E24}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BDDD0993-3E61-48A5-BFBC-F955A35AA744}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BDDD0993-3E61-48A5-BFBC-F955A35AA744}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BDDD0993-3E61-48A5-BFBC-F955A35AA744}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BDDD0993-3E61-48A5-BFBC-F955A35AA744}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F58DFA8E-60D2-4525-8AB9-6B6A9981F460}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F58DFA8E-60D2-4525-8AB9-6B6A9981F460}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F58DFA8E-60D2-4525-8AB9-6B6A9981F460}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F58DFA8E-60D2-4525-8AB9-6B6A9981F460}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2E2BAC16-3324-4659-947B-84A1E1D61192}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2E2BAC16-3324-4659-947B-84A1E1D61192}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2E2BAC16-3324-4659-947B-84A1E1D61192}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2E2BAC16-3324-4659-947B-84A1E1D61192}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -26,5 +26,15 @@ namespace DwFramework.Rpc.Extensions
         {
             return provider.GetService<RpcService>();
         }
+
+        /// <summary>
+        /// 初始化服务
+        /// </summary>
+        /// <param name="provider"></param>
+        /// <returns></returns>
+        public static Task InitRpcService(this IServiceProvider provider)
+        {
+            return provider.GetRpcService().OpenServiceAsync();
+        }
     }
 }

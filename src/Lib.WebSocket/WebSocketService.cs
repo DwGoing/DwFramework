@@ -102,20 +102,24 @@ namespace DwFramework.WebSocket
                     if (_config.Listen.ContainsKey("ws"))
                     {
                         string[] ipAndPort = _config.Listen["ws"].Split(":");
-                        options.Listen(string.IsNullOrEmpty(ipAndPort[0]) ? IPAddress.Any : IPAddress.Parse(ipAndPort[0]), int.Parse(ipAndPort[1]));
-                        listen += $"ws://{_config.Listen["ws"]}";
+                        var ip = string.IsNullOrEmpty(ipAndPort[0]) ? IPAddress.Any : IPAddress.Parse(ipAndPort[0]);
+                        var port = int.Parse(ipAndPort[1]);
+                        options.Listen(ip, port);
+                        listen += $"ws://{ip}:{port}";
                     }
                     if (_config.Listen.ContainsKey("wss"))
                     {
                         string[] addrAndCert = _config.Listen["wss"].Split(";");
                         string[] ipAndPort = addrAndCert[0].Split(":");
-                        options.Listen(string.IsNullOrEmpty(ipAndPort[0]) ? IPAddress.Any : IPAddress.Parse(ipAndPort[0]), int.Parse(ipAndPort[1]), listenOptions =>
+                        var ip = string.IsNullOrEmpty(ipAndPort[0]) ? IPAddress.Any : IPAddress.Parse(ipAndPort[0]);
+                        var port = int.Parse(ipAndPort[1]);
+                        options.Listen(ip, port, listenOptions =>
                         {
                             string[] certAndPassword = addrAndCert[1].Split(",");
                             listenOptions.UseHttps(certAndPassword[0], certAndPassword[1]);
                         });
                         if (!string.IsNullOrEmpty(listen)) listen += ",";
-                        listen += $"wss://{_config.Listen["wss"]}";
+                        listen += $"wss://{ip}:{port}";
                     }
                     Console.WriteLine($"WebSocket服务已开启 => 监听地址:{listen}");
                 })
