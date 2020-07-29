@@ -2,6 +2,8 @@
 
 ---
 
+1. 调整ResultInfo结构；
+
 ⌚️2020.07.29
 
 1. 对Lib.Web库进行了分离，包含Lib.Socket，Lib.WebAPI，Lib.WebSocket；
