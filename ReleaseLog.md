@@ -2,6 +2,13 @@
 
 ---
 
+⌚️2020.07.29
+
+1. 对Lib.Web库进行了分离，包含Lib.Socket，Lib.WebAPI，Lib.WebSocket；
+2. 新增MemoryCacahe；
+3. 对Lib.Rpc进行重构，用gRPC重新实现内部逻辑；
+4. 对配置项进行优化，支持多配置文件。
+
 ⌚️2020.07.22
 
 1. 重新整理了代码分支，移除了基于.net core的版本；
