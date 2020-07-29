@@ -2,7 +2,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <TargetFramework>netstandard2.1</TargetFramework>
-        <Version>1.2.1.1</Version>
+        <Version>1.2.1.2</Version>
         <AssemblyName>DwFramework.DataFlow</AssemblyName>
         <RootNamespace>DwFramework.DataFlow</RootNamespace>
         <Authors>DwGoing</Authors>
