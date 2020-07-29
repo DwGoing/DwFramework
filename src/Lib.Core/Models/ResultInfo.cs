@@ -10,48 +10,38 @@
     {
         public int Code { get; set; }
         public string Message { get; set; }
+        public dynamic Data { get; set; }
 
-        public static ResultInfo Success(string message)
+        public static ResultInfo Success(string message = null)
         {
             return new ResultInfo()
             {
                 Code = ResultCode.Ok,
-                Message = message
+                Message = message ?? "调用成功"
             };
         }
 
-        public static ResultInfo Fail(string message, int code = ResultCode.Error)
+        public static ResultInfo Fail(string message = null, int code = ResultCode.Error)
         {
             return new ResultInfo()
             {
                 Code = code,
-                Message = message
-            };
-        }
-    }
-
-    public class ResultInfo<T> : ResultInfo
-    {
-        public T Data { get; set; }
-
-        public static ResultInfo<T> Success(string message, T data)
-        {
-            return new ResultInfo<T>()
-            {
-                Code = ResultCode.Ok,
-                Message = message,
-                Data = data
+                Message = message ?? "调用失败"
             };
         }
 
-        public static ResultInfo<T> Fail(string message, T data, int code = ResultCode.Error)
+        public static ResultInfo Success<T>(T data, string message = null)
         {
-            return new ResultInfo<T>()
-            {
-                Code = code,
-                Message = message,
-                Data = data
-            };
+            var result = Success(message);
+            result.Data = data;
+            return result;
+        }
+
+        public static ResultInfo Fail<T>(T data, string message = null, int code = ResultCode.Error)
+        {
+            var result = Fail(message, code);
+            result.Data = data;
+            return result;
         }
     }
 }
