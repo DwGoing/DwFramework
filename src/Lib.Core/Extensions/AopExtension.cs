@@ -17,7 +17,6 @@ namespace DwFramework.Core.Extensions
         public static void RegisterInterceptor<T>(this ServiceHost host) where T : BaseInterceptor
         {
             host.RegisterType<T>();
-            Console.WriteLine(0);
         }
 
         /// <summary>

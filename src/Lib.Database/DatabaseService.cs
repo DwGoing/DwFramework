@@ -35,7 +35,7 @@ namespace DwFramework.Database
         /// </summary>
         public DatabaseService()
         {
-            _config = ServiceHost.Environment.GetConfiguration().GetConfig<Config>("Database");
+            _config = ServiceHost.Environment.Configuration.GetConfig<Config>("Database");
         }
 
         /// <summary>

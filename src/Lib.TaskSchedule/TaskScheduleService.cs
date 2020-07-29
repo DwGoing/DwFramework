@@ -11,18 +11,11 @@ using Quartz.Impl.Matchers;
 
 using DwFramework.Core;
 using DwFramework.Core.Plugins;
-using DwFramework.Core.Extensions;
 
 namespace DwFramework.TaskSchedule
 {
     public class TaskScheduleService : BaseService
     {
-        public class Config
-        {
-
-        }
-
-        private readonly Config _config;
         private readonly DirectSchedulerFactory _schedulerFactory;
 
         public IScheduler[] AllSchedulers => _schedulerFactory.GetAllSchedulers().Result.ToArray();
@@ -32,7 +25,6 @@ namespace DwFramework.TaskSchedule
         /// </summary>
         public TaskScheduleService()
         {
-            _config = ServiceHost.Environment.GetConfiguration().GetConfig<Config>("TaskSchedule");
             _schedulerFactory = DirectSchedulerFactory.Instance;
         }
 

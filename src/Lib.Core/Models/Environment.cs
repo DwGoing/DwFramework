@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 
 using Microsoft.Extensions.Configuration;
 
@@ -14,30 +13,43 @@ namespace DwFramework.Core
     public class Environment
     {
         private readonly EnvironmentType _environmentType;
-        private readonly IConfiguration _configuration;
+        private readonly ConfigurationBuilder _configurationBuilder;
 
-        public readonly string ConfigFilePath;
+        public IConfiguration Configuration { get; private set; }
 
+        /// <summary>
+        /// 构造函数
+        /// </summary>
+        /// <param name="environmentType"></param>
+        /// <param name="configFilePath"></param>
         public Environment(EnvironmentType environmentType, string configFilePath = null)
         {
             _environmentType = environmentType;
-            if (configFilePath != null && File.Exists(configFilePath))
-            {
-                ConfigFilePath = configFilePath;
-                _configuration = new ConfigurationBuilder().AddJsonFile(configFilePath).Build();
-            }
+            _configurationBuilder = new ConfigurationBuilder();
+            AddJsonConfig(configFilePath);
         }
 
+        /// <summary>
+        /// 添加配置
+        /// </summary>
+        /// <param name="configFilePath"></param>
+        public void AddJsonConfig(string configFilePath)
+        {
+            if (configFilePath != null && File.Exists(configFilePath)) _configurationBuilder.AddJsonFile(configFilePath);
+        }
+
+        /// <summary>
+        /// 构建环境配置
+        /// </summary>
+        public void Build() => Configuration = _configurationBuilder.Build();
+
+        /// <summary>
+        /// 获取环境类型
+        /// </summary>
+        /// <returns></returns>
         public EnvironmentType GetEnvironmentType()
         {
             return _environmentType;
-        }
-
-        public IConfiguration GetConfiguration()
-        {
-            if (_configuration == null)
-                throw new Exception("未读取到配置");
-            return _configuration;
         }
     }
 }
