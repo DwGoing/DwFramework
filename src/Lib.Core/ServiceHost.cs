@@ -18,8 +18,8 @@ namespace DwFramework.Core
         private readonly AutoResetEvent _autoResetEvent;
         private readonly ContainerBuilder _containerBuilder;
         private readonly ServiceCollection _services;
-        private readonly List<Action<AutofacServiceProvider>> _initActions;
-        private readonly List<Action<AutofacServiceProvider>> _stopActions;
+        private readonly List<Action<AutofacServiceProvider>> _initActions = new List<Action<AutofacServiceProvider>>();
+        private readonly List<Action<AutofacServiceProvider>> _stopActions = new List<Action<AutofacServiceProvider>>();
 
         public static Environment Environment { get; private set; }
         public static AutofacServiceProvider Provider { get; private set; }
@@ -34,17 +34,22 @@ namespace DwFramework.Core
             _autoResetEvent = new AutoResetEvent(false);
             _containerBuilder = new ContainerBuilder();
             _services = new ServiceCollection();
-            _initActions = new List<Action<AutofacServiceProvider>>();
-            _stopActions = new List<Action<AutofacServiceProvider>>();
             // 环境变量
             Environment = new Environment(environmentType, configFilePath);
         }
+
+        /// <summary>
+        /// 添加配置
+        /// </summary>
+        /// <param name="configFilePath"></param>
+        public void AddJsonConfig(string configFilePath) => Environment.AddJsonConfig(configFilePath);
 
         /// <summary>
         /// 开启服务
         /// </summary>
         public void Run()
         {
+            Environment.Build();
             _containerBuilder.Populate(_services);
             Provider = new AutofacServiceProvider(_containerBuilder.Build());
             foreach (var item in _initActions) item.Invoke(Provider);

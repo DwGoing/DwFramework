@@ -10,34 +10,40 @@ using DwFramework.Core.Extensions;
 
 namespace _Test.Core
 {
+    public class Root
+    {
+        public A A { get; set; }
+        public B B { get; set; }
+    }
+
+    public class A
+    {
+        public int a1 { get; set; }
+        public string a2 { get; set; }
+    }
+
+    public class B
+    {
+        public int b1 { get; set; }
+        public string b2 { get; set; }
+    }
+
     class Program
     {
         static void Main(string[] args)
         {
             try
             {
+                var rootPath = AppDomain.CurrentDomain.BaseDirectory;
                 var host = new ServiceHost();
-                host.RegisterMemoryCache(3);
-                host.RegisterFromAssemblies();
+                host.AddJsonConfig($"{rootPath}a.json");
+                host.AddJsonConfig($"{rootPath}b.json");
                 host.InitService(provider =>
                 {
-                    int i = 0;
-                    int j = 0;
                     TaskManager.CreateTask(() =>
                     {
-                        using (var scope = ServiceHost.CreateLifetimeScope())
-                        {
-                            var cache = scope.GetService<ICache>();
-                            var timer = new DwFramework.Core.Plugins.Timer();
-                            for (; i < 1000; i++)
-                            {
-                                for (; j < 1000; j++)
-                                {
-                                    cache.HSet($"k{i}", $"f{j}", i + j);
-                                }
-                            }
-                            Console.WriteLine($"{timer.GetTotalMilliseconds()}ms");
-                        }
+                        var e = ServiceHost.Environment;
+                        var r = e.Configuration.GetRoot<Root>();
                     });
                 });
                 host.Run();

@@ -80,7 +80,7 @@ namespace DwFramework.WebSocket
         /// </summary>
         public WebSocketService()
         {
-            _config = ServiceHost.Environment.GetConfiguration("ServiceHost").GetConfig<Config>("WebSocket");
+            _config = ServiceHost.Environment.Configuration.GetConfig<Config>("WebSocket");
             _connections = new Dictionary<string, WebSocketConnection>();
         }
 

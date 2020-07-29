@@ -26,7 +26,7 @@ namespace DwFramework.WebAPI
         /// </summary>
         public WebAPIService()
         {
-            _config = ServiceHost.Environment.GetConfiguration("ServiceHost").GetConfig<Config>("WebAPI");
+            _config = ServiceHost.Environment.Configuration.GetConfig<Config>("WebAPI");
         }
 
         /// <summary>

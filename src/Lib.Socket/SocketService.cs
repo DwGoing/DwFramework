@@ -64,7 +64,7 @@ namespace DwFramework.Socket
         /// </summary>
         public SocketService()
         {
-            _config = ServiceHost.Environment.GetConfiguration("ServiceHost").GetConfig<Config>("Socket");
+            _config = ServiceHost.Environment.Configuration.GetConfig<Config>("Socket");
             _connections = new Dictionary<string, SocketConnection>();
         }
 
