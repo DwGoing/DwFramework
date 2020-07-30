@@ -88,7 +88,7 @@ public class Startup
 }
 ```
 
-2. RequestFilter 请求过滤器
+2. RequestFilter
 
 ```c#
 app.UseRequestFilter(new Dictionary<string, Action<HttpContext>>
@@ -100,4 +100,27 @@ app.UseRequestFilter(new Dictionary<string, Action<HttpContext>>
         CustomContentTypeHandler(context);
     }}
 });
+```
+
+3. Consul
+
+```json
+{
+  "Consul": {
+    "Host": "http://127.0.0.1:8500", // Consul服务端IP及端口
+    "ServiceHost": "127.0.0.1", // 服务IP
+    "HealthCheckPort": 10080, // 健康检查端口
+    "Services": [
+      {
+        "Name": "WebAPIService", // 服务名称
+        "Port": 10080 // 服务端口
+      }
+    ]
+  }
+}
+```
+
+```c#
+// Startup
+app.UseConsul(ServiceHost.Environment.Configuration, lifetime);
 ```
