@@ -131,7 +131,7 @@ namespace DwFramework.WebSocket
                     {
                         if (!context.WebSockets.IsWebSocketRequest)
                         {
-                            await context.Response.WriteAsync(ResultInfo.Fail("非WebSocket请求").ToJson());
+                            await context.Response.WriteAsync(ResultInfo.Fail(message: "非WebSocket请求").ToJson());
                             return;
                         }
                         await next();

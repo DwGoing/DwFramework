@@ -26,11 +26,11 @@ namespace _Test.WebAPI
             ResultInfo result;
             try
             {
-                result = ResultInfo<object>.Success("ok", JwtManager.DecodeToken(body.Jwt));
+                result = ResultInfo.Success(JwtManager.DecodeToken(body.Jwt), "ok");
             }
             catch (Exception ex)
             {
-                result = ResultInfo.Fail(ex.Message);
+                result = ResultInfo.Fail(message: ex.Message);
             }
             return Ok(result);
         }
