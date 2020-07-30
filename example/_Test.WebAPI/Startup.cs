@@ -11,6 +11,7 @@ using Microsoft.Extensions.Logging;
 using DwFramework.Core;
 using DwFramework.Core.Extensions;
 using DwFramework.WebAPI.Plugins;
+using Microsoft.Extensions.Hosting;
 
 namespace _Test.WebAPI
 {
@@ -29,7 +30,7 @@ namespace _Test.WebAPI
             services.AddSwagger("Doc", "Test", "v1");
         }
 
-        public void Configure(IApplicationBuilder app)
+        public void Configure(IApplicationBuilder app, IHostApplicationLifetime lifetime)
         {
             app.UseRouting();
             app.UseSwagger("Doc", "My API V1");
@@ -37,10 +38,10 @@ namespace _Test.WebAPI
             {
                 {"/*",context =>{
                     // 请求日志
-                    //Console.WriteLine($"接收到请求:{context.Request.Path} ({GetIP(context)})");
-                    _logger.LogInformation($"接收到请求:{context.Request.Path} ({GetIP(context)})");
+                    _logger.LogDebug($"接收到请求:{context.Request.Path} ({GetIP(context)})");
                 }}
             });
+            app.UseConsul(ServiceHost.Environment.Configuration, lifetime);
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

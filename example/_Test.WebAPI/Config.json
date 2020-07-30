@@ -1,4 +1,15 @@
 {
+  "Consul": {
+    "ServerHost": "http://127.0.0.1:8500",
+    "ServicesHost": "127.0.0.1",
+    "HealthCheckPort": 10080,
+    "Services": [
+      {
+        "Name": "WebAPIService",
+        "Port": 10080
+      }
+    ]
+  },
   "WebAPI": {
     "ContentRoot": "",
     "Listen": {
