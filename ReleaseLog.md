@@ -2,15 +2,14 @@
 
 ---
 
-1. 调整ResultInfo结构；
-2. 增加Consul插件；
-
 ⌚️2020.07.29
 
 1. 对Lib.Web库进行了分离，包含Lib.Socket，Lib.WebAPI，Lib.WebSocket；
 2. 新增MemoryCacahe；
 3. 对Lib.Rpc进行重构，用gRPC重新实现内部逻辑；
-4. 对配置项进行优化，支持多配置文件。
+4. 对配置项进行优化，支持多配置文件；
+5. 调整ResultInfo结构；
+6. 增加Consul插件；
 
 ⌚️2020.07.22
 
