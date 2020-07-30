@@ -41,7 +41,7 @@ namespace _Test.WebAPI
                     _logger.LogDebug($"接收到请求:{context.Request.Path} ({GetIP(context)})");
                 }}
             });
-            app.UseConsul(ServiceHost.Environment.Configuration, lifetime);
+            //app.UseConsul(ServiceHost.Environment.Configuration, lifetime);
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
