@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Runtime.InteropServices;
-using System.Management;
 
 namespace DwFramework.Core.Plugins
 {
@@ -27,18 +26,6 @@ namespace DwFramework.Core.Plugins
             OSDescription = RuntimeInformation.OSDescription;
             FrameworkDescription = RuntimeInformation.FrameworkDescription;
             SystemVersion = RuntimeEnvironment.GetSystemVersion();
-        }
-    }
-
-    public static class EnviromentUtil
-    {
-        /// <summary>
-        /// 获取系统信息
-        /// </summary>
-        /// <returns></returns>
-        public static SystemInfo GetSystemInfo()
-        {
-            return new SystemInfo();
         }
     }
 }
