@@ -12,8 +12,6 @@ namespace DwFramework.WebAPI.Plugins
 {
     public static class ConsulManager
     {
-        public const string HEALTH_CHECK_PATH = "/consul/healthcheck";
-
         public class Config
         {
             public class Service
@@ -25,9 +23,17 @@ namespace DwFramework.WebAPI.Plugins
             public string Host { get; set; }
             public string ServiceHost { get; set; }
             public int HealthCheckPort { get; set; }
+            public string HealthCheckPath { get; set; }
             public Service[] Services { get; set; }
         }
 
+        /// <summary>
+        /// 注册服务
+        /// </summary>
+        /// <param name="app"></param>
+        /// <param name="configuration"></param>
+        /// <param name="lifetime"></param>
+        /// <returns></returns>
         public static IApplicationBuilder UseConsul(this IApplicationBuilder app, IConfiguration configuration, IHostApplicationLifetime lifetime)
         {
             var config = configuration.GetConfig<Config>("Consul");
@@ -48,7 +54,7 @@ namespace DwFramework.WebAPI.Plugins
                         DeregisterCriticalServiceAfter = TimeSpan.FromSeconds(10),
                         Interval = TimeSpan.FromSeconds(10),
                         Timeout = TimeSpan.FromSeconds(5),
-                        HTTP = $"http://{config.ServiceHost}:{config.HealthCheckPort}{HEALTH_CHECK_PATH}"
+                        HTTP = $"http://{config.ServiceHost}:{config.HealthCheckPort}{config.HealthCheckPath}"
                     }
                 };
                 client.Agent.ServiceRegister(registration).Wait();
@@ -57,7 +63,7 @@ namespace DwFramework.WebAPI.Plugins
                     client.Agent.ServiceDeregister(registration.ID).Wait();
                 });
             }
-            app.Map(HEALTH_CHECK_PATH, s =>
+            app.Map(config.HealthCheckPath, s =>
             {
                 s.Run(context => context.Response.WriteAsync("ok"));
             });

@@ -35,4 +35,9 @@
     <PackageReference Include="RSAExtensions" Version="1.0.3" />
     <PackageReference Include="System.Management" Version="4.7.0" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Plugins\Enviroment\" />
+    <Folder Include="Plugins\Aop\" />
+    <Folder Include="Plugins\Encryption\" />
+  </ItemGroup>
 </Project>
