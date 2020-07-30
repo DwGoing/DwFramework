@@ -22,8 +22,8 @@ namespace DwFramework.WebAPI.Plugins
                 public int Port { get; set; }
             }
 
-            public string ServerHost { get; set; }
-            public string ServicesHost { get; set; }
+            public string Host { get; set; }
+            public string ServiceHost { get; set; }
             public int HealthCheckPort { get; set; }
             public Service[] Services { get; set; }
         }
@@ -35,20 +35,20 @@ namespace DwFramework.WebAPI.Plugins
             {
                 var client = new ConsulClient(c =>
                 {
-                    c.Address = new Uri(config.ServerHost);
+                    c.Address = new Uri(config.Host);
                 });
                 var registration = new AgentServiceRegistration()
                 {
-                    ID = $"{item.Name}-{config.ServicesHost}:{item.Port}",
+                    ID = $"{item.Name}-{config.ServiceHost}:{item.Port}",
                     Name = item.Name,
-                    Address = config.ServicesHost,
+                    Address = config.ServiceHost,
                     Port = item.Port,
                     Check = new AgentServiceCheck()
                     {
                         DeregisterCriticalServiceAfter = TimeSpan.FromSeconds(10),
                         Interval = TimeSpan.FromSeconds(10),
                         Timeout = TimeSpan.FromSeconds(5),
-                        HTTP = $"http://{config.ServicesHost}:{config.HealthCheckPort}{HEALTH_CHECK_PATH}"
+                        HTTP = $"http://{config.ServiceHost}:{config.HealthCheckPort}{HEALTH_CHECK_PATH}"
                     }
                 };
                 client.Agent.ServiceRegister(registration).Wait();
