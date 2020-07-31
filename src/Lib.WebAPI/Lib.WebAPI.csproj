@@ -32,4 +32,7 @@
     <ItemGroup>
         <ProjectReference Include="..\Lib.Core\Lib.Core.csproj" />
     </ItemGroup>
+    <ItemGroup>
+      <Folder Include="Plugins\Jwt\" />
+    </ItemGroup>
 </Project>

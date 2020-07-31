@@ -9,6 +9,13 @@ namespace DwFramework.WebAPI.Plugins
 {
     public static class RequestFilter
     {
+        /// <summary>
+        /// 注册过滤器
+        /// </summary>
+        /// <param name="app"></param>
+        /// <param name="startHandler"></param>
+        /// <param name="endHandler"></param>
+        /// <returns></returns>
         public static IApplicationBuilder UseRequestFilter(this IApplicationBuilder app, Action<HttpContext> startHandler, Action<HttpContext> endHandler)
         {
             app.Use(async (context, next) =>
@@ -27,6 +34,12 @@ namespace DwFramework.WebAPI.Plugins
             return app;
         }
 
+        /// <summary>
+        /// 注册过滤器
+        /// </summary>
+        /// <param name="app"></param>
+        /// <param name="handlers"></param>
+        /// <returns></returns>
         public static IApplicationBuilder UseRequestFilter(this IApplicationBuilder app, Dictionary<string, Action<HttpContext>> handlers)
         {
             app.Use(async (context, next) =>

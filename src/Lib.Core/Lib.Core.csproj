@@ -31,8 +31,14 @@
     <PackageReference Include="NLog" Version="4.7.2" />
     <PackageReference Include="NLog.Extensions.Logging" Version="1.6.4" />
     <PackageReference Include="NLog.MailKit" Version="3.2.0" />
+    <PackageReference Include="NLog.Targets.ElasticSearch" Version="7.4.0" />
     <PackageReference Include="Polly" Version="7.2.1" />
     <PackageReference Include="RSAExtensions" Version="1.0.3" />
     <PackageReference Include="System.Management" Version="4.7.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Plugins\Enviroment\" />
+    <Folder Include="Plugins\Aop\" />
+    <Folder Include="Plugins\Encryption\" />
   </ItemGroup>
 </Project>

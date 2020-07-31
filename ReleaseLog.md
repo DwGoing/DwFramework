@@ -2,6 +2,8 @@
 
 ---
 
+1. 修复JwtManager生成Token时无法配置audience的问题；
+
 ⌚️2020.07.29
 
 1. 对Lib.Web库进行了分离，包含Lib.Socket，Lib.WebAPI，Lib.WebSocket；
