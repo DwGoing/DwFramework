@@ -3,6 +3,7 @@
 ---
 
 1. 修复JwtManager生成Token时无法配置audience的问题；
+2. NLog支持ELK日志框架；
 
 ⌚️2020.07.29
 
