@@ -23,7 +23,7 @@ namespace DwFramework.WebAPI.Plugins
             public string Host { get; set; }
             public string ServiceHost { get; set; }
             public int HealthCheckPort { get; set; }
-            public string HealthCheckPath { get; set; }
+            public string HealthCheckPath { get; set; } = "/consul/healthcheck";
             public Service[] Services { get; set; }
         }
 
