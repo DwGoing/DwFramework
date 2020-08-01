@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace DwFramework.Core.Plugins
 {
@@ -80,6 +81,21 @@ namespace DwFramework.Core.Plugins
         public void Del(string key)
         {
             GetMemoryCacheStore(key).Del(key);
+        }
+
+        /// <summary>
+        /// 获取所有Key
+        /// </summary>
+        /// <returns></returns>
+        public string[] AllKeys()
+        {
+            var keys = new string[0];
+            foreach (var item in _memoryCacheStores)
+            {
+                var s = item.AllKeys();
+                keys = keys.Concat(item.AllKeys()).ToArray();
+            }
+            return keys;
         }
 
         /// <summary>

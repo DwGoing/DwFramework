@@ -121,6 +121,18 @@ namespace DwFramework.Core.Plugins
         public void Del(string key) => _Datas.Remove(key);
 
         /// <summary>
+        /// 获取所有Key
+        /// </summary>
+        /// <returns></returns>
+        public string[] AllKeys()
+        {
+            var keys = _Datas.Keys;
+            var result = new string[keys.Count];
+            keys.CopyTo(result, 0);
+            return result;
+        }
+
+        /// <summary>
         /// 添加数据（Hash）
         /// </summary>
         /// <param name="key"></param>

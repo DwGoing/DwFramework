@@ -16,9 +16,16 @@ namespace _Test.Core
         {
             try
             {
-                var host = new ServiceHost();
+                var cache = new MemoryCache();
+                for (var i = 0; i < 100; i++)
+                {
+                    cache.Set($"t{i}", i);
+                }
+                var s = cache.AllKeys();
 
-                host.Run();
+                //var host = new ServiceHost();
+
+                //host.Run();
             }
             catch (Exception ex)
             {
