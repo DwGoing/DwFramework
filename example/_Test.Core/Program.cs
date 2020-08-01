@@ -21,7 +21,7 @@ namespace _Test.Core
                 {
                     cache.Set($"t{i}", i);
                 }
-                var s = cache.KeysWhere("t.2");
+                var s = cache.KeysWhere(".*2$");
 
                 //var host = new ServiceHost();
 
