@@ -90,11 +90,19 @@ namespace DwFramework.Core.Plugins
         public string[] AllKeys()
         {
             var keys = new string[0];
-            foreach (var item in _memoryCacheStores)
-            {
-                var s = item.AllKeys();
-                keys = keys.Concat(item.AllKeys()).ToArray();
-            }
+            foreach (var item in _memoryCacheStores) keys = keys.Concat(item.AllKeys()).ToArray();
+            return keys;
+        }
+
+        /// <summary>
+        /// 正则获取Key
+        /// </summary>
+        /// <param name="expression"></param>
+        /// <returns></returns>
+        public string[] KeysWhere(string pattern)
+        {
+            var keys = new string[0];
+            foreach (var item in _memoryCacheStores) keys = keys.Concat(item.KeysWhere(pattern)).ToArray();
             return keys;
         }
 

@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Text.RegularExpressions;
 
 namespace DwFramework.Core.Plugins
 {
@@ -130,6 +133,19 @@ namespace DwFramework.Core.Plugins
             var result = new string[keys.Count];
             keys.CopyTo(result, 0);
             return result;
+        }
+
+        /// <summary>
+        /// 正则获取Key
+        /// </summary>
+        /// <param name="pattern"></param>
+        /// <returns></returns>
+        public string[] KeysWhere(string pattern)
+        {
+            var keys = _Datas.Keys;
+            var result = new string[keys.Count];
+            keys.CopyTo(result, 0);
+            return result.Where(item => Regex.IsMatch(item, pattern)).ToArray();
         }
 
         /// <summary>
