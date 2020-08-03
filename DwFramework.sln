@@ -24,11 +24,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lib.Rpc", "src\Lib.Rpc\Lib.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lib.TaskSchedule", "src\Lib.TaskSchedule\Lib.TaskSchedule.csproj", "{BD33CF91-FAA8-4DDF-8B63-E98A1EA0505B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lib.Core", "src\Lib.Core\Lib.Core.csproj", "{BD976D28-A39B-4087-932B-52229A868FAC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lib.Core", "src\Lib.Core\Lib.Core.csproj", "{BD976D28-A39B-4087-932B-52229A868FAC}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lib.WebAPI", "src\Lib.WebAPI\Lib.WebAPI.csproj", "{B4A8E83C-5FA8-4631-96C4-B315D16724E2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lib.WebAPI", "src\Lib.WebAPI\Lib.WebAPI.csproj", "{B4A8E83C-5FA8-4631-96C4-B315D16724E2}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lib.WebSocket", "src\Lib.WebSocket\Lib.WebSocket.csproj", "{57E4D9A1-8F61-4B30-9B25-54FCE02AF031}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lib.WebSocket", "src\Lib.WebSocket\Lib.WebSocket.csproj", "{57E4D9A1-8F61-4B30-9B25-54FCE02AF031}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "_Test.WebSocket", "example\_Test.WebSocket\_Test.WebSocket.csproj", "{FE6169FC-8649-43B8-B95B-7D816EFF2AEB}"
 EndProject
@@ -36,7 +36,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "_Test.Socket", "example\_Te
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "_Test.WebAPI", "example\_Test.WebAPI\_Test.WebAPI.csproj", "{F58DFA8E-60D2-4525-8AB9-6B6A9981F460}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lib.Socket", "src\Lib.Socket\Lib.Socket.csproj", "{2E2BAC16-3324-4659-947B-84A1E1D61192}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lib.Socket", "src\Lib.Socket\Lib.Socket.csproj", "{4A4E18D1-225F-4C53-A3E2-91F910BEB74D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -112,10 +112,10 @@ Global
 		{F58DFA8E-60D2-4525-8AB9-6B6A9981F460}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F58DFA8E-60D2-4525-8AB9-6B6A9981F460}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F58DFA8E-60D2-4525-8AB9-6B6A9981F460}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2E2BAC16-3324-4659-947B-84A1E1D61192}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2E2BAC16-3324-4659-947B-84A1E1D61192}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2E2BAC16-3324-4659-947B-84A1E1D61192}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2E2BAC16-3324-4659-947B-84A1E1D61192}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4A4E18D1-225F-4C53-A3E2-91F910BEB74D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4A4E18D1-225F-4C53-A3E2-91F910BEB74D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4A4E18D1-225F-4C53-A3E2-91F910BEB74D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4A4E18D1-225F-4C53-A3E2-91F910BEB74D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
