@@ -38,7 +38,7 @@ namespace DwFramework.RabbitMQ
         private int _connectionPointer = 0;
         private readonly IConnection[] _connectionPool;
         private static readonly object _connectionPoolLock = new object();
-        private Dictionary<string, KeyValuePair<CancellationTokenSource, Task>> _subscribers;
+        private readonly Dictionary<string, KeyValuePair<CancellationTokenSource, Task>> _subscribers;
 
 
         /// <summary>
@@ -90,11 +90,8 @@ namespace DwFramework.RabbitMQ
         /// <returns></returns>
         public void ExchangeDeclare(string exchange, string type, bool durable = false, bool autoDelete = false, IDictionary<string, object> arguments = null)
         {
-            var connection = GetConnection();
-            using (var channel = connection.CreateModel())
-            {
-                channel.ExchangeDeclare(exchange, type, durable, autoDelete, arguments);
-            }
+            using var channel = GetConnection().CreateModel();
+            channel.ExchangeDeclare(exchange, type, durable, autoDelete, arguments);
         }
 
         /// <summary>
@@ -108,11 +105,8 @@ namespace DwFramework.RabbitMQ
         /// <returns></returns>
         public void QueueDeclare(string queue, bool durable = false, bool exclusive = false, bool autoDelete = false, IDictionary<string, object> arguments = null)
         {
-            var connection = GetConnection();
-            using (var channel = connection.CreateModel())
-            {
-                channel.QueueDeclare(queue, durable, exclusive, autoDelete, arguments);
-            }
+            using var channel = GetConnection().CreateModel();
+            channel.QueueDeclare(queue, durable, exclusive, autoDelete, arguments);
         }
 
         /// <summary>
@@ -125,11 +119,8 @@ namespace DwFramework.RabbitMQ
         /// <returns></returns>
         public void QueueBind(string queue, string exchange, string routingKey = "", IDictionary<string, object> arguments = null)
         {
-            var connection = GetConnection();
-            using (var channel = connection.CreateModel())
-            {
-                channel.QueueBind(queue, exchange, routingKey, arguments);
-            }
+            using var channel = GetConnection().CreateModel();
+            channel.QueueBind(queue, exchange, routingKey, arguments);
         }
 
         /// <summary>
@@ -141,19 +132,15 @@ namespace DwFramework.RabbitMQ
         /// <param name="basicPropertiesSetting"></param>
         public void Publish(string msg, string exchange = "", string routingKey = "", Action<IBasicProperties> basicPropertiesSetting = null)
         {
-            var connection = GetConnection();
-            using (var channel = connection.CreateModel())
+            using var channel = GetConnection().CreateModel();
+            IBasicProperties basicProperties = null;
+            if (basicPropertiesSetting != null)
             {
-
-                IBasicProperties basicProperties = null;
-                if (basicPropertiesSetting != null)
-                {
-                    basicProperties = channel.CreateBasicProperties();
-                    basicPropertiesSetting(basicProperties);
-                }
-                var body = Encoding.UTF8.GetBytes(msg);
-                channel.BasicPublish(exchange, routingKey, basicProperties, body);
+                basicProperties = channel.CreateBasicProperties();
+                basicPropertiesSetting(basicProperties);
             }
+            var body = Encoding.UTF8.GetBytes(msg);
+            channel.BasicPublish(exchange, routingKey, basicProperties, body);
         }
 
         /// <summary>
@@ -170,6 +157,45 @@ namespace DwFramework.RabbitMQ
         }
 
         /// <summary>
+        /// 发布消息并等待Ack
+        /// </summary>
+        /// <param name="msg"></param>
+        /// <param name="exchange"></param>
+        /// <param name="routingKey"></param>
+        /// <param name="basicPropertiesSetting"></param>
+        /// <param name="timeoutSeconds"></param>
+        /// <returns></returns>
+        public bool PublishWaitForAck(string msg, string exchange = "", string routingKey = "", Action<IBasicProperties> basicPropertiesSetting = null, int timeoutSeconds = 0)
+        {
+            using var channel = GetConnection().CreateModel();
+            channel.ConfirmSelect();
+            IBasicProperties basicProperties = null;
+            if (basicPropertiesSetting != null)
+            {
+                basicProperties = channel.CreateBasicProperties();
+                basicPropertiesSetting(basicProperties);
+            }
+            var body = Encoding.UTF8.GetBytes(msg);
+            channel.BasicPublish(exchange, routingKey, basicProperties, body);
+            if (timeoutSeconds >= 0) return channel.WaitForConfirms(TimeSpan.FromSeconds(timeoutSeconds));
+            else return channel.WaitForConfirms();
+        }
+
+        /// <summary>
+        /// 发布消息并等待Ack
+        /// </summary>
+        /// <param name="msg"></param>
+        /// <param name="exchange"></param>
+        /// <param name="routingKey"></param>
+        /// <param name="basicPropertiesSetting"></param>
+        /// <param name="timeoutSeconds"></param>
+        /// <returns></returns>
+        public Task<bool> PublishWaitForAckAsync(string msg, string exchange = "", string routingKey = "", Action<IBasicProperties> basicPropertiesSetting = null, int timeoutSeconds = 0)
+        {
+            return TaskManager.CreateTask(() => PublishWaitForAck(msg, exchange, routingKey, basicPropertiesSetting, timeoutSeconds));
+        }
+
+        /// <summary>
         /// 发布消息
         /// </summary>
         /// <param name="data"></param>
@@ -178,18 +204,15 @@ namespace DwFramework.RabbitMQ
         /// <param name="basicPropertiesSetting"></param>
         public void Publish(object data, string exchange = "", string routingKey = "", Action<IBasicProperties> basicPropertiesSetting = null)
         {
-            var connection = GetConnection();
-            using (var channel = connection.CreateModel())
+            using var channel = GetConnection().CreateModel();
+            IBasicProperties basicProperties = null;
+            if (basicPropertiesSetting != null)
             {
-                IBasicProperties basicProperties = null;
-                if (basicPropertiesSetting != null)
-                {
-                    basicProperties = channel.CreateBasicProperties();
-                    basicPropertiesSetting(basicProperties);
-                }
-                var body = Encoding.UTF8.GetBytes(data.ToJson());
-                channel.BasicPublish(exchange, routingKey, basicProperties, body);
+                basicProperties = channel.CreateBasicProperties();
+                basicPropertiesSetting(basicProperties);
             }
+            var body = Encoding.UTF8.GetBytes(data.ToJson());
+            channel.BasicPublish(exchange, routingKey, basicProperties, body);
         }
 
         /// <summary>
@@ -206,6 +229,45 @@ namespace DwFramework.RabbitMQ
         }
 
         /// <summary>
+        /// 发布消息并等待Ack
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="exchange"></param>
+        /// <param name="routingKey"></param>
+        /// <param name="basicPropertiesSetting"></param>
+        /// <param name="timeoutSeconds"></param>
+        /// <returns></returns>
+        public bool PublishWaitForAck(object data, string exchange = "", string routingKey = "", Action<IBasicProperties> basicPropertiesSetting = null, int timeoutSeconds = 0)
+        {
+            using var channel = GetConnection().CreateModel();
+            channel.ConfirmSelect();
+            IBasicProperties basicProperties = null;
+            if (basicPropertiesSetting != null)
+            {
+                basicProperties = channel.CreateBasicProperties();
+                basicPropertiesSetting(basicProperties);
+            }
+            var body = Encoding.UTF8.GetBytes(data.ToJson());
+            channel.BasicPublish(exchange, routingKey, basicProperties, body);
+            if (timeoutSeconds >= 0) return channel.WaitForConfirms(TimeSpan.FromSeconds(timeoutSeconds));
+            else return channel.WaitForConfirms();
+        }
+
+        /// <summary>
+        /// 发布消息并等待Ack
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="exchange"></param>
+        /// <param name="routingKey"></param>
+        /// <param name="basicPropertiesSetting"></param>
+        /// <param name="timeoutSeconds"></param>
+        /// <returns></returns>
+        public Task<bool> PublishWaitForAckAsync(object data, string exchange = "", string routingKey = "", Action<IBasicProperties> basicPropertiesSetting = null, int timeoutSeconds = 0)
+        {
+            return TaskManager.CreateTask(() => PublishWaitForAck(data, exchange, routingKey, basicPropertiesSetting, timeoutSeconds));
+        }
+
+        /// <summary>
         /// 订阅消息
         /// </summary>
         /// <param name="queue"></param>
@@ -216,17 +278,15 @@ namespace DwFramework.RabbitMQ
         {
             var task = TaskManager.CreateTask(token =>
             {
-                using (var connection = _connectionFactory.CreateConnection())
-                using (var channel = connection.CreateModel())
+                using var connection = _connectionFactory.CreateConnection();
+                using var channel = connection.CreateModel();
+                var consumer = new EventingBasicConsumer(channel);
+                channel.BasicConsume(queue, autoAck, consumer);
+                consumer.Received += (sender, args) =>
                 {
-                    var consumer = new EventingBasicConsumer(channel);
-                    channel.BasicConsume(queue, autoAck, consumer);
-                    consumer.Received += (sender, args) =>
-                    {
-                        handler(channel, args);
-                    };
-                    while (!token.IsCancellationRequested) Thread.Sleep(1);
-                }
+                    handler(channel, args);
+                };
+                while (!token.IsCancellationRequested) Thread.Sleep(1);
             }, out var cancellationToken);
             _subscribers[queue] = new KeyValuePair<CancellationTokenSource, Task>(cancellationToken, task);
         }
