@@ -130,7 +130,8 @@ namespace DwFramework.RabbitMQ
         /// <param name="exchange"></param>
         /// <param name="routingKey"></param>
         /// <param name="basicPropertiesSetting"></param>
-        public void Publish(string msg, string exchange = "", string routingKey = "", Action<IBasicProperties> basicPropertiesSetting = null)
+        /// <param name="returnAction"></param>
+        public void Publish(string msg, string exchange = "", string routingKey = "", Action<IBasicProperties> basicPropertiesSetting = null, Action<BasicReturnEventArgs> returnAction = null)
         {
             using var channel = GetConnection().CreateModel();
             IBasicProperties basicProperties = null;
@@ -140,6 +141,7 @@ namespace DwFramework.RabbitMQ
                 basicPropertiesSetting(basicProperties);
             }
             var body = Encoding.UTF8.GetBytes(msg);
+            if (returnAction != null) channel.BasicReturn += (sender, args) => returnAction(args);
             channel.BasicPublish(exchange, routingKey, basicProperties, body);
         }
 
@@ -150,10 +152,11 @@ namespace DwFramework.RabbitMQ
         /// <param name="exchange"></param>
         /// <param name="routingKey"></param>
         /// <param name="basicPropertiesSetting"></param>
+        /// <param name="returnAction"></param>
         /// <returns></returns>
-        public Task PublishAsync(string msg, string exchange = "", string routingKey = "", Action<IBasicProperties> basicPropertiesSetting = null)
+        public Task PublishAsync(string msg, string exchange = "", string routingKey = "", Action<IBasicProperties> basicPropertiesSetting = null, Action<BasicReturnEventArgs> returnAction = null)
         {
-            return TaskManager.CreateTask(() => Publish(msg, exchange, routingKey, basicPropertiesSetting));
+            return TaskManager.CreateTask(() => Publish(msg, exchange, routingKey, basicPropertiesSetting, returnAction));
         }
 
         /// <summary>
@@ -164,8 +167,9 @@ namespace DwFramework.RabbitMQ
         /// <param name="routingKey"></param>
         /// <param name="basicPropertiesSetting"></param>
         /// <param name="timeoutSeconds"></param>
+        /// <param name="returnAction"></param>
         /// <returns></returns>
-        public bool PublishWaitForAck(string msg, string exchange = "", string routingKey = "", Action<IBasicProperties> basicPropertiesSetting = null, int timeoutSeconds = 0)
+        public bool PublishWaitForAck(string msg, string exchange = "", string routingKey = "", Action<IBasicProperties> basicPropertiesSetting = null, int timeoutSeconds = 0, Action<BasicReturnEventArgs> returnAction = null)
         {
             using var channel = GetConnection().CreateModel();
             channel.ConfirmSelect();
@@ -176,6 +180,7 @@ namespace DwFramework.RabbitMQ
                 basicPropertiesSetting(basicProperties);
             }
             var body = Encoding.UTF8.GetBytes(msg);
+            if (returnAction != null) channel.BasicReturn += (sender, args) => returnAction(args);
             channel.BasicPublish(exchange, routingKey, basicProperties, body);
             if (timeoutSeconds >= 0) return channel.WaitForConfirms(TimeSpan.FromSeconds(timeoutSeconds));
             else return channel.WaitForConfirms();
@@ -189,10 +194,11 @@ namespace DwFramework.RabbitMQ
         /// <param name="routingKey"></param>
         /// <param name="basicPropertiesSetting"></param>
         /// <param name="timeoutSeconds"></param>
+        /// <param name="returnAction"></param>
         /// <returns></returns>
-        public Task<bool> PublishWaitForAckAsync(string msg, string exchange = "", string routingKey = "", Action<IBasicProperties> basicPropertiesSetting = null, int timeoutSeconds = 0)
+        public Task<bool> PublishWaitForAckAsync(string msg, string exchange = "", string routingKey = "", Action<IBasicProperties> basicPropertiesSetting = null, int timeoutSeconds = 0, Action<BasicReturnEventArgs> returnAction = null)
         {
-            return TaskManager.CreateTask(() => PublishWaitForAck(msg, exchange, routingKey, basicPropertiesSetting, timeoutSeconds));
+            return TaskManager.CreateTask(() => PublishWaitForAck(msg, exchange, routingKey, basicPropertiesSetting, timeoutSeconds, returnAction));
         }
 
         /// <summary>
@@ -202,7 +208,8 @@ namespace DwFramework.RabbitMQ
         /// <param name="exchange"></param>
         /// <param name="routingKey"></param>
         /// <param name="basicPropertiesSetting"></param>
-        public void Publish(object data, string exchange = "", string routingKey = "", Action<IBasicProperties> basicPropertiesSetting = null)
+        /// <param name="returnAction"></param>
+        public void Publish(object data, string exchange = "", string routingKey = "", Action<IBasicProperties> basicPropertiesSetting = null, Action<BasicReturnEventArgs> returnAction = null)
         {
             using var channel = GetConnection().CreateModel();
             IBasicProperties basicProperties = null;
@@ -212,6 +219,7 @@ namespace DwFramework.RabbitMQ
                 basicPropertiesSetting(basicProperties);
             }
             var body = Encoding.UTF8.GetBytes(data.ToJson());
+            if (returnAction != null) channel.BasicReturn += (sender, args) => returnAction(args);
             channel.BasicPublish(exchange, routingKey, basicProperties, body);
         }
 
@@ -222,10 +230,11 @@ namespace DwFramework.RabbitMQ
         /// <param name="exchange"></param>
         /// <param name="routingKey"></param>
         /// <param name="basicPropertiesSetting"></param>
+        /// <param name="returnAction"></param>
         /// <returns></returns>
-        public Task PublishAsync(object data, string exchange = "", string routingKey = "", Action<IBasicProperties> basicPropertiesSetting = null)
+        public Task PublishAsync(object data, string exchange = "", string routingKey = "", Action<IBasicProperties> basicPropertiesSetting = null, Action<BasicReturnEventArgs> returnAction = null)
         {
-            return TaskManager.CreateTask(() => Publish(data, exchange, routingKey, basicPropertiesSetting));
+            return TaskManager.CreateTask(() => Publish(data, exchange, routingKey, basicPropertiesSetting, returnAction));
         }
 
         /// <summary>
@@ -236,8 +245,9 @@ namespace DwFramework.RabbitMQ
         /// <param name="routingKey"></param>
         /// <param name="basicPropertiesSetting"></param>
         /// <param name="timeoutSeconds"></param>
+        /// <param name="returnAction"></param>
         /// <returns></returns>
-        public bool PublishWaitForAck(object data, string exchange = "", string routingKey = "", Action<IBasicProperties> basicPropertiesSetting = null, int timeoutSeconds = 0)
+        public bool PublishWaitForAck(object data, string exchange = "", string routingKey = "", Action<IBasicProperties> basicPropertiesSetting = null, int timeoutSeconds = 0, Action<BasicReturnEventArgs> returnAction = null)
         {
             using var channel = GetConnection().CreateModel();
             channel.ConfirmSelect();
@@ -248,6 +258,7 @@ namespace DwFramework.RabbitMQ
                 basicPropertiesSetting(basicProperties);
             }
             var body = Encoding.UTF8.GetBytes(data.ToJson());
+            if (returnAction != null) channel.BasicReturn += (sender, args) => returnAction(args);
             channel.BasicPublish(exchange, routingKey, basicProperties, body);
             if (timeoutSeconds >= 0) return channel.WaitForConfirms(TimeSpan.FromSeconds(timeoutSeconds));
             else return channel.WaitForConfirms();
@@ -261,10 +272,11 @@ namespace DwFramework.RabbitMQ
         /// <param name="routingKey"></param>
         /// <param name="basicPropertiesSetting"></param>
         /// <param name="timeoutSeconds"></param>
+        /// <param name="returnAction"></param>
         /// <returns></returns>
-        public Task<bool> PublishWaitForAckAsync(object data, string exchange = "", string routingKey = "", Action<IBasicProperties> basicPropertiesSetting = null, int timeoutSeconds = 0)
+        public Task<bool> PublishWaitForAckAsync(object data, string exchange = "", string routingKey = "", Action<IBasicProperties> basicPropertiesSetting = null, int timeoutSeconds = 0, Action<BasicReturnEventArgs> returnAction = null)
         {
-            return TaskManager.CreateTask(() => PublishWaitForAck(data, exchange, routingKey, basicPropertiesSetting, timeoutSeconds));
+            return TaskManager.CreateTask(() => PublishWaitForAck(data, exchange, routingKey, basicPropertiesSetting, timeoutSeconds, returnAction));
         }
 
         /// <summary>
