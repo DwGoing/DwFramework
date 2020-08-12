@@ -18,7 +18,12 @@ namespace _Test.Rpc
                 var host = new ServiceHost(configFilePath: $"{AppDomain.CurrentDomain.BaseDirectory}Config.json");
                 host.RegisterType<AService>();
                 host.RegisterRpcService();
-                host.InitService(provider => provider.InitRpcService());
+                host.InitService(provider =>
+                {
+                    var rpc = provider.GetRpcService();
+                    rpc.AddService(provider.GetService<AService>());
+                    provider.InitRpcService();
+                });
                 host.Run();
             }
             catch (Exception ex)
