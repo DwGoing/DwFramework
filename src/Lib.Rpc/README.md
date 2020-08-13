@@ -29,6 +29,12 @@ PM> Install-Package DwFramework.Rpc
 host.RegisterRpcService();
 // 初始化服务
 host.InitService(provider => provider.InitRpcService());
+// 对于非自定义的RPC服务类可以通过手动注册（无法使用[RPC]特性标签）
+host.InitService(provider => {
+  var rpc = provider.GetRpcService();
+  rpc.AddService(provider.GetService<AService>());
+  provider.InitRpcService();
+});
 ```
 
 ### 0x3 注册Rpc函数
@@ -58,7 +64,7 @@ message Response {
 // a.proto的实现类
 // 需要在host中注册
 // host.RegisterType<AService>();
-[Rpc(typeof(A))]
+[Rpc]
 public class AService : A.ABase
 {
   public override Task<Response> Do(Request request, ServerCallContext context)
