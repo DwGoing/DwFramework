@@ -94,7 +94,9 @@ namespace DwFramework.Rpc
         {
             var type = serviceImpl.GetType();
             var baseType = type.BaseType;
+            if (baseType.ReflectedType == null) throw new Exception("gRPC服务异常");
             var method = baseType.ReflectedType.GetMethod("BindService", new Type[] { baseType });
+            if (method == null) throw new Exception("gRPC服务异常");
             return (ServerServiceDefinition)method.Invoke(null, new[] { serviceImpl });
         }
 
