@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Net.WebSockets;
 using System.Text;
+using System.Collections.Generic;
 
 using DwFramework.Core.Plugins;
 
@@ -56,7 +57,7 @@ namespace DwFramework.WebSocket
         public event Action<OnCloceEventargs> OnClose;
         public event Action<OnErrorEventargs> OnError;
 
-        private ClientWebSocket _client;
+        private readonly ClientWebSocket _client;
         private int _bufferSize = 4096;
         public int BufferSize
         {
@@ -83,9 +84,13 @@ namespace DwFramework.WebSocket
         /// 建立连接
         /// </summary>
         /// <param name="uri"></param>
+        /// <param name="header"></param>
+        /// <param name="subProtocal"></param>
         /// <returns></returns>
-        public Task ConnectAsync(string uri)
+        public Task ConnectAsync(string uri, Dictionary<string, string> header = null, List<string> subProtocal = null)
         {
+            if (header != null) foreach (var item in header) _client.Options.SetRequestHeader(item.Key, item.Value);
+            if (subProtocal != null) foreach (var item in subProtocal) _client.Options.AddSubProtocol(item);
             return _client.ConnectAsync(new Uri(uri), CancellationToken.None).ContinueWith(a =>
             {
                 OnConnect?.Invoke(new OnConnectEventargs() { });
