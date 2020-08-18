@@ -4,7 +4,7 @@
         <TargetFramework>netstandard2.1</TargetFramework>
         <AssemblyName>DwFramework.MachineLearning</AssemblyName>
         <RootNamespace>DwFramework.MachineLearning</RootNamespace>
-        <Version>1.2.1.2</Version>
+        <Version>1.2.1.3</Version>
         <Authors>DwGoing</Authors>
         <Copyright>DwGoing</Copyright>
         <Description>DwFramework 机器学习库</Description>
