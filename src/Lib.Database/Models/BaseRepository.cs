@@ -4,7 +4,9 @@ using System.Threading.Tasks;
 
 using SqlSugar;
 
+using DwFramework.Core;
 using DwFramework.Core.Plugins;
+using DwFramework.Database.Extensions;
 
 namespace DwFramework.Database
 {
@@ -16,12 +18,10 @@ namespace DwFramework.Database
         /// <summary>
         /// 构造函数
         /// </summary>
-        /// <param name="databaseService"></param>
-        public BaseRepository(DatabaseService databaseService)
+        public BaseRepository()
         {
-            _databaseService = databaseService;
-            if (_databaseService == null)
-                throw new Exception("未找到Database服务");
+            _databaseService = ServiceHost.Provider.GetDatabaseService();
+            if (_databaseService == null) throw new Exception("未找到Database服务");
         }
 
         /// <summary>
