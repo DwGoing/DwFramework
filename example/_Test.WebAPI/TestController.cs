@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,7 +18,7 @@ namespace _Test.WebAPI
         [HttpGet("get")]
         public IActionResult Get()
         {
-            return Ok("ok");
+            return Ok(ResultInfo.Success<string>(JwtManager.GenerateToken("dwgoing", "ayou1209ayou1209ayou1209", new[] { "a", "b" }, customFields: new Dictionary<string, object>() { { "A", "a" } })));
         }
 
         [HttpPost("post")]

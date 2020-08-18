@@ -4,7 +4,9 @@ using System.Threading.Tasks;
 
 using SqlSugar;
 
+using DwFramework.Core;
 using DwFramework.Core.Plugins;
+using DwFramework.Database.Extensions;
 
 namespace DwFramework.Database
 {
@@ -16,12 +18,10 @@ namespace DwFramework.Database
         /// <summary>
         /// 构造函数
         /// </summary>
-        /// <param name="databaseService"></param>
-        public BaseRepository(DatabaseService databaseService)
+        public BaseRepository()
         {
-            _databaseService = databaseService;
-            if (_databaseService == null)
-                throw new Exception("未找到Database服务");
+            _databaseService = ServiceHost.Provider.GetDatabaseService();
+            if (_databaseService == null) throw new Exception("未找到Database服务");
         }
 
         /// <summary>
@@ -40,6 +40,24 @@ namespace DwFramework.Database
         }
 
         /// <summary>
+        /// 查找所有记录
+        /// </summary>
+        /// <param name="pageIndex"></param>
+        /// <param name="pageSize"></param>
+        /// <param name="cacheExpireSeconds"></param>
+        /// <returns></returns>
+        public Task<T[]> FindAllAsync(int pageIndex, int pageSize, int cacheExpireSeconds = 0)
+        {
+            return TaskManager.CreateTask(() =>
+            {
+                return DbConnection.Queryable<T>()
+                    .WithCacheIF(cacheExpireSeconds > 0, cacheExpireSeconds)
+                    .ToPageList(pageIndex, pageSize)
+                    .ToArray();
+            });
+        }
+
+        /// <summary>
         /// 条件查找
         /// </summary>
         /// <param name="expression"></param>
@@ -52,6 +70,25 @@ namespace DwFramework.Database
                 return DbConnection.Queryable<T>()
                     .Where(expression)
                     .WithCacheIF(cacheExpireSeconds > 0, cacheExpireSeconds)
+                    .ToArray();
+            });
+        }
+
+        /// <summary>
+        /// 条件查找
+        /// </summary>
+        /// <param name="expression"></param>
+        /// <param name="pageIndex"></param>
+        /// <param name="pageSize"></param>
+        /// <param name="cacheExpireSeconds"></param>
+        /// <returns></returns>
+        public Task<T[]> FindAsync(Expression<Func<T, bool>> expression, int pageIndex, int pageSize, int cacheExpireSeconds = 0)
+        {
+            return TaskManager.CreateTask(() =>
+            {
+                return DbConnection.Queryable<T>()
+                    .Where(expression)
+                    .ToPageList(pageIndex, pageSize)
                     .ToArray();
             });
         }

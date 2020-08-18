@@ -11,7 +11,7 @@ namespace _Test.Unit
         public void Md5Encode()
         {
             var str = "oijnidvnnehowierjnw3209j45;390j9[23";
-            var encodedStr = EncryptUtil.Md5.Encode(str);
+            var encodedStr = MD5.Encode(str);
             Assert.AreEqual(encodedStr, "ab15f6a56be7c3a457e8001ca0c8bc99");
         }
     }

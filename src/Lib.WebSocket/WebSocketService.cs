@@ -28,7 +28,12 @@ namespace DwFramework.WebSocket
 
         public class OnConnectEventargs : EventArgs
         {
+            public IHeaderDictionary Header { get; private set; }
 
+            public OnConnectEventargs(IHeaderDictionary header)
+            {
+                Header = header;
+            }
         }
 
         public class OnSendEventargs : EventArgs
@@ -142,7 +147,7 @@ namespace DwFramework.WebSocket
                         var webSocket = await context.WebSockets.AcceptWebSocketAsync();
                         var connection = new WebSocketConnection(webSocket);
                         _connections[connection.ID] = connection;
-                        OnConnect?.Invoke(connection, new OnConnectEventargs() { });
+                        OnConnect?.Invoke(connection, new OnConnectEventargs(context.Request.Headers));
                         var dataBytes = new List<byte>();
                         while (true)
                         {

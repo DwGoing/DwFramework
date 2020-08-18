@@ -20,7 +20,7 @@ namespace DwFramework.Socket
         /// <param name="socket"></param>
         public SocketConnection(System.Net.Sockets.Socket socket, int bufferSize)
         {
-            ID = EncryptUtil.Md5.Encode(Guid.NewGuid().ToString());
+            ID = MD5.Encode(Guid.NewGuid().ToString());
             Socket = socket;
             Buffer = new byte[bufferSize];
         }

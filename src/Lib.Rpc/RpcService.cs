@@ -33,6 +33,17 @@ namespace DwFramework.Rpc
         }
 
         /// <summary>
+        /// 添加RPC服务
+        /// </summary>
+        /// <param name="service"></param>
+        /// <returns></returns>
+        public RpcService AddService(object service)
+        {
+            _server.Services.Add(GetServerServiceDefinition(service));
+            return this;
+        }
+
+        /// <summary>
         /// 开启服务
         /// </summary>
         /// <returns></returns>
@@ -74,6 +85,22 @@ namespace DwFramework.Rpc
         }
 
         /// <summary>
+        /// 获取gRPC服务
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="serviceImpl"></param>
+        /// <returns></returns>
+        private ServerServiceDefinition GetServerServiceDefinition(object serviceImpl)
+        {
+            var type = serviceImpl.GetType();
+            var baseType = type.BaseType;
+            if (baseType.ReflectedType == null) throw new Exception("gRPC服务异常");
+            var method = baseType.ReflectedType.GetMethod("BindService", new Type[] { baseType });
+            if (method == null) throw new Exception("gRPC服务异常");
+            return (ServerServiceDefinition)method.Invoke(null, new[] { serviceImpl });
+        }
+
+        /// <summary>
         /// 从程序集中注册Rpc函数
         /// </summary>
         private void RegisterFuncFromAssemblies()
@@ -88,8 +115,7 @@ namespace DwFramework.Rpc
                     if (attr == null) continue;
                     var service = ServiceHost.Provider.GetService(item);
                     if (service == null) continue;
-                    var method = attr.ImplementType.GetMethod("BindService", new Type[] { item.BaseType });
-                    _server.Services.Add((ServerServiceDefinition)method.Invoke(null, new[] { service }));
+                    _server.Services.Add(GetServerServiceDefinition(service));
                 }
             }
         }

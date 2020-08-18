@@ -19,7 +19,7 @@ namespace DwFramework.WebSocket
         /// <param name="webSocket"></param>
         public WebSocketConnection(System.Net.WebSockets.WebSocket webSocket)
         {
-            ID = EncryptUtil.Md5.Encode(Guid.NewGuid().ToString());
+            ID = MD5.Encode(Guid.NewGuid().ToString());
             WebSocket = webSocket;
         }
 

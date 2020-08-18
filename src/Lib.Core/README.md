@@ -104,7 +104,7 @@ host.RegisterType<TestClass2, ITestInterface>();
 
 核心服务中内置了很多插件，为开发者提供便利。
 
-##### 0x1 拦截器
+##### 0x1 Aop
 
 ```c#
 public interface ITest

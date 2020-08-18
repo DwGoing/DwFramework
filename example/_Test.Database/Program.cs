@@ -20,9 +20,13 @@ namespace _Test.Database
                 host.RegisterRepositories();
                 host.InitService(provider =>
                 {
-                    var service = provider.GetService<AccountRepository>();
-                    Console.WriteLine(service.FindAllAsync().Result.ToJson());
-                    service.FindAsync(item => item.ID == 0);
+                    var db = provider.GetDatabaseService().DbConnection;
+                    db.Aop.OnLogExecuted = (sql, args) =>
+                    {
+                        Console.WriteLine(sql);
+                        Console.WriteLine(db.Ado.SqlExecutionTime.TotalMilliseconds + "ms");
+                    };
+                    var res = db.Union(db.Queryable<User>().Where(item => item.Name == "Test100"), db.Queryable<User>().Where(item => item.Name == "Test110")).ToArray();
                 });
                 host.Run();
             }
@@ -33,21 +37,22 @@ namespace _Test.Database
         }
     }
 
-    [SugarTable("account")]
-    public class Account
+    [SugarTable("user")]
+    public class User
     {
         [SugarColumn(ColumnName = "id", IsIdentity = true, IsPrimaryKey = true)]
         public int ID { get; set; }
-        [SugarColumn(ColumnName = "create_time")]
-        public DateTime CreateTime { get; set; }
-        [SugarColumn(ColumnName = "user")]
-        public string User { get; set; }
-        [SugarColumn(ColumnName = "password")]
-        public string Password { get; set; }
+        [SugarColumn(ColumnName = "card_id")]
+        public string CardId { get; set; }
+        [SugarColumn(ColumnName = "name")]
+        public string Name { get; set; }
     }
 
-    public class AccountRepository : BaseRepository<Account>
+    public class UserRepository : BaseRepository<User>
     {
-        public AccountRepository(DatabaseService database) : base(database) { }
+        public UserRepository()
+        {
+
+        }
     }
 }

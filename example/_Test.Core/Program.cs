@@ -10,43 +10,14 @@ using DwFramework.Core.Extensions;
 
 namespace _Test.Core
 {
-    public class Root
-    {
-        public A A { get; set; }
-        public B B { get; set; }
-    }
-
-    public class A
-    {
-        public int a1 { get; set; }
-        public string a2 { get; set; }
-    }
-
-    public class B
-    {
-        public int b1 { get; set; }
-        public string b2 { get; set; }
-    }
-
     class Program
     {
         static void Main(string[] args)
         {
             try
             {
-                var rootPath = AppDomain.CurrentDomain.BaseDirectory;
-                var host = new ServiceHost();
-                host.AddJsonConfig($"{rootPath}a.json");
-                host.AddJsonConfig($"{rootPath}b.json");
-                host.InitService(provider =>
-                {
-                    TaskManager.CreateTask(() =>
-                    {
-                        var e = ServiceHost.Environment;
-                        var r = e.Configuration.GetRoot<Root>();
-                    });
-                });
-                host.Run();
+                var v = "10001".ToBinary(2, 16);
+                Console.WriteLine(v);
             }
             catch (Exception ex)
             {

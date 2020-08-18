@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 
 namespace DwFramework.Core.Plugins
 {
@@ -11,6 +12,8 @@ namespace DwFramework.Core.Plugins
         public void Set(string key, object value, TimeSpan expireTime);
         public T Get<T>(string key);
         public void Del(string key);
+        public string[] AllKeys();
+        public string[] KeysWhere(string pattern);
         // Hash操作
         public void HSet(string key, string field, object value);
         public T HGet<T>(string key, string field);

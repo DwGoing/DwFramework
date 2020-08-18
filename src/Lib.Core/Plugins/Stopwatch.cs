@@ -2,7 +2,7 @@
 
 namespace DwFramework.Core.Plugins
 {
-    public class Timer
+    public class Stopwatch
     {
         public DateTime StartTime { get; private set; }
 
@@ -10,7 +10,7 @@ namespace DwFramework.Core.Plugins
         /// 构造函数
         /// </summary>
         /// <param name="startTime"></param>
-        public Timer(DateTime? startTime = null)
+        public Stopwatch(DateTime? startTime = null)
         {
             SetStartTime(startTime);
         }
