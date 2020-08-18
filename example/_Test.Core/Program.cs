@@ -16,16 +16,8 @@ namespace _Test.Core
         {
             try
             {
-                var cache = new MemoryCache();
-                for (var i = 0; i < 100; i++)
-                {
-                    cache.Set($"t{i}", i);
-                }
-                var s = cache.KeysWhere(".*2$");
-
-                //var host = new ServiceHost();
-
-                //host.Run();
+                var v = "10001".ToBinary(2, 16);
+                Console.WriteLine(v);
             }
             catch (Exception ex)
             {
