@@ -1,10 +1,36 @@
 ﻿using System;
 using System.Text;
+using System.Linq;
 
 namespace DwFramework.Core.Extensions
 {
     public static class StringExtension
     {
+        private static readonly string _characters = "0123456789abcdef";
+        /// <summary>
+        /// 进制转换
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        /// <returns></returns>
+        public static string ToBinary(this string source, int from, int to)
+        {
+            if (!new[] { 2, 8, 10, 16 }.Contains(from) || !new[] { 2, 8, 10, 16 }.Contains(to)) throw new Exception("请选择合适的进制:2,8,10,16");
+            var index = 0;
+            var value = source.Reverse().Sum(item => _characters.IndexOf(item) * Math.Pow(from, index++));
+            var builder = new StringBuilder();
+            while (value > 0)
+            {
+                var v = (int)value / to;
+                var mod = (int)value - v * to;
+                builder.Append(_characters[mod]);
+                value = v;
+            }
+            var chars = builder.ToString().Reverse().ToArray();
+            return new string(chars);
+        }
+
         /// <summary>
         /// 字符转int
         /// </summary>
