@@ -27,6 +27,22 @@ namespace DwFramework.Database
         /// <summary>
         /// 查找所有记录
         /// </summary>
+        /// <param name="pageIndex"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
+        public Task<T[]> FindAllAsync(int pageIndex, int pageSize)
+        {
+            return TaskManager.CreateTask(() =>
+            {
+                return DbConnection.Queryable<T>()
+                    .ToPageList(pageIndex, pageSize)
+                    .ToArray();
+            });
+        }
+
+        /// <summary>
+        /// 查找所有记录
+        /// </summary>
         /// <param name="cacheExpireSeconds"></param>
         /// <returns></returns>
         public Task<T[]> FindAllAsync(int cacheExpireSeconds = 0)
@@ -35,6 +51,24 @@ namespace DwFramework.Database
             {
                 return DbConnection.Queryable<T>()
                     .WithCacheIF(cacheExpireSeconds > 0, cacheExpireSeconds)
+                    .ToArray();
+            });
+        }
+
+        /// <summary>
+        /// 条件查找
+        /// </summary>
+        /// <param name="expression"></param>
+        /// <param name="pageIndex"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
+        public Task<T[]> FindAsync(Expression<Func<T, bool>> expression, int pageIndex, int pageSize)
+        {
+            return TaskManager.CreateTask(() =>
+            {
+                return DbConnection.Queryable<T>()
+                    .Where(expression)
+                    .ToPageList(pageIndex, pageSize)
                     .ToArray();
             });
         }
