@@ -2,8 +2,16 @@
 
 ---
 
+⌚️2020.08.18
+
 1. 修复JwtManager生成Token时无法配置audience的问题；
 2. NLog支持ELK日志框架；
+3. MemoryCache插件增加AllKeys、增加正则查找Key；
+4. 新增RabbitMQ消息发布ACK、路由结果监听；
+5. 调整计时器名称防止冲突；
+6. RPC请求增加请求头和子协议的支持；
+7. IRepository支持分页查找；
+8. 优化仓储服务初始化过程；
 
 ⌚️2020.07.29
 
