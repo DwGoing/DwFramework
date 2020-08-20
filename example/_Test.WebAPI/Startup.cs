@@ -34,6 +34,7 @@ namespace _Test.WebAPI
         {
             app.UseRouting();
             app.UseSwagger("Doc", "My API V1");
+            app.UseRequestId();
             app.UseRequestFilter(new Dictionary<string, Action<HttpContext>>
             {
                 {"/*",context =>{

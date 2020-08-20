@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Threading;
 
 using Microsoft.AspNetCore.Mvc;
 
 using DwFramework.Core;
-using DwFramework.Core.Extensions;
-using DwFramework.Core.Plugins;
-using DwFramework.WebAPI;
 using DwFramework.WebAPI.Plugins;
 
 namespace _Test.WebAPI
@@ -18,7 +15,16 @@ namespace _Test.WebAPI
         [HttpGet("get")]
         public IActionResult Get()
         {
-            return Ok(ResultInfo.Success<string>(JwtManager.GenerateToken("dwgoing", "ayou1209ayou1209ayou1209", new[] { "a", "b" }, customFields: new Dictionary<string, object>() { { "A", "a" } })));
+            Console.WriteLine(RequestId.Get());
+            Thread.Sleep(5000);
+            Console.WriteLine(RequestId.Get());
+            return Ok();
+        }
+
+        [HttpGet("g")]
+        public IActionResult G()
+        {
+            return Ok(RequestId.Get());
         }
 
         [HttpPost("post")]
