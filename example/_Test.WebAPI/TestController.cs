@@ -1,11 +1,10 @@
 ﻿using System;
 
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 
 using DwFramework.Core;
-using DwFramework.Core.Extensions;
 using DwFramework.WebAPI.Plugins;
+using System.Collections.Generic;
 
 namespace _Test.WebAPI
 {
@@ -25,7 +24,7 @@ namespace _Test.WebAPI
             ResultInfo result;
             try
             {
-                result = ResultInfo.Success(JwtManager.DecodeToken(body.Jwt), "ok");
+                return Ok(ResultInfo.Success<string>(JwtManager.GenerateToken("dwgoing", "ayou1209ayou1209ayou1209", new[] { "a", "b" }, customFields: new Dictionary<string, object>() { { "A", "a" } })));
             }
             catch (Exception ex)
             {
