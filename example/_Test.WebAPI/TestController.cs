@@ -4,10 +4,8 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 
 using DwFramework.Core;
-using DwFramework.Core.Extensions;
-using DwFramework.Core.Plugins;
-using DwFramework.WebAPI;
 using DwFramework.WebAPI.Plugins;
+using System.Collections.Generic;
 
 namespace _Test.WebAPI
 {
@@ -18,7 +16,7 @@ namespace _Test.WebAPI
         [HttpGet("get")]
         public IActionResult Get()
         {
-            return Ok(ResultInfo.Success<string>(JwtManager.GenerateToken("dwgoing", "ayou1209ayou1209ayou1209", new[] { "a", "b" }, customFields: new Dictionary<string, object>() { { "A", "a" } })));
+            return Ok();
         }
 
         [HttpPost("post")]
@@ -27,7 +25,7 @@ namespace _Test.WebAPI
             ResultInfo result;
             try
             {
-                result = ResultInfo.Success(JwtManager.DecodeToken(body.Jwt), "ok");
+                return Ok(ResultInfo.Success<string>(JwtManager.GenerateToken("dwgoing", "ayou1209ayou1209ayou1209", new[] { "a", "b" }, customFields: new Dictionary<string, object>() { { "A", "a" } })));
             }
             catch (Exception ex)
             {
