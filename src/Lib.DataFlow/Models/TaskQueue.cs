@@ -116,6 +116,9 @@ namespace DwFramework.DataFlow
             return Result;
         }
 
+        /// <summary>
+        /// 执行任务
+        /// </summary>
         private void TaskHandler()
         {
             while (_isEnable && _inputs.Count > 0)
