@@ -16,14 +16,16 @@ namespace _Test.Core
         {
             try
             {
-                var v = "10001".ToBinary(2, 16);
-                Console.WriteLine(v);
+                var host = new ServiceHost(EnvironmentType.Develop);
+                host.AddJsonConfig($"Config.json", () => Console.WriteLine(0));
+                host.AddJsonConfig($"Config1.json", () => Console.WriteLine(1));
+                host.Run();
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
+                Console.ReadKey();
             }
-            Console.ReadKey();
         }
     }
 }

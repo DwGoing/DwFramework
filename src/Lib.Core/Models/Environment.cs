@@ -1,6 +1,8 @@
-﻿using System.IO;
+﻿using System;
+using System.Collections.Generic;
 
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Primitives;
 
 namespace DwFramework.Core
 {
@@ -14,6 +16,7 @@ namespace DwFramework.Core
     {
         private readonly EnvironmentType _environmentType;
         private readonly ConfigurationBuilder _configurationBuilder;
+        private readonly List<Action> _configWatch;
 
         public IConfiguration Configuration { get; private set; }
 
@@ -26,16 +29,19 @@ namespace DwFramework.Core
         {
             _environmentType = environmentType;
             _configurationBuilder = new ConfigurationBuilder();
-            AddJsonConfig(configFilePath);
+            _configWatch = new List<Action>();
+            if (configFilePath != null) AddJsonConfig(configFilePath);
         }
 
         /// <summary>
         /// 添加配置
         /// </summary>
-        /// <param name="configFilePath"></param>
-        public void AddJsonConfig(string configFilePath)
+        /// <param name="fileName"></param>
+        /// <param name="onChange"></param>
+        public void AddJsonConfig(string fileName, Action onChange = null)
         {
-            if (configFilePath != null && File.Exists(configFilePath)) _configurationBuilder.AddJsonFile(configFilePath);
+            _configurationBuilder.AddJsonFile(fileName);
+            if (onChange != null) ChangeToken.OnChange(() => _configurationBuilder.GetFileProvider().Watch(fileName), () => onChange());
         }
 
         /// <summary>
