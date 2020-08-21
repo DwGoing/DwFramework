@@ -17,8 +17,7 @@ namespace _Test.Core
             try
             {
                 var host = new ServiceHost(EnvironmentType.Develop);
-                host.AddJsonConfig($"Config.json", () => Console.WriteLine(0));
-                host.AddJsonConfig($"Config1.json", () => Console.WriteLine(1));
+                host.AddJsonConfig($"Config.json", () => Console.WriteLine("Changed"));
                 host.Run();
             }
             catch (Exception ex)
