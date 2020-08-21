@@ -21,7 +21,7 @@
         </None>
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="RabbitMQ.Client" Version="6.1.0" />
+        <PackageReference Include="RabbitMQ.Client" Version="6.2.1" />
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\Lib.Core\Lib.Core.csproj" />
