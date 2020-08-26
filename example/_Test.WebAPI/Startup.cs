@@ -32,6 +32,10 @@ namespace _Test.WebAPI
 
         public void Configure(IApplicationBuilder app, IHostApplicationLifetime lifetime)
         {
+            app.UseExceptionFilter(async (context, ex) =>
+            {
+                await context.Response.WriteAsync(ex.Message);
+            });
             app.UseRouting();
             app.UseSwagger("Doc", "My API V1");
             app.UseRequestId();

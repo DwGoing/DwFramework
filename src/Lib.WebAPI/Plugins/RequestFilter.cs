@@ -20,16 +20,9 @@ namespace DwFramework.WebAPI.Plugins
         {
             app.Use(async (context, next) =>
             {
-                try
-                {
-                    startHandler(context);
-                    await next();
-                    endHandler(context);
-                }
-                catch (Exception ex)
-                {
-                    await context.Response.WriteAsync(ex.Message);
-                }
+                startHandler(context);
+                await next();
+                endHandler(context);
             });
             return app;
         }
@@ -44,19 +37,12 @@ namespace DwFramework.WebAPI.Plugins
         {
             app.Use(async (context, next) =>
             {
-                try
+                foreach (var item in handlers)
                 {
-                    foreach (var item in handlers)
-                    {
-                        if (Regex.Match(context.Request.Path, item.Key).Success)
-                            item.Value.Invoke(context);
-                    }
-                    await next();
+                    if (Regex.Match(context.Request.Path, item.Key).Success)
+                        item.Value.Invoke(context);
                 }
-                catch (Exception ex)
-                {
-                    await context.Response.WriteAsync(ex.Message);
-                }
+                await next();
             });
             return app;
         }
