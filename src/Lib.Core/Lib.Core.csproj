@@ -3,7 +3,7 @@
     <TargetFramework>netstandard2.1</TargetFramework>
     <AssemblyName>DwFramework.Core</AssemblyName>
     <RootNamespace>DwFramework.Core</RootNamespace>
-    <Version>1.2.1.6</Version>
+    <Version>1.2.1.7</Version>
     <Authors>DwGoing</Authors>
     <Copyright>DwGoing</Copyright>
     <Description>DwFramework 核心库</Description>

@@ -16,7 +16,6 @@ namespace _Test.WebAPI
         public IActionResult Get()
         {
             throw new Exception("ttt");
-            return Ok();
         }
 
         [HttpPost("post")]
