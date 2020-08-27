@@ -169,13 +169,9 @@ namespace DwFramework.Core
         /// <summary>
         /// 注册服务
         /// </summary>
-        /// <param name="assemblyName"></param>
-        /// <returns></returns>
-        public void RegisterFromAssembly(string assemblyName)
+        /// <param name="assembly"></param>
+        public void RegisterFromAssembly(Assembly assembly)
         {
-            var assembly = AppDomain.CurrentDomain.GetAssemblies().Where(item => item.FullName.Split(",").First() == assemblyName).FirstOrDefault();
-            if (assembly == null)
-                throw new Exception("未找到该程序集");
             var types = assembly.GetTypes();
             foreach (var type in types)
             {
@@ -202,34 +198,23 @@ namespace DwFramework.Core
         /// <summary>
         /// 注册服务
         /// </summary>
+        /// <param name="assemblyName"></param>
+        /// <returns></returns>
+        public void RegisterFromAssembly(string assemblyName)
+        {
+            var assembly = AppDomain.CurrentDomain.GetAssemblies().Where(item => item.FullName.Split(",").First() == assemblyName).FirstOrDefault();
+            if (assembly == null) throw new Exception("未找到该程序集");
+            RegisterFromAssembly(assembly);
+        }
+
+        /// <summary>
+        /// 注册服务
+        /// </summary>
         /// <returns></returns>
         public void RegisterFromAssemblies()
         {
             var assemblies = AppDomain.CurrentDomain.GetAssemblies();
-            foreach (var assembly in assemblies)
-            {
-                var types = assembly.GetTypes();
-                foreach (var type in types)
-                {
-                    var attr = type.GetCustomAttribute<RegisterableAttribute>();
-                    if (attr == null)
-                        continue;
-                    var builder = _containerBuilder.RegisterType(type);
-                    if (attr.InterfaceType != null)
-                        builder.As(attr.InterfaceType);
-                    switch (attr.Lifetime)
-                    {
-                        case Lifetime.Singleton:
-                            builder.SingleInstance();
-                            break;
-                        case Lifetime.InstancePerLifetimeScope:
-                            builder.InstancePerLifetimeScope();
-                            break;
-                    }
-                    if (attr.IsAutoActivate)
-                        builder.AutoActivate();
-                }
-            }
+            foreach (var item in assemblies) RegisterFromAssembly(item);
         }
 
         /// <summary>
