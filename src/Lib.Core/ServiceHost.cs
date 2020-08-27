@@ -176,11 +176,10 @@ namespace DwFramework.Core
             foreach (var type in types)
             {
                 var attr = type.GetCustomAttribute<RegisterableAttribute>();
-                if (attr == null)
-                    continue;
+                if (attr == null) continue;
                 var builder = _containerBuilder.RegisterType(type);
-                if (attr.InterfaceType != null)
-                    builder.As(attr.InterfaceType);
+                if (attr.InterfaceType != null) builder.As(attr.InterfaceType);
+                else builder.AsSelf();
                 switch (attr.Lifetime)
                 {
                     case Lifetime.Singleton:
