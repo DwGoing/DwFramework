@@ -15,7 +15,7 @@ namespace _Test.Socket
             {
                 ServiceHost host = new ServiceHost(configFilePath: $"{AppDomain.CurrentDomain.BaseDirectory}Config.json");
                 host.RegisterSocketService();
-                host.InitService(provider =>
+                host.OnInitializing += provider =>
                 {
                     provider.InitSocketServiceAsync();
                     var service = provider.GetSocketService();
@@ -38,7 +38,7 @@ namespace _Test.Socket
                     {
                         Console.WriteLine($"{c.ID}已断开");
                     };
-                });
+                };
                 host.Run();
             }
             catch (Exception ex)

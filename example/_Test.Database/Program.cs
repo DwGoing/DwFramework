@@ -18,7 +18,7 @@ namespace _Test.Database
             {
                 ServiceHost host = new ServiceHost(configFilePath: $"{AppDomain.CurrentDomain.BaseDirectory}Config.json");
                 host.RegisterRepositories();
-                host.InitService(provider =>
+                host.OnInitializing += provider =>
                 {
                     var db = provider.GetDatabaseService().DbConnection;
                     db.Aop.OnLogExecuted = (sql, args) =>
@@ -27,7 +27,7 @@ namespace _Test.Database
                         Console.WriteLine(db.Ado.SqlExecutionTime.TotalMilliseconds + "ms");
                     };
                     var res = db.Union(db.Queryable<User>().Where(item => item.Name == "Test100"), db.Queryable<User>().Where(item => item.Name == "Test110")).ToArray();
-                });
+                };
                 host.Run();
             }
             catch (Exception ex)

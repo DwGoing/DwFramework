@@ -18,10 +18,10 @@ namespace _Test.Core
             {
                 var host = new ServiceHost(EnvironmentType.Develop);
                 host.RegisterFromAssemblies();
-                host.InitService(p =>
+                host.OnInitializing += p =>
                 {
                     var c = p.GetService<CTest>();
-                });
+                };
                 host.Run();
             }
             catch (Exception ex)

@@ -15,7 +15,7 @@ namespace _Test.WebSocket
                 ServiceHost host = new ServiceHost(configFilePath: $"{AppDomain.CurrentDomain.BaseDirectory}Config.json");
                 host.RegisterLog();
                 host.RegisterWebSocketService();
-                host.InitService(provider =>
+                host.OnInitializing += provider =>
                 {
                     provider.InitWebSocketServiceAsync();
                     var service = provider.GetWebSocketService();
@@ -35,7 +35,7 @@ namespace _Test.WebSocket
                     {
                         Console.WriteLine($"{c.ID}已断开");
                     };
-                });
+                };
                 host.Run();
             }
             catch (Exception ex)

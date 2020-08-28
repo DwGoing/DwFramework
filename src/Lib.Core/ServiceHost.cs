@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Reflection;
 using System.Linq;
-using System.Collections.Generic;
 using System.Threading;
 
 using Autofac;
@@ -18,11 +17,11 @@ namespace DwFramework.Core
         private readonly AutoResetEvent _autoResetEvent;
         private readonly ContainerBuilder _containerBuilder;
         private readonly ServiceCollection _services;
-        private readonly List<Action<AutofacServiceProvider>> _initActions = new List<Action<AutofacServiceProvider>>();
-        private readonly List<Action<AutofacServiceProvider>> _stopActions = new List<Action<AutofacServiceProvider>>();
 
         public static Environment Environment { get; private set; }
         public static AutofacServiceProvider Provider { get; private set; }
+        public event Action<AutofacServiceProvider> OnInitializing;
+        public event Action<AutofacServiceProvider> OnStoping;
 
         /// <summary>
         /// 构造函数
@@ -53,7 +52,7 @@ namespace DwFramework.Core
             Environment.Build();
             _containerBuilder.Populate(_services);
             Provider = new AutofacServiceProvider(_containerBuilder.Build());
-            foreach (var item in _initActions) item.Invoke(Provider);
+            OnInitializing?.Invoke(Provider);
             Console.WriteLine("Services is running,Please enter \"Ctrl + C\" to stop!");
             Console.CancelKeyPress += (sender, args) => Stop();
             _autoResetEvent.WaitOne();
@@ -65,7 +64,7 @@ namespace DwFramework.Core
         public void Stop()
         {
             Console.WriteLine("Services is Stopping!");
-            foreach (var item in _stopActions) item.Invoke(Provider);
+            OnStoping?.Invoke(Provider);
             Console.WriteLine("Services is stopped!");
             _autoResetEvent.Set();
         }
@@ -214,24 +213,6 @@ namespace DwFramework.Core
         {
             var assemblies = AppDomain.CurrentDomain.GetAssemblies();
             foreach (var item in assemblies) RegisterFromAssembly(item);
-        }
-
-        /// <summary>
-        /// 初始化服务
-        /// </summary>
-        /// <param name="initAction"></param>
-        public void InitService(Action<AutofacServiceProvider> initAction)
-        {
-            _initActions.Add(initAction);
-        }
-
-        /// <summary>
-        /// 停止服务
-        /// </summary>
-        /// <param name="stopAction"></param>
-        public void StopService(Action<AutofacServiceProvider> stopAction)
-        {
-            _stopActions.Add(stopAction);
         }
 
         /// <summary>
