@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Reflection;
 using System.Linq;
-using System.Collections.Generic;
 using System.Threading;
 
 using Autofac;
@@ -18,11 +17,11 @@ namespace DwFramework.Core
         private readonly AutoResetEvent _autoResetEvent;
         private readonly ContainerBuilder _containerBuilder;
         private readonly ServiceCollection _services;
-        private readonly List<Action<AutofacServiceProvider>> _initActions = new List<Action<AutofacServiceProvider>>();
-        private readonly List<Action<AutofacServiceProvider>> _stopActions = new List<Action<AutofacServiceProvider>>();
 
         public static Environment Environment { get; private set; }
         public static AutofacServiceProvider Provider { get; private set; }
+        public event Action<AutofacServiceProvider> OnInitializing;
+        public event Action<AutofacServiceProvider> OnStoping;
 
         /// <summary>
         /// 构造函数
@@ -53,7 +52,7 @@ namespace DwFramework.Core
             Environment.Build();
             _containerBuilder.Populate(_services);
             Provider = new AutofacServiceProvider(_containerBuilder.Build());
-            foreach (var item in _initActions) item.Invoke(Provider);
+            OnInitializing?.Invoke(Provider);
             Console.WriteLine("Services is running,Please enter \"Ctrl + C\" to stop!");
             Console.CancelKeyPress += (sender, args) => Stop();
             _autoResetEvent.WaitOne();
@@ -65,7 +64,7 @@ namespace DwFramework.Core
         public void Stop()
         {
             Console.WriteLine("Services is Stopping!");
-            foreach (var item in _stopActions) item.Invoke(Provider);
+            OnStoping?.Invoke(Provider);
             Console.WriteLine("Services is stopped!");
             _autoResetEvent.Set();
         }
@@ -169,22 +168,17 @@ namespace DwFramework.Core
         /// <summary>
         /// 注册服务
         /// </summary>
-        /// <param name="assemblyName"></param>
-        /// <returns></returns>
-        public void RegisterFromAssembly(string assemblyName)
+        /// <param name="assembly"></param>
+        public void RegisterFromAssembly(Assembly assembly)
         {
-            var assembly = AppDomain.CurrentDomain.GetAssemblies().Where(item => item.FullName.Split(",").First() == assemblyName).FirstOrDefault();
-            if (assembly == null)
-                throw new Exception("未找到该程序集");
             var types = assembly.GetTypes();
             foreach (var type in types)
             {
                 var attr = type.GetCustomAttribute<RegisterableAttribute>();
-                if (attr == null)
-                    continue;
+                if (attr == null) continue;
                 var builder = _containerBuilder.RegisterType(type);
-                if (attr.InterfaceType != null)
-                    builder.As(attr.InterfaceType);
+                if (attr.InterfaceType != null) builder.As(attr.InterfaceType);
+                else builder.AsSelf();
                 switch (attr.Lifetime)
                 {
                     case Lifetime.Singleton:
@@ -202,52 +196,23 @@ namespace DwFramework.Core
         /// <summary>
         /// 注册服务
         /// </summary>
+        /// <param name="assemblyName"></param>
+        /// <returns></returns>
+        public void RegisterFromAssembly(string assemblyName)
+        {
+            var assembly = AppDomain.CurrentDomain.GetAssemblies().Where(item => item.FullName.Split(",").First() == assemblyName).FirstOrDefault();
+            if (assembly == null) throw new Exception("未找到该程序集");
+            RegisterFromAssembly(assembly);
+        }
+
+        /// <summary>
+        /// 注册服务
+        /// </summary>
         /// <returns></returns>
         public void RegisterFromAssemblies()
         {
             var assemblies = AppDomain.CurrentDomain.GetAssemblies();
-            foreach (var assembly in assemblies)
-            {
-                var types = assembly.GetTypes();
-                foreach (var type in types)
-                {
-                    var attr = type.GetCustomAttribute<RegisterableAttribute>();
-                    if (attr == null)
-                        continue;
-                    var builder = _containerBuilder.RegisterType(type);
-                    if (attr.InterfaceType != null)
-                        builder.As(attr.InterfaceType);
-                    switch (attr.Lifetime)
-                    {
-                        case Lifetime.Singleton:
-                            builder.SingleInstance();
-                            break;
-                        case Lifetime.InstancePerLifetimeScope:
-                            builder.InstancePerLifetimeScope();
-                            break;
-                    }
-                    if (attr.IsAutoActivate)
-                        builder.AutoActivate();
-                }
-            }
-        }
-
-        /// <summary>
-        /// 初始化服务
-        /// </summary>
-        /// <param name="initAction"></param>
-        public void InitService(Action<AutofacServiceProvider> initAction)
-        {
-            _initActions.Add(initAction);
-        }
-
-        /// <summary>
-        /// 停止服务
-        /// </summary>
-        /// <param name="stopAction"></param>
-        public void StopService(Action<AutofacServiceProvider> stopAction)
-        {
-            _stopActions.Add(stopAction);
+            foreach (var item in assemblies) RegisterFromAssembly(item);
         }
 
         /// <summary>

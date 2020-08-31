@@ -17,7 +17,11 @@ namespace _Test.Core
             try
             {
                 var host = new ServiceHost(EnvironmentType.Develop);
-                host.AddJsonConfig($"Config.json", () => Console.WriteLine("Changed"));
+                host.RegisterFromAssemblies();
+                host.OnInitializing += p =>
+                {
+                    var c = p.GetService<CTest>();
+                };
                 host.Run();
             }
             catch (Exception ex)
@@ -25,6 +29,15 @@ namespace _Test.Core
                 Console.WriteLine(ex);
                 Console.ReadKey();
             }
+        }
+    }
+
+    [Registerable(isAutoActivate: true)]
+    public class CTest : IDisposable
+    {
+        public void Dispose()
+        {
+            throw new NotImplementedException();
         }
     }
 }

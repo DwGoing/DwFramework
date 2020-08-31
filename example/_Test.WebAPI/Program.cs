@@ -2,6 +2,7 @@
 
 using DwFramework.Core;
 using DwFramework.Core.Extensions;
+using DwFramework.WebAPI.Plugins;
 using DwFramework.WebAPI.Extensions;
 
 namespace _Test.WebAPI
@@ -15,7 +16,7 @@ namespace _Test.WebAPI
                 ServiceHost host = new ServiceHost(configFilePath: $"{AppDomain.CurrentDomain.BaseDirectory}Config.json");
                 host.RegisterLog();
                 host.RegisterWebAPIService();
-                host.InitService(provider => provider.InitWebAPIServiceAsync<Startup>());
+                host.OnInitializing += provider => provider.InitWebAPIServiceAsync<Startup>();
                 host.Run();
             }
             catch (Exception ex)

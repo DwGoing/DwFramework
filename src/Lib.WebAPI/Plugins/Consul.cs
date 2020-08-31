@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
@@ -68,6 +69,39 @@ namespace DwFramework.WebAPI.Plugins
                 s.Run(context => context.Response.WriteAsync("ok"));
             });
             return app;
+        }
+
+        /// <summary>
+        /// 执行Consul操作
+        /// </summary>
+        /// <param name="consulHost"></param>
+        /// <param name="action"></param>
+        /// <param name="token"></param>
+        public static void Execute(string consulHost, Action<ConsulClient> action, string token = null)
+        {
+            action(new ConsulClient(c =>
+            {
+                c.Address = new Uri(consulHost);
+                c.Token = token;
+            }));
+        }
+
+        /// <summary>
+        /// 获取服务
+        /// </summary>
+        /// <param name="consulHost"></param>
+        /// <param name="serviceNames"></param>
+        /// <param name="token"></param>
+        /// <returns></returns>
+        public static AgentService[] GetServices(string consulHost, string[] serviceNames = null, string token = null)
+        {
+            AgentService[] services = null;
+            Execute(consulHost, client =>
+            {
+                services = client.Agent.Services().Result.Response.Values.ToArray();
+                if (serviceNames != null) services = services.Where(item => serviceNames.Contains(item.Service)).ToArray();
+            }, token);
+            return services;
         }
     }
 }

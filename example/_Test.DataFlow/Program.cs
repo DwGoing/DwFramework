@@ -14,7 +14,7 @@ namespace _Test.DataFlow
             {
                 ServiceHost host = new ServiceHost();
                 host.RegisterDataFlowService();
-                host.InitService(provider =>
+                host.OnInitializing += provider =>
                 {
                     var service = provider.GetDataFlowService();
                     var key = service.CreateTaskQueue(new TaskHandler(), new ResultHandler());
@@ -31,7 +31,7 @@ namespace _Test.DataFlow
                     service.AddInput(key, 9);
                     service.AddInput(key, 10);
                     service.GetResult(key);
-                });
+                };
                 host.Run();
             }
             catch (Exception ex)
