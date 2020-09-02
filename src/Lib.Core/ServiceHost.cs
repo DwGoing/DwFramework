@@ -55,7 +55,7 @@ namespace DwFramework.Core
             _containerBuilder.Populate(_services);
             Provider = new AutofacServiceProvider(_containerBuilder.Build());
             OnInitializing?.Invoke(Provider);
-            Console.WriteLine("Services is running,Please enter \"Ctrl + C\" to stop!");
+            Console.WriteLine("Service is running,Please enter \"Ctrl + C\" to stop!");
             OnInitialized?.Invoke(Provider);
             Console.CancelKeyPress += (sender, args) => Stop();
             _autoResetEvent.WaitOne();
@@ -66,9 +66,9 @@ namespace DwFramework.Core
         /// </summary>
         public void Stop()
         {
-            Console.WriteLine("Services is Stopping!");
+            Console.WriteLine("Service is Stopping!");
             OnStoping?.Invoke(Provider);
-            Console.WriteLine("Services is stopped!");
+            Console.WriteLine("Service is stopped!");
             OnStopped?.Invoke(Provider);
             _autoResetEvent.Set();
         }
