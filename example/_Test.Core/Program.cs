@@ -10,12 +10,18 @@ using DwFramework.Core.Extensions;
 
 namespace _Test.Core
 {
+    enum X
+    {
+        A, B
+    }
+
     class Program
     {
         static void Main(string[] args)
         {
             try
             {
+
                 var host = new ServiceHost(EnvironmentType.Develop);
                 host.RegisterFromAssemblies();
                 host.OnInitializing += p =>
