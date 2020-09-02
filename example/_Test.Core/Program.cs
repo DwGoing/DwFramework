@@ -41,6 +41,11 @@ namespace _Test.Core
     [Registerable(isAutoActivate: true)]
     public class CTest : IDisposable
     {
+        public CTest(DwFramework.Core.Environment environment)
+        {
+
+        }
+
         public void Dispose()
         {
             throw new NotImplementedException();

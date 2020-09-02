@@ -16,7 +16,6 @@ namespace DwFramework.Core
     {
         private readonly EnvironmentType _environmentType;
         private readonly ConfigurationBuilder _configurationBuilder;
-        private readonly List<Action> _configWatch;
 
         public IConfiguration Configuration { get; private set; }
 
@@ -29,7 +28,6 @@ namespace DwFramework.Core
         {
             _environmentType = environmentType;
             _configurationBuilder = new ConfigurationBuilder();
-            _configWatch = new List<Action>();
             if (configFilePath != null) AddJsonConfig(configFilePath);
         }
 

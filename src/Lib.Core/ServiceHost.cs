@@ -51,7 +51,10 @@ namespace DwFramework.Core
         /// </summary>
         public void Run()
         {
+            // 注册环境变量
             Environment.Build();
+            RegisterInstance(Environment).SingleInstance();
+            // 构建容器
             _containerBuilder.Populate(_services);
             Provider = new AutofacServiceProvider(_containerBuilder.Build());
             OnInitializing?.Invoke(Provider);
