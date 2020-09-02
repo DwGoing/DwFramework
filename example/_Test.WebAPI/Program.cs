@@ -15,8 +15,7 @@ namespace _Test.WebAPI
             {
                 ServiceHost host = new ServiceHost(configFilePath: $"{AppDomain.CurrentDomain.BaseDirectory}Config.json");
                 host.RegisterLog();
-                host.RegisterWebAPIService();
-                host.OnInitializing += provider => provider.InitWebAPIServiceAsync<Startup>();
+                host.RegisterWebAPIService<Startup>();
                 host.Run();
             }
             catch (Exception ex)

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using System.Linq;
 
 using DwFramework.Core;
 using DwFramework.Core.Extensions;
@@ -16,6 +15,7 @@ namespace DwFramework.WebSocket.Extensions
         public static void RegisterWebSocketService(this ServiceHost host)
         {
             host.RegisterType<WebSocketService>().SingleInstance();
+            host.OnInitializing += provider => provider.InitWebSocketServiceAsync();
         }
 
         /// <summary>

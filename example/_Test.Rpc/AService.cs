@@ -5,7 +5,7 @@ using DwFramework.Rpc;
 
 namespace _Test.Rpc
 {
-    //[Rpc]
+    [Rpc]
     public class AService : A.ABase
     {
         public override Task<Response> Do(Request request, ServerCallContext context)

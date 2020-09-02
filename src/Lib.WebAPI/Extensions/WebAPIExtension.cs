@@ -12,9 +12,10 @@ namespace DwFramework.WebAPI.Extensions
         /// 注册服务
         /// </summary>
         /// <param name="host"></param>
-        public static void RegisterWebAPIService(this ServiceHost host)
+        public static void RegisterWebAPIService<T>(this ServiceHost host) where T : class
         {
             host.RegisterType<WebAPIService>().SingleInstance();
+            host.OnInitializing += provider => provider.InitWebAPIServiceAsync<T>();
         }
 
         /// <summary>

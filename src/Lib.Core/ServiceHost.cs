@@ -21,7 +21,9 @@ namespace DwFramework.Core
         public static Environment Environment { get; private set; }
         public static AutofacServiceProvider Provider { get; private set; }
         public event Action<AutofacServiceProvider> OnInitializing;
+        public event Action<AutofacServiceProvider> OnInitialized;
         public event Action<AutofacServiceProvider> OnStoping;
+        public event Action<AutofacServiceProvider> OnStopped;
 
         /// <summary>
         /// 构造函数
@@ -54,6 +56,7 @@ namespace DwFramework.Core
             Provider = new AutofacServiceProvider(_containerBuilder.Build());
             OnInitializing?.Invoke(Provider);
             Console.WriteLine("Services is running,Please enter \"Ctrl + C\" to stop!");
+            OnInitialized?.Invoke(Provider);
             Console.CancelKeyPress += (sender, args) => Stop();
             _autoResetEvent.WaitOne();
         }
@@ -66,6 +69,7 @@ namespace DwFramework.Core
             Console.WriteLine("Services is Stopping!");
             OnStoping?.Invoke(Provider);
             Console.WriteLine("Services is stopped!");
+            OnStopped?.Invoke(Provider);
             _autoResetEvent.Set();
         }
 

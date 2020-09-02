@@ -17,7 +17,6 @@ namespace _Test.Socket
                 host.RegisterSocketService();
                 host.OnInitializing += provider =>
                 {
-                    provider.InitSocketServiceAsync();
                     var service = provider.GetSocketService();
                     service.OnConnect += (c, a) =>
                     {

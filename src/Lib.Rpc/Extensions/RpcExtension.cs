@@ -15,6 +15,7 @@ namespace DwFramework.Rpc.Extensions
         public static void RegisterRpcService(this ServiceHost host)
         {
             host.RegisterType<RpcService>().SingleInstance();
+            host.OnInitializing += provider => provider.InitRpcServiceAsync();
         }
 
         /// <summary>
@@ -32,7 +33,7 @@ namespace DwFramework.Rpc.Extensions
         /// </summary>
         /// <param name="provider"></param>
         /// <returns></returns>
-        public static Task InitRpcService(this IServiceProvider provider)
+        public static Task InitRpcServiceAsync(this IServiceProvider provider)
         {
             return provider.GetRpcService().OpenServiceAsync();
         }
