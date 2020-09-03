@@ -10,8 +10,10 @@ using DwFramework.Core.Extensions;
 
 namespace _Test.Core
 {
+    [Description("a", "b")]
     enum X
     {
+        [Description("x", "y")]
         A,
         B
     }
@@ -22,7 +24,7 @@ namespace _Test.Core
         {
             try
             {
-                var a = typeof(X);
+                var a = typeof(X).GetField("A").GetDescription();
             }
             catch (Exception ex)
             {
