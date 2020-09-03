@@ -175,6 +175,12 @@ namespace DwFramework.Core
         /// <summary>
         /// 注册服务
         /// </summary>
+        /// <param name="genericType"></param>
+        public IRegistrationBuilder<object, ReflectionActivatorData, DynamicRegistrationStyle> RegisterGeneric(Type genericType) => _containerBuilder.RegisterGeneric(genericType);
+
+        /// <summary>
+        /// 注册服务
+        /// </summary>
         /// <param name="assembly"></param>
         public void RegisterFromAssembly(Assembly assembly)
         {

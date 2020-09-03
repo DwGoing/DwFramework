@@ -10,9 +10,43 @@ using DwFramework.Core.Extensions;
 
 namespace _Test.Core
 {
-    enum X
+    public class I<T> where T : X
     {
-        A, B
+        public string s { get; set; }
+        public T data { get; set; }
+
+        public I(T d)
+        {
+            data = d;
+        }
+
+        public void CCC()
+        {
+            data.CCC();
+        }
+    }
+
+    public abstract class X
+    {
+        public abstract void CCC();
+    }
+
+    [Registerable]
+    public class A : X
+    {
+        public override void CCC()
+        {
+            Console.WriteLine("A");
+        }
+    }
+
+    [Registerable]
+    public class B : X
+    {
+        public override void CCC()
+        {
+            Console.WriteLine("B");
+        }
     }
 
     class Program
@@ -21,12 +55,13 @@ namespace _Test.Core
         {
             try
             {
-
                 var host = new ServiceHost(EnvironmentType.Develop);
+                host.RegisterGeneric(typeof(I<>));
                 host.RegisterFromAssemblies();
                 host.OnInitializing += p =>
                 {
-                    var c = p.GetService<CTest>();
+                    p.GetService<I<A>>().CCC();
+                    p.GetService<I<B>>().CCC();
                 };
                 host.Run();
             }
@@ -35,20 +70,6 @@ namespace _Test.Core
                 Console.WriteLine(ex);
                 Console.ReadKey();
             }
-        }
-    }
-
-    [Registerable(isAutoActivate: true)]
-    public class CTest : IDisposable
-    {
-        public CTest(DwFramework.Core.Environment environment)
-        {
-
-        }
-
-        public void Dispose()
-        {
-            throw new NotImplementedException();
         }
     }
 }
