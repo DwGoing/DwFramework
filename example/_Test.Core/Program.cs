@@ -10,43 +10,10 @@ using DwFramework.Core.Extensions;
 
 namespace _Test.Core
 {
-    public class I<T> where T : X
+    enum X
     {
-        public string s { get; set; }
-        public T data { get; set; }
-
-        public I(T d)
-        {
-            data = d;
-        }
-
-        public void CCC()
-        {
-            data.CCC();
-        }
-    }
-
-    public abstract class X
-    {
-        public abstract void CCC();
-    }
-
-    [Registerable]
-    public class A : X
-    {
-        public override void CCC()
-        {
-            Console.WriteLine("A");
-        }
-    }
-
-    [Registerable]
-    public class B : X
-    {
-        public override void CCC()
-        {
-            Console.WriteLine("B");
-        }
+        A,
+        B
     }
 
     class Program
@@ -55,15 +22,7 @@ namespace _Test.Core
         {
             try
             {
-                var host = new ServiceHost(EnvironmentType.Develop);
-                host.RegisterGeneric(typeof(I<>));
-                host.RegisterFromAssemblies();
-                host.OnInitializing += p =>
-                {
-                    p.GetService<I<A>>().CCC();
-                    p.GetService<I<B>>().CCC();
-                };
-                host.Run();
+                var a = typeof(X);
             }
             catch (Exception ex)
             {

@@ -7,11 +7,11 @@ namespace DwFramework.Core.Extensions
         /// <summary>
         /// 是否被定义
         /// </summary>
-        /// <param name="enum"></param>
+        /// <param name="value"></param>
         /// <returns></returns>
-        public static bool IsDefined(this Enum @enum)
+        public static bool IsDefined(this Enum value)
         {
-            return Enum.IsDefined(@enum.GetType(), @enum);
+            return Enum.IsDefined(value.GetType(), value);
         }
     }
 }
