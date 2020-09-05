@@ -10,12 +10,14 @@ using DwFramework.Core.Extensions;
 
 namespace _Test.Core
 {
-    [Description("a", "b")]
-    enum X
+    abstract class A
     {
-        [Description("x", "y")]
-        A,
-        B
+        public abstract string x { get; }
+    }
+
+    class B : A
+    {
+        public override string x => "a";
     }
 
     class Program
@@ -24,7 +26,8 @@ namespace _Test.Core
         {
             try
             {
-                var a = typeof(X).GetField("A").GetDescription();
+                var s = new B().ToJson();
+                var x = s.ToObject<A>();
             }
             catch (Exception ex)
             {

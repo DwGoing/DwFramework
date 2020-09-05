@@ -12,10 +12,12 @@ namespace DwFramework.Core.Extensions
         /// 序列化
         /// </summary>
         /// <param name="obj"></param>
+        /// <param name="isIndented"></param>
         /// <returns></returns>
-        public static string ToJson(this object obj)
+        public static string ToJson(this object obj, bool isIndented = false)
         {
-            return JsonConvert.SerializeObject(obj);
+            if (isIndented) return JsonConvert.SerializeObject(obj, Formatting.Indented, new JsonSerializerSettings() { TypeNameHandling = TypeNameHandling.All });
+            else return JsonConvert.SerializeObject(obj);
         }
 
         /// <summary>
@@ -23,10 +25,12 @@ namespace DwFramework.Core.Extensions
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="json"></param>
+        /// <param name="isIndented"></param>
         /// <returns></returns>
-        public static T ToObject<T>(this string json)
+        public static T ToObject<T>(this string json, bool isIndented = false)
         {
-            return JsonConvert.DeserializeObject<T>(json);
+            if (isIndented) return JsonConvert.DeserializeObject<T>(json, new JsonSerializerSettings() { TypeNameHandling = TypeNameHandling.All });
+            else return JsonConvert.DeserializeObject<T>(json);
         }
 
         /// <summary>
