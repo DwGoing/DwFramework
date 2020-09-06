@@ -10,30 +10,22 @@ using DwFramework.Core.Extensions;
 
 namespace _Test.Core
 {
-    abstract class A
-    {
-        public abstract string x { get; }
-    }
-
-    class B : A
-    {
-        public override string x => "a";
-    }
-
     class Program
     {
         static void Main(string[] args)
         {
             try
             {
-                var s = new B().ToJson();
-                var x = s.ToObject<A>();
+                var a = "helo".ToBytes();
+                var b = a.ToBase64String();
+                var c = b.FromBase64String();
+                Console.WriteLine(c.ToObject<string>());
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
-                Console.ReadKey();
             }
+            Console.ReadKey();
         }
     }
 }
