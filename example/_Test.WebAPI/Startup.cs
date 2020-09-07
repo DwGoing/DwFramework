@@ -32,13 +32,6 @@ namespace _Test.WebAPI
 
         public void Configure(IApplicationBuilder app, IHostApplicationLifetime lifetime)
         {
-            app.UseExceptionFilter(async (context, ex) =>
-            {
-                await context.Response.WriteAsync(ex.Message);
-            });
-            app.UseRouting();
-            app.UseSwagger("Doc", "My API V1");
-            app.UseRequestId();
             app.UseRequestFilter(new Dictionary<string, Action<HttpContext>>
             {
                 {"/*",context =>{
@@ -46,6 +39,9 @@ namespace _Test.WebAPI
                     _logger.LogDebug($"接收到请求:{context.Request.Path} ({GetIP(context)})");
                 }}
             });
+            app.UseRouting();
+            app.UseSwagger("Doc", "My API V1");
+            app.UseRequestId();
             //app.UseConsul(ServiceHost.Environment.Configuration, lifetime);
             app.UseEndpoints(endpoints =>
             {

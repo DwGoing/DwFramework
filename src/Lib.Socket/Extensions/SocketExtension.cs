@@ -15,7 +15,7 @@ namespace DwFramework.Socket.Extensions
         public static void RegisterSocketService(this ServiceHost host)
         {
             host.RegisterType<SocketService>().SingleInstance();
-            host.OnInitializing += provider => provider.InitSocketServiceAsync();
+            host.OnInitializing += provider => provider.InitSocketServiceAsync().Wait();
         }
 
         /// <summary>
