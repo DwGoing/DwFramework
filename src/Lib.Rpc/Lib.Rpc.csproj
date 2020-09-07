@@ -36,8 +36,6 @@
         <ProjectReference Include="..\Lib.Core\Lib.Core.csproj" />
     </ItemGroup>
     <ItemGroup>
-        <Folder Include="Plugins\" />
-        <Folder Include="Plugins\Cluster\" />
         <Folder Include="Plugins\Cluster\Protobufs\" />
         <Folder Include="Protobufs\" />
     </ItemGroup>

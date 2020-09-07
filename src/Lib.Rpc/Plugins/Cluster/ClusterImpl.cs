@@ -10,15 +10,15 @@ using DwFramework.Core.Plugins;
 
 namespace DwFramework.Rpc.Plugins.Cluster
 {
-    public abstract class ClusterImpl : Cluster.ClusterBase
+    public class ClusterImpl : Cluster.ClusterBase
     {
         private readonly Metadata _header;
         private readonly Timer _healthCheckTimer;
         private readonly Dictionary<string, string> _peers = new Dictionary<string, string>();
 
-        public abstract int HealthCheckPerMs { get; }
 
         public readonly string ID;
+        public readonly int HealthCheckPerMs;
         public event Action<string> OnJoin;
         public event Action<string> OnExit;
 
@@ -26,9 +26,12 @@ namespace DwFramework.Rpc.Plugins.Cluster
         /// 构造函数
         /// </summary>
         /// <param name="linkUrl"></param>
-        public ClusterImpl(string linkUrl, string bootPeer = null)
+        /// <param name="healthCheckPerMs"></param>
+        /// <param name="bootPeer"></param>
+        public ClusterImpl(string linkUrl, int healthCheckPerMs = 10000, string bootPeer = null)
         {
             ID = Generater.GenerateGUID().ToString();
+            HealthCheckPerMs = healthCheckPerMs;
             _header = new Metadata
             {
                 { "id", ID },
@@ -37,21 +40,28 @@ namespace DwFramework.Rpc.Plugins.Cluster
             _healthCheckTimer = new Timer(HealthCheckPerMs);
             _healthCheckTimer.Elapsed += (_, args) => PeerHealthCheck();
             _healthCheckTimer.AutoReset = true;
-            Init(bootPeer);
+            _healthCheckTimer.Start();
+            InitAsync(bootPeer);
+
+            OnJoin += id => Console.WriteLine($"{id}加入集群");
+            OnExit += id => Console.WriteLine($"{id}退出集群");
         }
 
         /// <summary>
         /// 初始化
         /// </summary>
-        private void Init(string bootPeer)
+        private Task InitAsync(string bootPeer)
         {
-            if (bootPeer == null) return;
-            UseRPC(bootPeer, client =>
+            return TaskManager.CreateTask(() =>
             {
-                client.Join(new Void(), _header);
-            }, ex =>
-            {
-                Console.WriteLine($"未加入集群:{ex.Message}");
+                if (bootPeer == null) return;
+                UseRPC(bootPeer, client =>
+                {
+                    client.Join(new Void(), _header);
+                }, ex =>
+                {
+                    Console.WriteLine($"未加入集群");
+                });
             });
         }
 
@@ -69,6 +79,17 @@ namespace DwFramework.Rpc.Plugins.Cluster
             _peers[id.Value] = url.Value;
             OnJoin?.Invoke(ID);
             if (!PeerHealthCheck(id.Value)) throw new Exception("LinkUrl不可用");
+            return Task.FromResult(new Void());
+        }
+
+        /// <summary>
+        /// 健康检查
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="context"></param>
+        /// <returns></returns>
+        public override Task<Void> HealthCheck(Void request, ServerCallContext context)
+        {
             return Task.FromResult(new Void());
         }
 

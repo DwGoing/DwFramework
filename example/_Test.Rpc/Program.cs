@@ -5,6 +5,7 @@ using System.Threading.Tasks.Dataflow;
 using DwFramework.Core;
 using DwFramework.Core.Extensions;
 using DwFramework.Rpc;
+using DwFramework.Rpc.Plugins.Cluster;
 using DwFramework.Rpc.Extensions;
 using Grpc.Core;
 
@@ -17,24 +18,25 @@ namespace _Test.Rpc
             try
             {
                 var host = new ServiceHost(configFilePath: "Config.json");
-                host.RegisterType<AService>();
+                //host.RegisterType<AService>();
+                host.RegisterClusterImpl(args[0], bootPeer: args.Length > 1 ? args[1] : null);
                 host.RegisterRpcService();
-                host.OnInitialized += p =>
-                {
-                    Thread.Sleep(3000);
-                    Channel channel = null;
-                    try
-                    {
-                        channel = new Channel("127.0.0.1:5000", ChannelCredentials.Insecure);
-                        var client = new A.AClient(channel);
-                        var response = client.Do(new Request() { Message = "123" });
-                        Console.WriteLine(response.Message);
-                    }
-                    finally
-                    {
-                        channel?.ShutdownAsync();
-                    }
-                };
+                //host.OnInitialized += p =>
+                //{
+                //    Thread.Sleep(3000);
+                //    Channel channel = null;
+                //    try
+                //    {
+                //        channel = new Channel("127.0.0.1:5000", ChannelCredentials.Insecure);
+                //        var client = new A.AClient(channel);
+                //        var response = client.Do(new Request() { Message = "123" });
+                //        Console.WriteLine(response.Message);
+                //    }
+                //    finally
+                //    {
+                //        channel?.ShutdownAsync();
+                //    }
+                //};
                 host.Run();
             }
             catch (Exception ex)
