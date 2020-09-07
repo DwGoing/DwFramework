@@ -4,7 +4,7 @@
         <TargetFramework>netstandard2.1</TargetFramework>
         <AssemblyName>DwFramework.Rpc</AssemblyName>
         <RootNamespace>DwFramework.Rpc</RootNamespace>
-        <Version>1.2.1.5</Version>
+        <Version>1.2.1.6</Version>
         <Authors>DwGoing</Authors>
         <Copyright>DwGoing</Copyright>
         <Description>DwFramework Rpc库</Description>
@@ -23,8 +23,8 @@
     <ItemGroup>
         <PackageReference Include="Google.Protobuf" Version="3.13.0" />
         <PackageReference Include="Grpc.Tools" Version="2.31.0">
-          <PrivateAssets>all</PrivateAssets>
-          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
         <PackageReference Include="Grpc.Core" Version="2.31.0" />
     </ItemGroup>
