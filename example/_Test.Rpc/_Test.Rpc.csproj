@@ -23,6 +23,6 @@
         </PackageReference>
     </ItemGroup>
     <ItemGroup>
-        <Protobuf Include="Protos\a.proto" GrpcServices="Server" />
+        <Protobuf Include="Protos\a.proto" GrpcServices="Server Client" />
     </ItemGroup>
 </Project>
