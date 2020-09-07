@@ -7,7 +7,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NLog.Extensions.Logging;
 
-using DwFramework.Core;
 using DwFramework.Core.Plugins;
 
 namespace DwFramework.Core.Extensions
@@ -99,6 +98,16 @@ namespace DwFramework.Core.Extensions
             var builder = host.Register(context => new MemoryCache(storeCount)).As<ICache>();
             if (isGlobal) builder.SingleInstance();
             return host;
+        }
+
+        /// <summary>
+        /// 获取缓存服务
+        /// </summary>
+        /// <param name="provider"></param>
+        /// <returns></returns>
+        public static ICache GetCache(this IServiceProvider provider)
+        {
+            return provider.GetService<ICache>();
         }
         #endregion
     }

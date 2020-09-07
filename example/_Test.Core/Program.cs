@@ -16,28 +16,16 @@ namespace _Test.Core
         {
             try
             {
-                var host = new ServiceHost(EnvironmentType.Develop);
-                host.RegisterFromAssemblies();
-                host.OnInitializing += p =>
-                {
-                    var c = p.GetService<CTest>();
-                };
-                host.Run();
+                var a = "helo".ToBytes();
+                var b = a.ToBase64String();
+                var c = b.FromBase64String();
+                Console.WriteLine(c.ToObject<string>());
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
-                Console.ReadKey();
             }
-        }
-    }
-
-    [Registerable(isAutoActivate: true)]
-    public class CTest : IDisposable
-    {
-        public void Dispose()
-        {
-            throw new NotImplementedException();
+            Console.ReadKey();
         }
     }
 }

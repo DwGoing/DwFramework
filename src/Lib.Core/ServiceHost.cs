@@ -21,7 +21,9 @@ namespace DwFramework.Core
         public static Environment Environment { get; private set; }
         public static AutofacServiceProvider Provider { get; private set; }
         public event Action<AutofacServiceProvider> OnInitializing;
+        public event Action<AutofacServiceProvider> OnInitialized;
         public event Action<AutofacServiceProvider> OnStoping;
+        public event Action<AutofacServiceProvider> OnStopped;
 
         /// <summary>
         /// 构造函数
@@ -49,11 +51,15 @@ namespace DwFramework.Core
         /// </summary>
         public void Run()
         {
+            // 注册环境变量
             Environment.Build();
+            RegisterInstance(Environment).SingleInstance();
+            // 构建容器
             _containerBuilder.Populate(_services);
             Provider = new AutofacServiceProvider(_containerBuilder.Build());
             OnInitializing?.Invoke(Provider);
-            Console.WriteLine("Services is running,Please enter \"Ctrl + C\" to stop!");
+            Console.WriteLine("Service is running,Please enter \"Ctrl + C\" to stop!");
+            OnInitialized?.Invoke(Provider);
             Console.CancelKeyPress += (sender, args) => Stop();
             _autoResetEvent.WaitOne();
         }
@@ -63,9 +69,10 @@ namespace DwFramework.Core
         /// </summary>
         public void Stop()
         {
-            Console.WriteLine("Services is Stopping!");
+            Console.WriteLine("Service is Stopping!");
             OnStoping?.Invoke(Provider);
-            Console.WriteLine("Services is stopped!");
+            Console.WriteLine("Service is stopped!");
+            OnStopped?.Invoke(Provider);
             _autoResetEvent.Set();
         }
 
@@ -164,6 +171,12 @@ namespace DwFramework.Core
         {
             return RegisterInstance(instance).As<I>();
         }
+
+        /// <summary>
+        /// 注册服务
+        /// </summary>
+        /// <param name="genericType"></param>
+        public IRegistrationBuilder<object, ReflectionActivatorData, DynamicRegistrationStyle> RegisterGeneric(Type genericType) => _containerBuilder.RegisterGeneric(genericType);
 
         /// <summary>
         /// 注册服务

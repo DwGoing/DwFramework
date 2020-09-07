@@ -1,12 +1,12 @@
 ﻿namespace DwFramework.Core
 {
-    public class ResultCode
+    public partial class ResultCode
     {
         public const int Ok = 200;
         public const int Error = 400;
     }
 
-    public class ResultInfo
+    public partial class ResultInfo
     {
         public int Code { get; set; }
         public string Message { get; set; }

@@ -17,7 +17,6 @@ namespace _Test.WebSocket
                 host.RegisterWebSocketService();
                 host.OnInitializing += provider =>
                 {
-                    provider.InitWebSocketServiceAsync();
                     var service = provider.GetWebSocketService();
                     service.OnConnect += (c, a) =>
                     {
