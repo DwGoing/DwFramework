@@ -3,7 +3,7 @@ package DwFramework.Rpc.Plugins.Cluster;
 import "Protobufs/Common.proto";
 
 service Cluster {
-    rpc Join (String) returns (Void);
+    rpc Join (Void) returns (Void);
     rpc HealthCheck (Void) returns (Void);
 }
 

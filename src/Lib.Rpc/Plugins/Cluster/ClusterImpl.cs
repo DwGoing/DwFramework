@@ -26,7 +26,7 @@ namespace DwFramework.Rpc.Plugins.Cluster
         /// 构造函数
         /// </summary>
         /// <param name="linkUrl"></param>
-        public ClusterImpl(string linkUrl, params string[] bootPeers)
+        public ClusterImpl(string linkUrl, string bootPeer = null)
         {
             ID = Generater.GenerateGUID().ToString();
             _header = new Metadata
@@ -37,22 +37,22 @@ namespace DwFramework.Rpc.Plugins.Cluster
             _healthCheckTimer = new Timer(HealthCheckPerMs);
             _healthCheckTimer.Elapsed += (_, args) => PeerHealthCheck();
             _healthCheckTimer.AutoReset = true;
-            Init(bootPeers);
+            Init(bootPeer);
         }
 
         /// <summary>
         /// 初始化
         /// </summary>
-        private void Init(string[] bootPeers)
+        private void Init(string bootPeer)
         {
-            foreach (var peer in bootPeers)
+            if (bootPeer == null) return;
+            UseRPC(bootPeer, client =>
             {
-                UseRPC(peer, client =>
-                {
-                    client.Join(new Void(), _header);
-                });
-            }
-            _healthCheckTimer.Start();
+                client.Join(new Void(), _header);
+            }, ex =>
+            {
+                Console.WriteLine($"未加入集群:{ex.Message}");
+            });
         }
 
         /// <summary>
