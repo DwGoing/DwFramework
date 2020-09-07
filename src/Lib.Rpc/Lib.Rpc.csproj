@@ -22,11 +22,11 @@
     </ItemGroup>
     <ItemGroup>
         <PackageReference Include="Google.Protobuf" Version="3.13.0" />
-        <PackageReference Include="Grpc" Version="2.31.0" />
         <PackageReference Include="Grpc.Tools" Version="2.31.0">
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
+        <PackageReference Include="Grpc.Core" Version="2.31.0" />
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\Lib.Core\Lib.Core.csproj" />
