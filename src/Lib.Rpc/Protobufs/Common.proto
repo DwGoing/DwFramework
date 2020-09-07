@@ -1,0 +1,8 @@
+﻿syntax = "proto3";
+package DwFramework.Rpc;
+
+message Void {}
+
+message String {
+    string Value = 1;
+}
