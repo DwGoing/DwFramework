@@ -10,7 +10,7 @@ using DwFramework.Core.Plugins;
 
 namespace DwFramework.Rpc.Plugins.Cluster
 {
-    public abstract class ClusterServerImpl : Cluster.ClusterBase
+    public abstract class ClusterImpl : Cluster.ClusterBase
     {
         private readonly Metadata _header;
         private readonly Timer _healthCheckTimer;
@@ -26,7 +26,7 @@ namespace DwFramework.Rpc.Plugins.Cluster
         /// 构造函数
         /// </summary>
         /// <param name="linkUrl"></param>
-        public ClusterServerImpl(string linkUrl)
+        public ClusterImpl(string linkUrl, params string[] bootPeers)
         {
             ID = Generater.GenerateGUID().ToString();
             _header = new Metadata
@@ -37,6 +37,22 @@ namespace DwFramework.Rpc.Plugins.Cluster
             _healthCheckTimer = new Timer(HealthCheckPerMs);
             _healthCheckTimer.Elapsed += (_, args) => PeerHealthCheck();
             _healthCheckTimer.AutoReset = true;
+            Init(bootPeers);
+        }
+
+        /// <summary>
+        /// 初始化
+        /// </summary>
+        private void Init(string[] bootPeers)
+        {
+            foreach (var peer in bootPeers)
+            {
+                UseRPC(peer, client =>
+                {
+                    client.Join(new Void(), _header);
+                });
+            }
+            _healthCheckTimer.Start();
         }
 
         /// <summary>
@@ -45,7 +61,7 @@ namespace DwFramework.Rpc.Plugins.Cluster
         /// <param name="request"></param>
         /// <param name="context"></param>
         /// <returns></returns>
-        public override Task<Void> Join(String request, ServerCallContext context)
+        public override Task<Void> Join(Void request, ServerCallContext context)
         {
             var id = context.RequestHeaders.Get("id");
             var url = context.RequestHeaders.Get("linkurl");
