@@ -1,7 +1,6 @@
 ﻿using Autofac;
 
 using DwFramework.Core;
-using DwFramework.Core.Extensions;
 using DwFramework.Rpc.Extensions;
 
 namespace DwFramework.Rpc.Plugins.Cluster
@@ -21,6 +20,7 @@ namespace DwFramework.Rpc.Plugins.Cluster
             var clusterImpl = new ClusterImpl(linkUrl, healthCheckPerMs, bootPeer);
             host.Register(context => clusterImpl).AsSelf().SingleInstance();
             host.OnInitializing += provider => provider.GetRpcService().AddService(clusterImpl);
+            host.OnInitialized += _ => clusterImpl.Init();
             return host;
         }
     }

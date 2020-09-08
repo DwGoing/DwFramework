@@ -6,6 +6,7 @@ using System.Linq;
 
 using Grpc.Core;
 
+using DwFramework.Core.Extensions;
 using DwFramework.Core.Plugins;
 
 namespace DwFramework.Rpc.Plugins.Cluster
@@ -19,6 +20,7 @@ namespace DwFramework.Rpc.Plugins.Cluster
 
         public readonly string ID;
         public readonly int HealthCheckPerMs;
+        public readonly string BootPeer;
         public event Action<string> OnJoin;
         public event Action<string> OnExit;
 
@@ -30,8 +32,9 @@ namespace DwFramework.Rpc.Plugins.Cluster
         /// <param name="bootPeer"></param>
         public ClusterImpl(string linkUrl, int healthCheckPerMs = 10000, string bootPeer = null)
         {
-            ID = Generater.GenerateGUID().ToString();
+            ID = Generater.GenerateRandomString(32);
             HealthCheckPerMs = healthCheckPerMs;
+            BootPeer = bootPeer;
             _header = new Metadata
             {
                 { "id", ID },
@@ -41,27 +44,21 @@ namespace DwFramework.Rpc.Plugins.Cluster
             _healthCheckTimer.Elapsed += (_, args) => PeerHealthCheck();
             _healthCheckTimer.AutoReset = true;
             _healthCheckTimer.Start();
-            InitAsync(bootPeer);
+            Console.WriteLine($"节点ID:{ID}");
 
             OnJoin += id => Console.WriteLine($"{id}加入集群");
-            OnExit += id => Console.WriteLine($"{id}退出集群");
         }
 
         /// <summary>
         /// 初始化
         /// </summary>
-        private Task InitAsync(string bootPeer)
+        public void Init()
         {
-            return TaskManager.CreateTask(() =>
+            if (BootPeer == null) return;
+            UseRPC(BootPeer, client =>
             {
-                if (bootPeer == null) return;
-                UseRPC(bootPeer, client =>
-                {
-                    client.Join(new Void(), _header);
-                }, ex =>
-                {
-                    Console.WriteLine($"未加入集群");
-                });
+                var response = client.Join(new Void(), _header);
+                _peers[response.Value] = BootPeer;
             });
         }
 
@@ -71,15 +68,16 @@ namespace DwFramework.Rpc.Plugins.Cluster
         /// <param name="request"></param>
         /// <param name="context"></param>
         /// <returns></returns>
-        public override Task<Void> Join(Void request, ServerCallContext context)
+        public override Task<String> Join(Void request, ServerCallContext context)
         {
             var id = context.RequestHeaders.Get("id");
             var url = context.RequestHeaders.Get("linkurl");
             if (id == null || string.IsNullOrEmpty(id.Value) || url == null || string.IsNullOrEmpty(url.Value)) throw new Exception($"无法获取节点信息");
             _peers[id.Value] = url.Value;
-            OnJoin?.Invoke(ID);
+            SyncRouteTable();
             if (!PeerHealthCheck(id.Value)) throw new Exception("LinkUrl不可用");
-            return Task.FromResult(new Void());
+            OnJoin?.Invoke(id.Value);
+            return Task.FromResult(new String() { Value = ID });
         }
 
         /// <summary>
@@ -90,6 +88,23 @@ namespace DwFramework.Rpc.Plugins.Cluster
         /// <returns></returns>
         public override Task<Void> HealthCheck(Void request, ServerCallContext context)
         {
+            return Task.FromResult(new Void());
+        }
+
+        /// <summary>
+        /// 同步路由表
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="context"></param>
+        /// <returns></returns>
+        public override Task<Void> SyncRouteTable(RouteTable request, ServerCallContext context)
+        {
+            request.Value.ForEach(item =>
+            {
+                if (item.Key == ID) return;
+                Console.WriteLine($"同步路由 {item.Key} {item.Value}");
+                _peers[item.Key] = item.Value;
+            });
             return Task.FromResult(new Void());
         }
 
@@ -129,8 +144,9 @@ namespace DwFramework.Rpc.Plugins.Cluster
             {
                 _peers.Remove(id);
                 isOk = false;
-                OnExit?.Invoke(ID);
             });
+            Console.WriteLine($"{id} {(isOk ? "OK" : "BAD")}");
+            if (!isOk) OnExit?.Invoke(id);
             return isOk;
         }
 
@@ -141,6 +157,16 @@ namespace DwFramework.Rpc.Plugins.Cluster
         {
             var ids = _peers.Keys.ToArray();
             foreach (var id in ids) PeerHealthCheck(id);
+        }
+
+        /// <summary>
+        /// 同步路由表
+        /// </summary>
+        private void SyncRouteTable()
+        {
+            var request = new RouteTable();
+            _peers.ForEach(item => request.Value.Add(item.Key, item.Value));
+            _peers.ForEach(item => UseRPC(item.Value, client => client.SyncRouteTableAsync(request)));
         }
     }
 }
