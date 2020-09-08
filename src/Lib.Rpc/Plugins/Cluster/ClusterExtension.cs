@@ -1,6 +1,9 @@
-﻿using Autofac;
+﻿using System;
+
+using Autofac;
 
 using DwFramework.Core;
+using DwFramework.Core.Extensions;
 using DwFramework.Rpc.Extensions;
 
 namespace DwFramework.Rpc.Plugins.Cluster
@@ -22,6 +25,16 @@ namespace DwFramework.Rpc.Plugins.Cluster
             host.OnInitializing += provider => provider.GetRpcService().AddService(clusterImpl);
             host.OnInitialized += _ => clusterImpl.Init();
             return host;
+        }
+
+        /// <summary>
+        /// 获取集群服务
+        /// </summary>
+        /// <param name="provider"></param>
+        /// <returns></returns>
+        public static ClusterImpl GetClusterImpl(this IServiceProvider provider)
+        {
+            return provider.GetService<ClusterImpl>();
         }
     }
 }

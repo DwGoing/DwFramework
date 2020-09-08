@@ -6,3 +6,7 @@ message Void {}
 message String {
     string Value = 1;
 }
+
+message Bytes {
+    bytes Value = 1;
+}

@@ -6,6 +6,7 @@ service Cluster {
     rpc Join (Void) returns (String);
     rpc HealthCheck (Void) returns (Void);
     rpc SyncRouteTable (RouteTable) returns (Void);
+    rpc SyncData (Bytes) returns (Void);
 }
 
 message RouteTable {

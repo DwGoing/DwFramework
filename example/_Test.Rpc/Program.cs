@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
@@ -21,22 +22,12 @@ namespace _Test.Rpc
                 //host.RegisterType<AService>();
                 host.RegisterClusterImpl(args[0], bootPeer: args.Length > 1 ? args[1] : null);
                 host.RegisterRpcService();
-                //host.OnInitialized += p =>
-                //{
-                //    Thread.Sleep(3000);
-                //    Channel channel = null;
-                //    try
-                //    {
-                //        channel = new Channel("127.0.0.1:5000", ChannelCredentials.Insecure);
-                //        var client = new A.AClient(channel);
-                //        var response = client.Do(new Request() { Message = "123" });
-                //        Console.WriteLine(response.Message);
-                //    }
-                //    finally
-                //    {
-                //        channel?.ShutdownAsync();
-                //    }
-                //};
+                host.OnInitializing += p =>
+                {
+                    var cluster = p.GetClusterImpl();
+                    cluster.OnJoin += id => cluster.SyncData(Encoding.UTF8.GetBytes($"欢迎 {id} 加入集群"));
+                    cluster.OnReceiveData += (id, data) => Console.WriteLine($"收到 {id} 消息:{Encoding.UTF8.GetString(data)}");
+                };
                 host.Run();
             }
             catch (Exception ex)

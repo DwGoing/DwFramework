@@ -23,6 +23,7 @@ namespace DwFramework.Rpc.Plugins.Cluster
         public readonly string BootPeer;
         public event Action<string> OnJoin;
         public event Action<string> OnExit;
+        public event Action<string, byte[]> OnReceiveData;
 
         /// <summary>
         /// 构造函数
@@ -45,8 +46,6 @@ namespace DwFramework.Rpc.Plugins.Cluster
             _healthCheckTimer.AutoReset = true;
             _healthCheckTimer.Start();
             Console.WriteLine($"节点ID:{ID}");
-
-            OnJoin += id => Console.WriteLine($"{id}加入集群");
         }
 
         /// <summary>
@@ -109,6 +108,20 @@ namespace DwFramework.Rpc.Plugins.Cluster
         }
 
         /// <summary>
+        /// 同步数据
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="context"></param>
+        /// <returns></returns>
+        public override Task<Void> SyncData(Bytes request, ServerCallContext context)
+        {
+            var id = context.RequestHeaders.Get("id");
+            if (id == null || string.IsNullOrEmpty(id.Value)) throw new Exception($"无法获取节点信息");
+            OnReceiveData?.Invoke(id.Value, request.RawValue);
+            return Task.FromResult(new Void());
+        }
+
+        /// <summary>
         /// 调用RPC
         /// </summary>
         /// <param name="connectStr"></param>
@@ -167,6 +180,16 @@ namespace DwFramework.Rpc.Plugins.Cluster
             var request = new RouteTable();
             _peers.ForEach(item => request.Value.Add(item.Key, item.Value));
             _peers.ForEach(item => UseRPC(item.Value, client => client.SyncRouteTableAsync(request)));
+        }
+
+        /// <summary>
+        /// 同步数据
+        /// </summary>
+        /// <param name="data"></param>
+        public void SyncData(byte[] data)
+        {
+            var request = new Bytes(data);
+            _peers.ForEach(item => UseRPC(item.Value, client => client.SyncData(request, _header)));
         }
     }
 }
