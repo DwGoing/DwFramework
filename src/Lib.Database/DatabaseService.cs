@@ -11,7 +11,7 @@ using DwFramework.Database.Extensions;
 
 namespace DwFramework.Database
 {
-    public class DatabaseService : BaseService
+    public sealed class DatabaseService : BaseService
     {
         public class Config
         {

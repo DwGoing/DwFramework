@@ -15,7 +15,7 @@ namespace DwFramework.Rpc.Extensions
         public static void RegisterRpcService(this ServiceHost host)
         {
             host.RegisterType<RpcService>().SingleInstance();
-            host.OnInitializing += provider => provider.InitRpcServiceAsync();
+            host.OnInitializing += provider => provider.InitRpcServiceAsync().Wait();
         }
 
         /// <summary>

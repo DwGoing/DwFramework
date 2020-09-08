@@ -33,7 +33,6 @@ host.InitService(provider => provider.InitRpcService());
 host.InitService(provider => {
   var rpc = provider.GetRpcService();
   rpc.AddService(provider.GetService<AService>());
-  provider.InitRpcService();
 });
 ```
 
@@ -86,4 +85,21 @@ var channel = new Channel("localhost:5000", ChannelCredentials.Insecure);
 var client = new A.AClient(channel);
 Console.WriteLine(client.Do(new Request() { Message = "123" }).Message);
 channel.ShutdownAsync();
+```
+
+### 0x5 集群插件 
+
+该插件基于RPC服务实现，满足服务实现去中心化的集群实现。
+
+```c#
+// 注册集群服务
+host.RegisterClusterImpl({本地服务连接URL}, {启动连接节点});
+host.RegisterRpcService();
+host.OnInitializing += p =>
+{
+  var cluster = p.GetClusterImpl();
+  // SyncData() 在集群中同步数据
+  cluster.OnJoin += id => cluster.SyncData(Encoding.UTF8.GetBytes($"欢迎 {id} 加入集群"));
+  cluster.OnReceiveData += (id, data) => Console.WriteLine($"收到 {id} 消息:{Encoding.UTF8.GetString(data)}");
+};
 ```

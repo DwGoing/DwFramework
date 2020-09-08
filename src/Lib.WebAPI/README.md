@@ -56,8 +56,7 @@ namespace Test
 // 注册服务
 ServiceHost host = new ServiceHost(configFilePath: $"{AppDomain.CurrentDomain.BaseDirectory}Config.json");
 host.RegisterLog();
-host.RegisterWebAPIService();
-host.InitService(provider => provider.InitWebAPIServiceAsync<Startup>());
+host.RegisterWebAPIService<Startup>();
 host.Run();
 ```
 

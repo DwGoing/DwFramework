@@ -6,7 +6,7 @@ using DwFramework.Core.Plugins;
 
 namespace DwFramework.DataFlow
 {
-    public class DataFlowService : BaseService
+    public sealed class DataFlowService : BaseService
     {
         private readonly Dictionary<string, ITaskQueue> _taskQueues = new Dictionary<string, ITaskQueue>();
 

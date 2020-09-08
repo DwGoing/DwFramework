@@ -16,10 +16,12 @@ namespace _Test.Core
         {
             try
             {
-                var a = "helo".ToBytes();
-                var b = a.ToBase64String();
-                var c = b.FromBase64String();
-                Console.WriteLine(c.ToObject<string>());
+                var d = new string[10];
+                d.ForEach(item =>
+                {
+                    item = Generater.GenerateGUID().ToString();
+                    Console.WriteLine(item);
+                });
             }
             catch (Exception ex)
             {

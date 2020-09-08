@@ -12,7 +12,7 @@ using DwFramework.Core.Plugins;
 
 namespace DwFramework.Rpc
 {
-    public class RpcService : BaseService
+    public sealed class RpcService : BaseService
     {
         public class Config
         {

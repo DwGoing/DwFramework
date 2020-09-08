@@ -17,7 +17,7 @@ using DwFramework.Core.Extensions;
 
 namespace DwFramework.WebSocket
 {
-    public class WebSocketService : BaseService
+    public sealed class WebSocketService : BaseService
     {
         public class Config
         {

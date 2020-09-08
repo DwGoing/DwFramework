@@ -10,6 +10,12 @@
         <None Update="Config.json">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
+        <None Update="Cluter.json">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Cluster.json">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\..\src\Lib.Rpc\Lib.Rpc.csproj" />
@@ -23,6 +29,6 @@
         </PackageReference>
     </ItemGroup>
     <ItemGroup>
-        <Protobuf Include="Protos\a.proto" GrpcServices="Server" />
+        <Protobuf Include="Protos\a.proto" GrpcServices="Server Client" />
     </ItemGroup>
 </Project>
