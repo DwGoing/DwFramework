@@ -19,7 +19,6 @@ namespace _Test.Rpc
             try
             {
                 var host = new ServiceHost(configFilePath: "Config.json");
-                //host.RegisterType<AService>();
                 host.RegisterClusterImpl(args[0], bootPeer: args.Length > 1 ? args[1] : null);
                 host.RegisterRpcService();
                 host.OnInitializing += p =>

@@ -25,9 +25,8 @@ PM> Install-Package DwFramework.Socket
 ```c#
 // 注册服务
 host.RegisterSocketService();
-host.InitService(provider =>
+host.OnInitializing += provider =>
 {
-  provider.InitSocketServiceAsync();
   var service = provider.GetSocketService();
   service.OnConnect += (c, a) =>
   {
@@ -48,6 +47,6 @@ host.InitService(provider =>
   {
     Console.WriteLine($"{c.ID}已断开");
   };
-});
+};
 host.Run();
 ```
