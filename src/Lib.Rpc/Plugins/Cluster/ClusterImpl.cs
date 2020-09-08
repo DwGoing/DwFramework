@@ -11,7 +11,7 @@ using DwFramework.Core.Plugins;
 
 namespace DwFramework.Rpc.Plugins.Cluster
 {
-    public class ClusterImpl : Cluster.ClusterBase
+    public sealed class ClusterImpl : Cluster.ClusterBase
     {
         private readonly Metadata _header;
         private readonly Timer _healthCheckTimer;

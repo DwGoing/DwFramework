@@ -11,7 +11,7 @@ using DwFramework.Core.Extensions;
 
 namespace DwFramework.Socket
 {
-    public class SocketService : BaseService
+    public sealed class SocketService : BaseService
     {
         public class Config
         {

@@ -40,7 +40,9 @@
         <Folder Include="Protobufs\" />
     </ItemGroup>
     <ItemGroup>
-        <Protobuf Include="Protobufs\Common.proto" GrpcServices="" />
+        <Protobuf Include="Protobufs\Common.proto" GrpcServices="">
+            <IncludeInPackage>true</IncludeInPackage>
+        </Protobuf>
         <Protobuf Include="Plugins\Cluster\Protobufs\Cluster.proto" GrpcServices="Server Client" />
     </ItemGroup>
 </Project>
