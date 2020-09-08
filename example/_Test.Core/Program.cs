@@ -16,8 +16,12 @@ namespace _Test.Core
         {
             try
             {
-                var d = new Dictionary<string, string>() { { "1", "a" }, { "2", "b" }, { "3", "c" } };
-                d.ForEach(item => Console.WriteLine($"{item.Key} {item.Value}"));
+                var d = new string[10];
+                d.ForEach(item =>
+                {
+                    item = Generater.GenerateGUID().ToString();
+                    Console.WriteLine(item);
+                });
             }
             catch (Exception ex)
             {
