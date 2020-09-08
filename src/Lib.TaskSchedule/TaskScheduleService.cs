@@ -14,7 +14,7 @@ using DwFramework.Core.Plugins;
 
 namespace DwFramework.TaskSchedule
 {
-    public class TaskScheduleService : BaseService
+    public sealed class TaskScheduleService : BaseService
     {
         private readonly DirectSchedulerFactory _schedulerFactory;
 

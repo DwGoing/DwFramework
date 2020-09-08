@@ -11,7 +11,7 @@ using DwFramework.Core.Extensions;
 
 namespace DwFramework.WebAPI
 {
-    public class WebAPIService : BaseService
+    public sealed class WebAPIService : BaseService
     {
         public class Config
         {

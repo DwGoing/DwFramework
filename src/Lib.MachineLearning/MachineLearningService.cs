@@ -8,7 +8,7 @@ using DwFramework.Core;
 
 namespace DwFramework.MachineLearning
 {
-    public class MachineLearningService : BaseService
+    public sealed class MachineLearningService : BaseService
     {
         public readonly MLContext MlContext;
         public DataOperationsCatalog DataOperations { get { return MlContext.Data; } }

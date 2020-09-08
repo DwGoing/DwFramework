@@ -13,7 +13,7 @@ using DwFramework.Core.Extensions;
 
 namespace DwFramework.RabbitMQ
 {
-    public class ExchangeType
+    public sealed class ExchangeType
     {
         public const string Direct = "direct";
         public const string Fanout = "fanout";
