@@ -27,12 +27,11 @@ PM> Install-Package DwFramework.WebSocket
 ### 0x2 注册服务及初始化
 
 ```c#
-ServiceHost host = new ServiceHost(configFilePath: $"{AppDomain.CurrentDomain.BaseDirectory}Config.json");
+ServiceHost host = new ServiceHost(configFilePath: $"Config.json");
 host.RegisterLog();
 host.RegisterWebSocketService();
-host.InitService(provider =>
+host.OnInitializing += provider =>
 {
-    provider.InitWebSocketServiceAsync();
     var service = provider.GetWebSocketService();
     service.OnConnect += (c, a) =>
     {
@@ -50,7 +49,7 @@ host.InitService(provider =>
     {
         Console.WriteLine($"{c.ID}已断开");
     };
-});
+};
 host.Run();
 ```
 
