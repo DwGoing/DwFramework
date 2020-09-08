@@ -13,17 +13,43 @@ namespace DwFramework.Rpc.Plugins.Cluster
 {
     public sealed class ClusterImpl : Cluster.ClusterBase
     {
+        private class Config
+        {
+            public string LinkUrl { get; set; }
+            public int HealthCheckPerMs { get; set; } = 10000;
+            public string BootPeer { get; set; }
+        }
+
+        private readonly Config _config;
         private readonly Metadata _header;
         private readonly Timer _healthCheckTimer;
         private readonly Dictionary<string, string> _peers = new Dictionary<string, string>();
 
 
         public readonly string ID;
-        public readonly int HealthCheckPerMs;
-        public readonly string BootPeer;
         public event Action<string> OnJoin;
         public event Action<string> OnExit;
         public event Action<string, byte[]> OnReceiveData;
+
+        /// <summary>
+        /// 构造函数
+        /// </summary>
+        /// <param name="environment"></param>
+        public ClusterImpl(Core.Environment environment)
+        {
+            _config = environment.Configuration.GetRoot<Config>();
+            ID = Generater.GenerateRandomString(32);
+            _header = new Metadata
+            {
+                { "id", ID },
+                { "linkurl", _config.LinkUrl }
+            };
+            _healthCheckTimer = new Timer(_config.HealthCheckPerMs);
+            _healthCheckTimer.Elapsed += (_, args) => PeerHealthCheck();
+            _healthCheckTimer.AutoReset = true;
+            _healthCheckTimer.Start();
+            Console.WriteLine($"节点ID:{ID}");
+        }
 
         /// <summary>
         /// 构造函数
@@ -33,15 +59,14 @@ namespace DwFramework.Rpc.Plugins.Cluster
         /// <param name="bootPeer"></param>
         public ClusterImpl(string linkUrl, int healthCheckPerMs = 10000, string bootPeer = null)
         {
+            _config = new Config() { LinkUrl = linkUrl, HealthCheckPerMs = healthCheckPerMs, BootPeer = bootPeer };
             ID = Generater.GenerateRandomString(32);
-            HealthCheckPerMs = healthCheckPerMs;
-            BootPeer = bootPeer;
             _header = new Metadata
             {
                 { "id", ID },
-                { "linkurl", linkUrl }
+                { "linkurl", _config.LinkUrl }
             };
-            _healthCheckTimer = new Timer(HealthCheckPerMs);
+            _healthCheckTimer = new Timer(_config.HealthCheckPerMs);
             _healthCheckTimer.Elapsed += (_, args) => PeerHealthCheck();
             _healthCheckTimer.AutoReset = true;
             _healthCheckTimer.Start();
@@ -53,11 +78,11 @@ namespace DwFramework.Rpc.Plugins.Cluster
         /// </summary>
         public void Init()
         {
-            if (BootPeer == null) return;
-            UseRPC(BootPeer, client =>
+            if (_config.BootPeer == null) return;
+            UseRPC(_config.BootPeer, client =>
             {
                 var response = client.Join(new Void(), _header);
-                _peers[response.Value] = BootPeer;
+                _peers[response.Value] = _config.BootPeer;
             });
         }
 

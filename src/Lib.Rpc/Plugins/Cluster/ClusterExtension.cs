@@ -14,6 +14,19 @@ namespace DwFramework.Rpc.Plugins.Cluster
         /// 注册集群服务
         /// </summary>
         /// <param name="host"></param>
+        /// <returns></returns>
+        public static ServiceHost RegisterClusterImpl(this ServiceHost host)
+        {
+            host.RegisterType<ClusterImpl>().SingleInstance();
+            host.OnInitializing += provider => provider.GetRpcService().AddService(provider.GetClusterImpl());
+            host.OnInitialized += provider => provider.GetClusterImpl().Init();
+            return host;
+        }
+
+        /// <summary>
+        /// 注册集群服务
+        /// </summary>
+        /// <param name="host"></param>
         /// <param name="linkUrl"></param>
         /// <param name="healthCheckPerMs"></param>
         /// <param name="bootPeer"></param>
