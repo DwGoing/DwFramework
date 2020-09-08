@@ -16,10 +16,8 @@ namespace _Test.Core
         {
             try
             {
-                var a = "helo".ToBytes();
-                var b = a.ToBase64String();
-                var c = b.FromBase64String();
-                Console.WriteLine(c.ToObject<string>());
+                var d = new Dictionary<string, string>() { { "1", "a" }, { "2", "b" }, { "3", "c" } };
+                d.ForEach(item => Console.WriteLine($"{item.Key} {item.Value}"));
             }
             catch (Exception ex)
             {
