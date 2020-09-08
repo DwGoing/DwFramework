@@ -27,6 +27,7 @@ namespace DwFramework.Rpc.Plugins.Cluster
 
 
         public readonly string ID;
+        public event Action<Exception> OnConnectBootPeerFailed;
         public event Action<string> OnJoin;
         public event Action<string> OnExit;
         public event Action<string, byte[]> OnReceiveData;
@@ -83,7 +84,7 @@ namespace DwFramework.Rpc.Plugins.Cluster
             {
                 var response = client.Join(new Void(), _header);
                 _peers[response.Value] = _config.BootPeer;
-            });
+            }, ex => OnConnectBootPeerFailed?.Invoke(ex));
         }
 
         /// <summary>
