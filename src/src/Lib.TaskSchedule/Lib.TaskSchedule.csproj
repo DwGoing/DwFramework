@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>netstandard2.1</TargetFramework>
+        <AssemblyName>DwFramework.TaskSchedule</AssemblyName>
+        <RootNamespace>DwFramework.TaskSchedule</RootNamespace>
+        <Version>1.2.1.3</Version>
+        <Authors>DwGoing</Authors>
+        <Copyright>DwGoing</Copyright>
+        <Description>DwFramework 任务调度库</Description>
+        <PackageLicenseFile>LICENSE</PackageLicenseFile>
+        <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+        <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+        <ReleaseVersion>1.0</ReleaseVersion>
+        <PackageProjectUrl>https://github.com/Dwgoing/DwFramework/tree/master/Lib.TaskSchedule</PackageProjectUrl>
+    </PropertyGroup>
+    <ItemGroup>
+        <None Include="..\..\LICENSE" Link="LICENSE">
+            <Pack>True</Pack>
+            <PackagePath>
+            </PackagePath>
+        </None>
+    </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Quartz" Version="3.1.0" />
+    </ItemGroup>
+</Project>
