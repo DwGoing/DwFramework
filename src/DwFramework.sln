@@ -26,6 +26,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DwFramework.MachineLearning
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DwFramework.RabbitMQ", "Module\DwFramework.RabbitMQ\DwFramework.RabbitMQ.csproj", "{DE205C4B-9007-4B6F-B9FC-C85AABE37987}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DwFramework.Socket", "Module\DwFramework.Socket\DwFramework.Socket.csproj", "{533B8781-CB5B-4E09-A77B-B83173AD4D16}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -80,6 +82,10 @@ Global
 		{DE205C4B-9007-4B6F-B9FC-C85AABE37987}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DE205C4B-9007-4B6F-B9FC-C85AABE37987}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DE205C4B-9007-4B6F-B9FC-C85AABE37987}.Release|Any CPU.Build.0 = Release|Any CPU
+		{533B8781-CB5B-4E09-A77B-B83173AD4D16}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{533B8781-CB5B-4E09-A77B-B83173AD4D16}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{533B8781-CB5B-4E09-A77B-B83173AD4D16}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{533B8781-CB5B-4E09-A77B-B83173AD4D16}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

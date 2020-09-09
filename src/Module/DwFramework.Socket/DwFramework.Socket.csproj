@@ -4,15 +4,12 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <Version>2.0.1</Version>
     <Authors>DwGoing</Authors>
-    <Description>DwFramework RabbitMQ库</Description>
+    <Description>DwFramework Socket库</Description>
     <PackageProjectUrl>https://github.com/Dwgoing/DwFramework</PackageProjectUrl>
   </PropertyGroup>
   <ItemGroup>
     <Folder Include="Extensions\" />
     <Folder Include="Models\" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="RabbitMQ.Client" Version="6.2.1" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DwFramework.Core\DwFramework.Core.csproj" />
