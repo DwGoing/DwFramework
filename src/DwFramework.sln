@@ -26,6 +26,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DwFramework.DataFlow", "Mod
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DwFramework.MachineLearning", "Module\DwFramework.MachineLearning\DwFramework.MachineLearning.csproj", "{D8EC497F-E142-4C28-BFC6-2B9F5CFACFFF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DwFramework.RabbitMQ", "Module\DwFramework.RabbitMQ\DwFramework.RabbitMQ.csproj", "{DE205C4B-9007-4B6F-B9FC-C85AABE37987}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -80,6 +82,10 @@ Global
 		{D8EC497F-E142-4C28-BFC6-2B9F5CFACFFF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D8EC497F-E142-4C28-BFC6-2B9F5CFACFFF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D8EC497F-E142-4C28-BFC6-2B9F5CFACFFF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DE205C4B-9007-4B6F-B9FC-C85AABE37987}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DE205C4B-9007-4B6F-B9FC-C85AABE37987}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DE205C4B-9007-4B6F-B9FC-C85AABE37987}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DE205C4B-9007-4B6F-B9FC-C85AABE37987}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
