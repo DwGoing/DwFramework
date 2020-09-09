@@ -10,8 +10,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lib.WebAPI", "src\Lib.WebAP
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lib.WebSocket", "src\Lib.WebSocket\Lib.WebSocket.csproj", "{57E4D9A1-8F61-4B30-9B25-54FCE02AF031}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lib.Socket", "src\Lib.Socket\Lib.Socket.csproj", "{4A4E18D1-225F-4C53-A3E2-91F910BEB74D}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "_UnitTest", "_UnitTest\_UnitTest.csproj", "{9B529FBA-16F3-45B4-9632-62EA9ECF83B2}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DwFramework.Core", "Module\DwFramework.Core\DwFramework.Core.csproj", "{2CDE6525-4635-47CC-9C6A-806ED5252853}"
@@ -50,10 +48,6 @@ Global
 		{57E4D9A1-8F61-4B30-9B25-54FCE02AF031}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{57E4D9A1-8F61-4B30-9B25-54FCE02AF031}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{57E4D9A1-8F61-4B30-9B25-54FCE02AF031}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4A4E18D1-225F-4C53-A3E2-91F910BEB74D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4A4E18D1-225F-4C53-A3E2-91F910BEB74D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4A4E18D1-225F-4C53-A3E2-91F910BEB74D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4A4E18D1-225F-4C53-A3E2-91F910BEB74D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{9B529FBA-16F3-45B4-9632-62EA9ECF83B2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{9B529FBA-16F3-45B4-9632-62EA9ECF83B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9B529FBA-16F3-45B4-9632-62EA9ECF83B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
