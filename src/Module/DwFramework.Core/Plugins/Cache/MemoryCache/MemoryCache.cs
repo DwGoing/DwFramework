@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace DwFramework.Core.Plugins
+namespace DwFramework.Plugins.Core
 {
     public class MemoryCache : ICache
     {

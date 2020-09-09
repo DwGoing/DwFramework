@@ -1,6 +1,6 @@
 ﻿using Castle.DynamicProxy;
 
-namespace DwFramework.Core.Plugins
+namespace DwFramework.Plugins.Core
 {
     public abstract class BaseInterceptor : IInterceptor
     {

@@ -2,7 +2,7 @@
 using System.Reflection;
 using Castle.DynamicProxy;
 
-namespace DwFramework.Core.Plugins
+namespace DwFramework.Plugins.Core
 {
     public class CallInfo
     {

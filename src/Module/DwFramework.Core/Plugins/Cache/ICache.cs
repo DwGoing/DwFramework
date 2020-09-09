@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace DwFramework.Core.Plugins
+namespace DwFramework.Plugins.Core
 {
     public interface ICache
     {

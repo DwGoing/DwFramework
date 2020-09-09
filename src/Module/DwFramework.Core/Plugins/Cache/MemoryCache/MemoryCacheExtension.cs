@@ -1,6 +1,8 @@
 ﻿using System;
 
-namespace DwFramework.Core.Plugins
+using DwFramework.Core;
+
+namespace DwFramework.Plugins.Core
 {
     public static class MemoryCacheExtension
     {

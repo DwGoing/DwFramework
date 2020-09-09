@@ -2,7 +2,7 @@
 using System.Text;
 using System.Linq;
 
-namespace DwFramework.Core.Extensions
+namespace DwFramework.Extensions.Core
 {
     public static class StringExtension
     {

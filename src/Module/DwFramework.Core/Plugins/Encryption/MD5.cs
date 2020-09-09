@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace DwFramework.Core.Plugins
+namespace DwFramework.Plugins.Core
 {
     public class MD5
     {

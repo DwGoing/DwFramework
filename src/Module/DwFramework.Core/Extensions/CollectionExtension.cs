@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace DwFramework.Core.Extensions
+namespace DwFramework.Extensions.Core
 {
     public static class CollectionExtension
     {

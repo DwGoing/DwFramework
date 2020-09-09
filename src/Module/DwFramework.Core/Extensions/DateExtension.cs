@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DwFramework.Core.Extensions
+namespace DwFramework.Extensions.Core
 {
     public static class DateExtension
     {

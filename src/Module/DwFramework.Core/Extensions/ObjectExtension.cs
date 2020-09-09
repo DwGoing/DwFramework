@@ -3,7 +3,7 @@ using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text.Json;
 
-namespace DwFramework.Core.Extensions
+namespace DwFramework.Extensions.Core
 {
     public static class ObjectExtension
     {

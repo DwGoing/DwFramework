@@ -4,7 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace DwFramework.Core.Plugins
+using DwFramework.Core.Plugins;
+
+namespace DwFramework.Plugins.Core
 {
     public class MemoryCacheStore
     {

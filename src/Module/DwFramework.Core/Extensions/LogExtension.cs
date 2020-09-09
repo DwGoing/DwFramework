@@ -3,7 +3,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NLog.Extensions.Logging;
 
-namespace DwFramework.Core.Extensions
+using DwFramework.Core;
+
+namespace DwFramework.Extensions.Core
 {
     public static class LogExtension
     {
@@ -29,9 +31,6 @@ namespace DwFramework.Core.Extensions
         /// <typeparam name="T"></typeparam>
         /// <param name="provider"></param>
         /// <returns></returns>
-        public static ILogger<T> GetLogger<T>(this IServiceProvider provider)
-        {
-            return provider.GetService<ILogger<T>>();
-        }
+        public static ILogger<T> GetLogger<T>(this IServiceProvider provider) => (ILogger<T>)provider.GetService(typeof(ILogger<T>));
     }
 }
