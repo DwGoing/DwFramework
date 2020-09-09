@@ -4,14 +4,13 @@ using System.Threading.Tasks;
 using SqlSugar;
 
 using DwFramework.Core;
-using DwFramework.Core.Plugins;
-using DwFramework.Database.Extensions;
+using DwFramework.Plugins.Core;
 
 namespace DwFramework.Database
 {
     public sealed class DatabaseService
     {
-        public class Config
+        private class Config
         {
             public class SlaveConnectionConfig
             {
@@ -26,14 +25,15 @@ namespace DwFramework.Database
         }
 
         private readonly Config _config;
+
         public SqlSugarClient DbConnection { get => CreateConnection(); }
 
         /// <summary>
         /// 构造函数
         /// </summary>
-        public DatabaseService()
+        public DatabaseService(Core.Environment environment)
         {
-            _config = ServiceHost.Environment.Configuration.GetConfig<Config>("Database");
+            _config = environment.Configuration.GetConfig<Config>("Database");
         }
 
         /// <summary>
@@ -50,8 +50,7 @@ namespace DwFramework.Database
                 InitKeyType = InitKeyType.SystemTable,    //默认SystemTable, 字段信息读取, 如：该属性是不是主键，是不是标识列等等信息
                 ConfigureExternalServices = new ConfigureExternalServices() // 配置扩展服务
             };
-            if (_config.UseMemoryCache)
-                config.ConfigureExternalServices.DataInfoCacheService = new DataMemoryCache(); // Memory缓存
+            if (_config.UseMemoryCache) config.ConfigureExternalServices.DataInfoCacheService = new DataMemoryCache(); // Memory缓存
             // 主从模式
             if (_config.SlaveConnections != null && _config.SlaveConnections.Length > 0)
             {
@@ -77,39 +76,21 @@ namespace DwFramework.Database
         /// <param name="columns"></param>
         /// <param name="isCreatePrimaryKey"></param>
         /// <returns></returns>
-        public Task<bool> CreateTableAsync(string tableName, List<DbColumnInfo> columns, bool isCreatePrimaryKey = true)
-        {
-            return TaskManager.CreateTask(() =>
-            {
-                return DbConnection.DbMaintenance.CreateTable(tableName, columns, isCreatePrimaryKey);
-            });
-        }
+        public Task<bool> CreateTableAsync(string tableName, List<DbColumnInfo> columns, bool isCreatePrimaryKey = true) => TaskManager.CreateTask(() => DbConnection.DbMaintenance.CreateTable(tableName, columns, isCreatePrimaryKey));
 
         /// <summary>
         /// 删除表
         /// </summary>
         /// <param name="tableName"></param>
         /// <returns></returns>
-        public Task<bool> DropTableAsync(string tableName)
-        {
-            return TaskManager.CreateTask(() =>
-            {
-                return DbConnection.DbMaintenance.DropTable(tableName);
-            });
-        }
+        public Task<bool> DropTableAsync(string tableName) => TaskManager.CreateTask(() => DbConnection.DbMaintenance.DropTable(tableName));
 
         /// <summary>
         /// 重置表
         /// </summary>
         /// <param name="tableName"></param>
         /// <returns></returns>
-        public Task<bool> TruncateTableAsync(string tableName)
-        {
-            return TaskManager.CreateTask(() =>
-            {
-                return DbConnection.DbMaintenance.TruncateTable(tableName);
-            });
-        }
+        public Task<bool> TruncateTableAsync(string tableName) => TaskManager.CreateTask(() => DbConnection.DbMaintenance.TruncateTable(tableName));
 
         /// <summary>
         /// 复制表结构

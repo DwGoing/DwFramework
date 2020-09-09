@@ -1,11 +1,9 @@
 ﻿using System;
-
 using SqlSugar;
 
 using DwFramework.Core;
-using DwFramework.Core.Extensions;
 
-namespace DwFramework.Database.Extensions
+namespace DwFramework.Database
 {
     public static class DatabaseExtension
     {
