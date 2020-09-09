@@ -24,6 +24,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "_UnitTest", "_UnitTest\_Uni
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DwFramework.Core", "Module\DwFramework.Core\DwFramework.Core.csproj", "{2CDE6525-4635-47CC-9C6A-806ED5252853}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DwFramework.Database", "Module\DwFramework.Database\DwFramework.Database.csproj", "{ACF33286-AE68-4021-BC7F-BB199036E4C8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -74,6 +76,10 @@ Global
 		{2CDE6525-4635-47CC-9C6A-806ED5252853}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2CDE6525-4635-47CC-9C6A-806ED5252853}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2CDE6525-4635-47CC-9C6A-806ED5252853}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ACF33286-AE68-4021-BC7F-BB199036E4C8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ACF33286-AE68-4021-BC7F-BB199036E4C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ACF33286-AE68-4021-BC7F-BB199036E4C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ACF33286-AE68-4021-BC7F-BB199036E4C8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <Version>2.0.1</Version>
+        <Authors>DwGoing</Authors>
+        <Description>DwFramework ORM库</Description>
+        <PackageProjectUrl>https://github.com/Dwgoing/DwFramework</PackageProjectUrl>
+    </PropertyGroup>
+    <ItemGroup>
+      <ProjectReference Include="..\DwFramework.Core\DwFramework.Core.csproj" />
+    </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="3.1.8" />
+        <PackageReference Include="sqlSugarCore" Version="5.0.0.15" />
+    </ItemGroup>
+    <ItemGroup>
+        <None Update="README.md">
+            <IncludeInPackage>true</IncludeInPackage>
+        </None>
+        <None Update="LICENSE">
+            <IncludeInPackage>true</IncludeInPackage>
+        </None>
+    </ItemGroup>
+</Project>
