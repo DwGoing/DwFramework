@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 
 using DwFramework.Core;
-using DwFramework.Core.Plugins;
+using DwFramework.Core.Extensions;
 
 namespace DwFramework.DataFlow
 {
@@ -27,11 +27,22 @@ namespace DwFramework.DataFlow
         /// <param name="taskHandler"></param>
         /// <param name="resultHandler"></param>
         /// <returns></returns>
-        public string CreateTaskQueue<TInput, TOutput, TResult>(ITaskHandler<TInput, TOutput> taskHandler, IResultHandler<TOutput, TResult> resultHandler)
+        public string CreateTaskQueue<TInput, TOutput, TResult>(Func<TInput, TOutput> taskHandler, Func<TOutput, TResult> resultHandler)
         {
-            var key = Generater.GenerateGUID().ToString();
-            _taskQueues[key] = new TaskQueue<TInput, TOutput, TResult>(taskHandler, resultHandler);
-            return key;
+            var taskQueue = new TaskQueue<TInput, TOutput, TResult>(taskHandler, resultHandler);
+            _taskQueues[taskQueue.ID] = taskQueue;
+            return taskQueue.ID;
+        }
+
+        /// <summary>
+        /// 获取任务队列
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public ITaskQueue GetTaskQueue(string key)
+        {
+            if (!_taskQueues.ContainsKey(key)) return null;
+            return _taskQueues[key];
         }
 
         /// <summary>
@@ -40,89 +51,15 @@ namespace DwFramework.DataFlow
         /// <param name="key"></param>
         public void RemoveTaskQueue(string key)
         {
-            RequireKey(key);
+            if (!_taskQueues.ContainsKey(key)) return;
+            _taskQueues[key].ClearAllInputs();
             _taskQueues.Remove(key);
         }
 
         /// <summary>
         /// 移除所有任务队列
         /// </summary>
-        public void ClearTaskQueues()
-        {
-            _taskQueues.Clear();
-        }
-
-        /// <summary>
-        /// 添加任务开始时的处理
-        /// </summary>
-        /// <typeparam name="TInput"></typeparam>
-        /// <param name="key"></param>
-        /// <param name="handler"></param>
-        public void AddTaskStartHandler<TInput>(string key, OnTaskStartHandler handler)
-        {
-            RequireKey(key);
-            _taskQueues[key].AddTaskStartHandler(handler);
-        }
-
-        /// <summary>
-        /// 移除任务开始时的处理
-        /// </summary>
-        /// <typeparam name="TInput"></typeparam>
-        /// <param name="key"></param>
-        /// <param name="handler"></param>
-        public void RemoveTaskStartHandler<TInput>(string key, OnTaskStartHandler handler)
-        {
-            RequireKey(key);
-            _taskQueues[key].RemoveTaskStartHandler(handler);
-        }
-
-        /// <summary>
-        /// 移除所有任务开始时的处理
-        /// </summary>
-        /// <param name="key"></param>
-        public void ClearTaskStartHandlers(string key)
-        {
-            RequireKey(key);
-            _taskQueues[key].ClearTaskStartHandlers();
-        }
-
-        /// <summary>
-        /// 添加任务结束时的处理
-        /// </summary>
-        /// <typeparam name="TInput"></typeparam>
-        /// <typeparam name="TOutput"></typeparam>
-        /// <typeparam name="TResult"></typeparam>
-        /// <param name="key"></param>
-        /// <param name="handler"></param>
-        public void AddTaskEndHandler<TInput, TOutput, TResult>(string key, OnTaskEndHandler handler)
-        {
-            RequireKey(key);
-            _taskQueues[key].AddTaskEndHandler(handler);
-        }
-
-        /// <summary>
-        /// 移除任务结束时的处理
-        /// </summary>
-        /// <typeparam name="TInput"></typeparam>
-        /// <typeparam name="TOutput"></typeparam>
-        /// <typeparam name="TResult"></typeparam>
-        /// <param name="key"></param>
-        /// <param name="handler"></param>
-        public void RemoveTaskEndHandler<TInput, TOutput, TResult>(string key, OnTaskEndHandler handler)
-        {
-            RequireKey(key);
-            _taskQueues[key].RemoveTaskEndHandler(handler);
-        }
-
-        /// <summary>
-        /// 移除所有任务结束时的处理
-        /// </summary>
-        /// <param name="key"></param>
-        public void ClearTaskEndHandlers(string key)
-        {
-            RequireKey(key);
-            _taskQueues[key].ClearTaskEndHandlers();
-        }
+        public void ClearTaskQueues() => _taskQueues.ForEach(item => RemoveTaskQueue(item.Key));
 
         /// <summary>
         /// 添加输入
@@ -130,10 +67,10 @@ namespace DwFramework.DataFlow
         /// <typeparam name="TInput"></typeparam>
         /// <param name="key"></param>
         /// <param name="input"></param>
-        public void AddInput<TInput>(string key, TInput input)
+        public string AddInput<TInput>(string key, TInput input)
         {
-            RequireKey(key);
-            _taskQueues[key].AddInput(input);
+            if (!_taskQueues.ContainsKey(key)) throw new Exception("该队列不存在");
+            return _taskQueues[key].AddInput(input);
         }
 
         /// <summary>
@@ -142,7 +79,7 @@ namespace DwFramework.DataFlow
         /// <param name="key"></param>
         public void ClearInput(string key)
         {
-            RequireKey(key);
+            if (!_taskQueues.ContainsKey(key)) throw new Exception("该队列不存在");
             _taskQueues[key].ClearAllInputs();
         }
 
@@ -151,19 +88,10 @@ namespace DwFramework.DataFlow
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
-        public object GetResult(string key)
+        public object GetResult(string key, out string inputId)
         {
-            RequireKey(key);
-            return _taskQueues[key].GetResult();
-        }
-
-        /// <summary>
-        /// 验证Key
-        /// </summary>
-        /// <param name="key"></param>
-        private void RequireKey(string key)
-        {
-            if (!_taskQueues.ContainsKey(key)) throw new Exception($"Key:{key}不存在");
+            if (!_taskQueues.ContainsKey(key)) throw new Exception("该队列不存在");
+            return _taskQueues[key].GetResult(out inputId);
         }
     }
 }

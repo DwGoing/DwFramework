@@ -17,9 +17,7 @@ namespace _Test.DataFlow
                 host.OnInitializing += provider =>
                 {
                     var service = provider.GetDataFlowService();
-                    var key = service.CreateTaskQueue(new TaskHandler(), new ResultHandler());
-                    service.AddTaskStartHandler<int>(key, input => Console.WriteLine($"------ Start ------\nInput=>{input}"));
-                    service.AddTaskEndHandler<int, int, int>(key, (input, output, result) => Console.WriteLine($"Output=>{output}\nResult=>{result}\n------ End ------"));
+                    var key = service.CreateTaskQueue<int, int, int>(TaskHandler, ResultHandler);
                     service.AddInput(key, 1);
                     service.AddInput(key, 2);
                     service.AddInput(key, 3);
@@ -30,7 +28,7 @@ namespace _Test.DataFlow
                     service.AddInput(key, 8);
                     service.AddInput(key, 9);
                     service.AddInput(key, 10);
-                    service.GetResult(key);
+                    Console.WriteLine(service.GetResult(key, out var id));
                 };
                 host.Run();
             }
@@ -39,21 +37,15 @@ namespace _Test.DataFlow
                 Console.WriteLine(ex.Message);
             }
         }
-    }
 
-    public class TaskHandler : ITaskHandler<int, int>
-    {
-        public int Invoke(int input)
+        private static int TaskHandler(int value)
         {
-            return input * 10;
+            return value++;
         }
-    }
 
-    public class ResultHandler : IResultHandler<int, int>
-    {
-        public int Invoke(int output, int result)
+        private static int ResultHandler(int value)
         {
-            return output + result;
+            return value++;
         }
     }
 }
