@@ -26,6 +26,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DwFramework.Database", "Mod
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DwFramework.Plugins.Database", "Plugins\DwFramework.Plugins.Database\DwFramework.Plugins.Database.csproj", "{92480E8E-0B2E-46F9-8ADA-4F11F2FE6071}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DwFramework.DataFlow", "Module\DwFramework.DataFlow\DwFramework.DataFlow.csproj", "{4FF3722A-30BA-4BD4-BB0A-549F2F41F798}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -80,6 +82,10 @@ Global
 		{92480E8E-0B2E-46F9-8ADA-4F11F2FE6071}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{92480E8E-0B2E-46F9-8ADA-4F11F2FE6071}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{92480E8E-0B2E-46F9-8ADA-4F11F2FE6071}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4FF3722A-30BA-4BD4-BB0A-549F2F41F798}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4FF3722A-30BA-4BD4-BB0A-549F2F41F798}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4FF3722A-30BA-4BD4-BB0A-549F2F41F798}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4FF3722A-30BA-4BD4-BB0A-549F2F41F798}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
