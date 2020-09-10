@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 using DwFramework.Core;
 
-namespace DwFramework.Rpc.Extensions
+namespace DwFramework.Rpc
 {
     public static class RpcExtension
     {
