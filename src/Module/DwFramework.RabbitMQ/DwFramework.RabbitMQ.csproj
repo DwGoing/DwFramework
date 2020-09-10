@@ -12,10 +12,10 @@
     <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="RabbitMQ.Client" Version="6.2.1" />
+    <ProjectReference Include="..\DwFramework.Core\DwFramework.Core.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DwFramework.Core\DwFramework.Core.csproj" />
+    <PackageReference Include="RabbitMQ.Client" Version="6.2.1" />
   </ItemGroup>
   <ItemGroup>
     <None Update="README.md">
