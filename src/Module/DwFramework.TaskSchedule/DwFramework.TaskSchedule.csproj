@@ -6,6 +6,7 @@
     <Authors>DwGoing</Authors>
     <Description>DwFramework 任务调度库</Description>
     <PackageProjectUrl>https://github.com/Dwgoing/DwFramework</PackageProjectUrl>
+    <ReleaseVersion>1.0</ReleaseVersion>
   </PropertyGroup>
   <ItemGroup>
     <Folder Include="Extensions\" />

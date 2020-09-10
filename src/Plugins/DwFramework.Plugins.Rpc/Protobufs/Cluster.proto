@@ -1,0 +1,15 @@
+﻿syntax = "proto3";
+import "Common.proto";
+package DwFramework.Plugins.Rpc.Cluster;
+
+service Cluster {
+    rpc Join (DwFramework.Rpc.Void) returns (DwFramework.Rpc.String);
+    rpc HealthCheck (DwFramework.Rpc.Void) returns (DwFramework.Rpc.Void);
+    rpc SyncRouteTable (RouteTable) returns (DwFramework.Rpc.Void);
+    rpc SyncData (DwFramework.Rpc.Bytes) returns (DwFramework.Rpc.Void);
+}
+
+message RouteTable {
+    map<string,string> Value = 1;
+}
+
