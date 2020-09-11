@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <Version>2.0.1</Version>
+        <Authors>DwGoing</Authors>
+        <Description>DwFramework WebAPI插件库</Description>
+        <PackageProjectUrl>https://github.com/Dwgoing/DwFramework</PackageProjectUrl>
+        <ReleaseVersion>1.0</ReleaseVersion>
+    </PropertyGroup>
+    <ItemGroup>
+        <Folder Include="Extensions\" />
+        <Folder Include="Models\" />
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\..\Module\DwFramework.WebAPI\DwFramework.WebAPI.csproj" />
+    </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.7.1" />
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="5.5.1" />
+        <PackageReference Include="Consul" Version="1.6.1.1" />
+    </ItemGroup>
+    <ItemGroup>
+        <None Update="README.md">
+            <IncludeInPackage>true</IncludeInPackage>
+        </None>
+        <None Update="LICENSE">
+            <IncludeInPackage>true</IncludeInPackage>
+        </None>
+    </ItemGroup>
+</Project>
