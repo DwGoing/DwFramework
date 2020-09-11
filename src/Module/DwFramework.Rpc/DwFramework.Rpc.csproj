@@ -24,7 +24,7 @@
         </PackageReference>
     </ItemGroup>
     <ItemGroup>
-        <Protobuf Include="Protobufs\*.proto" GrpcServices="None"/>
+        <Protobuf Include="Protobufs\*.proto" GrpcServices="None" />
     </ItemGroup>
     <ItemGroup>
         <None Update="README.md">
