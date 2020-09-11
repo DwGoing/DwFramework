@@ -30,6 +30,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DwFramework.Rpc", "Module\D
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DwFramework.Plugins.Rpc", "Plugins\DwFramework.Plugins.Rpc\DwFramework.Plugins.Rpc.csproj", "{4FCCBDF8-FFEA-481E-A935-A51A5D0E6088}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DwFramework.WebAPI", "Module\DwFramework.WebAPI\DwFramework.WebAPI.csproj", "{D6366887-279C-434C-83D0-C1F2BFA142BF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -92,6 +94,10 @@ Global
 		{4FCCBDF8-FFEA-481E-A935-A51A5D0E6088}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4FCCBDF8-FFEA-481E-A935-A51A5D0E6088}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4FCCBDF8-FFEA-481E-A935-A51A5D0E6088}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D6366887-279C-434C-83D0-C1F2BFA142BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D6366887-279C-434C-83D0-C1F2BFA142BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D6366887-279C-434C-83D0-C1F2BFA142BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D6366887-279C-434C-83D0-C1F2BFA142BF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
