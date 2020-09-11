@@ -4,8 +4,6 @@ VisualStudioVersion = 16.0.29926.136
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lib.Rpc", "src\Lib.Rpc\Lib.Rpc.csproj", "{23560FBC-5E90-432D-9C29-A09CE832CA1B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lib.WebAPI", "src\Lib.WebAPI\Lib.WebAPI.csproj", "{B4A8E83C-5FA8-4631-96C4-B315D16724E2}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "_UnitTest", "_UnitTest\_UnitTest.csproj", "{9B529FBA-16F3-45B4-9632-62EA9ECF83B2}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DwFramework.Core", "Module\DwFramework.Core\DwFramework.Core.csproj", "{2CDE6525-4635-47CC-9C6A-806ED5252853}"
@@ -44,10 +42,6 @@ Global
 		{23560FBC-5E90-432D-9C29-A09CE832CA1B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{23560FBC-5E90-432D-9C29-A09CE832CA1B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{23560FBC-5E90-432D-9C29-A09CE832CA1B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B4A8E83C-5FA8-4631-96C4-B315D16724E2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B4A8E83C-5FA8-4631-96C4-B315D16724E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B4A8E83C-5FA8-4631-96C4-B315D16724E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B4A8E83C-5FA8-4631-96C4-B315D16724E2}.Release|Any CPU.Build.0 = Release|Any CPU
 		{9B529FBA-16F3-45B4-9632-62EA9ECF83B2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{9B529FBA-16F3-45B4-9632-62EA9ECF83B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9B529FBA-16F3-45B4-9632-62EA9ECF83B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
