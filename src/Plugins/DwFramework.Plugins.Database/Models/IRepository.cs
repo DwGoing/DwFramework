@@ -2,7 +2,7 @@
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
-namespace DwFramework.Extensions.Database
+namespace DwFramework.Extensions.Database.Repository
 {
     public interface IRepository<T> where T : class, new()
     {

@@ -1,42 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
-    <PropertyGroup>
-        <TargetFramework>netcoreapp3.1</TargetFramework>
-        <Version>2.0.1</Version>
-        <Authors>DwGoing</Authors>
-        <Description>DwFramework RPC插件库</Description>
-        <PackageProjectUrl>https://github.com/Dwgoing/DwFramework</PackageProjectUrl>
-        <ReleaseVersion>1.0</ReleaseVersion>
-    </PropertyGroup>
-    <ItemGroup>
-        <Folder Include="Extensions\" />
-        <Folder Include="Models\" />
-        <Folder Include="Protobufs\" />
-    </ItemGroup>
-    <ItemGroup>
-        <ProjectReference Include="..\..\Module\DwFramework.Rpc\DwFramework.Rpc.csproj" />
-    </ItemGroup>
-    <ItemGroup>
-        <PackageReference Include="Google.Protobuf" Version="3.13.0" />
-        <PackageReference Include="Grpc.Core" Version="2.31.0" />
-        <PackageReference Include="Grpc.Tools" Version="2.31.0">
-            <PrivateAssets>all</PrivateAssets>
-            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
-    </ItemGroup>
-    <ItemGroup>
-        <Protobuf Include="*.proto" AdditionalImportDirs="..\..\Module\DwFramework.Rpc\Protobufs" />
-        <Protobuf Include="Protobufs\Cluster.proto" GrpcServices="None"/>
-    </ItemGroup>
-    <ItemGroup>
-      <None Remove="Protobufs\Cluster.proto" />
-    </ItemGroup>
-    <ItemGroup>
-        <None Update="README.md">
-            <IncludeInPackage>true</IncludeInPackage>
-        </None>
-        <None Update="LICENSE">
-            <IncludeInPackage>true</IncludeInPackage>
-        </None>
-    </ItemGroup>
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <Version>2.0.1</Version>
+    <Authors>DwGoing</Authors>
+    <Description>DwFramework RPC插件库</Description>
+    <PackageProjectUrl>https://github.com/Dwgoing/DwFramework</PackageProjectUrl>
+    <ReleaseVersion>1.0</ReleaseVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <Folder Include="Extensions\" />
+    <Folder Include="Models\" />
+    <Folder Include="Protobufs\" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Google.Protobuf" Version="3.13.0" />
+    <PackageReference Include="Grpc.Core" Version="2.32.0" />
+    <PackageReference Include="Grpc.Tools" Version="2.32.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Module\DwFramework.Rpc\DwFramework.Rpc.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Protobuf Include="Protobufs\**\*.proto" GrpcServices="None" />
+    <Protobuf Include="Protobufs\Cluster.proto" GrpcServices="Server Client" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="README.md">
+      <IncludeInPackage>true</IncludeInPackage>
+    </None>
+    <None Update="LICENSE">
+      <IncludeInPackage>true</IncludeInPackage>
+    </None>
+  </ItemGroup>
 </Project>

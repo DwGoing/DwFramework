@@ -4,13 +4,15 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
 using Grpc.Core;
+using Google.Protobuf;
+using Google.Protobuf.WellKnownTypes;
 
+using DwFramework.Core;
 using DwFramework.Extensions.Core;
 using DwFramework.Plugins.Core;
 
 namespace DwFramework.Plugins.Rpc.Cluster
 {
-    /*
     public sealed class ClusterImpl : Cluster.ClusterBase
     {
         private class Config
@@ -36,9 +38,9 @@ namespace DwFramework.Plugins.Rpc.Cluster
         /// 构造函数
         /// </summary>
         /// <param name="environment"></param>
-        public ClusterImpl(Core.Environment environment)
+        public ClusterImpl(DwFramework.Core.Environment environment)
         {
-            _config = environment.Configuration.GetRoot<Config>();
+            _config = environment.Configuration.GetConfig<Config>();
             ID = Generater.GenerateRandomString(32);
             _header = new Metadata
             {
@@ -82,7 +84,7 @@ namespace DwFramework.Plugins.Rpc.Cluster
             if (_config.BootPeer == null) return;
             UseRPC(_config.BootPeer, client =>
             {
-                var response = client.Join(new Void(), _header);
+                var response = client.Join(new Empty(), _header);
                 _peers[response.Value] = _config.BootPeer;
             }, ex => OnConnectBootPeerFailed?.Invoke(ex));
         }
@@ -93,7 +95,7 @@ namespace DwFramework.Plugins.Rpc.Cluster
         /// <param name="request"></param>
         /// <param name="context"></param>
         /// <returns></returns>
-        public override Task<String> Join(Void request, ServerCallContext context)
+        public override Task<StringValue> Join(Empty request, ServerCallContext context)
         {
             var id = context.RequestHeaders.Get("id");
             var url = context.RequestHeaders.Get("linkurl");
@@ -102,7 +104,7 @@ namespace DwFramework.Plugins.Rpc.Cluster
             SyncRouteTable();
             if (!PeerHealthCheck(id.Value)) throw new Exception("LinkUrl不可用");
             OnJoin?.Invoke(id.Value);
-            return Task.FromResult(new String() { Value = ID });
+            return Task.FromResult(new StringValue() { Value = ID });
         }
 
         /// <summary>
@@ -111,9 +113,9 @@ namespace DwFramework.Plugins.Rpc.Cluster
         /// <param name="request"></param>
         /// <param name="context"></param>
         /// <returns></returns>
-        public override Task<Void> HealthCheck(Void request, ServerCallContext context)
+        public override Task<Empty> HealthCheck(Empty request, ServerCallContext context)
         {
-            return Task.FromResult(new Void());
+            return Task.FromResult(new Empty());
         }
 
         /// <summary>
@@ -122,7 +124,7 @@ namespace DwFramework.Plugins.Rpc.Cluster
         /// <param name="request"></param>
         /// <param name="context"></param>
         /// <returns></returns>
-        public override Task<Void> SyncRouteTable(RouteTable request, ServerCallContext context)
+        public override Task<Empty> SyncRouteTable(RouteTable request, ServerCallContext context)
         {
             request.Value.ForEach(item =>
             {
@@ -130,7 +132,7 @@ namespace DwFramework.Plugins.Rpc.Cluster
                 Console.WriteLine($"同步路由 {item.Key} {item.Value}");
                 _peers[item.Key] = item.Value;
             });
-            return Task.FromResult(new Void());
+            return Task.FromResult(new Empty());
         }
 
         /// <summary>
@@ -139,12 +141,12 @@ namespace DwFramework.Plugins.Rpc.Cluster
         /// <param name="request"></param>
         /// <param name="context"></param>
         /// <returns></returns>
-        public override Task<Void> SyncData(Bytes request, ServerCallContext context)
+        public override Task<Empty> SyncData(BytesValue request, ServerCallContext context)
         {
             var id = context.RequestHeaders.Get("id");
             if (id == null || string.IsNullOrEmpty(id.Value)) throw new Exception($"无法获取节点信息");
-            OnReceiveData?.Invoke(id.Value, request.RawValue);
-            return Task.FromResult(new Void());
+            OnReceiveData?.Invoke(id.Value, request.ToByteArray());
+            return Task.FromResult(new Empty());
         }
 
         /// <summary>
@@ -178,7 +180,7 @@ namespace DwFramework.Plugins.Rpc.Cluster
             var isOk = true;
             UseRPC(_peers[id], client =>
             {
-                client.HealthCheck(new Void());
+                client.HealthCheck(new Empty());
             }, ex =>
             {
                 _peers.Remove(id);
@@ -214,9 +216,8 @@ namespace DwFramework.Plugins.Rpc.Cluster
         /// <param name="data"></param>
         public void SyncData(byte[] data)
         {
-            var request = new Bytes(data);
+            var request = BytesValue.Parser.ParseFrom(data);
             _peers.ForEach(item => UseRPC(item.Value, client => client.SyncData(request, _header)));
         }
     }
-    */
 }

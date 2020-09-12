@@ -2,8 +2,8 @@
 using Xunit;
 
 using DwFramework.Core;
-using DwFramework.Core.Extensions;
-using DwFramework.Core.Plugins;
+using DwFramework.Extensions.Core;
+using DwFramework.Plugins.Core;
 
 namespace _UnitTest
 {

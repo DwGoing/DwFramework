@@ -8,7 +8,7 @@ using DwFramework.Core;
 using DwFramework.Plugins.Core;
 using DwFramework.Database;
 
-namespace DwFramework.Extensions.Database
+namespace DwFramework.Extensions.Database.Repository
 {
     public abstract class BaseRepository<T> : IRepository<T> where T : class, new()
     {

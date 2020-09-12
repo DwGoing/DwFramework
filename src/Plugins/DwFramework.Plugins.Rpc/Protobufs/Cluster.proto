@@ -1,12 +1,13 @@
 ﻿syntax = "proto3";
-import "Common.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/wrappers.proto";
 package DwFramework.Plugins.Rpc.Cluster;
 
 service Cluster {
-    rpc Join (DwFramework.Rpc.Void) returns (DwFramework.Rpc.String);
-    rpc HealthCheck (DwFramework.Rpc.Void) returns (DwFramework.Rpc.Void);
-    rpc SyncRouteTable (RouteTable) returns (DwFramework.Rpc.Void);
-    rpc SyncData (DwFramework.Rpc.Bytes) returns (DwFramework.Rpc.Void);
+    rpc Join (google.protobuf.Empty) returns (google.protobuf.StringValue);
+    rpc HealthCheck (google.protobuf.Empty) returns (google.protobuf.Empty);
+    rpc SyncRouteTable (RouteTable) returns (google.protobuf.Empty);
+    rpc SyncData (google.protobuf.BytesValue) returns (google.protobuf.Empty);
 }
 
 message RouteTable {

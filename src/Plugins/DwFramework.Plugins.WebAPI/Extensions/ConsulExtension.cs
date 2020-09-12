@@ -8,7 +8,7 @@ using Consul;
 
 using DwFramework.Core;
 
-namespace DwFramework.Plugins.WebAPI
+namespace DwFramework.Plugins.WebAPI.Consul
 {
     public static class ConsulExtension
     {

@@ -10,21 +10,17 @@
     <ItemGroup>
         <Folder Include="Extensions\" />
         <Folder Include="Models\" />
-        <Folder Include="Protobufs\" />
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\DwFramework.Core\DwFramework.Core.csproj" />
     </ItemGroup>
     <ItemGroup>
         <PackageReference Include="Google.Protobuf" Version="3.13.0" />
-        <PackageReference Include="Grpc.Core" Version="2.31.0" />
-        <PackageReference Include="Grpc.Tools" Version="2.31.0">
+        <PackageReference Include="Grpc.Core" Version="2.32.0" />
+        <PackageReference Include="Grpc.Tools" Version="2.32.0">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-    </ItemGroup>
-    <ItemGroup>
-        <Protobuf Include="Protobufs\*.proto" GrpcServices="None" />
     </ItemGroup>
     <ItemGroup>
         <None Update="README.md">

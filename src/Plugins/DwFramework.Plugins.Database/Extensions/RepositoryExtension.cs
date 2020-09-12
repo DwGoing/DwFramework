@@ -3,7 +3,7 @@
 using DwFramework.Core;
 using DwFramework.Database;
 
-namespace DwFramework.Extensions.Database
+namespace DwFramework.Extensions.Database.Repository
 {
     public static class RepositoryExtension
     {
