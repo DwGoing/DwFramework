@@ -6,7 +6,7 @@ namespace DwFramework.Core
 {
     public class Environment
     {
-        public readonly EnvironmentType _environmentType;
+        public readonly EnvironmentType EnvironmentType;
         public IConfiguration Configuration { get; private set; }
 
         private readonly ConfigurationBuilder _configurationBuilder;
@@ -19,7 +19,7 @@ namespace DwFramework.Core
         /// <param name="configFilePath"></param>
         public Environment(EnvironmentType environmentType = EnvironmentType.Develop, string configFilePath = null)
         {
-            _environmentType = environmentType;
+            EnvironmentType = environmentType;
             _configurationBuilder = new ConfigurationBuilder();
             if (configFilePath != null) AddJsonConfig(configFilePath);
         }
