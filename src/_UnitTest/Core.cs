@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -45,7 +46,7 @@ namespace _UnitTest
         [Fact]
         public void GetPinYin()
         {
-            "".GetPinYin();
+            '将'.GetPinYin();
         }
 
         [Fact]
