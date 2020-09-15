@@ -1,5 +1,6 @@
 ﻿using System;
 using Xunit;
+using Xunit.Abstractions;
 
 using DwFramework.Core;
 using DwFramework.Extensions.Core;
@@ -9,9 +10,10 @@ namespace _UnitTest
 {
     public class Core
     {
-        public Core()
+        private readonly ITestOutputHelper _output;
+        public Core(ITestOutputHelper output)
         {
-
+            _output = output;
         }
 
         #region Extension
@@ -34,10 +36,17 @@ namespace _UnitTest
         }
 
         [Fact]
-        public void Deserialize()
+        public void JsonDeserialize()
         {
             var json = "{\"A\":\"x\",\"B\":5,\"C\":5.5}";
             var c = json.ToObject<TestClass>();
+        }
+
+        [Fact]
+        public void IsEmailAddress()
+        {
+            var str = "jianghy1209@163.com";
+            Assert.True(str.IsEmailAddress());
         }
         #endregion
 

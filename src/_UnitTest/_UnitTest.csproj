@@ -17,9 +17,7 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <None Remove="Core.Extension" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\Module\DwFramework.Core\DwFramework.Core.csproj" />
+    <ProjectReference Include="..\Module\DwFramework.TaskSchedule\DwFramework.TaskSchedule.csproj" />
   </ItemGroup>
 </Project>

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace DwFramework.Extensions.Core
 {
@@ -210,6 +211,17 @@ namespace DwFramework.Extensions.Core
                 bytes[i] = (byte)Convert.ToInt32(hexString.Substring(i * 2, 2), 16);
             }
             return bytes;
+        }
+
+        /// <summary>
+        /// 是否为邮箱地址
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns></returns>
+        public static bool IsEmailAddress(this string str)
+        {
+            var match = new Regex(@"^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$").Match(str);
+            return match.Success;
         }
     }
 }
