@@ -2,6 +2,7 @@
 using System.Text;
 using System.Linq;
 using System.Text.RegularExpressions;
+using Microsoft.International.Converters.PinYinConverter;
 
 namespace DwFramework.Extensions.Core
 {
@@ -212,6 +213,13 @@ namespace DwFramework.Extensions.Core
             }
             return bytes;
         }
+
+        /// <summary>
+        /// 获取中文字符的拼音
+        /// </summary>
+        /// <param name="chChar"></param>
+        /// <returns></returns>
+        public static string[] GetPinYin(this char chChar)=> new ChineseChar(chChar).Pinyins;
 
         /// <summary>
         /// 是否为邮箱地址

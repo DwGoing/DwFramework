@@ -43,6 +43,12 @@ namespace _UnitTest
         }
 
         [Fact]
+        public void GetPinYin()
+        {
+            "".GetPinYin();
+        }
+
+        [Fact]
         public void IsEmailAddress()
         {
             var str = "jianghy1209@163.com";
