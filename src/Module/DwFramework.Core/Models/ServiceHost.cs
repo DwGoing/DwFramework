@@ -19,10 +19,10 @@ namespace DwFramework.Core
 
         public static Environment Environment { get; private set; }
         public static AutofacServiceProvider Provider { get; private set; }
-        public event Action<AutofacServiceProvider> OnInitializing;
-        public event Action<AutofacServiceProvider> OnInitialized;
-        public event Action<AutofacServiceProvider> OnStoping;
-        public event Action<AutofacServiceProvider> OnStopped;
+        public event Action<IServiceProvider> OnInitializing;
+        public event Action<IServiceProvider> OnInitialized;
+        public event Action<IServiceProvider> OnStoping;
+        public event Action<IServiceProvider> OnStopped;
 
         /// <summary>
         /// 构造函数
