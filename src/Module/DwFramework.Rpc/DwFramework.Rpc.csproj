@@ -3,14 +3,11 @@
     <PropertyGroup>
         <TargetFramework>netcoreapp3.1</TargetFramework>
         <ReleaseVersion>2.0.1</ReleaseVersion>
-        <SynchReleaseVersion>false</SynchReleaseVersion>
-        <Build>$([System.DateTime]::op_Subtraction($([System.DateTime]::get_Now().get_Date()),$([System.DateTime]::new(2000,1,1))).get_TotalDays())</Build>
-        <Revision>$([MSBuild]::Divide($([System.DateTime]::get_Now().get_TimeOfDay().get_TotalSeconds()), 2).ToString('F0'))</Revision>
-        <Version>$(ReleaseVersion).$(Revision)</Version>
+        <SubVersion>3</SubVersion>
+        <Version>$(ReleaseVersion).$(SubVersion)</Version>
         <Authors>DwGoing</Authors>
         <Description>DwFramework RPC库</Description>
         <PackageProjectUrl>https://github.com/Dwgoing/DwFramework</PackageProjectUrl>
-        <ReleaseVersion>2.0.1</ReleaseVersion>
     </PropertyGroup>
     <ItemGroup>
         <Folder Include="Extensions\" />
