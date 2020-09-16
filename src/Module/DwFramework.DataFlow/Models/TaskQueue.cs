@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 
-using DwFramework.Plugins.Core;
+using DwFramework.Core.Plugins;
 
 namespace DwFramework.DataFlow
 {

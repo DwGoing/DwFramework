@@ -2,9 +2,9 @@
 using System.Security.Cryptography;
 using System.Text;
 
-using DwFramework.Extensions.Core;
+using DwFramework.Core.Extensions;
 
-namespace DwFramework.Plugins.Core
+namespace DwFramework.Core.Plugins
 {
     public static class GoogleAuthenticator
     {

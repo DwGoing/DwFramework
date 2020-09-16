@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text;
 
-namespace DwFramework.Plugins.Core
+namespace DwFramework.Core.Plugins
 {
     public static class Generater
     {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq.Expressions;
 
-namespace DwFramework.Extensions.Core
+namespace DwFramework.Core.Extensions
 {
     public static class ExpressionExtension
     {

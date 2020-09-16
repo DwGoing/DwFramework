@@ -5,10 +5,9 @@ using System.Threading.Tasks;
 using SqlSugar;
 
 using DwFramework.Core;
-using DwFramework.Plugins.Core;
-using DwFramework.Database;
+using DwFramework.Core.Plugins;
 
-namespace DwFramework.Extensions.Database.Repository
+namespace DwFramework.Database.Repository
 {
     public abstract class BaseRepository<T> : IRepository<T> where T : class, new()
     {

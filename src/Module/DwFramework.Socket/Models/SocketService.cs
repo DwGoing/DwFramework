@@ -6,7 +6,7 @@ using System.Net.Sockets;
 using System.Threading.Tasks;
 
 using DwFramework.Core;
-using DwFramework.Plugins.Core;
+using DwFramework.Core.Plugins;
 
 namespace DwFramework.Socket
 {

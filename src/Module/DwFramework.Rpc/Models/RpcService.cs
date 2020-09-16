@@ -6,7 +6,7 @@ using System.IO;
 using Grpc.Core;
 
 using DwFramework.Core;
-using DwFramework.Plugins.Core;
+using DwFramework.Core.Plugins;
 
 namespace DwFramework.Rpc
 {

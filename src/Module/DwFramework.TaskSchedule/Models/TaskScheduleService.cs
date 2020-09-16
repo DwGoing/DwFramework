@@ -9,7 +9,7 @@ using Quartz.Simpl;
 using Quartz.Impl.Calendar;
 using Quartz.Impl.Matchers;
 
-using DwFramework.Plugins.Core;
+using DwFramework.Core.Plugins;
 
 namespace DwFramework.TaskSchedule
 {

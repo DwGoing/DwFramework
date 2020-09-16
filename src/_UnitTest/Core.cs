@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using Xunit;
 using Xunit.Abstractions;
 
 using DwFramework.Core;
-using DwFramework.Extensions.Core;
-using DwFramework.Plugins.Core;
+using DwFramework.Core.Extensions;
+using DwFramework.Core.Plugins;
 
 namespace _UnitTest
 {
@@ -15,6 +16,12 @@ namespace _UnitTest
         public Core(ITestOutputHelper output)
         {
             _output = output;
+        }
+
+        [Fact]
+        public void Tmp()
+        {
+
         }
 
         #region Extension

@@ -2,7 +2,7 @@
 
 using DwFramework.Core;
 
-namespace DwFramework.Plugins.Core
+namespace DwFramework.Core.Plugins
 {
     public static class MemoryCacheExtension
     {

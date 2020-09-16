@@ -8,10 +8,10 @@ using Google.Protobuf;
 using Google.Protobuf.WellKnownTypes;
 
 using DwFramework.Core;
-using DwFramework.Extensions.Core;
-using DwFramework.Plugins.Core;
+using DwFramework.Core.Extensions;
+using DwFramework.Core.Plugins;
 
-namespace DwFramework.Plugins.Rpc.Cluster
+namespace DwFramework.Rpc.Cluster
 {
     public sealed class ClusterImpl : Cluster.ClusterBase
     {

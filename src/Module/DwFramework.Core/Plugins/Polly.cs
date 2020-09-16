@@ -9,7 +9,7 @@ using Polly.Fallback;
 using Polly.Timeout;
 using Polly.Bulkhead;
 
-namespace DwFramework.Plugins.Core
+namespace DwFramework.Core.Plugins
 {
     public static class PollyManager
     {

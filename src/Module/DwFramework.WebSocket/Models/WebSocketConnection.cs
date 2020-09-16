@@ -4,7 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Text;
 
-using DwFramework.Plugins.Core;
+using DwFramework.Core.Plugins;
 
 namespace DwFramework.WebSocket
 {

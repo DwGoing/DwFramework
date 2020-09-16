@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using Microsoft.International.Converters.PinYinConverter;
 
-namespace DwFramework.Extensions.Core
+namespace DwFramework.Core.Extensions
 {
     public static class StringExtension
     {

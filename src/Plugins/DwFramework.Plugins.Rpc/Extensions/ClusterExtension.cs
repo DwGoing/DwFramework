@@ -2,13 +2,11 @@
 using Autofac;
 
 using DwFramework.Core;
-using DwFramework.Rpc;
 
-namespace DwFramework.Plugins.Rpc.Cluster
+namespace DwFramework.Rpc.Cluster
 {
     public static class ClusterExtension
     {
-        /*
         /// <summary>
         /// 注册集群服务
         /// </summary>
@@ -48,6 +46,5 @@ namespace DwFramework.Plugins.Rpc.Cluster
         {
             return provider.GetService<ClusterImpl>();
         }
-        */
     }
 }

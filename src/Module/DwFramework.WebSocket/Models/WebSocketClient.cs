@@ -5,7 +5,7 @@ using System.Net.WebSockets;
 using System.Text;
 using System.Collections.Generic;
 
-using DwFramework.Plugins.Core;
+using DwFramework.Core.Plugins;
 
 namespace DwFramework.WebSocket
 {

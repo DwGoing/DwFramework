@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DwFramework.Plugins.Core
+namespace DwFramework.Core.Plugins
 {
     public class Stopwatch
     {

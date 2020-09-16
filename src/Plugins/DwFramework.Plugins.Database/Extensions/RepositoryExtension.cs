@@ -1,9 +1,8 @@
 ﻿using System;
 
 using DwFramework.Core;
-using DwFramework.Database;
 
-namespace DwFramework.Extensions.Database.Repository
+namespace DwFramework.Database.Repository
 {
     public static class RepositoryExtension
     {

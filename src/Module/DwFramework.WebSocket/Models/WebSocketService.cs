@@ -12,8 +12,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Builder;
 
 using DwFramework.Core;
-using DwFramework.Plugins.Core;
-using DwFramework.Extensions.Core;
+using DwFramework.Core.Plugins;
+using DwFramework.Core.Extensions;
 
 namespace DwFramework.WebSocket
 {

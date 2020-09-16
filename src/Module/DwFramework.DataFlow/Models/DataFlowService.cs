@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-using DwFramework.Extensions.Core;
+using DwFramework.Core.Extensions;
 
 namespace DwFramework.DataFlow
 {

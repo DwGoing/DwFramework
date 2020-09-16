@@ -5,7 +5,7 @@ using NLog.Extensions.Logging;
 
 using DwFramework.Core;
 
-namespace DwFramework.Extensions.Core
+namespace DwFramework.Core.Extensions
 {
     public static class LogExtension
     {
