@@ -18,12 +18,6 @@ namespace _UnitTest
             _output = output;
         }
 
-        [Fact]
-        public void Tmp()
-        {
-
-        }
-
         #region Extension
         private class TestClass : TestClassParent
         {
@@ -61,6 +55,15 @@ namespace _UnitTest
         {
             var str = "jianghy1209@163.com";
             Assert.True(str.IsEmailAddress());
+        }
+
+        [Fact]
+        public void ExpressionOr()
+        {
+            Expression<Func<int, bool>> a = i => i != 5;
+            Expression<Func<int, bool>> b = i => i > 1;
+            var c = a.Or(b);
+            var res = c.Compile()(5);
         }
         #endregion
 
