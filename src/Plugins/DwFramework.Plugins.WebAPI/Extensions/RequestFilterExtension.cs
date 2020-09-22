@@ -16,6 +16,16 @@ namespace DwFramework.WebAPI.RequestFilter
         public static string GetRequestId() => Trace.CorrelationManager.ActivityId.ToString();
 
         /// <summary>
+        /// 重载Body
+        /// </summary>
+        /// <param name="context"></param>
+        public static void ReloadBody(this HttpContext context)
+        {
+            context.Request.EnableBuffering();
+            context.Request.Body.Position = 0;
+        }
+
+        /// <summary>
         /// 注册过滤器
         /// </summary>
         /// <param name="app"></param>
@@ -32,8 +42,7 @@ namespace DwFramework.WebAPI.RequestFilter
                 }
                 catch (Exception ex)
                 {
-                    context.Request.EnableBuffering();
-                    context.Request.Body.Position = 0;
+                    context.ReloadBody();
                     exceptionHandler(context, ex);
                 }
             });
@@ -55,14 +64,15 @@ namespace DwFramework.WebAPI.RequestFilter
                 try
                 {
                     Trace.CorrelationManager.ActivityId = Guid.NewGuid();
+                    context.ReloadBody();
                     startHandler(context);
                     await next();
+                    context.ReloadBody();
                     endHandler(context);
                 }
                 catch (Exception ex)
                 {
-                    context.Request.EnableBuffering();
-                    context.Request.Body.Position = 0;
+                    context.ReloadBody();
                     exceptionHandler?.Invoke(context, ex);
                 }
             });
@@ -86,14 +96,16 @@ namespace DwFramework.WebAPI.RequestFilter
                     foreach (var item in handlers)
                     {
                         if (Regex.Match(context.Request.Path, item.Key).Success)
+                        {
+                            context.ReloadBody();
                             item.Value.Invoke(context);
+                        }
                     }
                     await next();
                 }
                 catch (Exception ex)
                 {
-                    context.Request.EnableBuffering();
-                    context.Request.Body.Position = 0;
+                    context.ReloadBody();
                     exceptionHandler?.Invoke(context, ex);
                 }
             });
