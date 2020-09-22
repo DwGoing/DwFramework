@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+       <ReleaseVersion>2.0.1</ReleaseVersion>
+        <SubVersion>3</SubVersion>
+        <Version>$(ReleaseVersion).$(SubVersion)</Version>
+        <Authors>DwGoing</Authors>
+        <Description>DwFramework WebAPI库</Description>
+        <PackageProjectUrl>https://github.com/Dwgoing/DwFramework</PackageProjectUrl>
+    </PropertyGroup>
+    <ItemGroup>
+        <Folder Include="Extensions\" />
+        <Folder Include="Models\" />
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\DwFramework.Core\DwFramework.Core.csproj" />
+    </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Microsoft.AspNetCore.Hosting" Version="2.2.7" />
+        <PackageReference Include="Microsoft.AspNetCore.Server.Kestrel" Version="2.2.0" />
+        <PackageReference Include="Microsoft.Extensions.Hosting" Version="3.1.8" />
+    </ItemGroup>
+    <ItemGroup>
+        <None Update="README.md">
+            <IncludeInPackage>true</IncludeInPackage>
+        </None>
+        <None Update="LICENSE">
+            <IncludeInPackage>true</IncludeInPackage>
+        </None>
+    </ItemGroup>
+</Project>
