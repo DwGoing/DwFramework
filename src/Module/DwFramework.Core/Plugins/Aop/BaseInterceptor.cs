@@ -36,16 +36,6 @@ namespace DwFramework.Core.Plugins
         }
 
         /// <summary>
-        /// 添加类拦截器
-        /// </summary>
-        /// <param name="builder"></param>
-        /// <param name="interceptors"></param>
-        public static void AddClassInterceptors(this IRegistrationBuilder<object, ConcreteReflectionActivatorData, SingleRegistrationStyle> builder, params Type[] interceptors)
-        {
-            builder.InterceptedBy(interceptors).EnableClassInterceptors();
-        }
-
-        /// <summary>
         /// 添加接口拦截器
         /// </summary>
         /// <typeparam name="T"></typeparam>
