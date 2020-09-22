@@ -10,12 +10,6 @@
         <PackageProjectUrl>https://github.com/Dwgoing/DwFramework</PackageProjectUrl>
     </PropertyGroup>
     <ItemGroup>
-        <Folder Include="Extensions\" />
-        <Folder Include="Models\" />
-        <Folder Include="Plugins\" />
-        <Folder Include="Plugins\Log\" />
-    </ItemGroup>
-    <ItemGroup>
         <PackageReference Include="Autofac" Version="5.2.0" />
         <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="6.0.0" />
         <PackageReference Include="Autofac.Extras.DynamicProxy" Version="5.0.0" />

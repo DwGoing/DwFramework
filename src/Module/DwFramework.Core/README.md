@@ -8,143 +8,162 @@ PM> Install-Package DwFramework.Core
 
 ## DwFramework 核心库
 
-### 0x1 初始化
-
-当开始一个项目时，先要初始化服务主机ServiceHost。
+### 0x1 快速开始
 
 ```c#
-ServiceHost host = new ServiceHost(EnvironmentType.Develop, $"配置文件路径");
-```
+var host = new ServiceHost(); // 初始化服务主机
+host.Register(context => new S1()); // 注册服务
+host.RegisterType<S2>(); // 注册服务
+host.RegisterFromAssemblies(); // 注册服务
+host.OnInitialized += provider => provider.GetService<S1>().Do();
+host.OnInitialized += provider => provider.GetService<S2>().Do();
+host.OnInitialized += provider => provider.GetService<S3>().Do();
+host.Run();
 
-### 0x2 服务注入
-
-ServiceHost提供了多种方式的服务注入，也是对Autofac的服务注入作了一定程度的封装，尽可能地使注入方式更容易让人理解其内部实现。为了方便后面的案例说明，我们先定义示例中使用到的接口和类型。类型TestClass1和TestCless2均实现了接口ITestInterface。
-
-```c#
-namespace Test
+class S1
 {
-    public interface ITestInterface
-    {
-        void TestMethod(string str);
-    }
+    public void Do() => Console.WriteLine("s1");
+}
 
-    [Registerable(typeof(ITestInterface), Lifetime.Singleton)]
-    public class TestClass1 : ITestInterface
-    {
-        private readonly ILogger<TestClass1> _logger;
+class S2
+{
+    public void Do() => Console.WriteLine("s2");
+}
 
-        public TestClass1(ILogger<TestClass1> logger)
-        {
-            _logger = logger;
-            _logger.Debug("TestClass1已注入");
-        }
-
-        public void TestMethod(string str)
-        {
-            _logger.Debug($"TestClass1:{str}");
-        }
-    }
-
-    [Registerable(typeof(ITestInterface), Lifetime.Singleton)]
-    public class TestClass2 : ITestInterface
-    {
-        private readonly ILogger<TestClass2> _logger;
-
-        public TestClass2(ILogger<TestClass2> logger)
-        {
-            _logger = logger;
-            _logger.Debug("TestClass2已注入");
-        }
-
-        public void TestMethod(string str)
-        {
-            _logger.Debug($"TestClass2:{str}");
-        }
-    }
+[Registerable]
+class S3
+{
+    public void Do() => Console.WriteLine("s3");
 }
 ```
 
-1. 批量注入。当我们需要现实批量注入时，我们将通过RegisterFromAssembly来注入服务。
+### 0x2 多种注册服务的方式
+
+ServiceHost提供了多种方式的服务注册，尽可能地使注入方式更容易让人理解其内部实现。为了方便后面的案例说明，我们先定义示例中使用到的接口和类型。
+
+##### 0x1 RegisterType<[实现类型]>
 
 ```c#
-host.RegisterFromAssembly({程序集名});
-```
-
-当使用RegisterFromAssembly来注入使，我们需要先使用Registerable对程序集中需要注入的类进行标识。
-
-```c#
-[Registerable({接口类型}, {生命周期},{是否初始化})]
-```
-
-```c#
-[Registerable(typeof(ITestInterface), Lifetime.Singleton)] // 标记该类型实现的接口及实现类型
-public class TestClass1 : ITestInterface
+var host = new ServiceHost(); // 初始化服务主机
+host.RegisterType<S>(); // 注册服务
+host.OnInitialized += provider => provider.GetService<S>().Do(); // 获取服务
+host.Run();
+class S
 {
-    public TestClass1(ILogger logger)
-    {
-        _logger = logger;
-        _logger.Debug("TestClass1已注入");
-    }
-
-    public void TestMethod(string str)
-    {
-        _logger.Debug($"TestClass1:{str}");
-    }
+    public void Do() => Console.WriteLine("s");
 }
 ```
 
-2. 单个类型注入。单个服务的注入我们可以使用RegisterType来注入。
+##### 0x2 RegisterType<[接口实现类型],[接口类型]>
 
 ```c#
-host.RegisterType<TestClass1>().As<ITestInterface>(); // Autofac原生模式
-host.RegisterType<TestClass2, ITestInterface>();
+var host = new ServiceHost(); // 初始化服务主机
+host.RegisterType<S1, IS>(); // 注册服务
+host.RegisterType<S2, IS>(); // 注册服务
+host.OnInitialized += provider => provider.GetService<IS>().Do(); // 默认获取到的是最后注册的IS实现
+host.Run();
+
+interface IS
+{
+    void Do();
+}
+
+class S1 : IS
+{
+    public void Do() => Console.WriteLine("s1");
+}
+
+class S2 : IS
+{
+    public void Do() => Console.WriteLine("s2");
+}
+```
+
+##### 0x3 Register([注册函数])
+
+```c#
+var host = new ServiceHost(); // 初始化服务主机
+host.Register(context => new S("hello")); // 注册服务
+host.OnInitialized += provider => provider.GetService<S>().Do();
+host.Run();
+
+class S
+{
+    readonly string _tag;
+
+    public S(string tag)
+    {
+        _tag = tag;
+    }
+
+    public void Do() => Console.WriteLine($"s_{_tag}");
+}
+```
+
+##### 0x4 RegisterFromAssemblies
+
+```c#
+var host = new ServiceHost(); // 初始化服务主机
+host.RegisterFromAssemblies(); // 注册服务
+host.OnInitialized += provider => provider.GetService<IS>().Do(); // 默认获取到的是最后注册的IS实现
+host.Run();
+
+interface IS
+{
+    void Do();
+}
+
+[Registerable(typeof(IS))]
+class S1 : IS
+{
+    public void Do() => Console.WriteLine("s1");
+}
+
+[Registerable(typeof(IS))]
+class S2 : IS
+{
+    public void Do() => Console.WriteLine("s2");
+}
 ```
 
 ### 0x3 使用插件
 
-核心服务中内置了很多插件，为开发者提供便利。
-
 ##### 0x1 Aop
 
 ```c#
-public interface ITest
-{
-    string A(string str);
-}
-
-public class CTest : ITest
-{
-  	// 要拦截的函数必须是虚函数或者重写函数
-    public virtual string A(string str)
-    {
-        Console.WriteLine(str);
-        return str;
-    }
-}
-
-// 构造拦截器
-// 1.继承BaseInterceptor
-// 2.重写OnCall(CallInfo info)函数
-public class TestInterceptor : BaseInterceptor
-{
-    public override void OnCall(CallInfo info)
-    {
-        // DoSomething
-        //在被拦截的方法执行完毕后 继续执行
-        info.Invocation.Proceed();
-        // DoSomething
-    }
-}
-
-// Main函数
-ServiceHost host = new ServiceHost(EnvironmentType.Develop);
-host.RegisterInterceptor<TestInterceptor>();
-host.RegisterType<CTest>().As<ITest>().AddInterfaceInterceptors(typeof(TestInterceptor));
-host.OnInitializing += provider=>{
-    var service = provider.GetService<ITest>();
-    service.A("Test");
-};
+var host = new ServiceHost(); // 初始化服务主机
+host.RegisterInterceptors(typeof(MyInterceptor)); // 注册拦截器
+host.RegisterType<S>().AddClassInterceptors(typeof(MyInterceptor)); // 注册服务并添加拦截器
+host.OnInitialized += provider => provider.GetService<S>().Do();
 host.Run();
+
+public class S
+{
+    // 要拦截的函数必须是虚函数或者重写函数
+    public virtual void Do()
+    {
+        Console.WriteLine("s");
+    }
+}
+
+/// <summary>
+/// 构造拦截器
+/// 1.继承BaseInterceptor
+/// 2.重写OnCalling(CallInfo info)函数
+/// 3.重写OnCalled(CallInfo info)函数
+/// </summary>
+public class MyInterceptor : BaseInterceptor
+{
+    public override void OnCalling(CallInfo info)
+    {
+        Console.WriteLine("OnCalling");
+    }
+
+    public override void OnCalled(CallInfo info)
+    {
+        Console.WriteLine("OnCalled");
+    }
+}
 ```
 
 ##### 0x2 NLog
