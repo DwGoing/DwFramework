@@ -2,7 +2,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <TargetFramework>netcoreapp3.1</TargetFramework>
-       <ReleaseVersion>2.0.1</ReleaseVersion>
+        <ReleaseVersion>2.0.1</ReleaseVersion>
         <SubVersion>3</SubVersion>
         <Version>$(ReleaseVersion).$(SubVersion)</Version>
         <Authors>DwGoing</Authors>
@@ -22,10 +22,10 @@
         <PackageReference Include="Microsoft.Extensions.Hosting" Version="3.1.8" />
     </ItemGroup>
     <ItemGroup>
-        <None Update="README.md">
+        <None Include="README.md">
             <IncludeInPackage>true</IncludeInPackage>
         </None>
-        <None Update="LICENSE">
+        <None Include="..\..\..\LICENSE" Link="LICENSE">
             <IncludeInPackage>true</IncludeInPackage>
         </None>
     </ItemGroup>

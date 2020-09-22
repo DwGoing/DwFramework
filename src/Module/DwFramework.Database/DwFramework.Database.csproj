@@ -21,10 +21,10 @@
         <PackageReference Include="sqlSugarCore" Version="5.0.0.15" />
     </ItemGroup>
     <ItemGroup>
-        <None Update="README.md">
+        <None Include="README.md">
             <IncludeInPackage>true</IncludeInPackage>
         </None>
-        <None Update="LICENSE">
+        <None Include="..\..\..\LICENSE" Link="LICENSE">
             <IncludeInPackage>true</IncludeInPackage>
         </None>
     </ItemGroup>

@@ -30,10 +30,10 @@
         <Protobuf Include="Protobufs\Cluster.proto" GrpcServices="Both" />
     </ItemGroup>
     <ItemGroup>
-        <None Update="README.md">
+        <None Include="README.md">
             <IncludeInPackage>true</IncludeInPackage>
         </None>
-        <None Update="LICENSE">
+        <None Include="..\..\..\LICENSE" Link="LICENSE">
             <IncludeInPackage>true</IncludeInPackage>
         </None>
     </ItemGroup>

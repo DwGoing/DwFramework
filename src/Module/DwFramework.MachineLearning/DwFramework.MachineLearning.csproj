@@ -22,10 +22,10 @@
         <PackageReference Include="Microsoft.ML.TimeSeries" Version="1.5.2" />
     </ItemGroup>
     <ItemGroup>
-        <None Update="README.md">
+        <None Include="README.md">
             <IncludeInPackage>true</IncludeInPackage>
         </None>
-        <None Update="LICENSE">
+        <None Include="..\..\..\LICENSE" Link="LICENSE">
             <IncludeInPackage>true</IncludeInPackage>
         </None>
     </ItemGroup>

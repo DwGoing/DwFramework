@@ -35,7 +35,7 @@
         <None Update="README.md">
             <IncludeInPackage>true</IncludeInPackage>
         </None>
-        <None Update="LICENSE">
+        <None Include="..\..\..\LICENSE" Link="LICENSE">
             <IncludeInPackage>true</IncludeInPackage>
         </None>
     </ItemGroup>
