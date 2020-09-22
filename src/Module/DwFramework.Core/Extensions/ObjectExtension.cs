@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text.Json;
@@ -7,6 +8,19 @@ namespace DwFramework.Core.Extensions
 {
     public static class ObjectExtension
     {
+        /// <summary>
+        /// 类型转换
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public static T ToObject<T>(this object obj)
+        {
+            var value = Convert.ChangeType(obj, typeof(T));
+            if (value == null) return default;
+            return (T)value;
+        }
+
         /// <summary>
         /// 序列化
         /// </summary>

@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
+using DwFramework.Core.Extensions;
+
 namespace DwFramework.Core.Plugins
 {
     public class MemoryCacheStore
@@ -112,8 +114,7 @@ namespace DwFramework.Core.Plugins
                 Del(key);
                 return default;
             }
-            if (data.Value.GetType() is T) return default;
-            return (T)data.Value;
+            return data.Value.ToObject<T>();
         }
 
         /// <summary>

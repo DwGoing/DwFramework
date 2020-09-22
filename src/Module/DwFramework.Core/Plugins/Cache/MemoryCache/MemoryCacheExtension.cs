@@ -19,12 +19,5 @@ namespace DwFramework.Core.Plugins
             if (isGlobal) builder.SingleInstance();
             return host;
         }
-
-        /// <summary>
-        /// 获取缓存服务
-        /// </summary>
-        /// <param name="provider"></param>
-        /// <returns></returns>
-        public static ICache GetCache(this IServiceProvider provider) => provider.GetService<ICache>();
     }
 }

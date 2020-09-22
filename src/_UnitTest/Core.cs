@@ -75,6 +75,20 @@ namespace _UnitTest
             System.Threading.Thread.Sleep(3000);
             var s = Stopwatch.Static.GetTotalMilliseconds();
         }
+
+        [Fact]
+        public void MemoryCache()
+        {
+            var m = new MemoryCache(6);
+            m.Set("test", new X { A = "1", B = 2 }); // 插入数据
+            var value = m.Get<X>("test"); // 获取数据
+        }
+
+        public class X
+        {
+            public string A { get; set; }
+            public int B { get; set; }
+        }
         #endregion
     }
 }
