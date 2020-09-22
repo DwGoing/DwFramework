@@ -32,6 +32,8 @@ namespace DwFramework.WebAPI.RequestFilter
                 }
                 catch (Exception ex)
                 {
+                    context.Request.EnableBuffering();
+                    context.Request.Body.Position = 0;
                     exceptionHandler(context, ex);
                 }
             });
@@ -59,6 +61,8 @@ namespace DwFramework.WebAPI.RequestFilter
                 }
                 catch (Exception ex)
                 {
+                    context.Request.EnableBuffering();
+                    context.Request.Body.Position = 0;
                     exceptionHandler?.Invoke(context, ex);
                 }
             });
@@ -88,6 +92,8 @@ namespace DwFramework.WebAPI.RequestFilter
                 }
                 catch (Exception ex)
                 {
+                    context.Request.EnableBuffering();
+                    context.Request.Body.Position = 0;
                     exceptionHandler?.Invoke(context, ex);
                 }
             });
