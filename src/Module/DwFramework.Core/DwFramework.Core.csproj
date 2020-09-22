@@ -3,7 +3,7 @@
     <PropertyGroup>
         <TargetFramework>netcoreapp3.1</TargetFramework>
         <ReleaseVersion>2.0.1</ReleaseVersion>
-        <SubVersion>4</SubVersion>
+        <SubVersion>5</SubVersion>
         <Version>$(ReleaseVersion).$(SubVersion)</Version>
         <Authors>DwGoing</Authors>
         <Description>DwFramework 核心库</Description>
@@ -13,6 +13,7 @@
         <Folder Include="Extensions\" />
         <Folder Include="Models\" />
         <Folder Include="Plugins\" />
+        <Folder Include="Plugins\Log\" />
     </ItemGroup>
     <ItemGroup>
         <PackageReference Include="Autofac" Version="5.2.0" />
