@@ -9,6 +9,7 @@ namespace DwFramework.Core.Plugins
         public void Set(string key, object value);
         public void Set(string key, object value, DateTime expireAt);
         public void Set(string key, object value, TimeSpan expireTime);
+        public object Get(string key);
         public T Get<T>(string key);
         public void Del(string key);
         public string[] AllKeys();

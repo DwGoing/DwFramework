@@ -79,7 +79,7 @@ namespace _UnitTest
         [Fact]
         public void MemoryCache()
         {
-            var m = new MemoryCache(6);
+            ICache m = new MemoryCache(6);
             m.Set("test", new { A = "1", B = 2 }); // 插入数据
             var value = m.Get("test"); // 获取数据
         }
