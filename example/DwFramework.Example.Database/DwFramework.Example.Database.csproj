@@ -16,4 +16,9 @@
     <PackageReference Include="DwFramework.Database" Version="2.0.1.3" />
     <PackageReference Include="DwFramework.Plugins.Database" Version="2.0.1.3" />
   </ItemGroup>
+  <ItemGroup>
+    <None Update="Database.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
 </Project>
