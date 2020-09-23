@@ -83,6 +83,15 @@ namespace _UnitTest
             m.Set("test", new { A = "1", B = 2 }); // 插入数据
             var value = m.Get("test"); // 获取数据
         }
+
+        [Fact]
+        public void RSAEncryptAndDecrypt()
+        {
+            var keys = RSA.GenerateKeyPair(RSAExtensions.RSAKeyType.Pkcs8, isPem: true);
+            var str = "DwFramework";
+            var rsa = RSA.EncryptWithPublicKey(str, RSAExtensions.RSAKeyType.Pkcs8, keys.PublicKey, true);
+            var raw = RSA.Decrypt(rsa, RSAExtensions.RSAKeyType.Pkcs8, keys.PrivateKey, true);
+        }
         #endregion
     }
 }
