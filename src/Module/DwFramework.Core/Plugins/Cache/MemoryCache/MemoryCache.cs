@@ -36,10 +36,7 @@ namespace DwFramework.Core.Plugins
         /// </summary>
         /// <param name="key"></param>
         /// <param name="value"></param>
-        public void Set(string key, object value)
-        {
-            GetMemoryCacheStore(key).Set(key, value);
-        }
+        public void Set(string key, object value) => GetMemoryCacheStore(key).Set(key, value);
 
         /// <summary>
         /// 添加数据（对象）
@@ -47,10 +44,7 @@ namespace DwFramework.Core.Plugins
         /// <param name="key"></param>
         /// <param name="value"></param>
         /// <param name="expireAt"></param>
-        public void Set(string key, object value, DateTime expireAt)
-        {
-            GetMemoryCacheStore(key).Set(key, value, expireAt);
-        }
+        public void Set(string key, object value, DateTime expireAt) => GetMemoryCacheStore(key).Set(key, value, expireAt);
 
         /// <summary>
         /// 添加数据（对象）
@@ -58,10 +52,14 @@ namespace DwFramework.Core.Plugins
         /// <param name="key"></param>
         /// <param name="value"></param>
         /// <param name="expireTime"></param>
-        public void Set(string key, object value, TimeSpan expireTime)
-        {
-            GetMemoryCacheStore(key).Set(key, value, expireTime);
-        }
+        public void Set(string key, object value, TimeSpan expireTime) => GetMemoryCacheStore(key).Set(key, value, expireTime);
+
+        /// <summary>
+        /// 获取数据（对象）
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public object Get(string key) => GetMemoryCacheStore(key).Get(key);
 
         /// <summary>
         /// 获取数据（对象）
@@ -69,19 +67,13 @@ namespace DwFramework.Core.Plugins
         /// <typeparam name="T"></typeparam>
         /// <param name="key"></param>
         /// <returns></returns>
-        public T Get<T>(string key)
-        {
-            return GetMemoryCacheStore(key).Get<T>(key);
-        }
+        public T Get<T>(string key) => GetMemoryCacheStore(key).Get<T>(key);
 
         /// <summary>
         /// 删除数据（对象）
         /// </summary>
         /// <param name="key"></param>
-        public void Del(string key)
-        {
-            GetMemoryCacheStore(key).Del(key);
-        }
+        public void Del(string key) => GetMemoryCacheStore(key).Del(key);
 
         /// <summary>
         /// 获取所有Key
@@ -112,10 +104,7 @@ namespace DwFramework.Core.Plugins
         /// <param name="key"></param>
         /// <param name="field"></param>
         /// <param name="value"></param>
-        public void HSet(string key, string field, object value)
-        {
-            GetMemoryCacheStore(key).HSet(key, field, value);
-        }
+        public void HSet(string key, string field, object value) => GetMemoryCacheStore(key).HSet(key, field, value);
 
         /// <summary>
         /// 获取数据（Hash）
@@ -124,10 +113,7 @@ namespace DwFramework.Core.Plugins
         /// <param name="key"></param>
         /// <param name="field"></param>
         /// <returns></returns>
-        public T HGet<T>(string key, string field)
-        {
-            return GetMemoryCacheStore(key).HGet<T>(key, field);
-        }
+        public T HGet<T>(string key, string field) => GetMemoryCacheStore(key).HGet<T>(key, field);
 
         /// <summary>
         /// 获取所有数据（Hash）
@@ -135,40 +121,27 @@ namespace DwFramework.Core.Plugins
         /// <typeparam name="T"></typeparam>
         /// <param name="key"></param>
         /// <returns></returns>
-        public Dictionary<string, object> HGetAll(string key)
-        {
-            return GetMemoryCacheStore(key).HGetAll(key);
-        }
+        public Dictionary<string, object> HGetAll(string key) => GetMemoryCacheStore(key).HGetAll(key);
 
         /// <summary>
         /// 删除数据（Hash）
         /// </summary>
         /// <param name="key"></param>
         /// <param name="field"></param>
-        public void HDel(string key, string field)
-        {
-            GetMemoryCacheStore(key).HDel(key, field);
-        }
+        public void HDel(string key, string field) => GetMemoryCacheStore(key).HDel(key, field);
 
         /// <summary>
         /// 设置过期时间
         /// </summary>
         /// <param name="key"></param>
         /// <param name="expireAt"></param>
-        public void SetExpireTime(string key, DateTime expireAt)
-        {
-            GetMemoryCacheStore(key).SetExpireTime(key, expireAt);
-        }
+        public void SetExpireTime(string key, DateTime expireAt) => GetMemoryCacheStore(key).SetExpireTime(key, expireAt);
 
         /// <summary>
         /// 设置过期时间
         /// </summary>
         /// <param name="key"></param>
         /// <param name="expireTime"></param>
-        public void SetExpireTime(string key, TimeSpan expireTime)
-        {
-            GetMemoryCacheStore(key).SetExpireTime(key, expireTime);
-
-        }
+        public void SetExpireTime(string key, TimeSpan expireTime) => GetMemoryCacheStore(key).SetExpireTime(key, expireTime);
     }
 }

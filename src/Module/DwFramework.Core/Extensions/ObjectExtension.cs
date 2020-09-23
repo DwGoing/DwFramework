@@ -14,7 +14,7 @@ namespace DwFramework.Core.Extensions
         /// <typeparam name="T"></typeparam>
         /// <param name="obj"></param>
         /// <returns></returns>
-        public static T ToObject<T>(this object obj)
+        public static T ConvertTo<T>(this object obj)
         {
             var value = Convert.ChangeType(obj, typeof(T));
             if (value == null) return default;

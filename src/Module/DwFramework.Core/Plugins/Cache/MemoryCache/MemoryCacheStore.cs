@@ -53,24 +53,12 @@ namespace DwFramework.Core.Plugins
         /// <summary>
         /// 添加数据（对象）
         /// </summary>
-        /// <param name="data"></param>
-        private void Set(MemoryCacheData data) => _Datas[data.Key] = data;
-
-        /// <summary>
-        /// 获取数据（对象）
-        /// </summary>
-        /// <param name="key"></param>
-        /// <returns></returns>
-        private MemoryCacheData Get(string key) => (MemoryCacheData)_Datas[key];
-
-        /// <summary>
-        /// 添加数据（对象）
-        /// </summary>
         /// <param name="key"></param>
         /// <param name="value"></param>
         public void Set(string key, object value)
         {
-            Set(new MemoryCacheData(key, value));
+            var data = new MemoryCacheData(key, value);
+            _Datas[data.Key] = data;
         }
 
         /// <summary>
@@ -83,7 +71,7 @@ namespace DwFramework.Core.Plugins
         {
             var data = new MemoryCacheData(key, value);
             data.SetExpireTime(expireAt);
-            Set(data);
+            _Datas[data.Key] = data;
         }
 
         /// <summary>
@@ -96,7 +84,24 @@ namespace DwFramework.Core.Plugins
         {
             var data = new MemoryCacheData(key, value);
             data.SetExpireTime(expireTime);
-            Set(data);
+            _Datas[data.Key] = data;
+        }
+
+        /// <summary>
+        /// 获取数据（对象）
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public object Get(string key)
+        {
+            var data = (MemoryCacheData)_Datas[key];
+            if (data == null) return null;
+            if (data.IsExpired)
+            {
+                Del(key);
+                return null;
+            }
+            return data.Value;
         }
 
         /// <summary>
@@ -107,14 +112,9 @@ namespace DwFramework.Core.Plugins
         /// <returns></returns>
         public T Get<T>(string key)
         {
-            var data = Get(key);
-            if (data == null) return default;
-            if (data.IsExpired)
-            {
-                Del(key);
-                return default;
-            }
-            return data.Value.ToObject<T>();
+            var value = Get(key);
+            if (value == null) return default;
+            return value.ConvertTo<T>();
         }
 
         /// <summary>
@@ -156,10 +156,10 @@ namespace DwFramework.Core.Plugins
         /// <param name="value"></param>
         public void HSet(string key, string field, object value)
         {
-            MemoryCacheData data = Get(key);
+            MemoryCacheData data = (MemoryCacheData)_Datas[key];
             if (data == null) data = new MemoryCacheData(key, Hashtable.Synchronized(new Hashtable()));
             (data.Value as Hashtable).Add(field, value);
-            Set(data);
+            _Datas[data.Key] = data;
         }
 
         /// <summary>
@@ -187,10 +187,7 @@ namespace DwFramework.Core.Plugins
             var table = Get<Hashtable>(key);
             if (table == null) return default;
             var dic = new Dictionary<string, object>();
-            foreach (DictionaryEntry item in table)
-            {
-                dic.Add((string)item.Key, item.Value);
-            }
+            foreach (DictionaryEntry item in table) dic.Add((string)item.Key, item.Value);
             return dic;
         }
 
@@ -213,7 +210,7 @@ namespace DwFramework.Core.Plugins
         /// <param name="expireAt"></param>
         public void SetExpireTime(string key, DateTime expireAt)
         {
-            var data = Get(key);
+            var data = (MemoryCacheData)_Datas[key];
             if (data == null) return;
             data.SetExpireTime(expireAt);
         }
@@ -225,7 +222,7 @@ namespace DwFramework.Core.Plugins
         /// <param name="expireTime"></param>
         public void SetExpireTime(string key, TimeSpan expireTime)
         {
-            var data = Get(key);
+            var data = (MemoryCacheData)_Datas[key];
             if (data == null) return;
             data.SetExpireTime(expireTime);
         }
