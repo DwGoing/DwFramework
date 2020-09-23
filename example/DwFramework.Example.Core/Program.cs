@@ -10,7 +10,7 @@ namespace DwFramework.Example.Core
     {
         static void Main(string[] args)
         {
-            var tag = 7;
+            var tag = 8;
             try
             {
                 var assemblies = AppDomain.CurrentDomain.GetAssemblies();
@@ -230,6 +230,23 @@ namespace DwFramework.Example.Core
                 var value = cache.Get("test"); // 获取数据
             };
             host.Run();
+        }
+    }
+
+    /// <summary>
+    /// Encryption插件
+    /// </summary>
+    public class Example8
+    {
+        public static void Invoke()
+        {
+            var str = "DwFramework";
+            var md5 = MD5.Encode(str); // MD5
+            var aes = AES.EncryptToHex(str, "1234567890abcdef", "1234567890abcdef"); // AES
+            var raw = AES.DecryptFromHex(aes, "1234567890abcdef", "1234567890abcdef");
+            var keys = RSA.GenerateKeyPair(RSAExtensions.RSAKeyType.Pkcs8, isPem: true); // Pem格式密钥
+            var rsa = RSA.EncryptWithPublicKey(str, RSAExtensions.RSAKeyType.Pkcs8, keys.PublicKey, true); // RSA
+            raw = RSA.Decrypt(rsa, RSAExtensions.RSAKeyType.Pkcs8, keys.PrivateKey, true);
         }
     }
 }
