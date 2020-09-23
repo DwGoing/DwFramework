@@ -31,23 +31,17 @@ namespace _UnitTest
         }
 
         [Fact]
-        public void JsonSerialize()
+        public void JsonSerializeAndDeserialize()
         {
-            var c = new TestClass() { A = "x", B = 5, C = 5.5 };
-            var json = c.ToJson();
-        }
-
-        [Fact]
-        public void JsonDeserialize()
-        {
-            var json = "{\"A\":\"x\",\"B\":5,\"C\":5.5}";
-            var c = json.ToObject<TestClass>();
+            var a = new TestClass() { A = "x", B = 5, C = 5.5 };
+            var json = a.ToJson();
+            Assert.Equal(a, json.ToObject<TestClass>());
         }
 
         [Fact]
         public void GetPinYin()
         {
-            '将'.GetPinYin();
+            Assert.Equal("HAO", '好'.GetPinYin()[0]);
         }
 
         [Fact]
@@ -63,7 +57,7 @@ namespace _UnitTest
             Expression<Func<int, bool>> a = i => i != 5;
             Expression<Func<int, bool>> b = i => i > 1;
             var c = a.Or(b);
-            var res = c.Compile()(5);
+            Assert.True(c.Compile()(5));
         }
         #endregion
 
@@ -73,15 +67,16 @@ namespace _UnitTest
         {
             Stopwatch.Static.SetStartTime();
             System.Threading.Thread.Sleep(3000);
-            var s = Stopwatch.Static.GetTotalMilliseconds();
+            Assert.Equal(3000, Stopwatch.Static.GetTotalMilliseconds());
         }
 
         [Fact]
         public void MemoryCache()
         {
             ICache m = new MemoryCache(6);
-            m.Set("test", new { A = "1", B = 2 }); // 插入数据
-            var value = m.Get("test"); // 获取数据
+            var a = new { A = "1", B = 2 };
+            m.Set("test", a); // 插入数据
+            Assert.Equal(a, m.Get("test")); // 获取数据
         }
 
         [Fact]
@@ -90,7 +85,7 @@ namespace _UnitTest
             var keys = RSA.GenerateKeyPair(RSAExtensions.RSAKeyType.Pkcs8, isPem: true);
             var str = "DwFramework";
             var rsa = RSA.EncryptWithPublicKey(str, RSAExtensions.RSAKeyType.Pkcs8, keys.PublicKey, true);
-            var raw = RSA.Decrypt(rsa, RSAExtensions.RSAKeyType.Pkcs8, keys.PrivateKey, true);
+            Assert.Equal(str, RSA.Decrypt(rsa, RSAExtensions.RSAKeyType.Pkcs8, keys.PrivateKey, true));
         }
         #endregion
     }
