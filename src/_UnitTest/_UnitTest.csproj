@@ -19,5 +19,11 @@
   <ItemGroup>
     <ProjectReference Include="..\Module\DwFramework.Core\DwFramework.Core.csproj" />
     <ProjectReference Include="..\Module\DwFramework.TaskSchedule\DwFramework.TaskSchedule.csproj" />
+    <ProjectReference Include="..\Module\DwFramework.Database\DwFramework.Database.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="Config.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 </Project>

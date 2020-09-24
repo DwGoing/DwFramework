@@ -1,5 +1,5 @@
 ﻿using System;
-using SqlSugar;
+using Autofac;
 
 using DwFramework.Core;
 
@@ -11,7 +11,16 @@ namespace DwFramework.Database
         /// 注册服务
         /// </summary>
         /// <param name="host"></param>
-        public static void RegisterDatabaseService(this ServiceHost host) => host.RegisterType<DatabaseService>().SingleInstance();
+        /// <param name="configFilePath"></param>
+        public static void RegisterDatabaseService(this ServiceHost host, string configFilePath = null)
+        {
+            if (!string.IsNullOrEmpty(configFilePath))
+            {
+                host.AddJsonConfig(configFilePath);
+                host.RegisterType<DatabaseService>().SingleInstance();
+            }
+            else host.Register(c => new DatabaseService(c.Resolve<Core.Environment>(), "Database")).SingleInstance();
+        }
 
         /// <summary>
         /// 获取服务

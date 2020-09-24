@@ -1,4 +1,5 @@
 ﻿using System;
+using Autofac;
 
 using DwFramework.Core;
 
@@ -10,9 +11,15 @@ namespace DwFramework.RabbitMQ
         /// 注册服务
         /// </summary>
         /// <param name="host"></param>
-        public static void RegisterRabbitMQService(this ServiceHost host)
+        /// <param name="configFilePath"></param>
+        public static void RegisterRabbitMQService(this ServiceHost host, string configFilePath = null)
         {
-            host.RegisterType<RabbitMQService>().SingleInstance();
+            if (!string.IsNullOrEmpty(configFilePath))
+            {
+                host.AddJsonConfig(configFilePath);
+                host.RegisterType<RabbitMQService>().SingleInstance();
+            }
+            else host.Register(c => new RabbitMQService(c.Resolve<Core.Environment>(), "RabbitMQ")).SingleInstance();
         }
 
         /// <summary>

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Autofac;
 
 using DwFramework.Core;
 
@@ -11,9 +12,15 @@ namespace DwFramework.Socket
         /// 注册服务
         /// </summary>
         /// <param name="host"></param>
-        public static void RegisterSocketService(this ServiceHost host)
+        /// <param name="configFilePath"></param>
+        public static void RegisterSocketService(this ServiceHost host, string configFilePath = null)
         {
-            host.RegisterType<SocketService>().SingleInstance();
+            if (!string.IsNullOrEmpty(configFilePath))
+            {
+                host.AddJsonConfig(configFilePath);
+                host.RegisterType<SocketService>().SingleInstance();
+            }
+            else host.Register(c => new SocketService(c.Resolve<Core.Environment>(), "Socket")).SingleInstance();
             host.OnInitializing += provider => provider.InitSocketServiceAsync().Wait();
         }
 

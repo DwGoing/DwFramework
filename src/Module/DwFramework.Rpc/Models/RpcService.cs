@@ -24,9 +24,12 @@ namespace DwFramework.Rpc
         /// <summary>
         /// 构造函数
         /// </summary>
-        public RpcService()
+        /// <param name="environment"></param>
+        /// <param name="configKey"></param>
+        public RpcService(Core.Environment environment, string configKey = null)
         {
-            _config = ServiceHost.Environment.Configuration.GetConfig<Config>("Rpc");
+            _config = environment.Configuration.GetConfig<Config>(configKey);
+            if (_config == null) throw new Exception("未读取到Rpc配置");
             _server = new Server();
         }
 

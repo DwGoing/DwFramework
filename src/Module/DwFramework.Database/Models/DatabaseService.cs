@@ -20,20 +20,19 @@ namespace DwFramework.Database
 
             public string ConnectionString { get; set; }
             public string DbType { get; set; }
-            public DbType DatabaseType
-            {
-                get
-                {
-                    foreach (var item in Enum.GetValues(typeof(DbType)))
-                    {
-                        if (string.Compare(item.ToString().ToLower(), DbType.ToLower(), true) == 0)
-                            return (DbType)item;
-                    }
-                    throw new Exception("无法找到匹配的DbType");
-                }
-            }
             public SlaveConnectionConfig[] SlaveConnections { get; set; }
             public bool UseMemoryCache { get; set; } = false;
+
+            public DbType ParseDbType()
+            {
+                if (string.IsNullOrEmpty(DbType)) throw new Exception("缺少DbType配置");
+                foreach (var item in Enum.GetValues(typeof(DbType)))
+                {
+                    if (string.Compare(item.ToString().ToLower(), DbType.ToLower(), true) == 0)
+                        return (DbType)item;
+                }
+                throw new Exception("无法找到匹配的DbType");
+            }
         }
 
         private readonly Config _config;
@@ -43,9 +42,12 @@ namespace DwFramework.Database
         /// <summary>
         /// 构造函数
         /// </summary>
-        public DatabaseService(Core.Environment environment)
+        /// <param name="environment"></param>
+        /// <param name="configKey"></param>
+        public DatabaseService(Core.Environment environment, string configKey = null)
         {
-            _config = environment.Configuration.GetConfig<Config>("Database");
+            _config = environment.Configuration.GetConfig<Config>(configKey);
+            if (_config == null) throw new Exception("未读取到Database配置");
         }
 
         /// <summary>
@@ -57,7 +59,7 @@ namespace DwFramework.Database
             var config = new ConnectionConfig()
             {
                 ConnectionString = _config.ConnectionString,//必填, 数据库连接字符串
-                DbType = _config.DatabaseType,         //必填, 数据库类型
+                DbType = _config.ParseDbType(),         //必填, 数据库类型
                 IsAutoCloseConnection = true,       //默认false, 自动关闭数据库连接, 设置为true无需使用using或者Close操作
                 InitKeyType = InitKeyType.SystemTable,    //默认SystemTable, 字段信息读取, 如：该属性是不是主键，是不是标识列等等信息
                 ConfigureExternalServices = new ConfigureExternalServices() // 配置扩展服务

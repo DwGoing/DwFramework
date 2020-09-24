@@ -22,9 +22,12 @@ namespace DwFramework.WebAPI
         /// <summary>
         /// 构造函数
         /// </summary>
-        public WebAPIService()
+        /// <param name="environment"></param>
+        /// <param name="configKey"></param>
+        public WebAPIService(Core.Environment environment, string configKey = null)
         {
-            _config = ServiceHost.Environment.Configuration.GetConfig<Config>("WebAPI");
+            _config = environment.Configuration.GetConfig<Config>(configKey);
+            if (_config == null) throw new Exception("未读取到WebAPI配置");
         }
 
         /// <summary>

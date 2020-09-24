@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Autofac;
 
 using DwFramework.Core;
 
@@ -10,9 +11,17 @@ namespace DwFramework.WebAPI
         /// <summary>
         /// 注册服务
         /// </summary>
+        /// <typeparam name="T"></typeparam>
         /// <param name="host"></param>
-        public static void RegisterWebAPIService<T>(this ServiceHost host) where T : class
+        /// <param name="configFilePath"></param>
+        public static void RegisterWebAPIService<T>(this ServiceHost host, string configFilePath = null) where T : class
         {
+            if (!string.IsNullOrEmpty(configFilePath))
+            {
+                host.AddJsonConfig(configFilePath);
+                host.RegisterType<WebAPIService>().SingleInstance();
+            }
+            else host.Register(c => new WebAPIService(c.Resolve<Core.Environment>(), "WebAPI")).SingleInstance();
             host.RegisterType<WebAPIService>().SingleInstance();
             host.OnInitializing += provider => provider.InitWebAPIServiceAsync<T>();
         }

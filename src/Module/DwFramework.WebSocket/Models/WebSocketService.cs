@@ -83,9 +83,12 @@ namespace DwFramework.WebSocket
         /// <summary>
         /// 构造函数
         /// </summary>
-        public WebSocketService()
+        /// <param name="environment"></param>
+        /// <param name="configKey"></param>
+        public WebSocketService(Core.Environment environment, string configKey = null)
         {
-            _config = ServiceHost.Environment.Configuration.GetConfig<Config>("WebSocket");
+            _config = environment.Configuration.GetConfig<Config>(configKey);
+            if (_config == null) throw new Exception("未读取到WebSocket配置");
             _connections = new Dictionary<string, WebSocketConnection>();
         }
 
