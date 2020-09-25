@@ -27,6 +27,23 @@ namespace DwFramework.Core.Extensions
         public static Task ForEachAsync<T>(this IEnumerable<T> enumerable, Action<T> action) => Task.Run(() => ForEach(enumerable, action));
 
         /// <summary>
+        /// 遍历（并行）
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="enumerable"></param>
+        /// <param name="action"></param>
+        public static void ParallelForEach<T>(this IEnumerable<T> enumerable, Action<T> action) => Parallel.ForEach(enumerable, action);
+
+        /// <summary>
+        /// 遍历（并行）
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="enumerable"></param>
+        /// <param name="action"></param>
+        /// <returns></returns>
+        public static Task ParallelForEachAsync<T>(this IEnumerable<T> enumerable, Action<T> action) => Task.Run(() => Parallel.ForEach(enumerable, action));
+
+        /// <summary>
         /// 按字段去重
         /// </summary>
         /// <typeparam name="TSource"></typeparam>
