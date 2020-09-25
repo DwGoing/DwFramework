@@ -9,89 +9,95 @@ namespace DwFramework.Core.Plugins
         /// <summary>
         /// 创建任务
         /// </summary>
-        /// <param name="taskAction"></param>
+        /// <param name="action"></param>
         /// <returns></returns>
-        public static Task CreateTask(Action taskAction) => Task.Factory.StartNew(taskAction);
+        public static Task CreateTask(Action action) => Task.Run(action);
 
         /// <summary>
         /// 创建限时任务
         /// </summary>
-        /// <param name="taskAction"></param>
+        /// <param name="action"></param>
         /// <param name="timeoutMilliSeconds"></param>
         /// <returns></returns>
-        public static Task CreateTask(Action<CancellationToken> taskAction, int timeoutMilliSeconds)
+        public static Task CreateTask(Action<CancellationToken> action, int timeoutMilliSeconds)
         {
             var cancellationToken = new CancellationTokenSource(timeoutMilliSeconds);
-            return Task.Factory.StartNew(token => taskAction((CancellationToken)token), cancellationToken.Token);
+            var token = cancellationToken.Token;
+            return Task.Run(() => action(token), token);
         }
 
         /// <summary>
         /// 创建可取消任务
         /// </summary>
-        /// <param name="taskAction"></param>
+        /// <param name="action"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public static Task CreateTask(Action<CancellationToken> taskAction, out CancellationTokenSource cancellationToken)
+        public static Task CreateTask(Action<CancellationToken> action, out CancellationTokenSource cancellationToken)
         {
             cancellationToken = new CancellationTokenSource();
-            return Task.Factory.StartNew(token => taskAction((CancellationToken)token), cancellationToken.Token);
+            var token = cancellationToken.Token;
+            return Task.Run(() => action(token), token);
         }
 
         /// <summary>
         /// 创建可取消任务
         /// </summary>
-        /// <param name="taskAction"></param>
+        /// <param name="action"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public static Task CreateTask(Action<CancellationToken> taskAction, CancellationTokenSource cancellationToken)
+        public static Task CreateTask(Action<CancellationToken> action, CancellationTokenSource cancellationToken)
         {
-            return Task.Factory.StartNew(token => taskAction((CancellationToken)token), cancellationToken.Token);
+            var token = cancellationToken.Token;
+            return Task.Run(() => action(token), token);
         }
 
         /// <summary>
         /// 创建任务
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="taskAction"></param>
+        /// <param name="action"></param>
         /// <returns></returns>
-        public static Task<T> CreateTask<T>(Func<T> taskAction) => Task.Factory.StartNew(taskAction);
+        public static Task<T> CreateTask<T>(Func<T> action) => Task.Run(action);
 
         /// <summary>
         /// 创建限时任务
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="taskAction"></param>
+        /// <param name="action"></param>
         /// <param name="timeoutMilliSeconds"></param>
         /// <returns></returns>
-        public static Task<T> CreateTask<T>(Func<CancellationToken, T> taskAction, int timeoutMilliSeconds)
+        public static Task<T> CreateTask<T>(Func<CancellationToken, T> action, int timeoutMilliSeconds)
         {
             var cancellationToken = new CancellationTokenSource(timeoutMilliSeconds);
-            return Task.Factory.StartNew(token => taskAction((CancellationToken)token), cancellationToken.Token);
+            var token = cancellationToken.Token;
+            return Task.Run(() => action(token), token);
         }
 
         /// <summary>
         /// 创建可取消任务
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="taskAction"></param>
+        /// <param name="action"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public static Task<T> CreateTask<T>(Func<CancellationToken, T> taskAction, out CancellationTokenSource cancellationToken)
+        public static Task<T> CreateTask<T>(Func<CancellationToken, T> action, out CancellationTokenSource cancellationToken)
         {
             cancellationToken = new CancellationTokenSource();
-            return Task.Factory.StartNew(token => taskAction((CancellationToken)token), cancellationToken.Token);
+            var token = cancellationToken.Token;
+            return Task.Run(() => action(token), token);
         }
 
         /// <summary>
         /// 创建可取消任务
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="taskAction"></param>
+        /// <param name="action"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public static Task<T> CreateTask<T>(Func<CancellationToken, T> taskAction, CancellationTokenSource cancellationToken)
+        public static Task<T> CreateTask<T>(Func<CancellationToken, T> action, CancellationTokenSource cancellationToken)
         {
-            return Task.Factory.StartNew(token => taskAction((CancellationToken)token), cancellationToken.Token);
+            var token = cancellationToken.Token;
+            return Task.Run(() => action(token), token);
         }
     }
 }
