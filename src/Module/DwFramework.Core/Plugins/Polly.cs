@@ -11,7 +11,7 @@ using Polly.Bulkhead;
 
 namespace DwFramework.Core.Plugins
 {
-    public static class PollyManager
+    public static class PolicyManager
     {
         /// <summary>
         /// 组合策略
@@ -39,10 +39,8 @@ namespace DwFramework.Core.Plugins
         public static RetryPolicy RetryWhenException<TException>(int retryCount, Action<Exception, int> onRetry, Expression<Func<TException, bool>> expression = null) where TException : Exception
         {
             PolicyBuilder builder = null;
-            if (expression == null)
-                builder = Policy.Handle<TException>();
-            else
-                builder = Policy.Handle(expression.Compile());
+            if (expression == null) builder = Policy.Handle<TException>();
+            else builder = Policy.Handle(expression.Compile());
             return builder.Retry(retryCount, onRetry);
         }
 
@@ -56,10 +54,7 @@ namespace DwFramework.Core.Plugins
         /// <returns></returns>
         public static RetryPolicy<TResult> RetryWhereResult<TResult>(Expression<Func<TResult, bool>> expression, int retryCount, Action<TResult, int> onRetry)
         {
-            return Policy.HandleResult(expression.Compile()).Retry(retryCount, (res, index) =>
-            {
-                onRetry(res.Result, index);
-            });
+            return Policy.HandleResult(expression.Compile()).Retry(retryCount, (res, index) => onRetry(res.Result, index));
         }
 
         /// <summary>
@@ -72,10 +67,8 @@ namespace DwFramework.Core.Plugins
         public static RetryPolicy RetryForeverWhenException<TException>(Action<Exception, int> onRetry, Expression<Func<TException, bool>> expression = null) where TException : Exception
         {
             PolicyBuilder builder = null;
-            if (expression == null)
-                builder = Policy.Handle<TException>();
-            else
-                builder = Policy.Handle(expression.Compile());
+            if (expression == null) builder = Policy.Handle<TException>();
+            else builder = Policy.Handle(expression.Compile());
             return builder.RetryForever(onRetry);
         }
 
@@ -88,10 +81,7 @@ namespace DwFramework.Core.Plugins
         /// <returns></returns>
         public static RetryPolicy<TResult> RetryForeverWhereResult<TResult>(Expression<Func<TResult, bool>> expression, Action<TResult, int> onRetry)
         {
-            return Policy.HandleResult(expression.Compile()).RetryForever((res, index) =>
-            {
-                onRetry(res.Result, index);
-            });
+            return Policy.HandleResult(expression.Compile()).RetryForever((res, index) => onRetry(res.Result, index));
         }
 
         /// <summary>
@@ -106,10 +96,8 @@ namespace DwFramework.Core.Plugins
         public static RetryPolicy WaitAndRetryWhenException<TException>(int retryCount, long spacingMilliseconds, Action<Exception, TimeSpan> onRetry, Expression<Func<TException, bool>> expression = null) where TException : Exception
         {
             PolicyBuilder builder = null;
-            if (expression == null)
-                builder = Policy.Handle<TException>();
-            else
-                builder = Policy.Handle(expression.Compile());
+            if (expression == null) builder = Policy.Handle<TException>();
+            else builder = Policy.Handle(expression.Compile());
             return builder.WaitAndRetry(retryCount, sleep => TimeSpan.FromMilliseconds(spacingMilliseconds), onRetry);
         }
 
@@ -124,15 +112,10 @@ namespace DwFramework.Core.Plugins
         public static RetryPolicy WaitAndRetryWhenException<TException>(long[] spacingMilliseconds, Action<Exception, TimeSpan> onRetry, Expression<Func<TException, bool>> expression = null) where TException : Exception
         {
             PolicyBuilder builder = null;
-            if (expression == null)
-                builder = Policy.Handle<TException>();
-            else
-                builder = Policy.Handle(expression.Compile());
+            if (expression == null) builder = Policy.Handle<TException>();
+            else builder = Policy.Handle(expression.Compile());
             List<TimeSpan> sleeps = new List<TimeSpan>();
-            foreach (var item in spacingMilliseconds)
-            {
-                sleeps.Add(TimeSpan.FromMilliseconds(item));
-            }
+            foreach (var item in spacingMilliseconds) sleeps.Add(TimeSpan.FromMilliseconds(item));
             return builder.WaitAndRetry(sleeps, onRetry);
         }
 
@@ -147,14 +130,8 @@ namespace DwFramework.Core.Plugins
         public static RetryPolicy<TResult> WaitAndRetryWhereResult<TResult>(Expression<Func<TResult, bool>> expression, long[] spacingMilliseconds, Action<TResult, TimeSpan> onRetry)
         {
             List<TimeSpan> sleeps = new List<TimeSpan>();
-            foreach (var item in spacingMilliseconds)
-            {
-                sleeps.Add(TimeSpan.FromMilliseconds(item));
-            }
-            return Policy.HandleResult(expression.Compile()).WaitAndRetry(sleeps, (res, ts) =>
-            {
-                onRetry(res.Result, ts);
-            });
+            foreach (var item in spacingMilliseconds) sleeps.Add(TimeSpan.FromMilliseconds(item));
+            return Policy.HandleResult(expression.Compile()).WaitAndRetry(sleeps, (res, ts) => onRetry(res.Result, ts));
         }
 
         /// <summary>
@@ -168,10 +145,8 @@ namespace DwFramework.Core.Plugins
         public static RetryPolicy WaitAndRetryForeverWhenException<TException>(Func<int, TimeSpan> spacingMillisecondsProvider, Action<Exception, TimeSpan> onRetry, Expression<Func<TException, bool>> expression = null) where TException : Exception
         {
             PolicyBuilder builder = null;
-            if (expression == null)
-                builder = Policy.Handle<TException>();
-            else
-                builder = Policy.Handle(expression.Compile());
+            if (expression == null) builder = Policy.Handle<TException>();
+            else builder = Policy.Handle(expression.Compile());
             return builder.WaitAndRetryForever(spacingMillisecondsProvider, onRetry);
         }
 
@@ -185,10 +160,7 @@ namespace DwFramework.Core.Plugins
         /// <returns></returns>
         public static RetryPolicy<TResult> WaitAndRetryForeverWhereResult<TResult>(Expression<Func<TResult, bool>> expression, Func<int, TimeSpan> spacingMillisecondsProvider, Action<TResult, TimeSpan> onRetry)
         {
-            return Policy.HandleResult(expression.Compile()).WaitAndRetryForever(spacingMillisecondsProvider, (res, ts) =>
-             {
-                 onRetry(res.Result, ts);
-             });
+            return Policy.HandleResult(expression.Compile()).WaitAndRetryForever(spacingMillisecondsProvider, (res, ts) => onRetry(res.Result, ts));
         }
 
         /// <summary>
@@ -204,10 +176,8 @@ namespace DwFramework.Core.Plugins
         public static CircuitBreakerPolicy CircuitBreakerWhenException<TException>(int allowCount, long millisecondsOfBreak, Action<Exception, TimeSpan> onBreak, Action onReset, Expression<Func<TException, bool>> expression = null) where TException : Exception
         {
             PolicyBuilder builder = null;
-            if (expression == null)
-                builder = Policy.Handle<TException>();
-            else
-                builder = Policy.Handle(expression.Compile());
+            if (expression == null) builder = Policy.Handle<TException>();
+            else builder = Policy.Handle(expression.Compile());
             return builder.CircuitBreaker(allowCount, TimeSpan.FromMilliseconds(millisecondsOfBreak), onBreak, onReset);
         }
 
@@ -223,10 +193,7 @@ namespace DwFramework.Core.Plugins
         /// <returns></returns>
         public static CircuitBreakerPolicy<TResult> CircuitBreakerWhenResult<TResult>(Expression<Func<TResult, bool>> expression, int allowExceptions, long millisecondsOfBreak, Action<TResult, TimeSpan> onBreak, Action onReset)
         {
-            return Policy.HandleResult(expression.Compile()).CircuitBreaker(allowExceptions, TimeSpan.FromMilliseconds(millisecondsOfBreak), (res, ts) =>
-            {
-                onBreak(res.Result, ts);
-            }, onReset);
+            return Policy.HandleResult(expression.Compile()).CircuitBreaker(allowExceptions, TimeSpan.FromMilliseconds(millisecondsOfBreak), (res, ts) => onBreak(res.Result, ts), onReset);
         }
 
         /// <summary>
@@ -240,10 +207,8 @@ namespace DwFramework.Core.Plugins
         public static FallbackPolicy FallbackWhenException<TException>(Action fallbackAction, Action<Exception> onFallback, Expression<Func<TException, bool>> expression = null) where TException : Exception
         {
             PolicyBuilder builder = null;
-            if (expression == null)
-                builder = Policy.Handle<TException>();
-            else
-                builder = Policy.Handle(expression.Compile());
+            if (expression == null) builder = Policy.Handle<TException>();
+            else builder = Policy.Handle(expression.Compile());
             return builder.Fallback(fallbackAction, onFallback);
         }
 
@@ -257,10 +222,7 @@ namespace DwFramework.Core.Plugins
         /// <returns></returns>
         public static FallbackPolicy<TResult> FallbackWhenException<TResult>(Expression<Func<TResult, bool>> expression, Func<TResult> fallbackAction, Action<TResult> onFallback)
         {
-            return Policy.HandleResult(expression.Compile()).Fallback(fallbackAction, (res) =>
-            {
-                onFallback(res.Result);
-            });
+            return Policy.HandleResult(expression.Compile()).Fallback(fallbackAction, (res) => onFallback(res.Result));
         }
 
         /// <summary>

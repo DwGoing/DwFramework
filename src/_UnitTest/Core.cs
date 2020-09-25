@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using Xunit;
@@ -93,6 +94,35 @@ namespace _UnitTest
             var str = "DwFramework";
             var rsa = RSA.EncryptWithPublicKey(str, RSAExtensions.RSAKeyType.Pkcs8, keys.PublicKey, true);
             Assert.Equal(str, RSA.Decrypt(rsa, RSAExtensions.RSAKeyType.Pkcs8, keys.PrivateKey, true));
+        }
+
+        [Fact]
+        public void CreateTask()
+        {
+            TaskManager.CreateTask(token =>
+            {
+                var i = 0;
+                while (!token.IsCancellationRequested)
+                {
+                    i++;
+                    _output.WriteLine(i.ToString());
+                    Thread.Sleep(1000);
+                }
+            }, 10000);
+            Console.ReadLine();
+        }
+
+        [Fact]
+        public void TimeoutPolicy()
+        {
+            try
+            {
+                PolicyManager.Timeout(5000).Execute(() => Thread.Sleep(10000));
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
         #endregion
     }
