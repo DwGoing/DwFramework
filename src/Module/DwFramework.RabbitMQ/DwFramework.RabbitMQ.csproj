@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <ReleaseVersion>2.0.1</ReleaseVersion>
+        <SubVersion>4</SubVersion>
+        <Version>$(ReleaseVersion).$(SubVersion)</Version>
+        <Authors>DwGoing</Authors>
+        <Description>DwFramework RabbitMQ库</Description>
+        <PackageProjectUrl>https://github.com/Dwgoing/DwFramework</PackageProjectUrl>
+    </PropertyGroup>
+    <ItemGroup>
+        <Folder Include="Extensions\" />
+        <Folder Include="Models\" />
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\DwFramework.Core\DwFramework.Core.csproj" />
+    </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="RabbitMQ.Client" Version="6.2.1" />
+    </ItemGroup>
+    <ItemGroup>
+        <None Include="README.md">
+            <IncludeInPackage>true</IncludeInPackage>
+        </None>
+        <None Include="..\..\..\LICENSE" Link="LICENSE">
+            <IncludeInPackage>true</IncludeInPackage>
+        </None>
+    </ItemGroup>
+</Project>
