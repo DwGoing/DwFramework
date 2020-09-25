@@ -32,7 +32,7 @@ namespace DwFramework.Core.Extensions
         /// <typeparam name="T"></typeparam>
         /// <param name="enumerable"></param>
         /// <param name="action"></param>
-        public static void ParallelForEach<T>(this IEnumerable<T> enumerable, Action<T> action) => Parallel.ForEach(enumerable, action);
+        public static void ForEachParallel<T>(this IEnumerable<T> enumerable, Action<T> action) => Parallel.ForEach(enumerable, action);
 
         /// <summary>
         /// 遍历（并行）
@@ -41,7 +41,7 @@ namespace DwFramework.Core.Extensions
         /// <param name="enumerable"></param>
         /// <param name="action"></param>
         /// <returns></returns>
-        public static Task ParallelForEachAsync<T>(this IEnumerable<T> enumerable, Action<T> action) => Task.Run(() => Parallel.ForEach(enumerable, action));
+        public static Task ForEachParallelAsync<T>(this IEnumerable<T> enumerable, Action<T> action) => Task.Run(() => Parallel.ForEach(enumerable, action));
 
         /// <summary>
         /// 按字段去重
@@ -49,12 +49,12 @@ namespace DwFramework.Core.Extensions
         /// <typeparam name="TSource"></typeparam>
         /// <typeparam name="TKey"></typeparam>
         /// <param name="source"></param>
-        /// <param name="keySelector"></param>
+        /// <param name="selector"></param>
         /// <returns></returns>
-        public static IEnumerable<TSource> DistinctBy<TSource, TKey>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector)
+        public static IEnumerable<TSource> DistinctBy<TSource, TKey>(this IEnumerable<TSource> source, Func<TSource, TKey> selector)
         {
-            var hash = new HashSet<TKey>();
-            return source.Where(p => hash.Add(keySelector(p)));
+            var hash = source.ToHashSet(selector);
+            return source.Where(item => hash.Add(selector(item)));
         }
 
         /// <summary>
