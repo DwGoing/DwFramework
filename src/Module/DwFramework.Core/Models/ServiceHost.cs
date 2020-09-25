@@ -181,18 +181,6 @@ namespace DwFramework.Core
         /// <summary>
         /// 注册服务
         /// </summary>
-        /// <param name="assemblyName"></param>
-        /// <returns></returns>
-        public void RegisterFromAssembly(string assemblyName)
-        {
-            var assembly = AppDomain.CurrentDomain.GetAssemblies().Where(item => item.FullName.Split(",").First() == assemblyName).FirstOrDefault();
-            if (assembly == null) throw new Exception("未找到该程序集");
-            RegisterFromAssembly(assembly);
-        }
-
-        /// <summary>
-        /// 注册服务
-        /// </summary>
         /// <returns></returns>
         public void RegisterFromAssemblies()
         {

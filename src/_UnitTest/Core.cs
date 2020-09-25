@@ -19,6 +19,13 @@ namespace _UnitTest
         }
 
         #region Extension
+        [Fact]
+        public void RegisterFromAssembly()
+        {
+            var host = new ServiceHost();
+            host.RegisterFromAssemblies();
+        }
+
         private class TestClass : TestClassParent
         {
             public double C { get; set; }
