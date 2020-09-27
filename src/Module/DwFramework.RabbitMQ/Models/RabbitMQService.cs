@@ -128,12 +128,13 @@ namespace DwFramework.RabbitMQ
         /// <summary>
         /// 发布消息
         /// </summary>
-        /// <param name="msg"></param>
+        /// <param name="data"></param>
         /// <param name="exchange"></param>
         /// <param name="routingKey"></param>
+        /// <param name="encoding"></param>
         /// <param name="basicPropertiesSetting"></param>
         /// <param name="returnAction"></param>
-        public void Publish(string msg, string exchange = "", string routingKey = "", Action<IBasicProperties> basicPropertiesSetting = null, Action<BasicReturnEventArgs> returnAction = null)
+        public void Publish(object data, string exchange = "", string routingKey = "", Encoding encoding = null, Action<IBasicProperties> basicPropertiesSetting = null, Action<BasicReturnEventArgs> returnAction = null)
         {
             using var channel = GetConnection().CreateModel();
             IBasicProperties basicProperties = null;
@@ -142,7 +143,7 @@ namespace DwFramework.RabbitMQ
                 basicProperties = channel.CreateBasicProperties();
                 basicPropertiesSetting(basicProperties);
             }
-            var body = Encoding.UTF8.GetBytes(msg);
+            var body = encoding != null ? Encoding.UTF8.GetBytes(data.ToJson()) : data.ToBytes();
             if (returnAction != null) channel.BasicReturn += (sender, args) => returnAction(args);
             channel.BasicPublish(exchange, routingKey, basicProperties, body);
         }
@@ -150,28 +151,29 @@ namespace DwFramework.RabbitMQ
         /// <summary>
         /// 发布消息
         /// </summary>
-        /// <param name="msg"></param>
+        /// <param name="data"></param>
         /// <param name="exchange"></param>
         /// <param name="routingKey"></param>
+        /// <param name="encoding"></param>
         /// <param name="basicPropertiesSetting"></param>
         /// <param name="returnAction"></param>
         /// <returns></returns>
-        public Task PublishAsync(string msg, string exchange = "", string routingKey = "", Action<IBasicProperties> basicPropertiesSetting = null, Action<BasicReturnEventArgs> returnAction = null)
+        public Task PublishAsync(object data, string exchange = "", string routingKey = "", Encoding encoding = null, Action<IBasicProperties> basicPropertiesSetting = null, Action<BasicReturnEventArgs> returnAction = null)
         {
-            return TaskManager.CreateTask(() => Publish(msg, exchange, routingKey, basicPropertiesSetting, returnAction));
+            return TaskManager.CreateTask(() => Publish(data, exchange, routingKey, encoding, basicPropertiesSetting, returnAction));
         }
 
         /// <summary>
         /// 发布消息并等待Ack
         /// </summary>
-        /// <param name="msg"></param>
+        /// <param name="data"></param>
         /// <param name="exchange"></param>
         /// <param name="routingKey"></param>
         /// <param name="basicPropertiesSetting"></param>
         /// <param name="timeoutSeconds"></param>
         /// <param name="returnAction"></param>
         /// <returns></returns>
-        public bool PublishWaitForAck(string msg, string exchange = "", string routingKey = "", Action<IBasicProperties> basicPropertiesSetting = null, int timeoutSeconds = 0, Action<BasicReturnEventArgs> returnAction = null)
+        public bool PublishWaitForAck(object data, string exchange = "", string routingKey = "", Encoding encoding = null, Action<IBasicProperties> basicPropertiesSetting = null, int timeoutSeconds = 0, Action<BasicReturnEventArgs> returnAction = null)
         {
             using var channel = GetConnection().CreateModel();
             channel.ConfirmSelect();
@@ -181,85 +183,7 @@ namespace DwFramework.RabbitMQ
                 basicProperties = channel.CreateBasicProperties();
                 basicPropertiesSetting(basicProperties);
             }
-            var body = Encoding.UTF8.GetBytes(msg);
-            if (returnAction != null) channel.BasicReturn += (sender, args) => returnAction(args);
-            channel.BasicPublish(exchange, routingKey, basicProperties, body);
-            if (timeoutSeconds >= 0) return channel.WaitForConfirms(TimeSpan.FromSeconds(timeoutSeconds));
-            else return channel.WaitForConfirms();
-        }
-
-        /// <summary>
-        /// 发布消息并等待Ack
-        /// </summary>
-        /// <param name="msg"></param>
-        /// <param name="exchange"></param>
-        /// <param name="routingKey"></param>
-        /// <param name="basicPropertiesSetting"></param>
-        /// <param name="timeoutSeconds"></param>
-        /// <param name="returnAction"></param>
-        /// <returns></returns>
-        public Task<bool> PublishWaitForAckAsync(string msg, string exchange = "", string routingKey = "", Action<IBasicProperties> basicPropertiesSetting = null, int timeoutSeconds = 0, Action<BasicReturnEventArgs> returnAction = null)
-        {
-            return TaskManager.CreateTask(() => PublishWaitForAck(msg, exchange, routingKey, basicPropertiesSetting, timeoutSeconds, returnAction));
-        }
-
-        /// <summary>
-        /// 发布消息
-        /// </summary>
-        /// <param name="data"></param>
-        /// <param name="exchange"></param>
-        /// <param name="routingKey"></param>
-        /// <param name="basicPropertiesSetting"></param>
-        /// <param name="returnAction"></param>
-        public void Publish(object data, string exchange = "", string routingKey = "", Action<IBasicProperties> basicPropertiesSetting = null, Action<BasicReturnEventArgs> returnAction = null)
-        {
-            using var channel = GetConnection().CreateModel();
-            IBasicProperties basicProperties = null;
-            if (basicPropertiesSetting != null)
-            {
-                basicProperties = channel.CreateBasicProperties();
-                basicPropertiesSetting(basicProperties);
-            }
-            var body = Encoding.UTF8.GetBytes(data.ToJson());
-            if (returnAction != null) channel.BasicReturn += (sender, args) => returnAction(args);
-            channel.BasicPublish(exchange, routingKey, basicProperties, body);
-        }
-
-        /// <summary>
-        /// 发布消息
-        /// </summary>
-        /// <param name="data"></param>
-        /// <param name="exchange"></param>
-        /// <param name="routingKey"></param>
-        /// <param name="basicPropertiesSetting"></param>
-        /// <param name="returnAction"></param>
-        /// <returns></returns>
-        public Task PublishAsync(object data, string exchange = "", string routingKey = "", Action<IBasicProperties> basicPropertiesSetting = null, Action<BasicReturnEventArgs> returnAction = null)
-        {
-            return TaskManager.CreateTask(() => Publish(data, exchange, routingKey, basicPropertiesSetting, returnAction));
-        }
-
-        /// <summary>
-        /// 发布消息并等待Ack
-        /// </summary>
-        /// <param name="data"></param>
-        /// <param name="exchange"></param>
-        /// <param name="routingKey"></param>
-        /// <param name="basicPropertiesSetting"></param>
-        /// <param name="timeoutSeconds"></param>
-        /// <param name="returnAction"></param>
-        /// <returns></returns>
-        public bool PublishWaitForAck(object data, string exchange = "", string routingKey = "", Action<IBasicProperties> basicPropertiesSetting = null, int timeoutSeconds = 0, Action<BasicReturnEventArgs> returnAction = null)
-        {
-            using var channel = GetConnection().CreateModel();
-            channel.ConfirmSelect();
-            IBasicProperties basicProperties = null;
-            if (basicPropertiesSetting != null)
-            {
-                basicProperties = channel.CreateBasicProperties();
-                basicPropertiesSetting(basicProperties);
-            }
-            var body = Encoding.UTF8.GetBytes(data.ToJson());
+            var body = encoding != null ? Encoding.UTF8.GetBytes(data.ToJson()) : data.ToBytes();
             if (returnAction != null) channel.BasicReturn += (sender, args) => returnAction(args);
             channel.BasicPublish(exchange, routingKey, basicProperties, body);
             if (timeoutSeconds >= 0) return channel.WaitForConfirms(TimeSpan.FromSeconds(timeoutSeconds));
@@ -276,9 +200,9 @@ namespace DwFramework.RabbitMQ
         /// <param name="timeoutSeconds"></param>
         /// <param name="returnAction"></param>
         /// <returns></returns>
-        public Task<bool> PublishWaitForAckAsync(object data, string exchange = "", string routingKey = "", Action<IBasicProperties> basicPropertiesSetting = null, int timeoutSeconds = 0, Action<BasicReturnEventArgs> returnAction = null)
+        public Task<bool> PublishWaitForAckAsync(object data, string exchange = "", string routingKey = "", Encoding encoding = null, Action<IBasicProperties> basicPropertiesSetting = null, int timeoutSeconds = 0, Action<BasicReturnEventArgs> returnAction = null)
         {
-            return TaskManager.CreateTask(() => PublishWaitForAck(data, exchange, routingKey, basicPropertiesSetting, timeoutSeconds, returnAction));
+            return TaskManager.CreateTask(() => PublishWaitForAck(data, exchange, routingKey, encoding, basicPropertiesSetting, timeoutSeconds, returnAction));
         }
 
         /// <summary>
