@@ -21,6 +21,16 @@
     <ProjectReference Include="..\Module\DwFramework.Database\DwFramework.Database.csproj" />
     <ProjectReference Include="..\Module\DwFramework.WebAPI\DwFramework.WebAPI.csproj" />
     <ProjectReference Include="..\Plugins\DwFramework.Plugins.WebAPI\DwFramework.Plugins.WebAPI.csproj" />
+    <ProjectReference Include="..\Module\DwFramework.DataFlow\DwFramework.DataFlow.csproj" />
+    <ProjectReference Include="..\Module\DwFramework.Kafka\DwFramework.Kafka.csproj" />
+    <ProjectReference Include="..\Module\DwFramework.MachineLearning\DwFramework.MachineLearning.csproj" />
+    <ProjectReference Include="..\Plugins\DwFramework.Plugins.Database\DwFramework.Plugins.Database.csproj" />
+    <ProjectReference Include="..\Plugins\DwFramework.Plugins.Rpc\DwFramework.Plugins.Rpc.csproj" />
+    <ProjectReference Include="..\Module\DwFramework.RabbitMQ\DwFramework.RabbitMQ.csproj" />
+    <ProjectReference Include="..\Module\DwFramework.Rpc\DwFramework.Rpc.csproj" />
+    <ProjectReference Include="..\Module\DwFramework.Socket\DwFramework.Socket.csproj" />
+    <ProjectReference Include="..\Module\DwFramework.TaskSchedule\DwFramework.TaskSchedule.csproj" />
+    <ProjectReference Include="..\Module\DwFramework.WebSocket\DwFramework.WebSocket.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Update="Config.json">
