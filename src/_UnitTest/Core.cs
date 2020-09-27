@@ -8,6 +8,7 @@ using Xunit.Abstractions;
 using DwFramework.Core;
 using DwFramework.Core.Extensions;
 using DwFramework.Core.Plugins;
+using DwFramework.WebAPI;
 
 namespace _UnitTest
 {

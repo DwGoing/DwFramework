@@ -21,7 +21,6 @@ namespace DwFramework.WebSocket
                 host.RegisterType<WebSocketService>().SingleInstance();
             }
             else host.Register(c => new WebSocketService(c.Resolve<Core.Environment>(), "WebSocket")).SingleInstance();
-            host.RegisterType<WebSocketService>().SingleInstance();
             host.OnInitializing += provider => provider.InitWebSocketServiceAsync();
         }
 
