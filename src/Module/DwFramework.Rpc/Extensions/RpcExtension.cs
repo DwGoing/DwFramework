@@ -20,7 +20,7 @@ namespace DwFramework.Rpc
                 host.AddJsonConfig(configFilePath);
                 host.RegisterType<RpcService>().SingleInstance();
             }
-            else host.Register(c => new RpcService(c.Resolve<Core.Environment>(), "Database")).SingleInstance();
+            else host.Register(c => new RpcService(c.Resolve<Core.Environment>(), "Rpc")).SingleInstance();
             host.OnInitializing += provider => provider.InitRpcServiceAsync().Wait();
         }
 

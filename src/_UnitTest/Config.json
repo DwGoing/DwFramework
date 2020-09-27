@@ -4,6 +4,11 @@
     "DbType": "MySql",
     "UseMemoryCache": true
   },
+  "Rpc": {
+    "Listen": {
+      "http": ":5020"
+    }
+  },
   "WebAPI": {
     "Listen": {
       "http": "0.0.0.0:6001"
