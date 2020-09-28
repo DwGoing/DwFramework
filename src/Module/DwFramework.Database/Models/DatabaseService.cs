@@ -37,7 +37,7 @@ namespace DwFramework.Database
 
         private readonly Config _config;
 
-        public SqlSugarClient DbConnection { get => CreateConnection(); }
+        public SqlSugarClient DbConnection => CreateConnection();
 
         /// <summary>
         /// 构造函数
@@ -53,15 +53,16 @@ namespace DwFramework.Database
         /// <summary>
         /// 创建连接
         /// </summary>
+        /// <param name="initKeyType"></param>
         /// <returns></returns>
-        private SqlSugarClient CreateConnection()
+        public SqlSugarClient CreateConnection(InitKeyType initKeyType = InitKeyType.Attribute)
         {
             var config = new ConnectionConfig()
             {
                 ConnectionString = _config.ConnectionString,//必填, 数据库连接字符串
                 DbType = _config.ParseDbType(),         //必填, 数据库类型
                 IsAutoCloseConnection = true,       //默认false, 自动关闭数据库连接, 设置为true无需使用using或者Close操作
-                InitKeyType = InitKeyType.SystemTable,    //默认SystemTable, 字段信息读取, 如：该属性是不是主键，是不是标识列等等信息
+                InitKeyType = initKeyType,    //默认SystemTable, 字段信息读取, 如：该属性是不是主键，是不是标识列等等信息
                 ConfigureExternalServices = new ConfigureExternalServices() // 配置扩展服务
             };
             if (_config.UseMemoryCache) config.ConfigureExternalServices.DataInfoCacheService = new DataMemoryCache(); // Memory缓存
