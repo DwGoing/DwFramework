@@ -12,9 +12,9 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="DwFramework.Core" Version="2.0.1.8" />
-    <PackageReference Include="DwFramework.Database" Version="2.0.1.3" />
-    <PackageReference Include="DwFramework.Plugins.Database" Version="2.0.1.3" />
+    <PackageReference Include="DwFramework.Core" Version="2.0.1.10" />
+    <PackageReference Include="DwFramework.Database" Version="2.0.1.5" />
+    <PackageReference Include="DwFramework.Plugins.Database" Version="2.0.1.4" />
   </ItemGroup>
   <ItemGroup>
     <None Update="Database.json">
