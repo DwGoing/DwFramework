@@ -10,7 +10,7 @@ namespace DwFramework.Example.Core
     {
         static void Main(string[] args)
         {
-            var tag = 8;
+            var tag = 6;
             try
             {
                 var assemblies = AppDomain.CurrentDomain.GetAssemblies();

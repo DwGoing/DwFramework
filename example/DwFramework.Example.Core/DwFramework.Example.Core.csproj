@@ -11,6 +11,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="DwFramework.Core" Version="2.0.1.8" />
+    <PackageReference Include="DwFramework.Core" Version="2.0.1.10" />
   </ItemGroup>
 </Project>
