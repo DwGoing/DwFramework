@@ -28,15 +28,25 @@ namespace _UnitTest
             host.RegisterFromAssemblies();
         }
 
+        [Serializable]
         private class TestClass : TestClassParent
         {
             public double C { get; set; }
         }
 
+        [Serializable]
         private class TestClassParent
         {
             public string A { get; set; }
             public int B { get; set; }
+        }
+
+        [Fact]
+        public void Json()
+        {
+            var a = new TestClass() { A = "x", B = 5, C = 5.5 };
+            var json = a.ToBytes().ToBase64String();
+            var obj = json.FromBase64String().ToObject<TestClass>();
         }
 
         [Fact]
