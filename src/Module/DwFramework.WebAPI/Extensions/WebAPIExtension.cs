@@ -22,7 +22,7 @@ namespace DwFramework.WebAPI
                 host.RegisterType<WebAPIService>().SingleInstance();
             }
             else host.Register(c => new WebAPIService(c.Resolve<Core.Environment>(), "WebAPI")).SingleInstance();
-            host.OnInitializing += provider => provider.InitWebAPIServiceAsync<T>();
+            host.OnInitializing += provider => provider.InitWebAPIServiceAsync<T>().Wait();
         }
 
         /// <summary>
