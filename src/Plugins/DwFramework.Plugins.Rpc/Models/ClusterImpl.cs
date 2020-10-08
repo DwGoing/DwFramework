@@ -38,9 +38,11 @@ namespace DwFramework.Rpc.Cluster
         /// 构造函数
         /// </summary>
         /// <param name="environment"></param>
-        public ClusterImpl(DwFramework.Core.Environment environment)
+        /// <param name="configKey"></param>
+        public ClusterImpl(DwFramework.Core.Environment environment, string configKey = null)
         {
-            _config = environment.Configuration.GetConfig<Config>();
+            _config = environment.Configuration.GetConfig<Config>(configKey);
+            if (_config == null) throw new Exception("未读取到Cluster配置");
             ID = Generater.GenerateRandomString(32);
             _header = new Metadata
             {
