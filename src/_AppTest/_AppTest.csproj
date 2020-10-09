@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Module\DwFramework.Core\DwFramework.Core.csproj" />
+    <ProjectReference Include="..\Module\DwFramework.WebAPI\DwFramework.WebAPI.csproj" />
+    <ProjectReference Include="..\Plugins\DwFramework.Plugins.WebAPI\DwFramework.Plugins.WebAPI.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="Config.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+</Project>

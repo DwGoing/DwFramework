@@ -6,7 +6,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "_UnitTest", "_UnitTest\_Uni
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DwFramework.Core", "Module\DwFramework.Core\DwFramework.Core.csproj", "{2CDE6525-4635-47CC-9C6A-806ED5252853}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DwFramework.Database", "Module\DwFramework.Database\DwFramework.Database.csproj", "{ACF33286-AE68-4021-BC7F-BB199036E4C8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DwFramework.Database", "Module\DwFramework.Database\DwFramework.Database.csproj", "{ACF33286-AE68-4021-BC7F-BB199036E4C8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DwFramework.Plugins.Database", "Plugins\DwFramework.Plugins.Database\DwFramework.Plugins.Database.csproj", "{92480E8E-0B2E-46F9-8ADA-4F11F2FE6071}"
 EndProject
@@ -31,6 +31,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DwFramework.Plugins.WebAPI", "Plugins\DwFramework.Plugins.WebAPI\DwFramework.Plugins.WebAPI.csproj", "{7C53FC4A-2288-41BC-A86D-FC987F6F6606}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DwFramework.Kafka", "Module\DwFramework.Kafka\DwFramework.Kafka.csproj", "{C5A197DC-602F-4B87-875E-44BFD9E192B5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "_AppTest", "_AppTest\_AppTest.csproj", "{43BF3B38-82B6-4D6A-BF07-CB0BCC5F94CA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -98,6 +100,10 @@ Global
 		{C5A197DC-602F-4B87-875E-44BFD9E192B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C5A197DC-602F-4B87-875E-44BFD9E192B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C5A197DC-602F-4B87-875E-44BFD9E192B5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{43BF3B38-82B6-4D6A-BF07-CB0BCC5F94CA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{43BF3B38-82B6-4D6A-BF07-CB0BCC5F94CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{43BF3B38-82B6-4D6A-BF07-CB0BCC5F94CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{43BF3B38-82B6-4D6A-BF07-CB0BCC5F94CA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
