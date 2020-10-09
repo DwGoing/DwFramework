@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
-using DwFramework.WebAPI.Jwt;
+using DwFramework.WebAPI;
 
-namespace _UnitTest
+namespace DwFramework.Example.WebAPI
 {
     [ApiController]
     [Route("test")]
@@ -16,11 +16,12 @@ namespace _UnitTest
         [HttpGet("a")]
         public IActionResult A()
         {
-            return Ok(JwtManager.GenerateToken("dwgoing", "0123456789abcdef", customFields: new Dictionary<string, object>() {
-                { "A","a" },
-                {"B",1 },
-                {"C",new {Name="DDD"} }
-            }));
+            return Ok();
+            //return Ok(JwtManager.GenerateToken("dwgoing", "0123456789abcdef", customFields: new Dictionary<string, object>() {
+            //    { "A","a" },
+            //    {"B",1 },
+            //    {"C",new {Name="DDD"} }
+            //}));
         }
     }
 }
