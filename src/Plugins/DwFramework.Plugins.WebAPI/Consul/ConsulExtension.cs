@@ -34,9 +34,9 @@ namespace DwFramework.WebAPI.Consul
         /// <param name="configuration"></param>
         /// <param name="lifetime"></param>
         /// <returns></returns>
-        public static IApplicationBuilder UseConsul(this IApplicationBuilder app, IConfiguration configuration, IHostApplicationLifetime lifetime)
+        public static IApplicationBuilder UseConsul(this IApplicationBuilder app, IConfiguration configuration, IHostApplicationLifetime lifetime, string configKey = "Consul")
         {
-            var config = configuration.GetConfig<Config>("Consul");
+            var config = configuration.GetConfig<Config>(configKey);
             foreach (var item in config.Services)
             {
                 var client = new ConsulClient(c =>
@@ -63,10 +63,7 @@ namespace DwFramework.WebAPI.Consul
                     client.Agent.ServiceDeregister(registration.ID).Wait();
                 });
             }
-            app.Map(config.HealthCheckPath, s =>
-            {
-                s.Run(context => context.Response.WriteAsync("ok"));
-            });
+            app.Map(config.HealthCheckPath, s => s.Run(context => context.Response.WriteAsync("ok")));
             return app;
         }
 
