@@ -40,9 +40,10 @@ namespace DwFramework.Core
         /// <summary>
         /// 添加配置
         /// </summary>
-        /// <param name="fileName"></param>
+        /// <param name="configFilePath"></param>
+        /// <param name="key"></param>
         /// <param name="onChange"></param>
-        public void AddJsonConfig(string fileName, Action onChange = null) => Environment.AddJsonConfig(fileName, onChange);
+        public void AddJsonConfig(string configFilePath, string key = "Global", Action onChange = null) => Environment.AddJsonConfig(configFilePath, key, onChange);
 
         /// <summary>
         /// 开启服务

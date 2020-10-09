@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Primitives;
+
+using DwFramework.Core.Extensions;
 
 namespace DwFramework.Core
 {
@@ -9,7 +12,9 @@ namespace DwFramework.Core
         public readonly EnvironmentType EnvironmentType;
         public IConfiguration Configuration { get; private set; }
 
-        private readonly ConfigurationBuilder _configurationBuilder;
+        private readonly Dictionary<string, ConfigurationBuilder> _configurationBuilders;
+        private readonly ConfigurationBuilder _globalConfigurationBuilder;
+        private readonly Dictionary<string, IConfiguration> _configurations;
 
 
         /// <summary>
@@ -20,24 +25,41 @@ namespace DwFramework.Core
         public Environment(EnvironmentType environmentType = EnvironmentType.Develop, string configFilePath = null)
         {
             EnvironmentType = environmentType;
-            _configurationBuilder = new ConfigurationBuilder();
+            _configurationBuilders = new Dictionary<string, ConfigurationBuilder>();
+            _globalConfigurationBuilder = new ConfigurationBuilder();
+            _configurationBuilders["Global"] = _globalConfigurationBuilder;
+            _configurations = new Dictionary<string, IConfiguration>();
             if (configFilePath != null) AddJsonConfig(configFilePath);
         }
 
         /// <summary>
         /// 添加配置
         /// </summary>
-        /// <param name="fileName"></param>
+        /// <param name="configFilePath"></param>
+        /// <param name="key"></param>
         /// <param name="onChange"></param>
-        public void AddJsonConfig(string fileName, Action onChange = null)
+        public void AddJsonConfig(string configFilePath, string key = "Global", Action onChange = null)
         {
-            _configurationBuilder.AddJsonFile(fileName);
-            if (onChange != null) ChangeToken.OnChange(() => _configurationBuilder.GetFileProvider().Watch(fileName), () => onChange());
+            var builder = _globalConfigurationBuilder;
+            if (key != "Global" && _configurationBuilders.ContainsKey(key)) builder = _configurationBuilders[key];
+            builder.AddJsonFile(configFilePath);
+            if (onChange != null) ChangeToken.OnChange(() => builder.GetFileProvider().Watch(configFilePath), () => onChange());
         }
 
         /// <summary>
         /// 构建环境配置
         /// </summary>
-        public void Build() => Configuration = _configurationBuilder.Build();
+        public void Build() => _configurationBuilders.ForEach(item => _configurations[item.Key] = item.Value.Build());
+
+        /// <summary>
+        /// 获取配置
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public IConfiguration GetConfiguration(string key = "Global")
+        {
+            if (!_configurations.ContainsKey(key)) return null;
+            return _configurations[key];
+        }
     }
 }
