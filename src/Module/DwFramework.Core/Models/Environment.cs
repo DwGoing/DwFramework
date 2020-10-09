@@ -10,10 +10,8 @@ namespace DwFramework.Core
     public class Environment
     {
         public readonly EnvironmentType EnvironmentType;
-        public IConfiguration Configuration { get; private set; }
 
         private readonly Dictionary<string, ConfigurationBuilder> _configurationBuilders;
-        private readonly ConfigurationBuilder _globalConfigurationBuilder;
         private readonly Dictionary<string, IConfiguration> _configurations;
 
 
@@ -25,9 +23,10 @@ namespace DwFramework.Core
         public Environment(EnvironmentType environmentType = EnvironmentType.Develop, string configFilePath = null)
         {
             EnvironmentType = environmentType;
-            _configurationBuilders = new Dictionary<string, ConfigurationBuilder>();
-            _globalConfigurationBuilder = new ConfigurationBuilder();
-            _configurationBuilders["Global"] = _globalConfigurationBuilder;
+            _configurationBuilders = new Dictionary<string, ConfigurationBuilder>
+            {
+                ["Global"] = new ConfigurationBuilder()
+            };
             _configurations = new Dictionary<string, IConfiguration>();
             if (configFilePath != null) AddJsonConfig(configFilePath);
         }
@@ -38,10 +37,11 @@ namespace DwFramework.Core
         /// <param name="configFilePath"></param>
         /// <param name="key"></param>
         /// <param name="onChange"></param>
-        public void AddJsonConfig(string configFilePath, string key = "Global", Action onChange = null)
+        public void AddJsonConfig(string configFilePath, string key = null, Action onChange = null)
         {
-            var builder = _globalConfigurationBuilder;
-            if (key != "Global" && _configurationBuilders.ContainsKey(key)) builder = _configurationBuilders[key];
+            key ??= "Global";
+            if (!_configurationBuilders.ContainsKey(key)) _configurationBuilders[key] = new ConfigurationBuilder();
+            IConfigurationBuilder builder = _configurationBuilders[key];
             builder.AddJsonFile(configFilePath);
             if (onChange != null) ChangeToken.OnChange(() => builder.GetFileProvider().Watch(configFilePath), () => onChange());
         }
@@ -56,9 +56,10 @@ namespace DwFramework.Core
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
-        public IConfiguration GetConfiguration(string key = "Global")
+        public IConfiguration GetConfiguration(string key = null)
         {
-            if (!_configurations.ContainsKey(key)) return null;
+            key ??= "Global";
+            key = _configurations.ContainsKey(key) ? key : "Global";
             return _configurations[key];
         }
     }

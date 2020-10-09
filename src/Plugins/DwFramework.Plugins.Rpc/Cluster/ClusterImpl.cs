@@ -41,7 +41,8 @@ namespace DwFramework.Rpc.Cluster
         /// <param name="configKey"></param>
         public ClusterImpl(DwFramework.Core.Environment environment, string configKey = null)
         {
-            _config = environment.Configuration.GetConfig<Config>(configKey);
+            var configuration = environment.GetConfiguration(configKey ?? "Cluster");
+            _config = configuration.GetConfig<Config>(configKey);
             if (_config == null) throw new Exception("未读取到Cluster配置");
             ID = Generater.GenerateRandomString(32);
             _header = new Metadata

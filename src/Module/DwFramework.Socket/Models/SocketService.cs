@@ -65,7 +65,8 @@ namespace DwFramework.Socket
         /// <param name="configKey"></param>
         public SocketService(Core.Environment environment, string configKey = null)
         {
-            _config = environment.Configuration.GetConfig<Config>(configKey);
+            var configuration = environment.GetConfiguration(configKey ?? "Socket");
+            _config = configuration.GetConfig<Config>(configKey);
             if (_config == null) throw new Exception("未读取到Socket配置");
             _connections = new Dictionary<string, SocketConnection>();
         }

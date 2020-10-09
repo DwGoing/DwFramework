@@ -26,7 +26,8 @@ namespace DwFramework.WebAPI
         /// <param name="configKey"></param>
         public WebAPIService(Core.Environment environment, string configKey = null)
         {
-            _config = environment.Configuration.GetConfig<Config>(configKey);
+            var configuration = environment.GetConfiguration(configKey ?? "WebAPI");
+            _config = configuration.GetConfig<Config>(configKey);
             if (_config == null) throw new Exception("未读取到WebAPI配置");
         }
 

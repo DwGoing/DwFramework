@@ -17,7 +17,7 @@ namespace DwFramework.WebSocket
         {
             if (!string.IsNullOrEmpty(configFilePath))
             {
-                host.AddJsonConfig(configFilePath);
+                host.AddJsonConfig(configFilePath, "WebSocket");
                 host.RegisterType<WebSocketService>().SingleInstance();
             }
             else host.Register(c => new WebSocketService(c.Resolve<Core.Environment>(), "WebSocket")).SingleInstance();

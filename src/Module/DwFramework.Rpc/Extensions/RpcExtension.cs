@@ -17,7 +17,7 @@ namespace DwFramework.Rpc
         {
             if (!string.IsNullOrEmpty(configFilePath))
             {
-                host.AddJsonConfig(configFilePath);
+                host.AddJsonConfig(configFilePath, "Rpc");
                 host.RegisterType<RpcService>().SingleInstance();
             }
             else host.Register(c => new RpcService(c.Resolve<Core.Environment>(), "Rpc")).SingleInstance();
