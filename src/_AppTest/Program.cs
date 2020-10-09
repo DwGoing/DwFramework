@@ -15,9 +15,10 @@ namespace _AppTest
             {
                 var host = new ServiceHost();
                 host.RegisterLog();
-                //host.RegisterWebAPIService<Startup>("webapi.json");
-                host.RegisterRpcService("rpc.json");
-                //host.RegisterClusterImpl();
+                //host.RegisterWebAPIService<Startup>("WebAPI.json");
+                host.RegisterClusterImpl("Cluster.json");
+                host.RegisterRpcService("Rpc.json");
+                host.OnInitialized += p => p.GetClusterImpl().OnJoin += id => Console.WriteLine(id);
                 host.Run();
             }
             catch (Exception ex)
