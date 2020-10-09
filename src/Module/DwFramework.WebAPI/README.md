@@ -13,12 +13,11 @@ PM> Install-Package DwFramework.WebAPI
 当使用该库时，需提前读取配置文件，Json配置如下：
 
 ```json
+// WebAPI
 {
-  "WebAPI": {
-    "ContentRoot": "",
-    "Listen": {
-      "http": "0.0.0.0:10080"
-    }
+  "ContentRoot": "",
+  "Listen": {
+    "http": "0.0.0.0:10080"
   }
 }
 ```
@@ -122,4 +121,24 @@ app.UseRequestFilter(new Dictionary<string, Action<HttpContext>>
 ```c#
 // Startup
 app.UseConsul(ServiceHost.Environment.Configuration, lifetime);
+```
+
+4. Jwt
+
+```c#
+// ConfigureServices
+services.AddJwtAuthentication(new DefaultJwtTokenValidator("fc3d06d9b75f92b648ab4e372dfd22f2"), context =>
+{
+	Console.WriteLine("Success");
+	return Task.CompletedTask;
+}, context =>
+{
+	Console.WriteLine("Fail");
+	return Task.CompletedTask;
+});
+// Configure
+app.UseAuthentication();
+app.UseRouting();
+app.UseAuthorization(); // 一定要在UseRouting和UseEndpoints之间
+app.UseEndpoints(endpoints =>{endpoints.MapControllers();});
 ```

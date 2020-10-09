@@ -2,9 +2,12 @@
 using System.Text;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.Threading.Tasks;
 using System.Linq;
 using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 using DwFramework.Core.Plugins;
 
@@ -20,6 +23,30 @@ namespace DwFramework.WebAPI.Jwt
         static JwtManager()
         {
             Tag = Generater.GenerateUUID();
+        }
+
+        /// <summary>
+        /// 注入JWT服务
+        /// </summary>
+        /// <param name="services"></param>
+        /// <param name="tokenValidator"></param>
+        /// <param name="onSuccess"></param>
+        /// <param name="onFail"></param>
+        /// <returns></returns>
+        public static IServiceCollection AddJwtAuthentication(this IServiceCollection services, ISecurityTokenValidator tokenValidator, Func<TokenValidatedContext, Task> onSuccess, Func<JwtBearerChallengeContext, Task> onFail)
+        {
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    options.SecurityTokenValidators.Clear();
+                    options.SecurityTokenValidators.Add(tokenValidator);
+                    options.Events = new JwtBearerEvents
+                    {
+                        OnTokenValidated = onSuccess,
+                        OnChallenge = onFail
+                    };
+                });
+            return services;
         }
 
         /// <summary>
