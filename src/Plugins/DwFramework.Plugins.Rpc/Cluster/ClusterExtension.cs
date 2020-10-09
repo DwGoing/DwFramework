@@ -17,7 +17,7 @@ namespace DwFramework.Rpc.Cluster
         {
             if (!string.IsNullOrEmpty(configFilePath))
             {
-                host.AddJsonConfig(configFilePath);
+                host.AddJsonConfig(configFilePath, "Cluster");
                 host.RegisterType<ClusterImpl>().SingleInstance();
             }
             else host.Register(c => new ClusterImpl(c.Resolve<Core.Environment>(), "Cluster")).SingleInstance();

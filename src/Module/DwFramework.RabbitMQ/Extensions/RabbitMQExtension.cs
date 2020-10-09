@@ -16,7 +16,7 @@ namespace DwFramework.RabbitMQ
         {
             if (!string.IsNullOrEmpty(configFilePath))
             {
-                host.AddJsonConfig(configFilePath);
+                host.AddJsonConfig(configFilePath, "RabbitMQ");
                 host.RegisterType<RabbitMQService>().SingleInstance();
             }
             else host.Register(c => new RabbitMQService(c.Resolve<Core.Environment>(), "RabbitMQ")).SingleInstance();

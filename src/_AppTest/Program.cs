@@ -15,9 +15,8 @@ namespace _AppTest
             {
                 var host = new ServiceHost();
                 host.RegisterLog();
-                host.RegisterWebAPIService<Startup>("webapi.json");
-                host.AddJsonConfig("rpc.json");
-                //host.RegisterRpcService("rpc.json");
+                //host.RegisterWebAPIService<Startup>("webapi.json");
+                host.RegisterRpcService("rpc.json");
                 //host.RegisterClusterImpl();
                 host.Run();
             }

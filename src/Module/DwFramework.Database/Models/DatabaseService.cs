@@ -46,7 +46,8 @@ namespace DwFramework.Database
         /// <param name="configKey"></param>
         public DatabaseService(Core.Environment environment, string configKey = null)
         {
-            _config = environment.Configuration.GetConfig<Config>(configKey);
+            var configuration = environment.GetConfiguration(configKey ?? "Database");
+            _config = configuration.GetConfig<Config>(configKey);
             if (_config == null) throw new Exception("未读取到Database配置");
         }
 

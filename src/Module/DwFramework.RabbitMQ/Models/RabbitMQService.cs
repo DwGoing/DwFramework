@@ -47,7 +47,8 @@ namespace DwFramework.RabbitMQ
         /// <param name="configKey"></param>
         public RabbitMQService(Core.Environment environment, string configKey = null)
         {
-            _config = environment.Configuration.GetConfig<Config>(configKey);
+            var configuration = environment.GetConfiguration(configKey ?? "RabbitMQ");
+            _config = configuration.GetConfig<Config>(configKey);
             if (_config == null) throw new Exception("未读取到RabbitMQ配置");
             _connectionFactory = new ConnectionFactory()
             {

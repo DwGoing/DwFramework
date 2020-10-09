@@ -16,7 +16,7 @@ namespace DwFramework.Database
         {
             if (!string.IsNullOrEmpty(configFilePath))
             {
-                host.AddJsonConfig(configFilePath);
+                host.AddJsonConfig(configFilePath, "Database");
                 host.RegisterType<DatabaseService>().SingleInstance();
             }
             else host.Register(c => new DatabaseService(c.Resolve<Core.Environment>(), "Database")).SingleInstance();

@@ -17,7 +17,7 @@ namespace DwFramework.Socket
         {
             if (!string.IsNullOrEmpty(configFilePath))
             {
-                host.AddJsonConfig(configFilePath);
+                host.AddJsonConfig(configFilePath, "Socket");
                 host.RegisterType<SocketService>().SingleInstance();
             }
             else host.Register(c => new SocketService(c.Resolve<Core.Environment>(), "Socket")).SingleInstance();
