@@ -1,4 +1,6 @@
 ﻿using System;
+using DwFramework.Core;
+using DwFramework.WebAPI;
 
 namespace DwFramework.Example.WebAPI
 {
@@ -6,7 +8,16 @@ namespace DwFramework.Example.WebAPI
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            try
+            {
+                var host = new ServiceHost(configFilePath: "Config.json");
+                host.RegisterWebAPIService<Startup>();
+                host.Run();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
         }
     }
 }
