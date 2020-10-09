@@ -8,7 +8,7 @@ using Xunit.Abstractions;
 using DwFramework.Core;
 using DwFramework.Core.Extensions;
 using DwFramework.Core.Plugins;
-using DwFramework.RabbitMQ;
+using DwFramework.WebAPI;
 
 namespace _UnitTest
 {
@@ -18,6 +18,15 @@ namespace _UnitTest
         public Core(ITestOutputHelper output)
         {
             _output = output;
+        }
+
+        [Fact]
+        public void WebAPI()
+        {
+            var host = new ServiceHost(configFilePath: "Config.json");
+            host.RegisterWebAPIService<Startup>();
+            host.RegisterLog();
+            host.Run();
         }
 
         #region Extension
