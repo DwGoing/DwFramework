@@ -66,29 +66,18 @@ host.Run();
 1. Swagger
 
 ```c#
-public class Startup
-{
-    public void ConfigureServices(IServiceCollection services)
-    {
-        services.AddControllers();
-        services.AddSwagger("Doc", "Test", "v1");
-    }
+// ConfigureServices
+services.AddSwagger("Doc", "Test", "v1");
 
-    public void Configure(IApplicationBuilder app)
-    {
-        app.UseRouting();
-        app.UseSwagger("Doc", "My API V1");
-        app.UseEndpoints(endpoints =>
-        {
-            endpoints.MapControllers();
-        });
-    }
-}
+// Configure
+app.UseSwagger("Doc", "My API V1");
+
 ```
 
 2. RequestFilter
 
 ```c#
+// Configure
 app.UseRequestFilter(new Dictionary<string, Action<HttpContext>>
 {
     {"/*",context =>{
@@ -119,7 +108,7 @@ app.UseRequestFilter(new Dictionary<string, Action<HttpContext>>
 ```
 
 ```c#
-// Startup
+// Configure
 app.UseConsul(ServiceHost.Environment.Configuration, lifetime);
 ```
 
