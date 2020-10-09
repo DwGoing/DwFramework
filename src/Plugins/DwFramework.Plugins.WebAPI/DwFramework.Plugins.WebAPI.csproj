@@ -3,7 +3,7 @@
     <PropertyGroup>
         <TargetFramework>netcoreapp3.1</TargetFramework>
         <ReleaseVersion>2.0.1</ReleaseVersion>
-        <SubVersion>6</SubVersion>
+        <SubVersion>7</SubVersion>
         <Version>$(ReleaseVersion).$(SubVersion)</Version>
         <Authors>DwGoing</Authors>
         <Description>DwFramework WebAPI插件库</Description>
@@ -18,9 +18,9 @@
     </ItemGroup>
     <ItemGroup>
         <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.7.1" />
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
         <PackageReference Include="Consul" Version="1.6.1.1" />
         <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.7.1" />
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
     </ItemGroup>
     <ItemGroup>
         <None Include="README.md">
