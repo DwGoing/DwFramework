@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+
 using DwFramework.WebAPI.Jwt;
 
 namespace _AppTest
@@ -14,6 +16,7 @@ namespace _AppTest
         }
 
         [HttpGet("a")]
+        [Authorize]
         public IActionResult A()
         {
             return Ok(JwtManager.GenerateToken("dwgoing", "0123456789abcdef", customFields: new Dictionary<string, object>() {

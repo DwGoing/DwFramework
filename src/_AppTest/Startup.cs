@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Net;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -13,6 +14,7 @@ using DwFramework.Core.Extensions;
 using DwFramework.Core.Plugins;
 using DwFramework.WebAPI.Swagger;
 using DwFramework.WebAPI.RequestFilter;
+using DwFramework.WebAPI.Jwt;
 
 namespace _AppTest
 {
@@ -29,6 +31,16 @@ namespace _AppTest
         {
             if (ServiceHost.Environment.EnvironmentType == EnvironmentType.Develop)
                 services.AddSwagger("IndexServiceDoc", "索引服务", "v1");
+            // JWT插件
+            services.AddJwtAuthentication(new DefaultJwtTokenValidator("fc3d06d9b75f92b648ab4e372dfd22f2"), context =>
+            {
+                Console.WriteLine("Success");
+                return Task.CompletedTask;
+            }, context =>
+            {
+                Console.WriteLine("Fail");
+                return Task.CompletedTask;
+            });
             services.AddControllers();
         }
 
@@ -48,7 +60,9 @@ namespace _AppTest
             });
             if (ServiceHost.Environment.EnvironmentType == EnvironmentType.Develop)
                 app.UseSwagger("IndexServiceDoc", "索引服务");
+            app.UseAuthentication();
             app.UseRouting();
+            app.UseAuthorization();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
