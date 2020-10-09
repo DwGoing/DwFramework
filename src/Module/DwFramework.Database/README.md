@@ -13,19 +13,18 @@ PM> Install-Package DwFramework.Database
 当使用该库时，需提前读取配置文件，Json配置如下：
 
 ```json
+// Database
 {
-  "Database": {
-    "ConnectionString": "", // 连接字符串
-    "DbType": "", // 数据库类型
-    // 主从模式（可选）
-    "SlaveConnections": [
-      {
-        "ConnectionString": "", // 连接字符串
-        "HitRate": "" // 命中率
-      }
-    ],
-    "UseMemoryCache": "" // 使用缓存
-  }
+  "ConnectionString": "", // 连接字符串
+  "DbType": "", // 数据库类型
+  // 主从模式（可选）
+  "SlaveConnections": [
+    {
+      "ConnectionString": "", // 连接字符串
+      "HitRate": "" // 命中率
+    }
+  ],
+  "UseMemoryCache": "" // 使用缓存
 }
 ```
 
