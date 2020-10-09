@@ -1,5 +1,6 @@
 ﻿using System;
 using DwFramework.Core;
+using DwFramework.Core.Plugins;
 using DwFramework.WebAPI;
 
 namespace _AppTest
@@ -11,6 +12,7 @@ namespace _AppTest
             try
             {
                 var host = new ServiceHost(configFilePath: "Config.json");
+                host.RegisterLog();
                 host.RegisterWebAPIService<Startup>();
                 host.Run();
             }

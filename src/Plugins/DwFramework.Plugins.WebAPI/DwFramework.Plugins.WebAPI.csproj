@@ -10,8 +10,10 @@
         <PackageProjectUrl>https://github.com/Dwgoing/DwFramework</PackageProjectUrl>
     </PropertyGroup>
     <ItemGroup>
-        <Folder Include="Extensions\" />
-        <Folder Include="Models\" />
+        <Folder Include="Swagger\" />
+        <Folder Include="Jwt\" />
+        <Folder Include="Consul\" />
+        <Folder Include="RequestFilter\" />
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\..\Module\DwFramework.WebAPI\DwFramework.WebAPI.csproj" />
