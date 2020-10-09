@@ -34,7 +34,7 @@ namespace DwFramework.Rpc.Cluster
         /// <param name="healthCheckPerMs"></param>
         /// <param name="bootPeer"></param>
         /// <returns></returns>
-        public static ServiceHost RegisterClusterImpl(this ServiceHost host, string linkUrl, int healthCheckPerMs = 10000, string bootPeer = null)
+        public static ServiceHost RegisterClusterImpl(this ServiceHost host, string linkUrl, int healthCheckPerMs, string bootPeer = null)
         {
             var clusterImpl = new ClusterImpl(linkUrl, healthCheckPerMs, bootPeer);
             host.Register(context => clusterImpl).AsSelf().SingleInstance();
@@ -48,9 +48,6 @@ namespace DwFramework.Rpc.Cluster
         /// </summary>
         /// <param name="provider"></param>
         /// <returns></returns>
-        public static ClusterImpl GetClusterImpl(this IServiceProvider provider)
-        {
-            return provider.GetService<ClusterImpl>();
-        }
+        public static ClusterImpl GetClusterImpl(this IServiceProvider provider) => provider.GetService<ClusterImpl>();
     }
 }

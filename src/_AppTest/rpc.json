@@ -1,9 +1,0 @@
-﻿{
-  "Listen": {
-    "http": ":5020"
-  },
-  "Cluster": {
-    "LinkUrl": "",
-    "BootPeer": ""
-  }
-}

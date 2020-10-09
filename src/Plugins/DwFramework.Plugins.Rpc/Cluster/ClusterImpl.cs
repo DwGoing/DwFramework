@@ -39,7 +39,7 @@ namespace DwFramework.Rpc.Cluster
         /// </summary>
         /// <param name="environment"></param>
         /// <param name="configKey"></param>
-        public ClusterImpl(DwFramework.Core.Environment environment, string configKey = null)
+        public ClusterImpl(Core.Environment environment, string configKey = null)
         {
             var configuration = environment.GetConfiguration(configKey ?? "Cluster");
             _config = configuration.GetConfig<Config>(configKey);
