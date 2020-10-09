@@ -11,9 +11,9 @@ namespace _AppTest
         {
             try
             {
-                var host = new ServiceHost(configFilePath: "Config.json");
+                var host = new ServiceHost();
                 host.RegisterLog();
-                host.RegisterWebAPIService<Startup>();
+                host.RegisterWebAPIService<Startup>("webapi.json");
                 host.Run();
             }
             catch (Exception ex)
