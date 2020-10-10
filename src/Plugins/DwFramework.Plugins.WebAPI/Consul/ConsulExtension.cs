@@ -31,10 +31,11 @@ namespace DwFramework.WebAPI.Consul
         /// 注册服务
         /// </summary>
         /// <param name="app"></param>
-        /// <param name="configuration"></param>
         /// <param name="lifetime"></param>
+        /// <param name="configuration"></param>
+        /// <param name="configKey"></param>
         /// <returns></returns>
-        public static IApplicationBuilder UseConsul(this IApplicationBuilder app, IConfiguration configuration, IHostApplicationLifetime lifetime, string configKey = "Consul")
+        public static IApplicationBuilder UseConsul(this IApplicationBuilder app, IHostApplicationLifetime lifetime, IConfiguration configuration, string configKey = null)
         {
             var config = configuration.GetConfig<Config>(configKey);
             foreach (var item in config.Services)
