@@ -3,19 +3,12 @@
     <PropertyGroup>
         <TargetFramework>netcoreapp3.1</TargetFramework>
         <ReleaseVersion>2.0.1</ReleaseVersion>
-        <SubVersion>9</SubVersion>
+        <SubVersion>10</SubVersion>
         <Version>$(ReleaseVersion).$(SubVersion)</Version>
         <Authors>DwGoing</Authors>
         <Description>DwFramework WebAPI插件库</Description>
         <PackageProjectUrl>https://github.com/Dwgoing/DwFramework</PackageProjectUrl>
     </PropertyGroup>
-    <ItemGroup>
-        <Folder Include="Swagger\" />
-        <Folder Include="Jwt\" />
-        <Folder Include="Consul\" />
-        <Folder Include="RequestFilter\" />
-        <Folder Include="Version\" />
-    </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\..\Module\DwFramework.WebAPI\DwFramework.WebAPI.csproj" />
     </ItemGroup>
