@@ -12,11 +12,7 @@ using Microsoft.Extensions.Logging;
 using DwFramework.Core;
 using DwFramework.Core.Extensions;
 using DwFramework.Core.Plugins;
-using DwFramework.WebAPI.Extensions;
-using DwFramework.WebAPI.Swagger;
-using DwFramework.WebAPI.RequestFilter;
-using DwFramework.WebAPI.Jwt;
-using DwFramework.WebAPI.Consul;
+using DwFramework.WebAPI.Plugins;
 
 namespace _AppTest
 {

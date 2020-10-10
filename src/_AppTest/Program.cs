@@ -4,7 +4,7 @@ using DwFramework.Core;
 using DwFramework.Core.Plugins;
 using DwFramework.WebAPI;
 using DwFramework.Rpc;
-using DwFramework.Rpc.Cluster;
+using DwFramework.Rpc.Plugins;
 
 namespace _AppTest
 {

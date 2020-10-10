@@ -11,7 +11,7 @@ using DwFramework.Core;
 using DwFramework.Core.Extensions;
 using DwFramework.Core.Plugins;
 
-namespace DwFramework.Rpc.Cluster
+namespace DwFramework.Rpc.Plugins
 {
     public sealed class ClusterImpl : Cluster.ClusterBase
     {

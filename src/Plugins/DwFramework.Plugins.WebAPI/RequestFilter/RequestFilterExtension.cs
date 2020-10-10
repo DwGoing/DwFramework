@@ -5,7 +5,7 @@ using System.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Builder;
 
-namespace DwFramework.WebAPI.RequestFilter
+namespace DwFramework.WebAPI.Plugins
 {
     public static class RequestFilterExtension
     {

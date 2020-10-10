@@ -1,9 +1,8 @@
-﻿using System;
-using System.IdentityModel.Tokens.Jwt;
+﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
 
-namespace DwFramework.WebAPI.Jwt
+namespace DwFramework.WebAPI.Plugins
 {
     public abstract class JwtTokenValidator : ISecurityTokenValidator
     {

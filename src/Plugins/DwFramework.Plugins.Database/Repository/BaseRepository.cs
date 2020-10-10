@@ -7,7 +7,7 @@ using SqlSugar;
 using DwFramework.Core;
 using DwFramework.Core.Plugins;
 
-namespace DwFramework.Database.Repository
+namespace DwFramework.Database.Plugins
 {
     public abstract class BaseRepository<T> : IRepository<T> where T : class, new()
     {
