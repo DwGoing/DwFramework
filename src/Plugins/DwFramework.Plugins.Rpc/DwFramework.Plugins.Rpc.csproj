@@ -3,15 +3,12 @@
     <PropertyGroup>
         <TargetFramework>netcoreapp3.1</TargetFramework>
         <ReleaseVersion>2.0.1</ReleaseVersion>
-        <SubVersion>5</SubVersion>
+        <SubVersion>6</SubVersion>
         <Version>$(ReleaseVersion).$(SubVersion)</Version>
         <Authors>DwGoing</Authors>
         <Description>DwFramework RPC插件库</Description>
         <PackageProjectUrl>https://github.com/Dwgoing/DwFramework</PackageProjectUrl>
     </PropertyGroup>
-    <ItemGroup>
-        <Folder Include="Cluster\" />
-    </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\..\Module\DwFramework.Rpc\DwFramework.Rpc.csproj" />
     </ItemGroup>

@@ -10,10 +10,6 @@
         <PackageProjectUrl>https://github.com/Dwgoing/DwFramework</PackageProjectUrl>
     </PropertyGroup>
     <ItemGroup>
-        <Folder Include="Extensions\" />
-        <Folder Include="Models\" />
-    </ItemGroup>
-    <ItemGroup>
         <ProjectReference Include="..\DwFramework.Core\DwFramework.Core.csproj" />
     </ItemGroup>
     <ItemGroup>
