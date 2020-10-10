@@ -16,7 +16,7 @@ namespace DwFramework.Kafka
         {
             if (!string.IsNullOrEmpty(configFilePath))
             {
-                host.AddJsonConfig(configFilePath);
+                host.AddJsonConfig(configFilePath, "Kafka");
                 host.RegisterType<KafkaService>().SingleInstance();
             }
             else host.Register(c => new KafkaService(c.Resolve<Core.Environment>(), "Kafka")).SingleInstance();

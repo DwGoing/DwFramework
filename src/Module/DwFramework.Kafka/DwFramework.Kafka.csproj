@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
+        <IsPackable>false</IsPackable>
         <TargetFramework>netcoreapp3.1</TargetFramework>
         <ReleaseVersion>2.0.1</ReleaseVersion>
         <SubVersion>1</SubVersion>
