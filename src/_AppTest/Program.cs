@@ -14,6 +14,9 @@ namespace _AppTest
         {
             try
             {
+                var task = ParallelManager.Create(() => throw new Exception("1"), () => throw new Exception("2"));
+                task.Start(ex => Console.WriteLine(ex.Message));
+
                 var host = new ServiceHost();
                 host.RegisterLog();
                 host.RegisterWebAPIService<Startup>("WebAPI.json");
