@@ -14,6 +14,7 @@
         <Folder Include="Jwt\" />
         <Folder Include="Consul\" />
         <Folder Include="RequestFilter\" />
+        <Folder Include="Version\" />
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\..\Module\DwFramework.WebAPI\DwFramework.WebAPI.csproj" />

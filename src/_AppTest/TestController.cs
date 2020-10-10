@@ -7,23 +7,45 @@ using DwFramework.WebAPI.Jwt;
 
 namespace _AppTest
 {
+    [ApiVersionNeutral]
     [ApiController]
     [Route("test")]
     public class TestController : Controller
     {
-        public TestController()
-        {
-        }
-
         [HttpGet("a")]
-        [Authorize]
         public IActionResult A()
         {
-            return Ok(JwtManager.GenerateToken("dwgoing", "0123456789abcdef", customFields: new Dictionary<string, object>() {
-                { "A","a" },
-                {"B",1 },
-                {"C",new {Name="DDD"} }
-            }));
+            return Ok(HttpContext.GetRequestedApiVersion().ToString());
+        }
+    }
+}
+
+namespace _AppTest.v1
+{
+    [ApiVersion("1.0")]
+    [ApiController]
+    [Route("test")]
+    public class TestController : Controller
+    {
+        [HttpGet("b")]
+        public IActionResult B()
+        {
+            return Ok(HttpContext.GetRequestedApiVersion().ToString());
+        }
+    }
+}
+
+namespace _AppTest.v2
+{
+    [ApiVersion("2.0")]
+    [ApiController]
+    [Route("test")]
+    public class TestController : Controller
+    {
+        [HttpGet("c")]
+        public IActionResult C()
+        {
+            return Ok(HttpContext.GetRequestedApiVersion().ToString());
         }
     }
 }

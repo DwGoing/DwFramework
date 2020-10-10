@@ -12,6 +12,7 @@ using Microsoft.Extensions.Logging;
 using DwFramework.Core;
 using DwFramework.Core.Extensions;
 using DwFramework.Core.Plugins;
+using DwFramework.WebAPI.Extensions;
 using DwFramework.WebAPI.Swagger;
 using DwFramework.WebAPI.RequestFilter;
 using DwFramework.WebAPI.Jwt;
@@ -33,15 +34,16 @@ namespace _AppTest
             if (ServiceHost.Environment.EnvironmentType == EnvironmentType.Develop)
                 services.AddSwagger("IndexServiceDoc", "索引服务", "v1");
             // JWT插件
-            services.AddJwtAuthentication(new DefaultJwtTokenValidator("fc3d06d9b75f92b648ab4e372dfd22f2"), context =>
-            {
-                Console.WriteLine("Success");
-                return Task.CompletedTask;
-            }, context =>
-            {
-                Console.WriteLine("Fail");
-                return Task.CompletedTask;
-            });
+            //services.AddJwtAuthentication(new DefaultJwtTokenValidator("fc3d06d9b75f92b648ab4e372dfd22f2"), context =>
+            //{
+            //    Console.WriteLine("Success");
+            //    return Task.CompletedTask;
+            //}, context =>
+            //{
+            //    Console.WriteLine("Fail");
+            //    return Task.CompletedTask;
+            //});
+            services.AddApiVersion(new Microsoft.AspNetCore.Mvc.ApiVersion(1, 0));
             services.AddControllers();
         }
 
@@ -62,9 +64,9 @@ namespace _AppTest
             if (ServiceHost.Environment.EnvironmentType == EnvironmentType.Develop)
                 app.UseSwagger("IndexServiceDoc", "索引服务");
             //app.UseConsul(lifetime, ServiceHost.Environment.GetConfiguration("WebAPI"), "Consul");
-            app.UseAuthentication();
+            //app.UseAuthentication();
             app.UseRouting();
-            app.UseAuthorization();
+            //app.UseAuthorization();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
