@@ -1,38 +1,14 @@
-# DwFramework.Database
+# DwFramework.Plugins.Database
 
 ```shell
-PM> Install-Package DwFramework.Database
+PM> Install-Package DwFramework.Plugins.Database
 或
-> dotnet add package DwFramework.Database
+> dotnet add package DwFramework.Plugins.Database
 ```
 
-## DwFramework ORM库
+## DwFramework ORM插件库
 
-### 0x1 配置
-
-当使用该库时，需提前读取配置文件，Json配置如下：
-
-```json
-{
-  "Database": {
-    "ConnectionString": "连接字符串",
-    "DbType": "数据库类型" // MySql
-  }
-}
-
-```
-
-### 0x2 注册服务及初始化
-
-可以参考如下代码：
-
-```c#
-// 注册服务
-host.RegisterDatabaseService();
-host.RegisterRepositories(); // 或者直接注入仓储服务
-```
-
-### 0x3 使用仓储模版
+### 0x1 使用仓储
 
 该库支持提供仓储模版以简化开发，可通过如下方式使用：
 
@@ -61,8 +37,6 @@ host.RegisterRepositories();
 // 获取仓储
 var repository = provider.GetService<UserRepository>();
 ```
-
-### 0x4 通过仓储操作数据库
 
 仓储接口已定义了以下常规的增删改查操作：
 
@@ -93,5 +67,3 @@ public class UserRepository : BaseRepository<User>
     }
 }
 ```
-
-更多的操作实现可以参考SqlSugar文档示例。
