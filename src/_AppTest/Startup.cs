@@ -15,6 +15,7 @@ using DwFramework.Core.Plugins;
 using DwFramework.WebAPI.Swagger;
 using DwFramework.WebAPI.RequestFilter;
 using DwFramework.WebAPI.Jwt;
+using DwFramework.WebAPI.Consul;
 
 namespace _AppTest
 {
@@ -60,6 +61,7 @@ namespace _AppTest
             });
             if (ServiceHost.Environment.EnvironmentType == EnvironmentType.Develop)
                 app.UseSwagger("IndexServiceDoc", "索引服务");
+            //app.UseConsul(lifetime, ServiceHost.Environment.GetConfiguration("WebAPI"), "Consul");
             app.UseAuthentication();
             app.UseRouting();
             app.UseAuthorization();
