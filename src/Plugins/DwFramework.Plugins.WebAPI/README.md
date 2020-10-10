@@ -75,3 +75,28 @@ app.UseRouting();
 app.UseAuthorization(); // 一定要在UseRouting和UseEndpoints之间
 app.UseEndpoints(endpoints =>{endpoints.MapControllers();});
 ```
+
+### 0x5 Version
+
+```c#
+// ConfigureServices
+services.AddApiVersion(new Microsoft.AspNetCore.Mvc.ApiVersion(1, 0));
+```
+
+```c#
+[ApiVersionNeutral] // 不受版本控制
+[ApiVersion("1.0")] // 版本1.0可用
+[ApiController]
+[Route("test")]
+public class TestController : Controller
+{
+  [HttpGet("a")]
+  public IActionResult A()
+  {
+    return Ok(HttpContext.GetRequestedApiVersion().ToString());
+  }
+}
+
+// Request
+http://***/test/a/api-version=1.0
+```
