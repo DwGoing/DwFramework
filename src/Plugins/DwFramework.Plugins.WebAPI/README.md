@@ -1,95 +1,27 @@
-# DwFramework.WebAPI
+# DwFramework.Plugins.WebAPI
 
 ```shell
-PM> Install-Package DwFramework.WebAPI
+PM> Install-Package DwFramework.Plugins.WebAPI
 或
-> dotnet add package DwFramework.WebAPI
+> dotnet add package DwFramework.Plugins.WebAPI
 ```
 
-## DwFramework WebAPI库
+## DwFramework WebAPI插件库
 
-### 0x1 配置
-
-当使用该库时，需提前读取配置文件，Json配置如下：
-
-```json
-{
-  "WebAPI": {
-    "ContentRoot": "",
-    "Listen": {
-      "http": "0.0.0.0:10080"
-    }
-  }
-}
-```
-
-### 0x2 注册服务及初始化
-
-WebAPI服务的初始化和AspDotCore原生WebAPI的配置方法一致，可以直接用Startup类来封装。可以参考如下代码：
+### 0x1 Swagger
 
 ```c#
-// Startup.cs
-namespace Test
-{
-    public class Startup
-    {
-        public override void ConfigureServices(IServiceCollection services)
-        {
-            services.AddControllers();
-            services.AddSwagger("Doc", "Test", "v1");
-        }
+// ConfigureServices
+services.AddSwagger("Doc", "Test", "v1");
 
-        public override void Configure(IApplicationBuilder app)
-        {
-            app.UseRouting();
-            app.UseSwagger("Doc", "My API V1");
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-            });
-        }
-    }
-}
+// Configure
+app.UseSwagger("Doc", "My API V1");
 ```
 
-```c#
-// 注册服务
-ServiceHost host = new ServiceHost(configFilePath: $"{AppDomain.CurrentDomain.BaseDirectory}Config.json");
-host.RegisterLog();
-host.RegisterWebAPIService<Startup>();
-host.Run();
-```
-
-### 0x3 插件
-
-引用DwFramework.Web.Plugins来使用Web插件
-
-1. Swagger
+### 0x2 RequestFilter
 
 ```c#
-public class Startup
-{
-    public void ConfigureServices(IServiceCollection services)
-    {
-        services.AddControllers();
-        services.AddSwagger("Doc", "Test", "v1");
-    }
-
-    public void Configure(IApplicationBuilder app)
-    {
-        app.UseRouting();
-        app.UseSwagger("Doc", "My API V1");
-        app.UseEndpoints(endpoints =>
-        {
-            endpoints.MapControllers();
-        });
-    }
-}
-```
-
-2. RequestFilter
-
-```c#
+// Configure
 app.UseRequestFilter(new Dictionary<string, Action<HttpContext>>
 {
     {"/*",context =>{
@@ -101,7 +33,7 @@ app.UseRequestFilter(new Dictionary<string, Action<HttpContext>>
 });
 ```
 
-3. Consul
+### 0x3 Consul
 
 ```json
 {
@@ -120,6 +52,26 @@ app.UseRequestFilter(new Dictionary<string, Action<HttpContext>>
 ```
 
 ```c#
-// Startup
-app.UseConsul(ServiceHost.Environment.Configuration, lifetime);
+// Configure
+app.UseConsul(lifetime, ServiceHost.Environment.GetConfiguration(), "Consul");
+```
+
+### 0x4 Jwt
+
+```c#
+// ConfigureServices
+services.AddJwtAuthentication(new DefaultJwtTokenValidator("fc3d06d9b75f92b648ab4e372dfd22f2"), context =>
+{
+	Console.WriteLine("Success");
+	return Task.CompletedTask;
+}, context =>
+{
+	Console.WriteLine("Fail");
+	return Task.CompletedTask;
+});
+// Configure
+app.UseAuthentication();
+app.UseRouting();
+app.UseAuthorization(); // 一定要在UseRouting和UseEndpoints之间
+app.UseEndpoints(endpoints =>{endpoints.MapControllers();});
 ```
