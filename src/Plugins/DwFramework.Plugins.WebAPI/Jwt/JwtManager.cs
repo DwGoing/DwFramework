@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 using DwFramework.Core.Plugins;
 
-namespace DwFramework.WebAPI.Jwt
+namespace DwFramework.WebAPI.Plugins
 {
     public static class JwtManager
     {

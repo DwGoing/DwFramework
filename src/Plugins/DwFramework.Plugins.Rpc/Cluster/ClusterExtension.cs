@@ -3,7 +3,7 @@ using Autofac;
 
 using DwFramework.Core;
 
-namespace DwFramework.Rpc.Cluster
+namespace DwFramework.Rpc.Plugins
 {
     public static class ClusterExtension
     {
