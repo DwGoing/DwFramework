@@ -1,0 +1,35 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <IsPackable>false</IsPackable>
+    <ReleaseVersion>2.0.1</ReleaseVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.7.1" />
+    <PackageReference Include="xunit" Version="2.4.1" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="coverlet.collector" Version="1.3.0">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Module\DwFramework.Core\DwFramework.Core.csproj" />
+    <ProjectReference Include="..\Module\DwFramework.Database\DwFramework.Database.csproj" />
+    <ProjectReference Include="..\Module\DwFramework.DataFlow\DwFramework.DataFlow.csproj" />
+    <ProjectReference Include="..\Module\DwFramework.Kafka\DwFramework.Kafka.csproj" />
+    <ProjectReference Include="..\Module\DwFramework.MachineLearning\DwFramework.MachineLearning.csproj" />
+    <ProjectReference Include="..\Plugins\DwFramework.Plugins.Database\DwFramework.Plugins.Database.csproj" />
+    <ProjectReference Include="..\Plugins\DwFramework.Plugins.Rpc\DwFramework.Plugins.Rpc.csproj" />
+    <ProjectReference Include="..\Plugins\DwFramework.Plugins.WebAPI\DwFramework.Plugins.WebAPI.csproj" />
+    <ProjectReference Include="..\Module\DwFramework.RabbitMQ\DwFramework.RabbitMQ.csproj" />
+    <ProjectReference Include="..\Module\DwFramework.Rpc\DwFramework.Rpc.csproj" />
+    <ProjectReference Include="..\Module\DwFramework.Socket\DwFramework.Socket.csproj" />
+    <ProjectReference Include="..\Module\DwFramework.TaskSchedule\DwFramework.TaskSchedule.csproj" />
+    <ProjectReference Include="..\Module\DwFramework.WebSocket\DwFramework.WebSocket.csproj" />
+    <ProjectReference Include="..\Module\DwFramework.WebAPI\DwFramework.WebAPI.csproj" />
+  </ItemGroup>
+</Project>

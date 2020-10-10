@@ -1,0 +1,16 @@
+﻿{
+  "Listen": {
+    "http": "0.0.0.0:6001"
+  },
+  "Consul": {
+    "Host": "http://127.0.0.1:8500", // Consul服务端IP及端口
+    "ServiceHost": "127.0.0.1", // 服务IP
+    "HealthCheckPort": 10080, // 健康检查端口
+    "Services": [
+      {
+        "Name": "WebAPIService", // 服务名称
+        "Port": 10080 // 服务端口
+      }
+    ]
+  }
+}

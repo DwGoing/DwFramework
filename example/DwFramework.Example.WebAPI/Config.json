@@ -1,0 +1,24 @@
+﻿{
+  "Database": {
+    "ConnectionString": "server=192.168.150.103;port=3306;uid=root;pwd=ewell@xc;database=empi_index;CharSet=utf8;Allow User Variables=True;Allow Zero Datetime=True;SslMode = none;",
+    "DbType": "MySql",
+    "UseMemoryCache": true
+  },
+  "Rpc": {
+    "Listen": {
+      "http": ":5020"
+    }
+  },
+  "WebAPI": {
+    "Listen": {
+      "http": "0.0.0.0:6001"
+    }
+  },
+  "RabbitMQ": {
+    "Host": "192.168.10.224",
+    "VirtualHost": "/",
+    "Port": 5672,
+    "UserName": "admin",
+    "Password": "admin"
+  }
+}
