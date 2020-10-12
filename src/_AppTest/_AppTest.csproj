@@ -12,6 +12,7 @@
         <ProjectReference Include="..\Plugins\DwFramework.Plugins.WebAPI\DwFramework.Plugins.WebAPI.csproj" />
         <ProjectReference Include="..\Module\DwFramework.Rpc\DwFramework.Rpc.csproj" />
         <ProjectReference Include="..\Plugins\DwFramework.Plugins.Rpc\DwFramework.Plugins.Rpc.csproj" />
+        <ProjectReference Include="..\Module\DwFramework.WebSocket\DwFramework.WebSocket.csproj" />
     </ItemGroup>
     <ItemGroup>
         <None Update="database.json">
@@ -37,6 +38,9 @@
         </None>
         <None Update="Config.json">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="WebSocket.json">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
     </ItemGroup>
 </Project>
