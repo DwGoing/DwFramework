@@ -19,7 +19,7 @@ namespace DwFramework.Core.Plugins
         /// <returns></returns>
         public static byte[] Encrypt(string str, string key, string iv, CipherMode mode = CipherMode.ECB, PaddingMode padding = PaddingMode.PKCS7, Encoding encoding = null)
         {
-            if (encoding == null)
+            if (encoding is null)
                 encoding = Encoding.UTF8;
             byte[] bytes = encoding.GetBytes(str);
             using (var aes = Aes.Create())
@@ -73,7 +73,7 @@ namespace DwFramework.Core.Plugins
         /// <returns></returns>
         public static string Decrypt(byte[] bytes, string key, string iv, CipherMode mode = CipherMode.ECB, PaddingMode padding = PaddingMode.PKCS7, Encoding encoding = null)
         {
-            if (encoding == null)
+            if (encoding is null)
                 encoding = Encoding.UTF8;
             using (var aes = System.Security.Cryptography.Aes.Create())
             {

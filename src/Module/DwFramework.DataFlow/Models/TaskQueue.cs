@@ -7,8 +7,6 @@ namespace DwFramework.DataFlow
 {
     public class TaskQueue<TInput, TOutput, TResult> : ITaskQueue
     {
-        public string ID => Guid.NewGuid().ToString();
-
         private readonly Func<TInput, TOutput> _taskHandler;
         private readonly Func<TOutput, TResult> _resultHandler;
         private readonly ConcurrentQueue<(string id, TInput input)> _inputs;
@@ -16,6 +14,7 @@ namespace DwFramework.DataFlow
         private (string id, TInput input) _currentInput = (null, default);
         private TResult _result;
 
+        public string ID { get; } = Guid.NewGuid().ToString();
         public event Action<TResult, string, TInput> OnExcuting;
         public event Action<string, TInput, TOutput, TResult> OnExcuted;
         public event Action<string, TInput, Exception> OnExcuteError;
@@ -39,7 +38,7 @@ namespace DwFramework.DataFlow
         public string AddInput(object input)
         {
             if (!(input is TInput)) throw new Exception($"输入类型不是{nameof(TInput)}");
-            string id = Guid.NewGuid().ToString();
+            string id = IdentificationGenerater.UUID();
             _inputs.Enqueue((id, (TInput)input));
             if (!_isExcuting)
             {

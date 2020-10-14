@@ -100,7 +100,7 @@ namespace _UnitTest
         [Fact]
         public void RSAEncryptAndDecrypt()
         {
-            var keys = RSA.GenerateKeyPair(RSAExtensions.RSAKeyType.Pkcs8, isPem: true);
+            var keys = KeyGenerater.RsaKeyPair(RSAExtensions.RSAKeyType.Pkcs8, isPem: true);
             var str = "DwFramework";
             var rsa = RSA.EncryptWithPublicKey(str, RSAExtensions.RSAKeyType.Pkcs8, keys.PublicKey, true);
             Assert.Equal(str, RSA.Decrypt(rsa, RSAExtensions.RSAKeyType.Pkcs8, keys.PrivateKey, true));

@@ -30,7 +30,7 @@ namespace DwFramework.Rpc
         {
             var configuration = environment.GetConfiguration(configKey ?? "Rpc");
             _config = configuration.GetConfig<Config>(configKey);
-            if (_config == null) throw new Exception("未读取到Rpc配置");
+            if (_config is null) throw new Exception("未读取到Rpc配置");
             _server = new Server();
         }
 
@@ -53,7 +53,7 @@ namespace DwFramework.Rpc
         {
             return TaskManager.CreateTask(() =>
             {
-                if (_config.Listen == null || _config.Listen.Count <= 0) throw new Exception("缺少Listen配置");
+                if (_config.Listen is null || _config.Listen.Count <= 0) throw new Exception("缺少Listen配置");
                 string listen = "";
                 // 监听地址及端口
                 if (_config.Listen.ContainsKey("http"))
@@ -96,9 +96,9 @@ namespace DwFramework.Rpc
         {
             var type = serviceImpl.GetType();
             var baseType = type.BaseType;
-            if (baseType.ReflectedType == null) throw new Exception("gRPC服务异常");
+            if (baseType.ReflectedType is null) throw new Exception("gRPC服务异常");
             var method = baseType.ReflectedType.GetMethod("BindService", new Type[] { baseType });
-            if (method == null) throw new Exception("gRPC服务异常");
+            if (method is null) throw new Exception("gRPC服务异常");
             return (ServerServiceDefinition)method.Invoke(null, new[] { serviceImpl });
         }
 
@@ -114,9 +114,9 @@ namespace DwFramework.Rpc
                 foreach (var item in types)
                 {
                     var attr = item.GetCustomAttribute<RpcAttribute>();
-                    if (attr == null) continue;
+                    if (attr is null) continue;
                     var service = ServiceHost.Provider.GetService(item);
-                    if (service == null) continue;
+                    if (service is null) continue;
                     _server.Services.Add(GetServerServiceDefinition(service));
                 }
             }

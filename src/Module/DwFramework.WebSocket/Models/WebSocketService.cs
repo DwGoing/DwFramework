@@ -90,7 +90,7 @@ namespace DwFramework.WebSocket
         {
             var configuration = environment.GetConfiguration(configKey ?? "WebSocket");
             _config = configuration.GetConfig<Config>(configKey);
-            if (_config == null) throw new Exception("未读取到WebSocket配置");
+            if (_config is null) throw new Exception("未读取到WebSocket配置");
             _connections = new Dictionary<string, WebSocketConnection>();
         }
 
@@ -108,7 +108,7 @@ namespace DwFramework.WebSocket
                     .UseContentRoot($"{AppDomain.CurrentDomain.BaseDirectory}{_config.ContentRoot}")
                     .UseKestrel(options =>
                     {
-                        if (_config.Listen == null || _config.Listen.Count <= 0) throw new Exception("缺少Listen配置");
+                        if (_config.Listen is null || _config.Listen.Count <= 0) throw new Exception("缺少Listen配置");
                         string listen = "";
                         // 监听地址及端口
                         if (_config.Listen.ContainsKey("ws"))

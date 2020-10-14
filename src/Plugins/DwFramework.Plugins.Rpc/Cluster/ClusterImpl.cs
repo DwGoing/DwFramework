@@ -43,7 +43,7 @@ namespace DwFramework.Rpc.Plugins
         {
             var configuration = environment.GetConfiguration(configKey ?? "Cluster");
             _config = configuration.GetConfig<Config>(configKey);
-            if (_config == null) throw new Exception("未读取到Cluster配置");
+            if (_config is null) throw new Exception("未读取到Cluster配置");
             ID = IdentificationGenerater.RandomString(32);
             _header = new Metadata
             {
@@ -84,7 +84,7 @@ namespace DwFramework.Rpc.Plugins
         /// </summary>
         public void Init()
         {
-            if (_config.BootPeer == null) return;
+            if (_config.BootPeer is null) return;
             UseRPC(_config.BootPeer, client =>
             {
                 var response = client.Join(new Empty(), _header);
@@ -102,7 +102,7 @@ namespace DwFramework.Rpc.Plugins
         {
             var id = context.RequestHeaders.Get("id");
             var url = context.RequestHeaders.Get("linkurl");
-            if (id == null || string.IsNullOrEmpty(id.Value) || url == null || string.IsNullOrEmpty(url.Value)) throw new Exception($"无法获取节点信息");
+            if (id is null || string.IsNullOrEmpty(id.Value) || url is null || string.IsNullOrEmpty(url.Value)) throw new Exception($"无法获取节点信息");
             _peers[id.Value] = url.Value;
             SyncRouteTable();
             if (!PeerHealthCheck(id.Value)) throw new Exception("LinkUrl不可用");
@@ -147,7 +147,7 @@ namespace DwFramework.Rpc.Plugins
         public override Task<Empty> SyncData(BytesValue request, ServerCallContext context)
         {
             var id = context.RequestHeaders.Get("id");
-            if (id == null || string.IsNullOrEmpty(id.Value)) throw new Exception($"无法获取节点信息");
+            if (id is null || string.IsNullOrEmpty(id.Value)) throw new Exception($"无法获取节点信息");
             OnReceiveData?.Invoke(id.Value, request.ToByteArray());
             return Task.FromResult(new Empty());
         }

@@ -48,7 +48,7 @@ namespace DwFramework.Database
         {
             var configuration = environment.GetConfiguration(configKey ?? "Database");
             _config = configuration.GetConfig<Config>(configKey);
-            if (_config == null) throw new Exception("未读取到Database配置");
+            if (_config is null) throw new Exception("未读取到Database配置");
         }
 
         /// <summary>
@@ -81,7 +81,7 @@ namespace DwFramework.Database
                 }
             }
             var db = new SqlSugarClient(config);
-            if (db == null) throw new Exception("数据库连接创建异常");
+            if (db is null) throw new Exception("数据库连接创建异常");
             return db;
         }
 

@@ -17,7 +17,7 @@ namespace DwFramework.Core.Extensions
         public static T ConvertTo<T>(this object obj)
         {
             var value = Convert.ChangeType(obj, typeof(T));
-            if (value == null) return default;
+            if (value is null) return default;
             return (T)value;
         }
 

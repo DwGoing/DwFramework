@@ -52,7 +52,7 @@ namespace DwFramework.MachineLearning
         public IDataView DataLoad<T>(IEnumerable<T> data, Func<IDataView, DataOperationsCatalog, IDataView> handle = null) where T : class
         {
             var sourceData = DataOperations.LoadFromEnumerable(data);
-            return handle == null ? sourceData : handle(sourceData, DataOperations);
+            return handle is null ? sourceData : handle(sourceData, DataOperations);
         }
 
         /// <summary>
@@ -70,7 +70,7 @@ namespace DwFramework.MachineLearning
         public IDataView DataLoad<T>(string path, Func<IDataView, DataOperationsCatalog, IDataView> handle = null, char separatorChar = '\t', bool hasHeader = false, bool allowQuoting = false, bool trimWhitespace = false, bool allowSparse = false) where T : class
         {
             var sourceData = DataOperations.LoadFromTextFile<T>(path, separatorChar, hasHeader, allowQuoting, trimWhitespace, allowSparse);
-            return handle == null ? sourceData : handle(sourceData, DataOperations);
+            return handle is null ? sourceData : handle(sourceData, DataOperations);
         }
 
         /// <summary>
@@ -89,7 +89,7 @@ namespace DwFramework.MachineLearning
         {
             var loader = DataOperations.CreateTextLoader<T>(separatorChar, hasHeader, null, allowQuoting, trimWhitespace, allowSparse);
             var sourceData = loader.Load(paths);
-            return handle == null ? sourceData : handle(sourceData, DataOperations);
+            return handle is null ? sourceData : handle(sourceData, DataOperations);
         }
 
         /// <summary>

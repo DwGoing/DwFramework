@@ -128,7 +128,7 @@ namespace DwFramework.Core.Extensions
         /// <returns></returns>
         public static string ToBase32String(this byte[] bytes)
         {
-            if (bytes == null || bytes.Length == 0)
+            if (bytes is null || bytes.Length == 0)
             {
                 throw new ArgumentNullException("input");
             }

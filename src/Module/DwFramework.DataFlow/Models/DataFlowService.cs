@@ -28,7 +28,7 @@ namespace DwFramework.DataFlow
         /// <returns></returns>
         public string CreateTaskQueue<TInput, TOutput, TResult>(Func<TInput, TOutput> taskHandler, Func<TOutput, TResult> resultHandler)
         {
-            var taskQueue = new TaskQueue<TInput, TOutput, TResult>(taskHandler, resultHandler);
+            ITaskQueue taskQueue = new TaskQueue<TInput, TOutput, TResult>(taskHandler, resultHandler);
             _taskQueues[taskQueue.ID] = taskQueue;
             return taskQueue.ID;
         }
