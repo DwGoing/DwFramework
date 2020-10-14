@@ -15,18 +15,8 @@ namespace _AppTest
 {
     class Program
     {
-        [Serializable]
-        class A
-        {
-            public int id { get; set; }
-            public string name { get; set; }
-        }
-
         static void Main(string[] args)
         {
-            var a = new A().ToBytes();
-            var b = a.ToObject<A>();
-
             try
             {
                 var host = new ServiceHost();

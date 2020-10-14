@@ -7,7 +7,7 @@ namespace DwFramework.DataFlow
 {
     public sealed class DataFlowService
     {
-        private readonly Dictionary<string, ITaskQueue> _taskQueues = new Dictionary<string, ITaskQueue>();
+        private readonly Dictionary<string, TaskQueue> _taskQueues = new Dictionary<string, TaskQueue>();
 
         /// <summary>
         /// 构造函数
@@ -25,34 +25,39 @@ namespace DwFramework.DataFlow
         /// <typeparam name="TResult"></typeparam>
         /// <param name="taskHandler"></param>
         /// <param name="resultHandler"></param>
+        /// <param name="queueId"></param>
         /// <returns></returns>
-        public string CreateTaskQueue<TInput, TOutput, TResult>(Func<TInput, TOutput> taskHandler, Func<TOutput, TResult> resultHandler)
+        public TaskQueue<TInput, TOutput, TResult> CreateTaskQueue<TInput, TOutput, TResult>(Func<TInput, TOutput> taskHandler, Func<TOutput, TResult> resultHandler, out string queueId)
         {
-            ITaskQueue taskQueue = new TaskQueue<TInput, TOutput, TResult>(taskHandler, resultHandler);
-            _taskQueues[taskQueue.ID] = taskQueue;
-            return taskQueue.ID;
+            queueId = Guid.NewGuid().ToString();
+            var queue = new TaskQueue<TInput, TOutput, TResult>(taskHandler, resultHandler);
+            _taskQueues[queueId] = queue;
+            return queue;
         }
 
         /// <summary>
         /// 获取任务队列
         /// </summary>
-        /// <param name="key"></param>
+        /// <typeparam name="TInput"></typeparam>
+        /// <typeparam name="TOutput"></typeparam>
+        /// <typeparam name="TResult"></typeparam>
+        /// <param name="queueId"></param>
         /// <returns></returns>
-        public ITaskQueue GetTaskQueue(string key)
+        public TaskQueue<TInput, TOutput, TResult> GetTaskQueue<TInput, TOutput, TResult>(string queueId)
         {
-            if (!_taskQueues.ContainsKey(key)) return null;
-            return _taskQueues[key];
+            if (!_taskQueues.ContainsKey(queueId)) return null;
+            return (TaskQueue<TInput, TOutput, TResult>)_taskQueues[queueId];
         }
 
         /// <summary>
         /// 移除任务队列
         /// </summary>
-        /// <param name="key"></param>
-        public void RemoveTaskQueue(string key)
+        /// <param name="queueId"></param>
+        public void RemoveTaskQueue(string queueId)
         {
-            if (!_taskQueues.ContainsKey(key)) return;
-            _taskQueues[key].ClearAllInputs();
-            _taskQueues.Remove(key);
+            if (!_taskQueues.ContainsKey(queueId)) return;
+            _taskQueues[queueId].ClearAllInputs();
+            _taskQueues.Remove(queueId);
         }
 
         /// <summary>
