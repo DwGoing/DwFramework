@@ -15,19 +15,6 @@ namespace _AppTest
         {
             try
             {
-                int i = 0;
-                while (true)
-                {
-                    Console.WriteLine(IdentificationGenerater.UUID());
-                    i++;
-                    if (i >= 30) break;
-                    System.Threading.Thread.Sleep(100);
-                }
-                Console.ReadKey();
-
-                //var task = ParallelManager.Create(() => throw new Exception("1"), () => throw new Exception("2"));
-                //task.Start(ex => Console.WriteLine(ex.Message));
-
                 var host = new ServiceHost();
                 host.RegisterLog();
                 #region WebAPI
