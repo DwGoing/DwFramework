@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
@@ -42,13 +43,22 @@ namespace DwFramework.Core.Extensions
         /// 序列化
         /// </summary>
         /// <param name="obj"></param>
+        /// <param name="encoding"></param>
         /// <returns></returns>
-        public static byte[] ToBytes(this object obj)
+        public static byte[] ToBytes(this object obj, Encoding encoding = null)
         {
-            using var stream = new MemoryStream();
-            IFormatter formatter = new BinaryFormatter();
-            formatter.Serialize(stream, obj);
-            return stream.GetBuffer();
+            if (encoding != null)
+            {
+                var json = obj.ToJson();
+                return encoding.GetBytes(json);
+            }
+            else
+            {
+                using var stream = new MemoryStream();
+                IFormatter formatter = new BinaryFormatter();
+                formatter.Serialize(stream, obj);
+                return stream.GetBuffer();
+            }
         }
 
         /// <summary>
@@ -56,12 +66,21 @@ namespace DwFramework.Core.Extensions
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="bytes"></param>
+        /// <param name="encoding"></param>
         /// <returns></returns>
-        public static T ToObject<T>(this byte[] bytes)
+        public static T ToObject<T>(this byte[] bytes, Encoding encoding = null)
         {
-            using var stream = new MemoryStream(bytes);
-            IFormatter formatter = new BinaryFormatter();
-            return (T)formatter.Deserialize(stream);
+            if (encoding != null)
+            {
+                var json = encoding.GetString(bytes);
+                return json.ToObject<T>();
+            }
+            else
+            {
+                using var stream = new MemoryStream(bytes);
+                IFormatter formatter = new BinaryFormatter();
+                return (T)formatter.Deserialize(stream);
+            }
         }
     }
 }

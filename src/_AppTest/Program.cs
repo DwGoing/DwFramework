@@ -1,7 +1,9 @@
 ﻿using System;
+using System.IO;
 using System.Threading;
 using System.Collections.Generic;
 using DwFramework.Core;
+using DwFramework.Core.Extensions;
 using DwFramework.Core.Plugins;
 using DwFramework.WebAPI;
 using DwFramework.WebSocket;
@@ -13,8 +15,18 @@ namespace _AppTest
 {
     class Program
     {
+        [Serializable]
+        class A
+        {
+            public int id { get; set; }
+            public string name { get; set; }
+        }
+
         static void Main(string[] args)
         {
+            var a = new A().ToBytes();
+            var b = a.ToObject<A>();
+
             try
             {
                 var host = new ServiceHost();
