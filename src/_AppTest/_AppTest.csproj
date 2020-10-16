@@ -14,6 +14,7 @@
         <ProjectReference Include="..\Plugins\DwFramework.Plugins.Rpc\DwFramework.Plugins.Rpc.csproj" />
         <ProjectReference Include="..\Module\DwFramework.WebSocket\DwFramework.WebSocket.csproj" />
         <ProjectReference Include="..\Module\DwFramework.DataFlow\DwFramework.DataFlow.csproj" />
+        <ProjectReference Include="..\Module\DwFramework.Database\DwFramework.Database.csproj" />
     </ItemGroup>
     <ItemGroup>
         <None Update="database.json">
