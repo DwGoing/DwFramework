@@ -19,34 +19,46 @@ namespace _AppTest
         {
             try
             {
-                var host = new ServiceHost();
-                host.RegisterLog();
-                #region WebAPI
-                //host.RegisterWebAPIService<Startup>("WebAPI.json");
-                #endregion
-                #region WebSocket
-                //host.RegisterWebSocketService("WebSocket.json");
+                var filter = new BloomFilter(100000);
+                for (var i = 1; i < 5000; i++)
+                {
+                    filter.Add(IdentificationGenerater.RandomString(6));
+                }
+                filter.Add("dwgoing");
+                Console.WriteLine(filter.IsExist("dwgoing1"));
+                Console.ReadKey();
+
+                //var host = new ServiceHost();
+                //host.RegisterLog();
+                //#region WebAPI
+                ////host.RegisterWebAPIService<Startup>("WebAPI.json");
+                //#endregion
+                //#region WebSocket
+                ////host.RegisterWebSocketService("WebSocket.json");
+                ////host.OnInitialized += p =>
+                ////{
+                ////    var websocket = p.GetWebSocketService();
+                ////    websocket.OnReceive += (c, args) => Console.WriteLine(args.Message);
+                ////};
+                //#endregion
+                //#region Rpc
+                ////host.RegisterClusterImpl("Cluster.json");
+                ////host.RegisterRpcService("Rpc.json");
+                ////host.OnInitialized += p => p.GetClusterImpl().OnJoin += id => Console.WriteLine(id);
+                //#endregion
+                //host.RegisterDataFlowService();
                 //host.OnInitialized += p =>
                 //{
-                //    var websocket = p.GetWebSocketService();
-                //    websocket.OnReceive += (c, args) => Console.WriteLine(args.Message);
+                //    var val = 1;
+                //    switch (val)
+                //    {
+                //        case 1:
+                //            goto A;
+                //    }
+                //A:
+                //    Console.WriteLine("a");
                 //};
-                #endregion
-                #region Rpc
-                //host.RegisterClusterImpl("Cluster.json");
-                //host.RegisterRpcService("Rpc.json");
-                //host.OnInitialized += p => p.GetClusterImpl().OnJoin += id => Console.WriteLine(id);
-                #endregion
-                host.RegisterDataFlowService();
-                host.OnInitialized += p =>
-                {
-                    var ser = p.GetDataFlowService();
-                    var sum = 0;
-                    var key = ser.CreateTaskQueue<int, int, int>(i => i, j => sum += j);
-                    ser.GetTaskQueue(key);
-                    for (var i = 0; i < 10000; i++) ser.AddInput(key, i);
-                };
-                host.Run();
+                //host.Run();
             }
             catch (Exception ex)
             {

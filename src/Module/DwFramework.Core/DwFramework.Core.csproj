@@ -34,4 +34,7 @@
             <IncludeInPackage>true</IncludeInPackage>
         </None>
     </ItemGroup>
+    <ItemGroup>
+      <Folder Include="Plugins\Filter\" />
+    </ItemGroup>
 </Project>
