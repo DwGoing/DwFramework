@@ -95,7 +95,7 @@ namespace DwFramework.Core.Plugins
         public object Get(string key)
         {
             var data = (MemoryCacheData)_Datas[key];
-            if (data is null) return null;
+            if (data == null) return null;
             if (data.IsExpired)
             {
                 Del(key);
@@ -113,7 +113,7 @@ namespace DwFramework.Core.Plugins
         public T Get<T>(string key)
         {
             var value = Get(key);
-            if (value is null) return default;
+            if (value == null) return default;
             return value.ConvertTo<T>();
         }
 
@@ -157,7 +157,7 @@ namespace DwFramework.Core.Plugins
         public void HSet(string key, string field, object value)
         {
             MemoryCacheData data = (MemoryCacheData)_Datas[key];
-            if (data is null) data = new MemoryCacheData(key, Hashtable.Synchronized(new Hashtable()));
+            if (data == null) data = new MemoryCacheData(key, Hashtable.Synchronized(new Hashtable()));
             (data.Value as Hashtable).Add(field, value);
             _Datas[data.Key] = data;
         }
@@ -172,7 +172,7 @@ namespace DwFramework.Core.Plugins
         public T HGet<T>(string key, string field)
         {
             var table = Get<Hashtable>(key);
-            if (table is null) return default;
+            if (table == null) return default;
             if (!table.ContainsKey(field) || table[field].GetType() is T) return default;
             return (T)table[field];
         }
@@ -185,7 +185,7 @@ namespace DwFramework.Core.Plugins
         public Dictionary<string, object> HGetAll(string key)
         {
             var table = Get<Hashtable>(key);
-            if (table is null) return default;
+            if (table == null) return default;
             var dic = new Dictionary<string, object>();
             foreach (DictionaryEntry item in table) dic.Add((string)item.Key, item.Value);
             return dic;
@@ -199,7 +199,7 @@ namespace DwFramework.Core.Plugins
         public void HDel(string key, string field)
         {
             var table = Get<Hashtable>(key);
-            if (table is null) return;
+            if (table == null) return;
             table.Remove(field);
         }
 
@@ -211,7 +211,7 @@ namespace DwFramework.Core.Plugins
         public void SetExpireTime(string key, DateTime expireAt)
         {
             var data = (MemoryCacheData)_Datas[key];
-            if (data is null) return;
+            if (data == null) return;
             data.SetExpireTime(expireAt);
         }
 
@@ -223,7 +223,7 @@ namespace DwFramework.Core.Plugins
         public void SetExpireTime(string key, TimeSpan expireTime)
         {
             var data = (MemoryCacheData)_Datas[key];
-            if (data is null) return;
+            if (data == null) return;
             data.SetExpireTime(expireTime);
         }
     }

@@ -11,7 +11,7 @@ namespace DwFramework.Core.Plugins
         {
             get
             {
-                if (ExpireAt is null) return false;
+                if (ExpireAt == null) return false;
                 return ExpireAt <= DateTime.UtcNow;
             }
         }

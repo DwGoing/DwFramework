@@ -21,7 +21,7 @@ namespace DwFramework.Database.Plugins
         public BaseRepository()
         {
             _databaseService = ServiceHost.Provider.GetDatabaseService();
-            if (_databaseService is null) throw new Exception("未找到Database服务");
+            if (_databaseService == null) throw new Exception("未找到Database服务");
         }
 
         /// <summary>

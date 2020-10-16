@@ -12,7 +12,7 @@ namespace DwFramework.Core.Plugins
         /// <returns></returns>
         public static string Encode(string str, Encoding encoding = null)
         {
-            if (encoding is null)
+            if (encoding == null)
                 encoding = Encoding.UTF8;
             byte[] bytes = encoding.GetBytes(str);
             using (var md5 = System.Security.Cryptography.MD5.Create())

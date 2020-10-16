@@ -22,7 +22,7 @@ namespace DwFramework.Kafka
         {
             var configuration = environment.GetConfiguration(configKey ?? "Kafka");
             _config = configuration.GetConfig<Config>(configKey);
-            if (_config is null) throw new Exception("未读取到Kafka配置");
+            if (_config == null) throw new Exception("未读取到Kafka配置");
         }
     }
 }

@@ -49,7 +49,7 @@ namespace DwFramework.RabbitMQ
         {
             var configuration = environment.GetConfiguration(configKey ?? "RabbitMQ");
             _config = configuration.GetConfig<Config>(configKey);
-            if (_config is null) throw new Exception("未读取到RabbitMQ配置");
+            if (_config == null) throw new Exception("未读取到RabbitMQ配置");
             _connectionFactory = new ConnectionFactory()
             {
                 HostName = _config.Host,
@@ -75,7 +75,7 @@ namespace DwFramework.RabbitMQ
             lock (_connectionPoolLock)
             {
                 var connection = _connectionPool[_connectionPointer];
-                if (connection is null || !connection.IsOpen) _connectionPool[_connectionPointer] = _connectionFactory.CreateConnection();
+                if (connection == null || !connection.IsOpen) _connectionPool[_connectionPointer] = _connectionFactory.CreateConnection();
                 _connectionPointer++;
                 if (_connectionPointer >= _connectionPool.Length) _connectionPointer = 0;
                 return connection;

@@ -109,7 +109,7 @@ namespace DwFramework.Core.Plugins
         /// <returns></returns>
         public static string EncryptWithPublicKey(string data, RSAKeyType type, string publicKey, bool isPem = false, RSAEncryptionPadding padding = null, Encoding encoding = null)
         {
-            if (encoding is null) encoding = Encoding.UTF8;
+            if (encoding == null) encoding = Encoding.UTF8;
             return EncryptWithPublicKey(encoding.GetBytes(data), type, publicKey, isPem, padding).ToBase64String();
         }
 
@@ -143,7 +143,7 @@ namespace DwFramework.Core.Plugins
         /// <returns></returns>
         public static string EncryptWithPrivateKey(string data, RSAKeyType type, string privateKey, bool isPem = false, RSAEncryptionPadding padding = null, Encoding encoding = null)
         {
-            if (encoding is null) encoding = Encoding.UTF8;
+            if (encoding == null) encoding = Encoding.UTF8;
             return EncryptWithPrivateKey(encoding.GetBytes(data), type, privateKey, isPem, padding).ToBase64String();
         }
 
@@ -177,7 +177,7 @@ namespace DwFramework.Core.Plugins
         /// <returns></returns>
         public static string Decrypt(string encryptedData, RSAKeyType type, string privateKey, bool isPem = false, RSAEncryptionPadding padding = null, Encoding encoding = null)
         {
-            if (encoding is null) encoding = Encoding.UTF8;
+            if (encoding == null) encoding = Encoding.UTF8;
             return encoding.GetString(Decrypt(encryptedData.FromBase64String(), type, privateKey, isPem, padding));
         }
     }

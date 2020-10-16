@@ -67,7 +67,7 @@ namespace DwFramework.Socket
         {
             var configuration = environment.GetConfiguration(configKey ?? "Socket");
             _config = configuration.GetConfig<Config>(configKey);
-            if (_config is null) throw new Exception("未读取到Socket配置");
+            if (_config == null) throw new Exception("未读取到Socket配置");
             _connections = new Dictionary<string, SocketConnection>();
         }
 
@@ -80,7 +80,7 @@ namespace DwFramework.Socket
             return TaskManager.CreateTask(() =>
             {
                 _server = new System.Net.Sockets.Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-                if (_config.Listen is null) throw new Exception("缺少Listen配置");
+                if (_config.Listen == null) throw new Exception("缺少Listen配置");
                 string[] ipAndPort = _config.Listen.Split(":");
                 _server.Bind(new IPEndPoint(string.IsNullOrEmpty(ipAndPort[0]) ? IPAddress.Any : IPAddress.Parse(ipAndPort[0]), int.Parse(ipAndPort[1])));
                 _server.Listen(_config.BackLog);
