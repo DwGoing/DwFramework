@@ -2,7 +2,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <TargetFramework>netcoreapp3.1</TargetFramework>
-        <ReleaseVersion>2.0.1</ReleaseVersion>
+        <ReleaseVersion>2.0.2</ReleaseVersion>
         <SubVersion>6</SubVersion>
         <Version>$(ReleaseVersion).$(SubVersion)</Version>
         <Authors>DwGoing</Authors>
@@ -13,7 +13,7 @@
         <ProjectReference Include="..\DwFramework.Core\DwFramework.Core.csproj" />
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="3.1.8" />
+        <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="3.1.9" />
         <PackageReference Include="sqlSugarCore" Version="5.0.0.18" />
     </ItemGroup>
     <ItemGroup>
