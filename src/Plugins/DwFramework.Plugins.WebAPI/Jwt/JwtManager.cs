@@ -22,7 +22,7 @@ namespace DwFramework.WebAPI.Plugins
         /// </summary>
         static JwtManager()
         {
-            Tag = Generater.GenerateUUID();
+            Tag = IdentificationGenerater.UUID();
         }
 
         /// <summary>

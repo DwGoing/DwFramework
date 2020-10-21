@@ -2,7 +2,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <TargetFramework>netcoreapp3.1</TargetFramework>
-        <ReleaseVersion>2.0.1</ReleaseVersion>
+        <ReleaseVersion>2.0.2</ReleaseVersion>
         <SubVersion>10</SubVersion>
         <Version>$(ReleaseVersion).$(SubVersion)</Version>
         <Authors>DwGoing</Authors>
@@ -13,11 +13,11 @@
         <ProjectReference Include="..\..\Module\DwFramework.WebAPI\DwFramework.WebAPI.csproj" />
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.7.1" />
+        <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.8.0" />
         <PackageReference Include="Consul" Version="1.6.1.1" />
-        <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.7.1" />
+        <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.8.0" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
-        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.8" />
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.9" />
     </ItemGroup>
     <ItemGroup>
         <None Include="README.md">

@@ -35,7 +35,7 @@ namespace DwFramework.TaskSchedule
         /// <returns></returns>
         public Task CreateScheduler(string schedulerKey)
         {
-            _schedulerFactory.CreateScheduler(schedulerKey, Generater.GenerateRandomString(16), new DefaultThreadPool(), new RAMJobStore());
+            _schedulerFactory.CreateScheduler(schedulerKey, IdentificationGenerater.RandomString(16), new DefaultThreadPool(), new RAMJobStore());
             var scheduler = _schedulerFactory.GetScheduler(schedulerKey).Result;
             return scheduler.Start();
         }

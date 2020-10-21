@@ -5,14 +5,21 @@ using DwFramework.Core.Plugins;
 
 namespace DwFramework.DataFlow
 {
-    public class TaskQueue<TInput, TOutput, TResult> : ITaskQueue
+    public abstract class TaskQueue
     {
-        public string ID => Generater.GenerateGUID().ToString();
+        public string ID { get; } = Guid.NewGuid().ToString();
+        protected bool _isExcuting = false;
 
+        public abstract string AddInput(object input);
+        public abstract void ClearAllInputs();
+        public abstract object GetResult(out string inputId);
+    }
+
+    public class TaskQueue<TInput, TOutput, TResult> : TaskQueue
+    {
         private readonly Func<TInput, TOutput> _taskHandler;
         private readonly Func<TOutput, TResult> _resultHandler;
         private readonly ConcurrentQueue<(string id, TInput input)> _inputs;
-        private bool _isExcuting = false;
         private (string id, TInput input) _currentInput = (null, default);
         private TResult _result;
 
@@ -33,31 +40,9 @@ namespace DwFramework.DataFlow
         }
 
         /// <summary>
-        /// 添加输入
-        /// </summary>
-        /// <param name="input"></param>
-        public string AddInput(object input)
-        {
-            if (!(input is TInput)) throw new Exception($"输入类型不是{nameof(TInput)}");
-            string id = Generater.GenerateGUID().ToString();
-            _inputs.Enqueue((id, (TInput)input));
-            if (!_isExcuting)
-            {
-                _isExcuting = true;
-                TaskManager.CreateTask(Excute);
-            }
-            return id;
-        }
-
-        /// <summary>
-        /// 移除所有输入
-        /// </summary>
-        public void ClearAllInputs() => _inputs.Clear();
-
-        /// <summary>
         /// 执行任务
         /// </summary>
-        public void Excute()
+        private void Excute()
         {
             while (!_inputs.IsEmpty)
             {
@@ -78,10 +63,34 @@ namespace DwFramework.DataFlow
         }
 
         /// <summary>
+        /// 添加输入
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public override string AddInput(object input)
+        {
+            if (!(input is TInput)) throw new Exception($"输入类型不是{nameof(TInput)}");
+            string id = IdentificationGenerater.UUID();
+            _inputs.Enqueue((id, (TInput)input));
+            if (!_isExcuting)
+            {
+                _isExcuting = true;
+                TaskManager.CreateTask(Excute);
+            }
+            return id;
+        }
+
+        /// <summary>
+        /// 移除所有输入
+        /// </summary>
+        public override void ClearAllInputs() => _inputs.Clear();
+
+        /// <summary>
         /// 获取结果
         /// </summary>
+        /// <param name="inputId"></param>
         /// <returns></returns>
-        public object GetResult(out string inputId)
+        public override object GetResult(out string inputId)
         {
             inputId = _currentInput.id;
             return _result;
