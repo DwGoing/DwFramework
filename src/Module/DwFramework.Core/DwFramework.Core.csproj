@@ -2,7 +2,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <TargetFramework>netcoreapp3.1</TargetFramework>
-        <ReleaseVersion>2.0.1</ReleaseVersion>
+        <ReleaseVersion>2.0.2</ReleaseVersion>
         <SubVersion>12</SubVersion>
         <Version>$(ReleaseVersion).$(SubVersion)</Version>
         <Authors>DwGoing</Authors>
@@ -33,8 +33,5 @@
         <None Include="..\..\..\LICENSE" Link="LICENSE">
             <IncludeInPackage>true</IncludeInPackage>
         </None>
-    </ItemGroup>
-    <ItemGroup>
-      <Folder Include="Plugins\Filter\" />
     </ItemGroup>
 </Project>
