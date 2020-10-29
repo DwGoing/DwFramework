@@ -1,11 +1,26 @@
 ﻿using System;
 using System.Text;
 using System.Linq;
+using System.IO;
+using System.IO.Compression;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using Microsoft.International.Converters.PinYinConverter;
+using K4os.Compression.LZ4.Streams;
 
 namespace DwFramework.Core.Extensions
 {
+    /// <summary>
+    /// 压缩类型
+    /// </summary>
+    public enum CompressType
+    {
+        Unknow = 0,
+        Brotli = 1,
+        GZip = 2,
+        LZ4 = 3
+    }
+
     public static class StringExtension
     {
         private static readonly string _characters = "0123456789abcdef";
@@ -39,9 +54,9 @@ namespace DwFramework.Core.Extensions
         /// </summary>
         /// <param name="c"></param>
         /// <returns></returns>
-        public static int ToBase32Value(this char c)
+        public static int ToBase32Value(this char @char)
         {
-            var value = (int)c;
+            var value = (int)@char;
             if (value < 91 && value > 64)
             {
                 return value - 65;
@@ -54,7 +69,7 @@ namespace DwFramework.Core.Extensions
             {
                 return value - 97;
             }
-            throw new ArgumentException("Character is not a Base32 character.", "c");
+            throw new ArgumentException("Character is not a Base32 character.", "@char");
         }
 
         /// <summary>
@@ -62,17 +77,17 @@ namespace DwFramework.Core.Extensions
         /// </summary>
         /// <param name="b"></param>
         /// <returns></returns>
-        public static char ToBase32Char(this byte b)
+        public static char ToBase32Char(this byte @byte)
         {
-            if (b < 26)
+            if (@byte < 26)
             {
-                return (char)(b + 65);
+                return (char)(@byte + 65);
             }
-            if (b < 32)
+            if (@byte < 32)
             {
-                return (char)(b + 24);
+                return (char)(@byte + 24);
             }
-            throw new ArgumentException("Byte is not a value Base32 value.", "b");
+            throw new ArgumentException("Byte is not a value Base32 value.", "@byte");
         }
 
         /// <summary>
@@ -165,6 +180,26 @@ namespace DwFramework.Core.Extensions
         }
 
         /// <summary>
+        /// 转Base64字符串
+        /// </summary>
+        /// <param name="bytes"></param>
+        /// <returns></returns>
+        public static string ToBase64String(this byte[] bytes)
+        {
+            return Convert.ToBase64String(bytes, 0, bytes.Length);
+        }
+
+        /// <summary>
+        /// Base64转字节数组
+        /// </summary>
+        /// <param name="base64String"></param>
+        /// <returns></returns>
+        public static byte[] FromBase64String(this string base64String)
+        {
+            return Convert.FromBase64String(base64String);
+        }
+
+        /// <summary>
         /// 字节数组转Hex
         /// </summary>
         /// <param name="bytes"></param>
@@ -180,27 +215,7 @@ namespace DwFramework.Core.Extensions
         }
 
         /// <summary>
-        /// 转Base64字符串
-        /// </summary>
-        /// <param name="bytes"></param>
-        /// <returns></returns>
-        public static string ToBase64String(this byte[] bytes)
-        {
-            return Convert.ToBase64String(bytes, 0, bytes.Length);
-        }
-
-        /// <summary>
-        /// Base64转字符串
-        /// </summary>
-        /// <param name="base64String"></param>
-        /// <returns></returns>
-        public static byte[] FromBase64String(this string base64String)
-        {
-            return Convert.FromBase64String(base64String);
-        }
-
-        /// <summary>
-        /// Hex转字符串
+        /// Hex转字节数组
         /// </summary>
         /// <param name="hexString"></param>
         /// <returns></returns>
@@ -219,7 +234,7 @@ namespace DwFramework.Core.Extensions
         /// </summary>
         /// <param name="chChar"></param>
         /// <returns></returns>
-        public static string[] GetPinYin(this char chChar)=> new ChineseChar(chChar).Pinyins;
+        public static string[] GetPinYin(this char chChar) => new ChineseChar(chChar).Pinyins;
 
         /// <summary>
         /// 是否为邮箱地址
@@ -230,6 +245,49 @@ namespace DwFramework.Core.Extensions
         {
             var match = new Regex(@"^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$").Match(str);
             return match.Success;
+        }
+
+        /// <summary>
+        /// 压缩
+        /// </summary>
+        /// <param name="bytes"></param>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public static async Task<byte[]> Compress(this byte[] bytes, CompressType type)
+        {
+            using var sourceStream = new MemoryStream(bytes);
+            using var targetStream = new MemoryStream();
+            using dynamic compressionStream = type switch
+            {
+                CompressType.Brotli => new BrotliStream(targetStream, CompressionMode.Compress),
+                CompressType.GZip => new GZipStream(targetStream, CompressionMode.Compress),
+                CompressType.LZ4 => LZ4Stream.Encode(targetStream),
+                _ => throw new Exception("未知压缩类型")
+            };
+            await sourceStream.CopyToAsync(compressionStream);
+            compressionStream.Close();
+            return targetStream.ToArray();
+        }
+
+        /// <summary>
+        /// 解压
+        /// </summary>
+        /// <param name="bytes"></param>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public static async Task<byte[]> Decompress(this byte[] bytes, CompressType type)
+        {
+            using var soureStream = new MemoryStream(bytes);
+            using var targetStream = new MemoryStream();
+            using dynamic decompressionStream = type switch
+            {
+                CompressType.Brotli => new BrotliStream(soureStream, CompressionMode.Decompress),
+                CompressType.GZip => new GZipStream(soureStream, CompressionMode.Decompress),
+                CompressType.LZ4 => LZ4Stream.Decode(soureStream),
+                _ => throw new Exception("未知压缩类型")
+            };
+            await decompressionStream.CopyToAsync(targetStream);
+            return targetStream.ToArray();
         }
     }
 }

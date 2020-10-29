@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using System.IO;
 using System.Threading;
 using System.Collections.Generic;
@@ -15,12 +16,24 @@ using DwFramework.Database;
 
 namespace _AppTest
 {
+    [Serializable]
+    class A
+    {
+        public int id { get; set; }
+        public string name { get; set; }
+    }
+
     class Program
     {
         static void Main(string[] args)
         {
             try
             {
+                var a = new A() { id = 1, name = "dwgoing" };
+                var b = a.ToBytes();
+                var c = b.Compress(CompressType.LZ4).Result;
+                var d = c.Decompress(CompressType.LZ4).Result;
+
                 var host = new ServiceHost();
                 host.RegisterLog();
                 host.RegisterDatabaseService("Database.json");
