@@ -13,7 +13,7 @@
         <ProjectReference Include="..\DwFramework.Core\DwFramework.Core.csproj" />
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="Quartz" Version="3.2.0" />
+        <PackageReference Include="Quartz" Version="3.2.2" />
     </ItemGroup>
     <ItemGroup>
         <None Include="README.md">
