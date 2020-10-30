@@ -29,10 +29,10 @@ namespace _AppTest
         {
             try
             {
-                var a = new A() { id = 1, name = "dwgoing" };
-                var b = a.ToBytes();
-                var c = b.Compress(CompressType.LZ4).Result;
-                var d = c.Decompress(CompressType.LZ4).Result;
+                var s1 = "abcdefg";
+                var s2 = "abxcdefg";
+                Console.WriteLine(s1.ComputeSimilarity(s2));
+                Console.ReadKey();
 
                 var host = new ServiceHost();
                 host.RegisterLog();

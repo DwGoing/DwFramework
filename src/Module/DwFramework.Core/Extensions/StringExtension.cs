@@ -289,5 +289,29 @@ namespace DwFramework.Core.Extensions
             await decompressionStream.CopyToAsync(targetStream);
             return targetStream.ToArray();
         }
+
+        /// <summary>
+        /// 计算相似度
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="target"></param>
+        /// <returns></returns>
+        public static double ComputeSimilarity(this string source, string target)
+        {
+            var len1 = source.Length;
+            var len2 = target.Length;
+            int[,] diff = new int[len1 + 1, len2 + 1];
+            diff[0, 0] = 0;
+            for (var i = 1; i <= len1; i++) diff[i, 0] = i;
+            for (var i = 1; i <= len2; i++) diff[0, i] = i;
+            var ch1 = source.ToCharArray();
+            var ch2 = target.ToCharArray();
+            for (int i = 1; i <= len1; i++) for (int j = 1; j <= len2; j++)
+                {
+                    var min = new int[] { diff[i - 1, j - 1], diff[i - 1, j], diff[i, j - 1] }.Min();
+                    diff[i, j] = ch1[i - 1] == ch2[j - 1] ? min : min + 1;
+                }
+            return 1 - (double)diff[len1, len2] / Math.Max(len1, len2);
+        }
     }
 }
