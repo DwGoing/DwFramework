@@ -16,13 +16,6 @@ using DwFramework.Database;
 
 namespace _AppTest
 {
-    [Serializable]
-    class A
-    {
-        public int id { get; set; }
-        public string name { get; set; }
-    }
-
     class Program
     {
         static void Main(string[] args)
@@ -70,29 +63,5 @@ namespace _AppTest
                 Console.WriteLine(ex);
             }
         }
-
-        static void D(SqlSugarClient connection)
-        {
-            throw new Exception();
-            connection.Insertable(new T2() { }).ExecuteCommand();
-        }
-    }
-
-    [SugarTable("test1")]
-    public class T1
-    {
-        [SugarColumn(ColumnName = "id", IsIdentity = true, IsPrimaryKey = true)]
-        public int ID { get; set; }
-        [SugarColumn(ColumnName = "val")]
-        public string Value { get; set; }
-    }
-
-    [SugarTable("test2")]
-    public class T2
-    {
-        [SugarColumn(ColumnName = "id", IsIdentity = true, IsPrimaryKey = true)]
-        public int ID { get; set; }
-        [SugarColumn(ColumnName = "val")]
-        public string Value { get; set; }
     }
 }
