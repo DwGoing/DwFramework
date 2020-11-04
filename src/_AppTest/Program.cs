@@ -13,6 +13,7 @@ using DwFramework.Rpc;
 using DwFramework.Rpc.Plugins;
 using DwFramework.DataFlow;
 using DwFramework.Database;
+using Autofac;
 
 namespace _AppTest
 {
@@ -22,14 +23,20 @@ namespace _AppTest
         {
             try
             {
-                var s1 = "abcdefg";
-                var s2 = "abxcdefg";
-                Console.WriteLine(s1.ComputeSimilarity(s2));
-                Console.ReadKey();
-
                 var host = new ServiceHost();
-                host.RegisterLog();
-                host.RegisterDatabaseService("Database.json");
+                host.AddJsonConfig("Config.json");
+                host.Register<I>(c =>
+                {
+                    var a = c.Resolve<DwFramework.Core.Environment>();
+                    var type = a.GetConfiguration().GetConfig<int>("Type");
+                    return type switch
+                    {
+                        0 => new A(),
+                        1 => new B(),
+                        _ => throw new Exception()
+                    };
+                });
+                //host.RegisterLog();
                 #region WebAPI
                 //host.RegisterWebAPIService<Startup>("WebAPI.json");
                 #endregion
@@ -48,13 +55,7 @@ namespace _AppTest
                 #endregion
                 host.OnInitialized += p =>
                 {
-                    var db = p.GetDatabaseService();
-                    var connection = db.DbConnection;
-                    connection.UseTran(() =>
-                    {
-                        var a = connection.Insertable(new T1()).ExecuteReturnEntity();
-                        D(connection);
-                    });
+                    p.GetService<I>().Print();
                 };
                 host.Run();
             }
@@ -62,6 +63,27 @@ namespace _AppTest
             {
                 Console.WriteLine(ex);
             }
+        }
+    }
+
+    public interface I
+    {
+        public void Print();
+    }
+
+    public class A : I
+    {
+        public void Print()
+        {
+            Console.WriteLine("a");
+        }
+    }
+
+    public class B : I
+    {
+        public void Print()
+        {
+            Console.WriteLine("b");
         }
     }
 }

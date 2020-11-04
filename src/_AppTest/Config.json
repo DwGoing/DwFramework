@@ -7,5 +7,6 @@
   "Cluster": {
     "LinkUrl": "127.0.0.1:5020",
     "BootPeer": ""
-  }
+  },
+  "Type": 0
 }
