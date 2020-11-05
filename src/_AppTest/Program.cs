@@ -23,6 +23,15 @@ namespace _AppTest
         {
             try
             {
+                int i = 0;
+                var sf = new SnowflakeGenerater();
+                while (i < 30)
+                {
+                    Console.WriteLine(sf.GenerateId());
+                    i++;
+                }
+
+
                 //var host = new ServiceHost();
                 //host.AddJsonConfig("Config.json");
                 //host.Register<I>(c =>

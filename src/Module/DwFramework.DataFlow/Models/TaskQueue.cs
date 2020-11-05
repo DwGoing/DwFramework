@@ -70,7 +70,7 @@ namespace DwFramework.DataFlow
         public override string AddInput(object input)
         {
             if (!(input is TInput)) throw new Exception($"输入类型不是{nameof(TInput)}");
-            string id = IdentificationGenerater.UUID();
+            string id = UUIDGenerater.GenerateUUID();
             _inputs.Enqueue((id, (TInput)input));
             if (!_isExcuting)
             {
