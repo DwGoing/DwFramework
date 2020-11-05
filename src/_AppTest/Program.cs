@@ -23,19 +23,19 @@ namespace _AppTest
         {
             try
             {
-                var host = new ServiceHost();
-                host.AddJsonConfig("Config.json");
-                host.Register<I>(c =>
-                {
-                    var a = c.Resolve<DwFramework.Core.Environment>();
-                    var type = a.GetConfiguration().GetConfig<int>("Type");
-                    return type switch
-                    {
-                        0 => new A(),
-                        1 => new B(),
-                        _ => throw new Exception()
-                    };
-                });
+                //var host = new ServiceHost();
+                //host.AddJsonConfig("Config.json");
+                //host.Register<I>(c =>
+                //{
+                //    var a = c.Resolve<DwFramework.Core.Environment>();
+                //    var type = a.GetConfiguration().GetConfig<int>("Type");
+                //    return type switch
+                //    {
+                //        0 => new A(),
+                //        1 => new B(),
+                //        _ => throw new Exception()
+                //    };
+                //});
                 //host.RegisterLog();
                 #region WebAPI
                 //host.RegisterWebAPIService<Startup>("WebAPI.json");
@@ -53,16 +53,17 @@ namespace _AppTest
                 //host.RegisterRpcService("Rpc.json");
                 //host.OnInitialized += p => p.GetClusterImpl().OnJoin += id => Console.WriteLine(id);
                 #endregion
-                host.OnInitialized += p =>
-                {
-                    p.GetService<I>().Print();
-                };
-                host.Run();
+                //host.OnInitialized += p =>
+                //{
+                //    p.GetService<I>().Print();
+                //};
+                //host.Run();
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
             }
+            Console.ReadKey();
         }
     }
 
