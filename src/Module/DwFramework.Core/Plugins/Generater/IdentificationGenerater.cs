@@ -27,7 +27,7 @@ namespace DwFramework.Core.Plugins
 
         /// <summary>
         /// 生成流水号
-        /// [日期 8位][时间 4位][随机数 8位][Nonce 4位][自定义标识 n位]
+        /// [日期 8位][时间 4位][随机数 8位][自定义标识 n位][Nonce 4位]
         /// </summary>
         /// <param name="customNum"></param>
         /// <returns></returns>
@@ -43,6 +43,8 @@ namespace DwFramework.Core.Plugins
             Random random = new Random((int)RandomNumber());
             // 随机数
             builder.Append(random.Next(100000000).ToString().PadLeft(8, '0'));
+            // 自定义标识
+            if (customTag != null) builder.Append(customTag);
             // Nonce
             lock (_uuidLock)
             {
@@ -57,9 +59,6 @@ namespace DwFramework.Core.Plugins
                 }
             }
             builder.Append(_uuidNonce.ToString().PadLeft(4, '0'));
-            // 自定义标识
-            if (customTag != null) builder.Append(customTag);
-            Console.Write($"{nowTime}");
             return builder.ToString();
         }
     }
