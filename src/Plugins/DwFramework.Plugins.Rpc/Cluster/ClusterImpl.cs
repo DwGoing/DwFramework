@@ -44,7 +44,7 @@ namespace DwFramework.Rpc.Plugins
             var configuration = environment.GetConfiguration(configKey ?? "Cluster");
             _config = configuration.GetConfig<Config>(configKey);
             if (_config == null) throw new Exception("未读取到Cluster配置");
-            ID = IdentificationGenerater.RandomString(32);
+            ID = RandomGenerater.RandomString(32);
             _header = new Metadata
             {
                 { "id", ID },
@@ -66,7 +66,7 @@ namespace DwFramework.Rpc.Plugins
         public ClusterImpl(string linkUrl, int healthCheckPerMs = 10000, string bootPeer = null)
         {
             _config = new Config() { LinkUrl = linkUrl, HealthCheckPerMs = healthCheckPerMs, BootPeer = bootPeer };
-            ID = IdentificationGenerater.RandomString(32);
+            ID = RandomGenerater.RandomString(32);
             _header = new Metadata
             {
                 { "id", ID },
