@@ -12,8 +12,6 @@ using DwFramework.WebSocket;
 using DwFramework.Rpc;
 using DwFramework.Rpc.Plugins;
 using DwFramework.ORM;
-using Autofac;
-using Mapster;
 
 namespace _AppTest
 {
@@ -23,7 +21,15 @@ namespace _AppTest
         {
             try
             {
-                
+                var host = new ServiceHost();
+                host.RegisterORMService("ORM.json");
+                host.OnInitialized += p =>
+                {
+                    var service = p.GetORMService();
+                    var conn = service.CreateConnection();
+                    var res = conn.Queryable<dynamic>().AS("zsy").ToList();
+                };
+                host.Run();
             }
             catch (Exception ex)
             {

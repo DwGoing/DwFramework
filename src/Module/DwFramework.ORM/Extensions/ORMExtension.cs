@@ -16,10 +16,10 @@ namespace DwFramework.ORM
         {
             if (!string.IsNullOrEmpty(configFilePath))
             {
-                host.AddJsonConfig(configFilePath, "Database");
+                host.AddJsonConfig(configFilePath, "ORM");
                 host.RegisterType<ORMService>().SingleInstance();
             }
-            else host.Register(c => new ORMService(c.Resolve<Core.Environment>(), "Database")).SingleInstance();
+            else host.Register(c => new ORMService(c.Resolve<Core.Environment>(), "ORM")).SingleInstance();
         }
 
         /// <summary>
@@ -27,6 +27,6 @@ namespace DwFramework.ORM
         /// </summary>
         /// <param name="provider"></param>
         /// <returns></returns>
-        public static ORMService GetDatabaseService(this IServiceProvider provider) => provider.GetService<ORMService>();
+        public static ORMService GetORMService(this IServiceProvider provider) => provider.GetService<ORMService>();
     }
 }
