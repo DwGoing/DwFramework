@@ -28,7 +28,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "_AppTest", "_AppTest\_AppTe
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DwFramework.ORM", "Module\DwFramework.ORM\DwFramework.ORM.csproj", "{7D7501F7-03E9-4218-B55E-2AD235AF828E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DwFramework.Plugins.ORM", "Plugins\DwFramework.Plugins.ORM\DwFramework.Plugins.ORM.csproj", "{E6A85321-6C0B-4856-83EC-5EA4B04DD7B5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DwFramework.ORM.Plugins", "Plugins\DwFramework.ORM.Plugins\DwFramework.ORM.Plugins.csproj", "{03359E21-479C-4FB7-8AC0-C3E240284B0C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -88,10 +88,10 @@ Global
 		{7D7501F7-03E9-4218-B55E-2AD235AF828E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7D7501F7-03E9-4218-B55E-2AD235AF828E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7D7501F7-03E9-4218-B55E-2AD235AF828E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E6A85321-6C0B-4856-83EC-5EA4B04DD7B5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E6A85321-6C0B-4856-83EC-5EA4B04DD7B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E6A85321-6C0B-4856-83EC-5EA4B04DD7B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E6A85321-6C0B-4856-83EC-5EA4B04DD7B5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{03359E21-479C-4FB7-8AC0-C3E240284B0C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{03359E21-479C-4FB7-8AC0-C3E240284B0C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{03359E21-479C-4FB7-8AC0-C3E240284B0C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{03359E21-479C-4FB7-8AC0-C3E240284B0C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
