@@ -23,12 +23,8 @@ namespace _AppTest
             try
             {
                 var host = new ServiceHost();
-                host.RegisterORMService("ORM.json");
-                host.RegisterRepositories();
                 host.OnInitialized += p =>
                 {
-                    var service = p.GetService<Rep>(); ;
-                    var res = service.FindAllAsync().Result;
                 };
                 host.Run();
             }
@@ -38,18 +34,5 @@ namespace _AppTest
             }
             Console.ReadKey();
         }
-    }
-
-    [Repository]
-    public class Rep : BaseRepository<A>
-    {
-
-    }
-
-    [SugarTable("zsy")]
-    public class A
-    {
-        [SugarColumn(ColumnName = "xm")]
-        public string Name { get; set; }
     }
 }
