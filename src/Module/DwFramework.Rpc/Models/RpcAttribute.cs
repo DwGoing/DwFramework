@@ -1,10 +1,7 @@
 ﻿using System;
 
-namespace DwFramework.Rpc
+namespace DwFramework.RPC
 {
     [AttributeUsage(AttributeTargets.Class)]
-    public class RpcAttribute : Attribute
-    {
-
-    }
+    public class RPCAttribute : Attribute { }
 }

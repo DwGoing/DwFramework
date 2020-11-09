@@ -4,24 +4,24 @@ using Autofac;
 
 using DwFramework.Core;
 
-namespace DwFramework.Rpc
+namespace DwFramework.RPC
 {
-    public static class RpcExtension
+    public static class RPCExtension
     {
         /// <summary>
         /// 注册服务
         /// </summary>
         /// <param name="host"></param>
         /// <param name="configFilePath"></param>
-        public static void RegisterRpcService(this ServiceHost host, string configFilePath = null)
+        public static void RegisterRPCService(this ServiceHost host, string configFilePath = null)
         {
             if (!string.IsNullOrEmpty(configFilePath))
             {
-                host.AddJsonConfig(configFilePath, "Rpc");
-                host.RegisterType<RpcService>().SingleInstance();
+                host.AddJsonConfig(configFilePath, "RPC");
+                host.RegisterType<RPCService>().SingleInstance();
             }
-            else host.Register(c => new RpcService(c.Resolve<Core.Environment>(), "Rpc")).SingleInstance();
-            host.OnInitializing += provider => provider.InitRpcServiceAsync().Wait();
+            else host.Register(c => new RPCService(c.Resolve<Core.Environment>(), "RPC")).SingleInstance();
+            host.OnInitializing += async provider => await provider.InitRPCServiceAsync();
         }
 
         /// <summary>
@@ -29,13 +29,13 @@ namespace DwFramework.Rpc
         /// </summary>
         /// <param name="provider"></param>
         /// <returns></returns>
-        public static RpcService GetRpcService(this IServiceProvider provider) => provider.GetService<RpcService>();
+        public static RPCService GetRPCService(this IServiceProvider provider) => provider.GetService<RPCService>();
 
         /// <summary>
         /// 初始化服务
         /// </summary>
         /// <param name="provider"></param>
         /// <returns></returns>
-        public static Task InitRpcServiceAsync(this IServiceProvider provider) => provider.GetRpcService().OpenServiceAsync();
+        public static Task InitRPCServiceAsync(this IServiceProvider provider) => provider.GetRPCService().OpenServiceAsync();
     }
 }

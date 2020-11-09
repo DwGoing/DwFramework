@@ -8,9 +8,9 @@ using Grpc.Core;
 using DwFramework.Core;
 using DwFramework.Core.Plugins;
 
-namespace DwFramework.Rpc
+namespace DwFramework.RPC
 {
-    public sealed class RpcService
+    public sealed class RPCService
     {
         public class Config
         {
@@ -26,9 +26,9 @@ namespace DwFramework.Rpc
         /// </summary>
         /// <param name="environment"></param>
         /// <param name="configKey"></param>
-        public RpcService(Core.Environment environment, string configKey = null)
+        public RPCService(Core.Environment environment, string configKey = null)
         {
-            var configuration = environment.GetConfiguration(configKey ?? "Rpc");
+            var configuration = environment.GetConfiguration(configKey ?? "RPC");
             _config = configuration.GetConfig<Config>(configKey);
             if (_config == null) throw new Exception("未读取到Rpc配置");
             _server = new Server();
@@ -39,7 +39,7 @@ namespace DwFramework.Rpc
         /// </summary>
         /// <param name="service"></param>
         /// <returns></returns>
-        public RpcService AddService(object service)
+        public RPCService AddService(object service)
         {
             _server.Services.Add(GetServerServiceDefinition(service));
             return this;
@@ -113,7 +113,7 @@ namespace DwFramework.Rpc
                 var types = assembly.GetTypes();
                 foreach (var item in types)
                 {
-                    var attr = item.GetCustomAttribute<RpcAttribute>();
+                    var attr = item.GetCustomAttribute<RPCAttribute>();
                     if (attr == null) continue;
                     var service = ServiceHost.Provider.GetService(item);
                     if (service == null) continue;

@@ -1,9 +1,9 @@
-# DwFramework.Rpc
+# DwFramework.RPC
 
 ```shell
-PM> Install-Package DwFramework.Rpc
+PM> Install-Package DwFramework.RPC
 或
-> dotnet add package DwFramework.Rpc
+> dotnet add package DwFramework.RPC
 ```
 
 ## DwFramework Rpc库
@@ -13,7 +13,7 @@ PM> Install-Package DwFramework.Rpc
 当使用该库时，需提前读取配置文件，Json配置如下：
 
 ```json
-// Rpc
+// RPC
 {
   "ContentRoot":"",
   "Listen": {
@@ -63,7 +63,7 @@ message Response {
 // a.proto的实现类
 // 需要在host中注册
 // host.RegisterType<AService>();
-[Rpc]
+[RPC]
 public class AService : A.ABase
 {
   public override Task<Response> Do(Request request, ServerCallContext context)

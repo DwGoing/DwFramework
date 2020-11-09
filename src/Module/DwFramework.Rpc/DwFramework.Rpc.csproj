@@ -8,6 +8,8 @@
         <Authors>DwGoing</Authors>
         <Description>DwFramework RPC库</Description>
         <PackageProjectUrl>https://github.com/Dwgoing/DwFramework</PackageProjectUrl>
+        <RootNamespace>DwFramework.RPC</RootNamespace>
+        <AssemblyName>DwFramework.RPC</AssemblyName>
     </PropertyGroup>
     <ItemGroup>
         <ProjectReference Include="..\DwFramework.Core\DwFramework.Core.csproj" />
