@@ -7,7 +7,7 @@ using DwFramework.Core.Extensions;
 
 namespace DwFramework.Core
 {
-    public class Environment
+    public sealed class Environment
     {
         public readonly EnvironmentType EnvironmentType;
 
