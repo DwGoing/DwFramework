@@ -6,9 +6,9 @@ using SqlSugar;
 using DwFramework.Core;
 using DwFramework.Core.Plugins;
 
-namespace DwFramework.Database
+namespace DwFramework.ORM
 {
-    public sealed class DatabaseService
+    public sealed class ORMService
     {
         private class Config
         {
@@ -44,7 +44,7 @@ namespace DwFramework.Database
         /// </summary>
         /// <param name="environment"></param>
         /// <param name="configKey"></param>
-        public DatabaseService(Core.Environment environment, string configKey = null)
+        public ORMService(Core.Environment environment, string configKey = null)
         {
             var configuration = environment.GetConfiguration(configKey ?? "Database");
             _config = configuration.GetConfig<Config>(configKey);

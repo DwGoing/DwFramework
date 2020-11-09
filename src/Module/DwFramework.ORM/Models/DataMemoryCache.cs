@@ -5,7 +5,7 @@ using System.Reflection;
 using Microsoft.Extensions.Caching.Memory;
 using SqlSugar;
 
-namespace DwFramework.Database
+namespace DwFramework.ORM
 {
     public class DataMemoryCache : ICacheService
     {

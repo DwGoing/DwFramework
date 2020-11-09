@@ -2,7 +2,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <IsPackable>false</IsPackable>
-    <ReleaseVersion>2.0.2</ReleaseVersion>
+    <ReleaseVersion>2.1.1</ReleaseVersion>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.7.1" />
@@ -19,8 +19,6 @@
   <ItemGroup>
     <ProjectReference Include="..\Module\DwFramework.Core\DwFramework.Core.csproj" />
     <ProjectReference Include="..\Module\DwFramework.Database\DwFramework.Database.csproj" />
-    <ProjectReference Include="..\Module\DwFramework.DataFlow\DwFramework.DataFlow.csproj" />
-    <ProjectReference Include="..\Module\DwFramework.Kafka\DwFramework.Kafka.csproj" />
     <ProjectReference Include="..\Module\DwFramework.MachineLearning\DwFramework.MachineLearning.csproj" />
     <ProjectReference Include="..\Plugins\DwFramework.Plugins.Database\DwFramework.Plugins.Database.csproj" />
     <ProjectReference Include="..\Plugins\DwFramework.Plugins.Rpc\DwFramework.Plugins.Rpc.csproj" />
