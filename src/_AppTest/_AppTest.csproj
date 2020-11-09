@@ -45,7 +45,4 @@
           <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
     </ItemGroup>
-    <ItemGroup>
-      <PackageReference Include="Mapster" Version="6.5.1" />
-    </ItemGroup>
 </Project>

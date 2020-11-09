@@ -10,17 +10,6 @@ using K4os.Compression.LZ4.Streams;
 
 namespace DwFramework.Core.Extensions
 {
-    /// <summary>
-    /// 压缩类型
-    /// </summary>
-    public enum CompressType
-    {
-        Unknow = 0,
-        Brotli = 1,
-        GZip = 2,
-        LZ4 = 3
-    }
-
     public static class StringExtension
     {
         private static readonly string _characters = "0123456789abcdef";
@@ -232,9 +221,9 @@ namespace DwFramework.Core.Extensions
         /// <summary>
         /// 获取中文字符的拼音
         /// </summary>
-        /// <param name="chChar"></param>
+        /// <param name="@char"></param>
         /// <returns></returns>
-        public static string[] GetPinYin(this char chChar) => new ChineseChar(chChar).Pinyins;
+        public static string[] GetPinYin(this char @char) => new ChineseChar(@char).Pinyins;
 
         /// <summary>
         /// 是否为邮箱地址
