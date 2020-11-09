@@ -10,7 +10,8 @@
         <PackageProjectUrl>https://github.com/Dwgoing/DwFramework</PackageProjectUrl>
     </PropertyGroup>
     <ItemGroup>
-        <ProjectReference Include="..\..\Module\DwFramework.Database\DwFramework.Database.csproj" />
+        <ProjectReference Include="..\..\Module\DwFramework.Core\DwFramework.Core.csproj" />
+        <ProjectReference Include="..\..\Module\DwFramework.ORM\DwFramework.ORM.csproj" />
     </ItemGroup>
     <ItemGroup>
         <None Include="README.md">

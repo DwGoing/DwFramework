@@ -12,6 +12,7 @@ using DwFramework.WebSocket;
 using DwFramework.Rpc;
 using DwFramework.Rpc.Plugins;
 using DwFramework.ORM;
+using DwFramework.ORM.Plugins;
 
 namespace _AppTest
 {
@@ -23,11 +24,11 @@ namespace _AppTest
             {
                 var host = new ServiceHost();
                 host.RegisterORMService("ORM.json");
+                host.RegisterRepositories();
                 host.OnInitialized += p =>
                 {
-                    var service = p.GetORMService();
-                    var conn = service.CreateConnection();
-                    var res = conn.Queryable<dynamic>().AS("zsy").ToList();
+                    var service = p.GetService<Rep>(); ;
+                    var res = service.FindAllAsync().Result;
                 };
                 host.Run();
             }
@@ -39,8 +40,16 @@ namespace _AppTest
         }
     }
 
-    public enum A
+    [Repository]
+    public class Rep : BaseRepository<A>
     {
-        X, Y, Z
+
+    }
+
+    [SugarTable("zsy")]
+    public class A
+    {
+        [SugarColumn(ColumnName = "xm")]
+        public string Name { get; set; }
     }
 }
