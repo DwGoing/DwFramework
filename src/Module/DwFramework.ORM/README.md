@@ -1,9 +1,9 @@
-# DwFramework.Database
+# DwFramework.ORM
 
 ```shell
-PM> Install-Package DwFramework.Database
+PM> Install-Package DwFramework.ORM
 或
-> dotnet add package DwFramework.Database
+> dotnet add package DwFramework.ORM
 ```
 
 ## DwFramework ORM库
@@ -13,7 +13,7 @@ PM> Install-Package DwFramework.Database
 当使用该库时，需提前读取配置文件，Json配置如下：
 
 ```json
-// Database
+// ORM
 {
   "ConnectionString": "", // 连接字符串
   "DbType": "", // 数据库类型
@@ -32,7 +32,7 @@ PM> Install-Package DwFramework.Database
 
 ```c#
 // 注册服务
-host.RegisterDatabaseService();
+host.RegisterORMService();
 ```
 
 ### 0x3 简单使用
@@ -51,11 +51,11 @@ public class User
 
 // 获取Database服务进行数据库操作
 var host = new ServiceHost();
-host.AddJsonConfig("Database.json");
-host.RegisterDatabaseService();
+host.AddJsonConfig("ORM.json");
+host.RegisterORMService();
 host.OnInitialized += provider =>
 {
-  var db = provider.GetService<DatabaseService>();
+  var db = provider.GetService<ORMService>();
   var result = db.DbConnection.Queryable<Record>().ToArray();
 };
 host.Run();
