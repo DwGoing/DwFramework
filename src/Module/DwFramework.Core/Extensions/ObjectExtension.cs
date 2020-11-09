@@ -4,6 +4,7 @@ using System.IO;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text.Json;
+using Mapster;
 
 namespace DwFramework.Core.Extensions
 {
@@ -15,12 +16,7 @@ namespace DwFramework.Core.Extensions
         /// <param name="obj"></param>
         /// <param name="type"></param>
         /// <returns></returns>
-        public static object ConvertTo(this object obj, Type type)
-        {
-            var value = Convert.ChangeType(obj, type);
-            if (value == null) return default;
-            return value;
-        }
+        public static object ConvertTo(this object obj, Type type) => obj.Adapt(obj.GetType(), type);
 
         /// <summary>
         /// 类型转换
@@ -28,7 +24,7 @@ namespace DwFramework.Core.Extensions
         /// <typeparam name="T"></typeparam>
         /// <param name="obj"></param>
         /// <returns></returns>
-        public static T ConvertTo<T>(this object obj) => (T)obj.ConvertTo(typeof(T));
+        public static T ConvertTo<T>(this object obj) => obj.Adapt<T>();
 
         /// <summary>
         /// 序列化
