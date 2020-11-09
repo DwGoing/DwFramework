@@ -14,11 +14,7 @@ namespace DwFramework.Core
         /// <typeparam name="T"></typeparam>
         /// <param name="provider"></param>
         /// <returns></returns>
-        public static bool IsRegistered<T>(this IServiceProvider provider) where T : class
-        {
-            var services = provider.GetServices<T>();
-            return services.Count() > 0;
-        }
+        public static bool IsRegistered<T>(this IServiceProvider provider) where T : class => provider.GetServices<T>().Count() > 0;
 
         /// <summary>
         /// 获取服务
