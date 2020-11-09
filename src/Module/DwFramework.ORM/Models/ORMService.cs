@@ -46,9 +46,9 @@ namespace DwFramework.ORM
         /// <param name="configKey"></param>
         public ORMService(Core.Environment environment, string configKey = null)
         {
-            var configuration = environment.GetConfiguration(configKey ?? "Database");
+            var configuration = environment.GetConfiguration(configKey ?? "ORM");
             _config = configuration.GetConfig<Config>(configKey);
-            if (_config == null) throw new Exception("未读取到Database配置");
+            if (_config == null) throw new Exception("未读取到ORM配置");
         }
 
         /// <summary>
