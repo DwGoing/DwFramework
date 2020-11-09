@@ -43,10 +43,7 @@ namespace DwFramework.Core.Extensions
         /// <param name="exp1"></param>
         /// <param name="exp2"></param>
         /// <returns></returns>
-        public static Expression<Func<T, bool>> And<T>(this Expression<Func<T, bool>> exp1, Expression<Func<T, bool>> exp2)
-        {
-            return exp1.Merge(exp2, Expression.AndAlso);
-        }
+        public static Expression<Func<T, bool>> And<T>(this Expression<Func<T, bool>> exp1, Expression<Func<T, bool>> exp2) => exp1.Merge(exp2, Expression.AndAlso);
 
         /// <summary>
         /// OR操作
@@ -55,10 +52,7 @@ namespace DwFramework.Core.Extensions
         /// <param name="exp1"></param>
         /// <param name="exp2"></param>
         /// <returns></returns>
-        public static Expression<Func<T, bool>> Or<T>(this Expression<Func<T, bool>> exp1, Expression<Func<T, bool>> exp2)
-        {
-            return exp1.Merge(exp2, Expression.OrElse);
-        }
+        public static Expression<Func<T, bool>> Or<T>(this Expression<Func<T, bool>> exp1, Expression<Func<T, bool>> exp2) => exp1.Merge(exp2, Expression.OrElse);
 
         /// <summary>
         /// NOT操作
@@ -66,9 +60,6 @@ namespace DwFramework.Core.Extensions
         /// <typeparam name="T"></typeparam>
         /// <param name="exp"></param>
         /// <returns></returns>
-        public static Expression<Func<T, bool>> Not<T>(this Expression<Func<T, bool>> exp)
-        {
-            return Expression.Lambda<Func<T, bool>>(Expression.Not(exp.Body), exp.Parameters[0]);
-        }
+        public static Expression<Func<T, bool>> Not<T>(this Expression<Func<T, bool>> exp) => Expression.Lambda<Func<T, bool>>(Expression.Not(exp.Body), exp.Parameters[0]);
     }
 }
