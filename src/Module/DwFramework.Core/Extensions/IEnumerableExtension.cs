@@ -113,14 +113,8 @@ namespace DwFramework.Core.Extensions
         {
             foreach (var item in list.Select((item, index) => new { item, index }).Where(p => predicate(p.item)).OrderByDescending(p => p.index))
             {
-                if (item.index + 1 == list.Count)
-                {
-                    list.Add(value);
-                }
-                else
-                {
-                    list.Insert(item.index + 1, value);
-                }
+                if (item.index + 1 == list.Count) list.Add(value);
+                else list.Insert(item.index + 1, value);
             }
         }
 
@@ -135,14 +129,8 @@ namespace DwFramework.Core.Extensions
         {
             foreach (var item in list.Select((v, i) => new { Value = v, Index = i }).Where(p => p.Index == index).OrderByDescending(p => p.Index))
             {
-                if (item.Index + 1 == list.Count)
-                {
-                    list.Add(value);
-                }
-                else
-                {
-                    list.Insert(item.Index + 1, value);
-                }
+                if (item.Index + 1 == list.Count) list.Add(value);
+                else list.Insert(item.Index + 1, value);
             }
         }
 
