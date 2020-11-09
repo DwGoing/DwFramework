@@ -1,27 +1,26 @@
 ﻿using System;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-
 using SqlSugar;
 
 using DwFramework.Core;
 using DwFramework.Core.Plugins;
 
-namespace DwFramework.Database.Plugins
+namespace DwFramework.ORM.Plugins
 {
     public abstract class BaseRepository<T> : IRepository<T> where T : class, new()
     {
-        private readonly DatabaseService _databaseService;
+        private readonly ORMService _ormService;
 
-        protected SqlSugarClient DbConnection { get => _databaseService.DbConnection; }
+        protected SqlSugarClient DbConnection { get => _ormService.DbConnection; }
 
         /// <summary>
         /// 构造函数
         /// </summary>
         public BaseRepository()
         {
-            _databaseService = ServiceHost.Provider.GetDatabaseService();
-            if (_databaseService == null) throw new Exception("未找到Database服务");
+            _ormService = ServiceHost.Provider.GetORMService();
+            if (_ormService == null) throw new Exception("未找到ORM服务");
         }
 
         /// <summary>
