@@ -21,7 +21,7 @@ namespace DwFramework.Rpc.Plugins
                 host.RegisterType<ClusterImpl>().SingleInstance();
             }
             else host.Register(c => new ClusterImpl(c.Resolve<Core.Environment>(), "Cluster")).SingleInstance();
-            host.OnInitializing += provider => provider.GetRpcService().AddService(provider.GetClusterImpl());
+            host.OnInitializing += provider => provider.().AddService(provider.GetClusterImpl());
             host.OnInitialized += provider => provider.GetClusterImpl().Init();
             return host;
         }
