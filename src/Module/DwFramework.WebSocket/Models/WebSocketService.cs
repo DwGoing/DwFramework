@@ -73,6 +73,7 @@ namespace DwFramework.WebSocket
         }
 
         private readonly Config _config;
+        private readonly ILogger<WebSocketService> _logger;
         private readonly Dictionary<string, WebSocketConnection> _connections;
 
         public event Action<WebSocketConnection, OnConnectEventargs> OnConnect;
@@ -91,6 +92,7 @@ namespace DwFramework.WebSocket
             var configuration = environment.GetConfiguration(configKey ?? "WebSocket");
             _config = configuration.GetConfig<Config>(configKey);
             if (_config == null) throw new Exception("未读取到WebSocket配置");
+            _logger = ServiceHost.Provider.GetLogger<WebSocketService>();
             _connections = new Dictionary<string, WebSocketConnection>();
         }
 
@@ -133,7 +135,7 @@ namespace DwFramework.WebSocket
                             if (!string.IsNullOrEmpty(listen)) listen += ",";
                             listen += $"wss://{ip}:{port}";
                         }
-                        Console.WriteLine($"WebSocket服务已开启 => 监听地址:{listen}");
+                        _logger.LogDebug($"WebSocket服务已开启 => 监听地址:{listen}");
                     })
                     .Configure(app =>
                     {

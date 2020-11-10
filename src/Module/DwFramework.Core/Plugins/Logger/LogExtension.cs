@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NLog.Extensions.Logging;
@@ -30,5 +31,50 @@ namespace DwFramework.Core.Plugins
         /// <param name="provider"></param>
         /// <returns></returns>
         public static ILogger<T> GetLogger<T>(this IServiceProvider provider) => (ILogger<T>)provider.GetService(typeof(ILogger<T>));
+
+        /// <summary>
+        /// Debug
+        /// </summary>
+        /// <param name="logger"></param>
+        /// <param name="message"></param>
+        /// <param name="args"></param>
+        /// <returns></returns>
+        public static async Task LogDebugAsync(this ILogger logger, string message, params object[] args) => await TaskManager.CreateTask(() => logger.LogDebug(message, args));
+
+        /// <summary>
+        /// Trace
+        /// </summary>
+        /// <param name="logger"></param>
+        /// <param name="message"></param>
+        /// <param name="args"></param>
+        /// <returns></returns>
+        public static async Task LogTrace(this ILogger logger, string message, params object[] args) => await TaskManager.CreateTask(() => logger.LogTrace(message, args));
+
+        /// <summary>
+        /// Information
+        /// </summary>
+        /// <param name="logger"></param>
+        /// <param name="message"></param>
+        /// <param name="args"></param>
+        /// <returns></returns>
+        public static async Task LogInformationAsync(this ILogger logger, string message, params object[] args) => await TaskManager.CreateTask(() => logger.LogInformation(message, args));
+
+        /// <summary>
+        /// Warning
+        /// </summary>
+        /// <param name="logger"></param>
+        /// <param name="message"></param>
+        /// <param name="args"></param>
+        /// <returns></returns>
+        public static async Task LogWarning(this ILogger logger, string message, params object[] args) => await TaskManager.CreateTask(() => logger.LogWarning(message, args));
+
+        /// <summary>
+        /// Error
+        /// </summary>
+        /// <param name="logger"></param>
+        /// <param name="message"></param>
+        /// <param name="args"></param>
+        /// <returns></returns>
+        public static async Task LogError(this ILogger logger, string message, params object[] args) => await TaskManager.CreateTask(() => logger.LogError(message, args));
     }
 }
