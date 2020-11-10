@@ -7,6 +7,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
 using DwFramework.Core;
+using DwFramework.Core.Plugins;
 
 namespace DwFramework.WebAPI
 {
@@ -19,6 +20,7 @@ namespace DwFramework.WebAPI
         }
 
         private readonly Config _config;
+        private readonly ILogger<WebAPIService> _logger;
 
         /// <summary>
         /// 构造函数
@@ -30,6 +32,7 @@ namespace DwFramework.WebAPI
             var configuration = environment.GetConfiguration(configKey ?? "WebAPI");
             _config = configuration.GetConfig<Config>(configKey);
             if (_config == null) throw new Exception("未读取到WebAPI配置");
+            _logger = ServiceHost.Provider.GetLogger<WebAPIService>();
         }
 
         /// <summary>
@@ -72,7 +75,7 @@ namespace DwFramework.WebAPI
                             if (!string.IsNullOrEmpty(listen)) listen += ",";
                             listen += $"https://{ip}:{port}";
                         }
-                        Console.WriteLine($"WebAPI服务已开启 => 监听地址:{listen}");
+                        _logger.LogDebug($"WebAPI服务已开启 => 监听地址:{listen}");
                     })
                     .UseStartup<T>();
                 }).Build().RunAsync();

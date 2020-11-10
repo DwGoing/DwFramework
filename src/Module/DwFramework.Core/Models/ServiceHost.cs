@@ -7,6 +7,9 @@ using Autofac.Core;
 using Autofac.Core.Registration;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+
+using DwFramework.Core.Plugins;
 
 namespace DwFramework.Core
 {
@@ -15,6 +18,8 @@ namespace DwFramework.Core
         private readonly AutoResetEvent _autoResetEvent;
         private readonly ContainerBuilder _containerBuilder;
         private readonly ServiceCollection _services;
+
+        private ILogger<ServiceHost> _logger;
 
         public static Environment Environment { get; private set; }
         public static AutofacServiceProvider Provider { get; private set; }
@@ -56,8 +61,9 @@ namespace DwFramework.Core
             // 构建容器
             _containerBuilder.Populate(_services);
             Provider = new AutofacServiceProvider(_containerBuilder.Build());
+            _logger = Provider.GetLogger<ServiceHost>();
             OnInitializing?.Invoke(Provider);
-            Console.WriteLine("Service is running,Please enter \"Ctrl + C\" to stop!");
+            _logger.LogDebug("Service is running,Please enter \"Ctrl + C\" to stop!");
             OnInitialized?.Invoke(Provider);
             Console.CancelKeyPress += (sender, args) => Stop();
             _autoResetEvent.WaitOne();
@@ -68,9 +74,9 @@ namespace DwFramework.Core
         /// </summary>
         public void Stop()
         {
-            Console.WriteLine("Service is Stopping!");
+            _logger.LogDebug("Service is Stopping!");
             OnStoping?.Invoke(Provider);
-            Console.WriteLine("Service is stopped!");
+            _logger.LogDebug("Service is stopped!");
             OnStopped?.Invoke(Provider);
             _autoResetEvent.Set();
         }

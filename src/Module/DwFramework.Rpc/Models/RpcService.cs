@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.IO;
 using Grpc.Core;
+using Microsoft.Extensions.Logging;
 
 using DwFramework.Core;
 using DwFramework.Core.Plugins;
@@ -19,6 +20,7 @@ namespace DwFramework.RPC
         }
 
         private readonly Config _config;
+        private readonly ILogger<RPCService> _logger;
         private readonly Server _server;
 
         /// <summary>
@@ -31,6 +33,7 @@ namespace DwFramework.RPC
             var configuration = environment.GetConfiguration(configKey ?? "RPC");
             _config = configuration.GetConfig<Config>(configKey);
             if (_config == null) throw new Exception("RPC初始化异常 => 未读取到Rpc配置");
+            _logger = ServiceHost.Provider.GetLogger<RPCService>();
             _server = new Server();
         }
 
@@ -82,7 +85,7 @@ namespace DwFramework.RPC
                 }
                 RegisterFuncFromAssemblies();
                 _server.Start();
-                Console.WriteLine($"RPC服务已开启 => 监听地址:{listen}");
+                _logger.LogDebug($"RPC服务已开启 => 监听地址:{listen}");
             });
         }
 

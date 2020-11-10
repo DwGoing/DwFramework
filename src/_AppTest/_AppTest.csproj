@@ -12,6 +12,8 @@
         <ProjectReference Include="..\Plugins\DwFramework.ORM.Plugins\DwFramework.ORM.Plugins.csproj" />
         <ProjectReference Include="..\Plugins\DwFramework.RPC.Plugins\DwFramework.RPC.Plugins.csproj" />
         <ProjectReference Include="..\Module\DwFramework.Socket\DwFramework.Socket.csproj" />
+        <ProjectReference Include="..\Module\DwFramework.WebAPI\DwFramework.WebAPI.csproj" />
+        <ProjectReference Include="..\Plugins\DwFramework.WebAPI.Plugins\DwFramework.WebAPI.Plugins.csproj" />
     </ItemGroup>
     <ItemGroup>
         <None Remove="A.proto" />

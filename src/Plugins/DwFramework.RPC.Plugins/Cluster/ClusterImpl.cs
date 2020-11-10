@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Linq;
 using Grpc.Core;
 using Google.Protobuf.WellKnownTypes;
+using Microsoft.Extensions.Logging;
 
 using DwFramework.Core;
 using DwFramework.Core.Extensions;
@@ -22,6 +23,7 @@ namespace DwFramework.RPC.Plugins
         }
 
         private readonly Config _config;
+        private readonly ILogger<ClusterImpl> _logger;
         private readonly Metadata _header;
         private readonly Timer _healthCheckTimer;
         private readonly Dictionary<string, string> _peers = new Dictionary<string, string>();
@@ -43,6 +45,7 @@ namespace DwFramework.RPC.Plugins
             var configuration = environment.GetConfiguration(configKey ?? "Cluster");
             _config = configuration.GetConfig<Config>(configKey);
             if (_config == null) throw new Exception("Cluster初始化异常 => 未读取到Cluster配置");
+            _logger = ServiceHost.Provider.GetLogger<ClusterImpl>();
             ID = RandomGenerater.RandomString(32);
             _header = new Metadata
             {
@@ -53,7 +56,7 @@ namespace DwFramework.RPC.Plugins
             _healthCheckTimer.Elapsed += (_, args) => PeerHealthCheck();
             _healthCheckTimer.AutoReset = true;
             _healthCheckTimer.Start();
-            Console.WriteLine($"Cluster初始化 => 节点ID:{ID} ｜ 节点EndPoint:{_config.LinkUrl}");
+            _logger.LogDebug($"Cluster初始化 => 节点ID:{ID} ｜ 节点EndPoint:{_config.LinkUrl}");
         }
 
         /// <summary>
@@ -75,7 +78,7 @@ namespace DwFramework.RPC.Plugins
             _healthCheckTimer.Elapsed += (_, args) => PeerHealthCheck();
             _healthCheckTimer.AutoReset = true;
             _healthCheckTimer.Start();
-            Console.WriteLine($"Cluster初始化 => 节点ID:{ID} ｜ 节点EndPoint:{linkUrl}");
+            _logger.LogDebug($"Cluster初始化 => 节点ID:{ID} ｜ 节点EndPoint:{linkUrl}");
         }
 
         /// <summary>

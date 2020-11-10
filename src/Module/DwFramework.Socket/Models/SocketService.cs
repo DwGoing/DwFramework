@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 
 using DwFramework.Core;
 using DwFramework.Core.Plugins;
@@ -50,6 +51,7 @@ namespace DwFramework.Socket
         }
 
         private readonly Config _config;
+        private readonly ILogger<SocketService> _logger;
         private readonly Dictionary<string, SocketConnection> _connections;
         private System.Net.Sockets.Socket _server;
 
@@ -68,6 +70,7 @@ namespace DwFramework.Socket
             var configuration = environment.GetConfiguration(configKey ?? "Socket");
             _config = configuration.GetConfig<Config>(configKey);
             if (_config == null) throw new Exception("未读取到Socket配置");
+            _logger = ServiceHost.Provider.GetLogger<SocketService>();
             _connections = new Dictionary<string, SocketConnection>();
         }
 
@@ -85,7 +88,7 @@ namespace DwFramework.Socket
                 _server.Bind(new IPEndPoint(string.IsNullOrEmpty(ipAndPort[0]) ? IPAddress.Any : IPAddress.Parse(ipAndPort[0]), int.Parse(ipAndPort[1])));
                 _server.Listen(_config.BackLog);
                 _server.BeginAccept(OnConnectHandler, _server);
-                Console.WriteLine($"Socket服务已开启 => 监听地址:{_config.Listen}");
+                _logger.LogDebug($"Socket服务已开启 => 监听地址:{_config.Listen}");
             });
         }
 
