@@ -85,7 +85,7 @@ namespace DwFramework.RPC
                 }
                 RegisterFuncFromAssemblies();
                 _server.Start();
-                _logger.LogDebug($"RPC服务已开启 => 监听地址:{listen}");
+                _logger?.LogDebug($"RPC服务已开启 => 监听地址:{listen}");
             });
         }
 

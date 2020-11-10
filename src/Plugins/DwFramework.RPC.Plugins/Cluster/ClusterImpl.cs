@@ -56,7 +56,7 @@ namespace DwFramework.RPC.Plugins
             _healthCheckTimer.Elapsed += (_, args) => PeerHealthCheck();
             _healthCheckTimer.AutoReset = true;
             _healthCheckTimer.Start();
-            _logger.LogDebug($"Cluster初始化 => 节点ID:{ID} ｜ 节点EndPoint:{_config.LinkUrl}");
+            _logger?.LogDebug($"Cluster初始化 => 节点ID:{ID} ｜ 节点EndPoint:{_config.LinkUrl}");
         }
 
         /// <summary>
@@ -78,7 +78,7 @@ namespace DwFramework.RPC.Plugins
             _healthCheckTimer.Elapsed += (_, args) => PeerHealthCheck();
             _healthCheckTimer.AutoReset = true;
             _healthCheckTimer.Start();
-            _logger.LogDebug($"Cluster初始化 => 节点ID:{ID} ｜ 节点EndPoint:{linkUrl}");
+            _logger?.LogDebug($"Cluster初始化 => 节点ID:{ID} ｜ 节点EndPoint:{linkUrl}");
         }
 
         /// <summary>
