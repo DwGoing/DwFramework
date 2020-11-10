@@ -31,7 +31,7 @@ namespace DwFramework.RPC
                     provider.GetRPCService().AddService(service);
                 };
             });
-            host.OnInitializing += async provider => await provider.InitRPCServiceAsync();
+            host.OnInitializing += provider => provider.InitRPCServiceAsync().Wait();
         }
 
         /// <summary>
