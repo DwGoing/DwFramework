@@ -39,21 +39,21 @@ namespace DwFramework.WebSocket
 
         public class OnSendEventargs : EventArgs
         {
-            public string Message { get; private set; }
+            public byte[] Data { get; private set; }
 
-            public OnSendEventargs(string msg)
+            public OnSendEventargs(byte[] data)
             {
-                Message = msg;
+                Data = data;
             }
         }
 
         public class OnReceiveEventargs : EventArgs
         {
-            public string Message { get; private set; }
+            public byte[] Data { get; private set; }
 
-            public OnReceiveEventargs(string msg)
+            public OnReceiveEventargs(byte[] data)
             {
-                Message = msg;
+                Data = data;
             }
         }
 
@@ -168,8 +168,7 @@ namespace DwFramework.WebSocket
                                         break;
                                     dataBytes.AddRange(buffer.Take(result.Count));
                                     if (!result.EndOfMessage) continue;
-                                    var msg = Encoding.UTF8.GetString(dataBytes.ToArray());
-                                    OnReceive?.Invoke(connection, new OnReceiveEventargs(msg));
+                                    OnReceive?.Invoke(connection, new OnReceiveEventargs(dataBytes.ToArray()));
                                     dataBytes.Clear();
                                 }
                                 catch (Exception ex)
@@ -211,7 +210,7 @@ namespace DwFramework.WebSocket
             RequireClient(id);
             var connection = _connections[id];
             return connection.SendAsync(buffer)
-                .ContinueWith(a => OnSend?.Invoke(connection, new OnSendEventargs(Encoding.UTF8.GetString(buffer))));
+                .ContinueWith(a => OnSend?.Invoke(connection, new OnSendEventargs(buffer)));
         }
 
         /// <summary>
