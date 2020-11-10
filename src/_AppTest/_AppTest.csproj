@@ -11,6 +11,7 @@
         <ProjectReference Include="..\Module\DwFramework.ORM\DwFramework.ORM.csproj" />
         <ProjectReference Include="..\Plugins\DwFramework.ORM.Plugins\DwFramework.ORM.Plugins.csproj" />
         <ProjectReference Include="..\Plugins\DwFramework.RPC.Plugins\DwFramework.RPC.Plugins.csproj" />
+        <ProjectReference Include="..\Module\DwFramework.Socket\DwFramework.Socket.csproj" />
     </ItemGroup>
     <ItemGroup>
         <None Remove="A.proto" />
@@ -48,6 +49,9 @@
         </None>
         <None Update="RPC.json">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Socket.json">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
     </ItemGroup>
     <ItemGroup>
