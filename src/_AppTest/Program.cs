@@ -34,11 +34,11 @@ namespace _AppTest
                 var host = new ServiceHost();
                 host.RegisterLog();
                 host.RegisterTaskScheduleService();
-                host.OnInitialized += p =>
+                host.OnInitialized +=async p =>
                 {
                     var service = p.GetTaskScheduleService();
-                    service.CreateScheduler("Test");
-                    service.CreateJob<Job>("Test", "*/5 * * * * ?");
+                    await service.CreateScheduler("Test");
+                    await service.CreateJobAsync<Job>("Test", "*/5 * * * * ?");
                 };
                 host.Run();
             }
