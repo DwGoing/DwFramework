@@ -26,7 +26,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DwFramework.ORM", "Module\D
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DwFramework.ORM.Plugins", "Plugins\DwFramework.ORM.Plugins\DwFramework.ORM.Plugins.csproj", "{03359E21-479C-4FB7-8AC0-C3E240284B0C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DwFramework.RPC", "Module\DwFramework.RPC\DwFramework.Rpc.csproj", "{56C60C39-D4B1-4627-A575-34BA57B4E5DC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DwFramework.RPC", "Module\DwFramework.RPC\DwFramework.RPC.csproj", "{56C60C39-D4B1-4627-A575-34BA57B4E5DC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DwFramework.RPC.Plugins", "Plugins\DwFramework.RPC.Plugins\DwFramework.RPC.Plugins.csproj", "{8F564B0A-DED6-48C3-BD3B-FC0C28DFE3FB}"
 EndProject

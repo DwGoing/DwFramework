@@ -4,14 +4,13 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
 using Grpc.Core;
-using Google.Protobuf;
 using Google.Protobuf.WellKnownTypes;
 
 using DwFramework.Core;
 using DwFramework.Core.Extensions;
 using DwFramework.Core.Plugins;
 
-namespace DwFramework.Rpc.Plugins
+namespace DwFramework.RPC.Plugins
 {
     public sealed class ClusterImpl : Cluster.ClusterBase
     {
@@ -32,7 +31,7 @@ namespace DwFramework.Rpc.Plugins
         public event Action<Exception> OnConnectBootPeerFailed;
         public event Action<string> OnJoin;
         public event Action<string> OnExit;
-        public event Action<string, byte[]> OnReceiveData;
+        public event Action<string, DataType, byte[]> OnReceiveData;
 
         /// <summary>
         /// 构造函数
@@ -43,7 +42,7 @@ namespace DwFramework.Rpc.Plugins
         {
             var configuration = environment.GetConfiguration(configKey ?? "Cluster");
             _config = configuration.GetConfig<Config>(configKey);
-            if (_config == null) throw new Exception("未读取到Cluster配置");
+            if (_config == null) throw new Exception("Cluster初始化异常 => 未读取到Cluster配置");
             ID = RandomGenerater.RandomString(32);
             _header = new Metadata
             {
@@ -54,7 +53,7 @@ namespace DwFramework.Rpc.Plugins
             _healthCheckTimer.Elapsed += (_, args) => PeerHealthCheck();
             _healthCheckTimer.AutoReset = true;
             _healthCheckTimer.Start();
-            Console.WriteLine($"节点ID:{ID}");
+            Console.WriteLine($"Cluster初始化 => 节点ID:{ID} ｜ 节点EndPoint:{_config.LinkUrl}");
         }
 
         /// <summary>
@@ -76,7 +75,7 @@ namespace DwFramework.Rpc.Plugins
             _healthCheckTimer.Elapsed += (_, args) => PeerHealthCheck();
             _healthCheckTimer.AutoReset = true;
             _healthCheckTimer.Start();
-            Console.WriteLine($"节点ID:{ID}");
+            Console.WriteLine($"Cluster初始化 => 节点ID:{ID} ｜ 节点EndPoint:{linkUrl}");
         }
 
         /// <summary>
@@ -84,7 +83,7 @@ namespace DwFramework.Rpc.Plugins
         /// </summary>
         public void Init()
         {
-            if (_config.BootPeer == null) return;
+            if (string.IsNullOrEmpty(_config.BootPeer)) return;
             UseRPC(_config.BootPeer, client =>
             {
                 var response = client.Join(new Empty(), _header);
@@ -102,10 +101,10 @@ namespace DwFramework.Rpc.Plugins
         {
             var id = context.RequestHeaders.Get("id");
             var url = context.RequestHeaders.Get("linkurl");
-            if (id == null || string.IsNullOrEmpty(id.Value) || url == null || string.IsNullOrEmpty(url.Value)) throw new Exception($"无法获取节点信息");
+            if (string.IsNullOrEmpty(id?.Value) || url == null || string.IsNullOrEmpty(url?.Value)) throw new Exception($"Cluster加入集群失败 => 无法获取节点信息");
             _peers[id.Value] = url.Value;
             SyncRouteTable();
-            if (!PeerHealthCheck(id.Value)) throw new Exception("LinkUrl不可用");
+            if (!PeerHealthCheck(id.Value)) throw new Exception("Cluster加入集群失败 => LinkUrl不可用");
             OnJoin?.Invoke(id.Value);
             return Task.FromResult(new StringValue() { Value = ID });
         }
@@ -132,7 +131,6 @@ namespace DwFramework.Rpc.Plugins
             request.Value.ForEach(item =>
             {
                 if (item.Key == ID) return;
-                Console.WriteLine($"同步路由 {item.Key} {item.Value}");
                 _peers[item.Key] = item.Value;
             });
             return Task.FromResult(new Empty());
@@ -144,11 +142,11 @@ namespace DwFramework.Rpc.Plugins
         /// <param name="request"></param>
         /// <param name="context"></param>
         /// <returns></returns>
-        public override Task<Empty> SyncData(BytesValue request, ServerCallContext context)
+        public override Task<Empty> SyncData(Data request, ServerCallContext context)
         {
             var id = context.RequestHeaders.Get("id");
-            if (id == null || string.IsNullOrEmpty(id.Value)) throw new Exception($"无法获取节点信息");
-            OnReceiveData?.Invoke(id.Value, request.ToByteArray());
+            if (id == null || string.IsNullOrEmpty(id.Value)) throw new Exception($"Cluster同步数据失败 => 无法获取节点信息");
+            OnReceiveData?.Invoke(id.Value, (DataType)request.Type, request.Hex.FromHex().Decompress(CompressType.LZ4).Result);
             return Task.FromResult(new Empty());
         }
 
@@ -189,7 +187,6 @@ namespace DwFramework.Rpc.Plugins
                 _peers.Remove(id);
                 isOk = false;
             });
-            Console.WriteLine($"{id} {(isOk ? "OK" : "BAD")}");
             if (!isOk) OnExit?.Invoke(id);
             return isOk;
         }
@@ -216,10 +213,15 @@ namespace DwFramework.Rpc.Plugins
         /// <summary>
         /// 同步数据
         /// </summary>
+        /// <param name="type"></param>
         /// <param name="data"></param>
-        public void SyncData(byte[] data)
+        public void SyncData(DataType type, byte[] data)
         {
-            var request = BytesValue.Parser.ParseFrom(data);
+            var request = new Data()
+            {
+                Type = (int)type,
+                Hex = data.Compress(CompressType.LZ4).Result.ToHex()
+            };
             _peers.ForEach(item => UseRPC(item.Value, client => client.SyncData(request, _header)));
         }
     }

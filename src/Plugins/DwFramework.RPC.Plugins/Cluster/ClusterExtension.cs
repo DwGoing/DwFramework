@@ -3,7 +3,7 @@ using Autofac;
 
 using DwFramework.Core;
 
-namespace DwFramework.Rpc.Plugins
+namespace DwFramework.RPC.Plugins
 {
     public static class ClusterExtension
     {
@@ -21,7 +21,7 @@ namespace DwFramework.Rpc.Plugins
                 host.RegisterType<ClusterImpl>().SingleInstance();
             }
             else host.Register(c => new ClusterImpl(c.Resolve<Core.Environment>(), "Cluster")).SingleInstance();
-            host.OnInitializing += provider => provider.().AddService(provider.GetClusterImpl());
+            host.OnInitializing += provider => provider.GetRPCService().AddService(provider.GetClusterImpl());
             host.OnInitialized += provider => provider.GetClusterImpl().Init();
             return host;
         }
@@ -38,7 +38,7 @@ namespace DwFramework.Rpc.Plugins
         {
             var clusterImpl = new ClusterImpl(linkUrl, healthCheckPerMs, bootPeer);
             host.Register(context => clusterImpl).AsSelf().SingleInstance();
-            host.OnInitializing += provider => provider.GetRpcService().AddService(clusterImpl);
+            host.OnInitializing += provider => provider.GetRPCService().AddService(clusterImpl);
             host.OnInitialized += _ => clusterImpl.Init();
             return host;
         }

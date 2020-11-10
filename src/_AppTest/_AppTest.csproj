@@ -10,7 +10,7 @@
         <ProjectReference Include="..\Module\DwFramework.Core\DwFramework.Core.csproj" />
         <ProjectReference Include="..\Module\DwFramework.ORM\DwFramework.ORM.csproj" />
         <ProjectReference Include="..\Plugins\DwFramework.ORM.Plugins\DwFramework.ORM.Plugins.csproj" />
-        <ProjectReference Include="..\Module\DwFramework.RPC\DwFramework.Rpc.csproj" />
+        <ProjectReference Include="..\Plugins\DwFramework.RPC.Plugins\DwFramework.RPC.Plugins.csproj" />
     </ItemGroup>
     <ItemGroup>
         <None Remove="A.proto" />
