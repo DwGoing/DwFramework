@@ -1,9 +1,5 @@
 ﻿using System;
 using System.Text;
-using System.IO;
-using System.Threading;
-using System.Collections.Generic;
-using SqlSugar;
 using DwFramework.Core;
 using DwFramework.Core.Extensions;
 using DwFramework.Core.Plugins;
@@ -11,8 +7,7 @@ using DwFramework.RPC;
 using DwFramework.RPC.Plugins;
 using DwFramework.ORM;
 using DwFramework.ORM.Plugins;
-using System.Threading.Tasks;
-using Grpc.Core;
+using DwFramework.Socket;
 
 namespace _AppTest
 {
@@ -23,17 +18,29 @@ namespace _AppTest
             try
             {
                 var host = new ServiceHost();
-                host.RegisterClusterImpl("Cluster.json");
-                host.RegisterRPCService("RPC.json");
-                host.OnInitializing += p =>
+                host.RegisterSocketService("Socket.json");
+                host.OnInitializing += provider =>
                 {
-                    var cluster = p.GetClusterImpl();
-                    cluster.OnJoin += id => Console.WriteLine($"欢迎 {id} 加入集群");
-                    cluster.OnExit += id => Console.WriteLine($"{id} 退出集群");
-                    // SyncData() 在集群中同步数据
-                    cluster.OnJoin += id => cluster.SyncData(DataType.Text, $"欢迎 {id} 加入集群".ToBytes(Encoding.UTF8));
-                    cluster.OnReceiveData += (id, type, data) => Console.WriteLine($"收到 {id} 消息:{data.ToObject<string>(Encoding.UTF8)}");
-                    cluster.OnConnectBootPeerFailed += ex => Console.WriteLine(ex);
+                    var service = provider.GetSocketService();
+                    service.OnConnect += (c, a) =>
+                    {
+                        Console.WriteLine($"{c.ID}已连接");
+                    };
+                    service.OnSend += (c, a) =>
+                    {
+                        Console.WriteLine($"向{c.ID}消息：{Encoding.UTF8.GetString(a.Data)}");
+                    };
+                    service.OnReceive += (c, a) =>
+                    {
+                        Console.WriteLine($"收到{c.ID}发来的消息：{Encoding.UTF8.GetString(a.Data)}");
+                        var data = new { A = "a", B = 123 }.ToJson();
+                        var msg = $"HTTP/1.1 200 OK\r\nContent-Type:application/json;charset=UTF-8\r\nContent-Length:{data.Length}\r\nConnection:close\r\n\r\n{data}";
+                        service.SendAsync(c.ID, msg);
+                    };
+                    service.OnClose += (c, a) =>
+                    {
+                        Console.WriteLine($"{c.ID}已断开");
+                    };
                 };
                 host.Run();
             }
