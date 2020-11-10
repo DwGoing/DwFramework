@@ -30,7 +30,7 @@ namespace DwFramework.RPC
         {
             var configuration = environment.GetConfiguration(configKey ?? "RPC");
             _config = configuration.GetConfig<Config>(configKey);
-            if (_config == null) throw new Exception("未读取到Rpc配置");
+            if (_config == null) throw new Exception("RPC初始化异常 => 未读取到Rpc配置");
             _server = new Server();
         }
 
@@ -53,7 +53,7 @@ namespace DwFramework.RPC
         {
             return TaskManager.CreateTask(() =>
             {
-                if (_config.Listen == null || _config.Listen.Count <= 0) throw new Exception("缺少Listen配置");
+                if (_config.Listen == null || _config.Listen.Count <= 0) throw new Exception("RPC初始化异常 => 缺少Listen配置");
                 string listen = "";
                 // 监听地址及端口
                 if (_config.Listen.ContainsKey("http"))
@@ -82,7 +82,7 @@ namespace DwFramework.RPC
                 }
                 RegisterFuncFromAssemblies();
                 _server.Start();
-                Console.WriteLine($"Rpc服务已开启 => 监听地址:{listen}");
+                Console.WriteLine($"RPC服务已开启 => 监听地址:{listen}");
             });
         }
 
@@ -96,9 +96,9 @@ namespace DwFramework.RPC
         {
             var type = serviceImpl.GetType();
             var baseType = type.BaseType;
-            if (baseType.ReflectedType == null) throw new Exception("gRPC服务异常");
+            if (baseType.ReflectedType == null) throw new Exception("RPC注册异常 => 非gRPC实现");
             var method = baseType.ReflectedType.GetMethod("BindService", new Type[] { baseType });
-            if (method == null) throw new Exception("gRPC服务异常");
+            if (method == null) throw new Exception("RPC注册异常 => 非gRPC实现");
             return (ServerServiceDefinition)method.Invoke(null, new[] { serviceImpl });
         }
 

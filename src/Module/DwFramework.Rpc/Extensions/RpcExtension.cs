@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Autofac;
 
 using DwFramework.Core;
+using DwFramework.Core.Extensions;
 
 namespace DwFramework.RPC
 {
@@ -13,7 +14,7 @@ namespace DwFramework.RPC
         /// </summary>
         /// <param name="host"></param>
         /// <param name="configFilePath"></param>
-        public static void RegisterRPCService(this ServiceHost host, string configFilePath = null)
+        public static void RegisterRPCService(this ServiceHost host, string configFilePath = null, params Type[] services)
         {
             if (!string.IsNullOrEmpty(configFilePath))
             {
@@ -21,6 +22,15 @@ namespace DwFramework.RPC
                 host.RegisterType<RPCService>().SingleInstance();
             }
             else host.Register(c => new RPCService(c.Resolve<Core.Environment>(), "RPC")).SingleInstance();
+            services.ForEach(item =>
+            {
+                host.OnInitializing += provider =>
+                {
+                    var service = provider.GetService(item);
+                    if (service == null) return;
+                    provider.GetRPCService().AddService(service);
+                };
+            });
             host.OnInitializing += async provider => await provider.InitRPCServiceAsync();
         }
 

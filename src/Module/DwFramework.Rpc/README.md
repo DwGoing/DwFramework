@@ -25,15 +25,16 @@ PM> Install-Package DwFramework.RPC
 ### 0x2 注册服务及初始化
 
 ```c#
+// 使用自动化注册或者手动注册
+host.RegisterFromAssemblies();
+host.RegisterType<AService>();
+// 对于非自定义的RPC服务类(无法使用[RPC]特性标签)
+// 可以通过服务一起注册或者手动注册
+host.OnInitializing += p => p.GetRPCService().AddService(p.GetService<AService>()); // 一定要在注册服务之前
 // 注册服务
-host.RegisterRpcService();
-// 初始化服务
-host.InitService(provider => provider.InitRpcService());
-// 对于非自定义的RPC服务类可以通过手动注册（无法使用[RPC]特性标签）
-host.InitService(provider => {
-  var rpc = provider.GetRpcService();
-  rpc.AddService(provider.GetService<AService>());
-});
+host.RegisterRPCService("RPC.json");
+// 注册服务
+host.RegisterRPCService("RPC.json", typeof(AService));
 ```
 
 ### 0x3 注册Rpc函数
