@@ -75,7 +75,7 @@ namespace DwFramework.WebAPI
                             if (!string.IsNullOrEmpty(listen)) listen += ",";
                             listen += $"https://{ip}:{port}";
                         }
-                        _logger.LogDebug($"WebAPI服务已开启 => 监听地址:{listen}");
+                        _logger?.LogDebug($"WebAPI服务已开启 => 监听地址:{listen}");
                     })
                     .UseStartup<T>();
                 }).Build().RunAsync();

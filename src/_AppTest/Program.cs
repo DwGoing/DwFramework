@@ -20,8 +20,7 @@ namespace _AppTest
             try
             {
                 var host = new ServiceHost();
-                host.RegisterLog();
-                host.RegisterWebAPIService<Startup>("WebAPI.json");
+                //host.RegisterLog();
                 host.RegisterWebSocketService("WebSocket.json");
                 host.OnInitializing += provider =>
                 {

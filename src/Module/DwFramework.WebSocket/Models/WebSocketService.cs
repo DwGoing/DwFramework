@@ -135,7 +135,7 @@ namespace DwFramework.WebSocket
                             if (!string.IsNullOrEmpty(listen)) listen += ",";
                             listen += $"wss://{ip}:{port}";
                         }
-                        _logger.LogDebug($"WebSocket服务已开启 => 监听地址:{listen}");
+                        _logger?.LogDebug($"WebSocket服务已开启 => 监听地址:{listen}");
                     })
                     .Configure(app =>
                     {
