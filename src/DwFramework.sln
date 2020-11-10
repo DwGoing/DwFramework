@@ -16,8 +16,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DwFramework.WebSocket", "Mo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DwFramework.TaskSchedule", "Module\DwFramework.TaskSchedule\DwFramework.TaskSchedule.csproj", "{E3615C74-3CC1-499E-97C4-ECB3C7F0C7BC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DwFramework.Plugins.Rpc", "Plugins\DwFramework.Plugins.Rpc\DwFramework.Plugins.Rpc.csproj", "{4FCCBDF8-FFEA-481E-A935-A51A5D0E6088}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DwFramework.WebAPI", "Module\DwFramework.WebAPI\DwFramework.WebAPI.csproj", "{D6366887-279C-434C-83D0-C1F2BFA142BF}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DwFramework.Plugins.WebAPI", "Plugins\DwFramework.Plugins.WebAPI\DwFramework.Plugins.WebAPI.csproj", "{7C53FC4A-2288-41BC-A86D-FC987F6F6606}"
@@ -29,6 +27,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DwFramework.ORM.Plugins", "Plugins\DwFramework.ORM.Plugins\DwFramework.ORM.Plugins.csproj", "{03359E21-479C-4FB7-8AC0-C3E240284B0C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DwFramework.RPC", "Module\DwFramework.RPC\DwFramework.Rpc.csproj", "{56C60C39-D4B1-4627-A575-34BA57B4E5DC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DwFramework.RPC.Plugins", "Plugins\DwFramework.RPC.Plugins\DwFramework.RPC.Plugins.csproj", "{8F564B0A-DED6-48C3-BD3B-FC0C28DFE3FB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -64,10 +64,6 @@ Global
 		{E3615C74-3CC1-499E-97C4-ECB3C7F0C7BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E3615C74-3CC1-499E-97C4-ECB3C7F0C7BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E3615C74-3CC1-499E-97C4-ECB3C7F0C7BC}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4FCCBDF8-FFEA-481E-A935-A51A5D0E6088}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4FCCBDF8-FFEA-481E-A935-A51A5D0E6088}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4FCCBDF8-FFEA-481E-A935-A51A5D0E6088}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4FCCBDF8-FFEA-481E-A935-A51A5D0E6088}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D6366887-279C-434C-83D0-C1F2BFA142BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D6366887-279C-434C-83D0-C1F2BFA142BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D6366887-279C-434C-83D0-C1F2BFA142BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -92,6 +88,10 @@ Global
 		{56C60C39-D4B1-4627-A575-34BA57B4E5DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{56C60C39-D4B1-4627-A575-34BA57B4E5DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{56C60C39-D4B1-4627-A575-34BA57B4E5DC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8F564B0A-DED6-48C3-BD3B-FC0C28DFE3FB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8F564B0A-DED6-48C3-BD3B-FC0C28DFE3FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8F564B0A-DED6-48C3-BD3B-FC0C28DFE3FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8F564B0A-DED6-48C3-BD3B-FC0C28DFE3FB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
