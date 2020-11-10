@@ -2,12 +2,12 @@
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Linq;
-
 using Quartz;
 using Quartz.Impl;
 using Quartz.Simpl;
 using Quartz.Impl.Calendar;
 using Quartz.Impl.Matchers;
+using Quartz.Logging;
 
 using DwFramework.Core.Plugins;
 
@@ -17,6 +17,7 @@ namespace DwFramework.TaskSchedule
     {
         private readonly DirectSchedulerFactory _schedulerFactory;
 
+        public bool EnableLog { get => !LogProvider.IsDisabled; set => LogProvider.IsDisabled = !value; }
         public IScheduler[] AllSchedulers => _schedulerFactory.GetAllSchedulers().Result.ToArray();
 
         /// <summary>
@@ -24,6 +25,7 @@ namespace DwFramework.TaskSchedule
         /// </summary>
         public TaskScheduleService()
         {
+            EnableLog = false;
             _schedulerFactory = DirectSchedulerFactory.Instance;
         }
 
@@ -287,7 +289,7 @@ namespace DwFramework.TaskSchedule
         /// <param name="triggerName"></param>
         /// <param name="triggerGroup"></param>
         /// <returns></returns>
-        private Task CreateJob<T>(string schedulerKey, Func<JobBuilder, JobBuilder> jobBuild, Func<TriggerBuilder, TriggerBuilder> triggerBuild, string jobName = null, string jobGroup = null, string triggerName = null, string triggerGroup = null) where T : ScheduleJob
+        private Task CreateJob<T>(string schedulerKey, Func<JobBuilder, JobBuilder> jobBuild, Func<TriggerBuilder, TriggerBuilder> triggerBuild, string jobName = null, string jobGroup = null, string triggerName = null, string triggerGroup = null) where T : IJob
         {
             var scheduler = AllSchedulers.Where(item => item.SchedulerName == schedulerKey).SingleOrDefault();
             if (scheduler == null)
@@ -328,7 +330,7 @@ namespace DwFramework.TaskSchedule
         /// <param name="triggerName"></param>
         /// <param name="triggerGroup"></param>
         /// <returns></returns>
-        public Task CreateJob<T>(string schedulerKey, int repeat, long intervalMilliseconds, DateTimeOffset? startAt = null, string calName = null, IDictionary<string, object> properties = null, string jobName = null, string jobGroup = null, string triggerName = null, string triggerGroup = null) where T : ScheduleJob
+        public Task CreateJob<T>(string schedulerKey, int repeat, long intervalMilliseconds, DateTimeOffset? startAt = null, string calName = null, IDictionary<string, object> properties = null, string jobName = null, string jobGroup = null, string triggerName = null, string triggerGroup = null) where T : IJob
         {
             if (repeat < 0 || intervalMilliseconds <= 0)
                 throw new Exception("参数错误");
@@ -368,7 +370,7 @@ namespace DwFramework.TaskSchedule
         /// <param name="triggerName"></param>
         /// <param name="triggerGroup"></param>
         /// <returns></returns>
-        public Task CreateJob<T>(string schedulerKey, string cronExpression, DateTimeOffset? startAt = null, string calName = null, IDictionary<string, object> properties = null, string jobName = null, string jobGroup = null, string triggerName = null, string triggerGroup = null) where T : ScheduleJob
+        public Task CreateJob<T>(string schedulerKey, string cronExpression, DateTimeOffset? startAt = null, string calName = null, IDictionary<string, object> properties = null, string jobName = null, string jobGroup = null, string triggerName = null, string triggerGroup = null) where T : IJob
         {
             return CreateJob<T>(schedulerKey, jobBuilder =>
              {

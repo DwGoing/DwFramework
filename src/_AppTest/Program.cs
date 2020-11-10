@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text;
+using System.Threading.Tasks;
 using DwFramework.Core;
 using DwFramework.Core.Extensions;
 using DwFramework.Core.Plugins;
@@ -8,42 +9,36 @@ using DwFramework.ORM.Plugins;
 using DwFramework.RPC;
 using DwFramework.RPC.Plugins;
 using DwFramework.Socket;
+using DwFramework.TaskSchedule;
 using DwFramework.WebAPI;
 using DwFramework.WebSocket;
+using Quartz;
 
 namespace _AppTest
 {
     class Program
     {
+        class Job : IJob
+        {
+            public Task Execute(IJobExecutionContext context)
+            {
+                Console.WriteLine(1);
+                return Task.CompletedTask;
+            }
+        }
+
         static void Main(string[] args)
         {
             try
             {
                 var host = new ServiceHost();
-                //host.RegisterLog();
-                host.RegisterWebSocketService("WebSocket.json");
-                host.OnInitializing += provider =>
+                host.RegisterLog();
+                host.RegisterTaskScheduleService();
+                host.OnInitialized += p =>
                 {
-                    var service = provider.GetWebSocketService();
-                    service.OnConnect += (c, a) =>
-                    {
-                        Console.WriteLine($"{c.ID}已连接");
-                    };
-                    service.OnSend += (c, a) =>
-                    {
-                        var msg = Encoding.UTF8.GetString(a.Data);
-                        Console.WriteLine($"向{c.ID}发送消息：{msg}");
-                    };
-                    service.OnReceive += (c, a) =>
-                    {
-                        var msg = Encoding.UTF8.GetString(a.Data);
-                        Console.WriteLine($"收到{c.ID}发来的消息：{msg}");
-                        service.SendAsync(c.ID, a.Data);
-                    };
-                    service.OnClose += (c, a) =>
-                    {
-                        Console.WriteLine($"{c.ID}已断开");
-                    };
+                    var service = p.GetTaskScheduleService();
+                    service.CreateScheduler("Test");
+                    service.CreateJob<Job>("Test", "*/5 * * * * ?");
                 };
                 host.Run();
             }
