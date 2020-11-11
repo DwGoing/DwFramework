@@ -1,0 +1,28 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+
+namespace DwFramework.Core.Extensions
+{
+    public static class DataTableExtension
+    {
+        public static T[] ToArray<T>(this DataTable dataTable, Dictionary<Type, Func<object, object>> convertFunc = null)
+        {
+            var arr = new T[dataTable.Rows.Count];
+            var properties = typeof(T).GetProperties();
+            for (var i = 0; i < arr.Length; i++)
+            {
+                arr[i] = Activator.CreateInstance<T>();
+                var row = dataTable.Rows[i];
+                properties.ForEach(property =>
+                {
+                    if (!dataTable.Columns.Contains(property.Name)) return;
+                    var srcData = row[property.Name];
+                    var srcType = srcData.GetType();
+                    property.SetValue(arr[i], convertFunc != null && convertFunc.ContainsKey(srcType) ? convertFunc[srcType](srcData) : srcData);
+                });
+            }
+            return arr;
+        }
+    }
+}
