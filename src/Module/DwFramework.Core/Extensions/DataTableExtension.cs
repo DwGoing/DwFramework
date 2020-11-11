@@ -6,6 +6,13 @@ namespace DwFramework.Core.Extensions
 {
     public static class DataTableExtension
     {
+        /// <summary>
+        /// DataTable转实体数组
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="dataTable"></param>
+        /// <param name="convertFunc"></param>
+        /// <returns></returns>
         public static T[] ToArray<T>(this DataTable dataTable, Dictionary<Type, Func<object, object>> convertFunc = null)
         {
             var arr = new T[dataTable.Rows.Count];
