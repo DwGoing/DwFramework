@@ -18,7 +18,6 @@
         <ProjectReference Include="..\Module\DwFramework.TaskSchedule\DwFramework.TaskSchedule.csproj" />
         <ProjectReference Include="..\Module\DwFramework.RPC\DwFramework.RPC.csproj" />
         <ProjectReference Include="..\Module\DwFramework.RabbitMQ\DwFramework.RabbitMQ.csproj" />
-        <ProjectReference Include="..\Module\DwFramework.MachineLearning\DwFramework.MachineLearning.csproj" />
     </ItemGroup>
     <ItemGroup>
         <None Remove="A.proto" />
