@@ -11,9 +11,10 @@ namespace DwFramework.Core.Extensions
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="dataTable"></param>
+        /// <param name="propertyFunc"></param>
         /// <param name="convertFunc"></param>
         /// <returns></returns>
-        public static T[] ToArray<T>(this DataTable dataTable, Dictionary<Type, Func<object, object>> convertFunc = null)
+        public static T[] ToArray<T>(this DataTable dataTable, Func<string, string> propertyFunc = null, Dictionary<Type, Func<object, object>> convertFunc = null)
         {
             var arr = new T[dataTable.Rows.Count];
             var properties = typeof(T).GetProperties();
@@ -23,7 +24,7 @@ namespace DwFramework.Core.Extensions
                 var row = dataTable.Rows[i];
                 properties.ForEach(property =>
                 {
-                    if (!dataTable.Columns.Contains(property.Name)) return;
+                    if (!dataTable.Columns.Contains(propertyFunc != null ? propertyFunc(property.Name) : property.Name)) return;
                     var srcData = row[property.Name];
                     var srcType = srcData.GetType();
                     property.SetValue(arr[i], convertFunc != null && convertFunc.ContainsKey(srcType) ? convertFunc[srcType](srcData) : srcData);
