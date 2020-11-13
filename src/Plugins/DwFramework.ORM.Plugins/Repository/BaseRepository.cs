@@ -12,7 +12,7 @@ namespace DwFramework.ORM.Plugins
     {
         private readonly ORMService _ormService;
 
-        protected SqlSugarClient DbConnection { get => _ormService.DbConnection; }
+        protected SqlSugarClient DbConnection => _ormService.CreateConnection();
 
         /// <summary>
         /// 构造函数
