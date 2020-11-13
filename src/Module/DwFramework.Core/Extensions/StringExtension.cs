@@ -223,7 +223,18 @@ namespace DwFramework.Core.Extensions
         /// </summary>
         /// <param name="@char"></param>
         /// <returns></returns>
-        public static string[] GetPinYin(this char @char) => new ChineseChar(@char).Pinyins;
+        public static string[] GetPinYin(this char @char)
+        {
+            try
+            {
+                var decoder = new ChineseChar(@char);
+                return decoder.Pinyins;
+            }
+            catch
+            {
+                return null;
+            }
+        }
 
         /// <summary>
         /// 是否为邮箱地址
