@@ -37,8 +37,6 @@ namespace DwFramework.ORM
 
         private readonly Config _config;
 
-        public SqlSugarClient DbConnection => CreateConnection();
-
         /// <summary>
         /// 构造函数
         /// </summary>
@@ -92,21 +90,21 @@ namespace DwFramework.ORM
         /// <param name="columns"></param>
         /// <param name="isCreatePrimaryKey"></param>
         /// <returns></returns>
-        public Task<bool> CreateTableAsync(string tableName, List<DbColumnInfo> columns, bool isCreatePrimaryKey = true) => TaskManager.CreateTask(() => DbConnection.DbMaintenance.CreateTable(tableName, columns, isCreatePrimaryKey));
+        public Task<bool> CreateTableAsync(string tableName, List<DbColumnInfo> columns, bool isCreatePrimaryKey = true) => TaskManager.CreateTask(() => CreateConnection().DbMaintenance.CreateTable(tableName, columns, isCreatePrimaryKey));
 
         /// <summary>
         /// 删除表
         /// </summary>
         /// <param name="tableName"></param>
         /// <returns></returns>
-        public Task<bool> DropTableAsync(string tableName) => TaskManager.CreateTask(() => DbConnection.DbMaintenance.DropTable(tableName));
+        public Task<bool> DropTableAsync(string tableName) => TaskManager.CreateTask(() => CreateConnection().DbMaintenance.DropTable(tableName));
 
         /// <summary>
         /// 重置表
         /// </summary>
         /// <param name="tableName"></param>
         /// <returns></returns>
-        public Task<bool> TruncateTableAsync(string tableName) => TaskManager.CreateTask(() => DbConnection.DbMaintenance.TruncateTable(tableName));
+        public Task<bool> TruncateTableAsync(string tableName) => TaskManager.CreateTask(() => CreateConnection().DbMaintenance.TruncateTable(tableName));
 
         /// <summary>
         /// 复制表结构
@@ -118,8 +116,9 @@ namespace DwFramework.ORM
         {
             return TaskManager.CreateTask(() =>
             {
-                var columns = DbConnection.DbMaintenance.GetColumnInfosByTableName(from);
-                return DbConnection.DbMaintenance.CreateTable(to, columns);
+                var connection = CreateConnection();
+                var columns = connection.DbMaintenance.GetColumnInfosByTableName(from);
+                return connection.DbMaintenance.CreateTable(to, columns);
             });
         }
     }
