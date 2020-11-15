@@ -1,5 +1,4 @@
 ﻿using System;
-using Autofac;
 
 using DwFramework.Core;
 
@@ -11,15 +10,11 @@ namespace DwFramework.ORM
         /// 注册服务
         /// </summary>
         /// <param name="host"></param>
-        /// <param name="configFilePath"></param>
-        public static void RegisterORMService(this ServiceHost host, string configFilePath = null)
+        /// <param name="configKey"></param>
+        /// <param name="configPath"></param>
+        public static void RegisterORMService(this ServiceHost host, string configKey = null, string configPath = null)
         {
-            if (!string.IsNullOrEmpty(configFilePath))
-            {
-                host.AddJsonConfig(configFilePath, "ORM");
-                host.RegisterType<ORMService>().SingleInstance();
-            }
-            else host.Register(c => new ORMService(c.Resolve<Core.Environment>(), "ORM")).SingleInstance();
+            host.Register(c => new ORMService(configKey, configPath)).SingleInstance();
         }
 
         /// <summary>

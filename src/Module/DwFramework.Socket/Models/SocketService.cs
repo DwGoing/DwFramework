@@ -63,12 +63,11 @@ namespace DwFramework.Socket
         /// <summary>
         /// 构造函数
         /// </summary>
-        /// <param name="environment"></param>
         /// <param name="configKey"></param>
-        public SocketService(Core.Environment environment, string configKey = null)
+        /// <param name="configPath"></param>
+        public SocketService(string configKey = null, string configPath = null)
         {
-            var configuration = environment.GetConfiguration(configKey ?? "Socket");
-            _config = configuration.GetConfig<Config>(configKey);
+            _config = ServiceHost.Environment.GetConfiguration<Config>(configKey, configPath);
             if (_config == null) throw new Exception("未读取到Socket配置");
             _logger = ServiceHost.Provider.GetLogger<SocketService>();
             _connections = new Dictionary<string, SocketConnection>();

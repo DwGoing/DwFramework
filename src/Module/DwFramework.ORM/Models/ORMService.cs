@@ -8,33 +8,35 @@ using DwFramework.Core.Plugins;
 
 namespace DwFramework.ORM
 {
-    public sealed class ORMService
+    public sealed class Config
     {
-        private class Config
+        public static string ConfigKey => "ORM";
+
+        public class SlaveConnectionConfig
         {
-            public class SlaveConnectionConfig
-            {
-                public string ConnectionString { get; set; }
-                public int HitRate { get; set; }
-            }
-
             public string ConnectionString { get; set; }
-            public string DbType { get; set; }
-            public SlaveConnectionConfig[] SlaveConnections { get; set; }
-            public bool UseMemoryCache { get; set; } = false;
-
-            public DbType ParseDbType()
-            {
-                if (string.IsNullOrEmpty(DbType)) throw new Exception("ORM初始化异常 => 缺少DbType配置");
-                foreach (var item in Enum.GetValues(typeof(DbType)))
-                {
-                    if (string.Compare(item.ToString().ToLower(), DbType.ToLower(), true) == 0)
-                        return (DbType)item;
-                }
-                throw new Exception("ORM初始化异常 => 无法找到匹配的DbType");
-            }
+            public int HitRate { get; set; }
         }
 
+        public string ConnectionString { get; set; }
+        public string DbType { get; set; }
+        public SlaveConnectionConfig[] SlaveConnections { get; set; }
+        public bool UseMemoryCache { get; set; } = false;
+
+        public DbType ParseDbType()
+        {
+            if (string.IsNullOrEmpty(DbType)) throw new Exception("ORM初始化异常 => 缺少DbType配置");
+            foreach (var item in Enum.GetValues(typeof(DbType)))
+            {
+                if (string.Compare(item.ToString().ToLower(), DbType.ToLower(), true) == 0)
+                    return (DbType)item;
+            }
+            throw new Exception("ORM初始化异常 => 无法找到匹配的DbType");
+        }
+    }
+
+    public sealed class ORMService
+    {
         private readonly Config _config;
 
         public SqlSugarClient DbConnection => CreateConnection();
@@ -42,12 +44,11 @@ namespace DwFramework.ORM
         /// <summary>
         /// 构造函数
         /// </summary>
-        /// <param name="environment"></param>
         /// <param name="configKey"></param>
-        public ORMService(Core.Environment environment, string configKey = null)
+        /// <param name="configPath"></param>
+        public ORMService(string configKey = null, string configPath = null)
         {
-            var configuration = environment.GetConfiguration(configKey ?? "ORM");
-            _config = configuration.GetConfig<Config>(configKey);
+            _config = ServiceHost.Environment.GetConfiguration<Config>(configKey, configPath);
             if (_config == null) throw new Exception("ORM初始化异常 => 未读取到ORM配置");
         }
 

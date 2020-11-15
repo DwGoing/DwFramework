@@ -13,15 +13,15 @@ using DwFramework.Core.Plugins;
 
 namespace DwFramework.RPC.Plugins
 {
+    public sealed class Config
+    {
+        public string LinkUrl { get; set; }
+        public int HealthCheckPerMs { get; set; } = 10000;
+        public string BootPeer { get; set; }
+    }
+
     public sealed class ClusterImpl : Cluster.ClusterBase
     {
-        private class Config
-        {
-            public string LinkUrl { get; set; }
-            public int HealthCheckPerMs { get; set; } = 10000;
-            public string BootPeer { get; set; }
-        }
-
         private readonly Config _config;
         private readonly ILogger<ClusterImpl> _logger;
         private readonly Metadata _header;
@@ -38,12 +38,11 @@ namespace DwFramework.RPC.Plugins
         /// <summary>
         /// 构造函数
         /// </summary>
-        /// <param name="environment"></param>
         /// <param name="configKey"></param>
-        public ClusterImpl(Core.Environment environment, string configKey = null)
+        /// <param name="configPath"></param>
+        public ClusterImpl(string configKey = null, string configPath = null)
         {
-            var configuration = environment.GetConfiguration(configKey ?? "Cluster");
-            _config = configuration.GetConfig<Config>(configKey);
+            _config = ServiceHost.Environment.GetConfiguration<Config>(configKey, configPath);
             if (_config == null) throw new Exception("Cluster初始化异常 => 未读取到Cluster配置");
             _logger = ServiceHost.Provider.GetLogger<ClusterImpl>();
             ID = RandomGenerater.RandomString(32);
