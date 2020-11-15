@@ -11,14 +11,14 @@ using DwFramework.Core.Plugins;
 
 namespace DwFramework.RPC
 {
+    public sealed class Config
+    {
+        public string ContentRoot { get; set; }
+        public Dictionary<string, string> Listen { get; set; }
+    }
+
     public sealed class RPCService
     {
-        public class Config
-        {
-            public string ContentRoot { get; set; }
-            public Dictionary<string, string> Listen { get; set; }
-        }
-
         private readonly Config _config;
         private readonly ILogger<RPCService> _logger;
         private readonly Server _server;
@@ -26,12 +26,11 @@ namespace DwFramework.RPC
         /// <summary>
         /// 构造函数
         /// </summary>
-        /// <param name="environment"></param>
         /// <param name="configKey"></param>
-        public RPCService(Core.Environment environment, string configKey = null)
+        /// <param name="configPath"></param>
+        public RPCService(string configKey = null, string configPath = null)
         {
-            var configuration = environment.GetConfiguration(configKey ?? "RPC");
-            _config = configuration.GetConfig<Config>(configKey);
+            _config = ServiceHost.Environment.GetConfiguration<Config>(configKey, configPath);
             if (_config == null) throw new Exception("RPC初始化异常 => 未读取到Rpc配置");
             _logger = ServiceHost.Provider.GetLogger<RPCService>();
             _server = new Server();

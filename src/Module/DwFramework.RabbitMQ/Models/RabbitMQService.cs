@@ -20,18 +20,18 @@ namespace DwFramework.RabbitMQ
         public const string Topic = "topic";
     }
 
-    public class RabbitMQService
+    public sealed class Config
     {
-        public class Config
-        {
-            public string Host { get; set; } = "localhost";
-            public int Port { get; set; } = 5672;
-            public string UserName { get; set; }
-            public string Password { get; set; }
-            public string VirtualHost { get; set; } = "/";
-            public int ConnectionPoolSize { get; set; } = 3;
-        }
+        public string Host { get; set; } = "localhost";
+        public int Port { get; set; } = 5672;
+        public string UserName { get; set; }
+        public string Password { get; set; }
+        public string VirtualHost { get; set; } = "/";
+        public int ConnectionPoolSize { get; set; } = 3;
+    }
 
+    public sealed class RabbitMQService
+    {
         private readonly Config _config;
         private readonly ConnectionFactory _connectionFactory;
         private int _connectionPointer = 0;
@@ -39,16 +39,14 @@ namespace DwFramework.RabbitMQ
         private static readonly object _connectionPoolLock = new object();
         private readonly Dictionary<string, KeyValuePair<CancellationTokenSource, Task>> _subscribers;
 
-
         /// <summary>
         /// 构造函数
         /// </summary>
-        /// <param name="environment"></param>
         /// <param name="configKey"></param>
-        public RabbitMQService(Core.Environment environment, string configKey = null)
+        /// <param name="configPath"></param>
+        public RabbitMQService(string configKey = null, string configPath = null)
         {
-            var configuration = environment.GetConfiguration(configKey ?? "RabbitMQ");
-            _config = configuration.GetConfig<Config>(configKey);
+            _config = ServiceHost.Environment.GetConfiguration<Config>(configKey, configPath);
             if (_config == null) throw new Exception("未读取到RabbitMQ配置");
             _connectionFactory = new ConnectionFactory()
             {

@@ -14,7 +14,6 @@ namespace DwFramework.Core
         private readonly Dictionary<string, ConfigurationBuilder> _configurationBuilders;
         private readonly Dictionary<string, IConfiguration> _configurations;
 
-
         /// <summary>
         /// 构造函数
         /// </summary>
@@ -61,6 +60,18 @@ namespace DwFramework.Core
             key ??= "Global";
             key = _configurations.ContainsKey(key) ? key : "Global";
             return _configurations[key];
+        }
+
+        /// <summary>
+        /// 获取配置
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="configKey"></param>
+        /// <param name="configPath"></param>
+        /// <returns></returns>
+        public T GetConfiguration<T>(string configKey = null, string configPath = null)
+        {
+            return GetConfiguration(configKey).GetConfig<T>(configPath);
         }
     }
 }

@@ -9,12 +9,12 @@ namespace DwFramework.Core
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="configuration"></param>
-        /// <param name="key"></param>
+        /// <param name="path"></param>
         /// <returns></returns>
-        public static T GetConfig<T>(this IConfiguration configuration, string key = null)
+        public static T GetConfig<T>(this IConfiguration configuration, string path = null)
         {
             var section = configuration;
-            if (!string.IsNullOrEmpty(key)) section = section.GetSection(key);
+            if (!string.IsNullOrEmpty(path)) section = section.GetSection(path);
             return section.Get<T>();
         }
     }

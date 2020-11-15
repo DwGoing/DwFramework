@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Autofac;
 
 using DwFramework.Core;
 using DwFramework.Core.Extensions;
@@ -13,15 +12,12 @@ namespace DwFramework.RPC
         /// 注册服务
         /// </summary>
         /// <param name="host"></param>
-        /// <param name="configFilePath"></param>
-        public static void RegisterRPCService(this ServiceHost host, string configFilePath = null, params Type[] services)
+        /// <param name="configKey"></param>
+        /// <param name="configPath"></param>
+        /// <param name="services"></param>
+        public static void RegisterRPCService(this ServiceHost host, string configKey = null, string configPath = null, params Type[] services)
         {
-            if (!string.IsNullOrEmpty(configFilePath))
-            {
-                host.AddJsonConfig(configFilePath, "RPC");
-                host.RegisterType<RPCService>().SingleInstance();
-            }
-            else host.Register(c => new RPCService(c.Resolve<Core.Environment>(), "RPC")).SingleInstance();
+            host.Register(c => new RPCService(configKey, configPath)).SingleInstance();
             services.ForEach(item =>
             {
                 host.OnInitializing += provider =>

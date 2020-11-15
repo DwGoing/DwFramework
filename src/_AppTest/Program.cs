@@ -17,43 +17,17 @@ namespace _AppTest
 {
     class Program
     {
-        class A
-        {
-            public long ID { get; set; }
-            public DateTime Date { get; set; }
-            public Sex Sex { get; set; }
-        }
-
-        enum Sex
-        {
-            Unknow,
-            男,
-            女
-        }
-
-        static Dictionary<Type, Func<object, object>> ConvertFunc = new Dictionary<Type, Func<object, object>>()
-        {
-            {typeof(MySql.Data.Types.MySqlDateTime),src=>DateTime.Parse(src.ToString()) }
-        };
-
-        static Dictionary<string, Func<object, object>> PropertyFunc = new Dictionary<string, Func<object, object>>()
-        {
-            {"Date",src=>DateTime.Parse(src.ToString()) }
-        };
-
         static void Main(string[] args)
         {
             try
             {
                 var host = new ServiceHost();
                 host.RegisterLog();
-                host.RegisterORMService("ORM.json");
+                host.AddJsonConfig("ORM.json");
+                host.RegisterType<ORMService>();
                 host.OnInitialized += p =>
                 {
                     var s = p.GetORMService();
-                    var db = s.CreateConnection();
-                    var dt = db.Ado.GetDataTable($"SELECT id as ID,date as Date,sex as Sex FROM _test");
-                    var res = dt.ToArray<A>(propertyFunc: PropertyFunc);
                 };
                 host.Run();
             }
