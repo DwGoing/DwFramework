@@ -10,17 +10,14 @@ namespace DwFramework.ORM
 {
     public sealed class Config
     {
-        public static string ConfigKey => "ORM";
+        public Dictionary<string, DbConnectionConfig> ConnectionConfigs { get; set; }
+    }
 
-        public class SlaveConnectionConfig
-        {
-            public string ConnectionString { get; set; }
-            public int HitRate { get; set; }
-        }
-
+    public sealed class DbConnectionConfig
+    {
         public string ConnectionString { get; set; }
         public string DbType { get; set; }
-        public SlaveConnectionConfig[] SlaveConnections { get; set; }
+        public SlaveDbConnectionConfig[] SlaveConnections { get; set; }
         public bool UseMemoryCache { get; set; } = false;
 
         public DbType ParseDbType()
@@ -35,11 +32,15 @@ namespace DwFramework.ORM
         }
     }
 
+    public sealed class SlaveDbConnectionConfig
+    {
+        public string ConnectionString { get; set; }
+        public int HitRate { get; set; }
+    }
+
     public sealed class ORMService
     {
         private readonly Config _config;
-
-        public SqlSugarClient DbConnection => CreateConnection();
 
         /// <summary>
         /// 构造函数
@@ -55,24 +56,27 @@ namespace DwFramework.ORM
         /// <summary>
         /// 创建连接
         /// </summary>
+        /// <param name="connName"></param>
         /// <param name="initKeyType"></param>
         /// <returns></returns>
-        public SqlSugarClient CreateConnection(InitKeyType initKeyType = InitKeyType.Attribute)
+        public SqlSugarClient CreateConnection(string connName, InitKeyType initKeyType = InitKeyType.Attribute)
         {
+            if (!_config.ConnectionConfigs.ContainsKey(connName)) return null;
+            var connConfig = _config.ConnectionConfigs[connName];
             var config = new ConnectionConfig()
             {
-                ConnectionString = _config.ConnectionString,//必填, 数据库连接字符串
-                DbType = _config.ParseDbType(),         //必填, 数据库类型
+                ConnectionString = connConfig.ConnectionString,//必填, 数据库连接字符串
+                DbType = connConfig.ParseDbType(),         //必填, 数据库类型
                 IsAutoCloseConnection = true,       //默认false, 自动关闭数据库连接, 设置为true无需使用using或者Close操作
                 InitKeyType = initKeyType,    //默认SystemTable, 字段信息读取, 如：该属性是不是主键，是不是标识列等等信息
                 ConfigureExternalServices = new ConfigureExternalServices() // 配置扩展服务
             };
-            if (_config.UseMemoryCache) config.ConfigureExternalServices.DataInfoCacheService = new DataMemoryCache(); // Memory缓存
+            if (connConfig.UseMemoryCache) config.ConfigureExternalServices.DataInfoCacheService = new DataMemoryCache(); // Memory缓存
             // 主从模式
-            if (_config.SlaveConnections != null && _config.SlaveConnections.Length > 0)
+            if (connConfig.SlaveConnections != null && connConfig.SlaveConnections.Length > 0)
             {
                 config.SlaveConnectionConfigs = new List<SlaveConnectionConfig>();
-                foreach (var item in _config.SlaveConnections)
+                foreach (var item in connConfig.SlaveConnections)
                 {
                     config.SlaveConnectionConfigs.Add(new SlaveConnectionConfig()
                     {
@@ -89,37 +93,41 @@ namespace DwFramework.ORM
         /// <summary>
         /// 创建表
         /// </summary>
+        /// <param name="connName"></param>
         /// <param name="tableName"></param>
         /// <param name="columns"></param>
         /// <param name="isCreatePrimaryKey"></param>
         /// <returns></returns>
-        public Task<bool> CreateTableAsync(string tableName, List<DbColumnInfo> columns, bool isCreatePrimaryKey = true) => TaskManager.CreateTask(() => DbConnection.DbMaintenance.CreateTable(tableName, columns, isCreatePrimaryKey));
+        public Task<bool> CreateTableAsync(string connName, string tableName, List<DbColumnInfo> columns, bool isCreatePrimaryKey = true) => TaskManager.CreateTask(() => CreateConnection(connName).DbMaintenance.CreateTable(tableName, columns, isCreatePrimaryKey));
 
         /// <summary>
         /// 删除表
         /// </summary>
+        /// <param name="connName"></param>
         /// <param name="tableName"></param>
         /// <returns></returns>
-        public Task<bool> DropTableAsync(string tableName) => TaskManager.CreateTask(() => DbConnection.DbMaintenance.DropTable(tableName));
+        public Task<bool> DropTableAsync(string connName, string tableName) => TaskManager.CreateTask(() => CreateConnection(connName).DbMaintenance.DropTable(tableName));
 
         /// <summary>
         /// 重置表
         /// </summary>
+        /// <param name="connName"></param>
         /// <param name="tableName"></param>
         /// <returns></returns>
-        public Task<bool> TruncateTableAsync(string tableName) => TaskManager.CreateTask(() => DbConnection.DbMaintenance.TruncateTable(tableName));
+        public Task<bool> TruncateTableAsync(string connName, string tableName) => TaskManager.CreateTask(() => CreateConnection(connName).DbMaintenance.TruncateTable(tableName));
 
         /// <summary>
         /// 复制表结构
         /// </summary>
+        /// <param name="connName"></param>
         /// <param name="from"></param>
         /// <param name="to"></param>
         /// <returns></returns>
-        public Task<bool> CopyTableStructAsync(string from, string to)
+        public Task<bool> CopyTableStructAsync(string connName, string from, string to)
         {
             return TaskManager.CreateTask(() =>
             {
-                var connection = DbConnection;
+                var connection = CreateConnection(connName);
                 var columns = connection.DbMaintenance.GetColumnInfosByTableName(from);
                 return connection.DbMaintenance.CreateTable(to, columns);
             });

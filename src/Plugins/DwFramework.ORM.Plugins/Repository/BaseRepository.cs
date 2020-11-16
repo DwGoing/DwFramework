@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using SqlSugar;
 
 using DwFramework.Core;
 using DwFramework.Core.Plugins;
@@ -11,15 +10,13 @@ namespace DwFramework.ORM.Plugins
     public abstract class BaseRepository<T> : IRepository<T> where T : class, new()
     {
         private readonly ORMService _ormService;
+        private readonly string _connName;
 
-        protected SqlSugarClient DbConnection => _ormService.CreateConnection();
-
-        /// <summary>
-        /// 构造函数
-        /// </summary>
-        public BaseRepository()
+        ///构造函数
+        public BaseRepository(string connName)
         {
             _ormService = ServiceHost.Provider.GetORMService();
+            _connName = connName;
             if (_ormService == null) throw new Exception("未找到ORM服务");
         }
 
@@ -30,7 +27,7 @@ namespace DwFramework.ORM.Plugins
         /// <returns></returns>
         public Task<T[]> FindAllAsync(int cacheExpireSeconds = 0)
         {
-            return TaskManager.CreateTask(() => DbConnection.Queryable<T>()
+            return TaskManager.CreateTask(() => _ormService.CreateConnection(_connName).Queryable<T>()
                     .WithCacheIF(cacheExpireSeconds > 0, cacheExpireSeconds)
                     .ToArray());
         }
@@ -44,7 +41,7 @@ namespace DwFramework.ORM.Plugins
         /// <returns></returns>
         public Task<T[]> FindAllAsync(int pageIndex, int pageSize, int cacheExpireSeconds = 0)
         {
-            return TaskManager.CreateTask(() => DbConnection.Queryable<T>()
+            return TaskManager.CreateTask(() => _ormService.CreateConnection(_connName).Queryable<T>()
                     .WithCacheIF(cacheExpireSeconds > 0, cacheExpireSeconds)
                     .ToPageList(pageIndex, pageSize)
                     .ToArray());
@@ -58,7 +55,7 @@ namespace DwFramework.ORM.Plugins
         /// <returns></returns>
         public Task<T[]> FindAsync(Expression<Func<T, bool>> expression, int cacheExpireSeconds = 0)
         {
-            return TaskManager.CreateTask(() => DbConnection.Queryable<T>()
+            return TaskManager.CreateTask(() => _ormService.CreateConnection(_connName).Queryable<T>()
                     .Where(expression)
                     .WithCacheIF(cacheExpireSeconds > 0, cacheExpireSeconds)
                     .ToArray());
@@ -74,7 +71,7 @@ namespace DwFramework.ORM.Plugins
         /// <returns></returns>
         public Task<T[]> FindAsync(Expression<Func<T, bool>> expression, int pageIndex, int pageSize, int cacheExpireSeconds = 0)
         {
-            return TaskManager.CreateTask(() => DbConnection.Queryable<T>()
+            return TaskManager.CreateTask(() => _ormService.CreateConnection(_connName).Queryable<T>()
                     .Where(expression)
                     .ToPageList(pageIndex, pageSize)
                     .ToArray());
@@ -88,7 +85,7 @@ namespace DwFramework.ORM.Plugins
         /// <returns></returns>
         public Task<T> FindSingleAsync(Expression<Func<T, bool>> expression, int cacheExpireSeconds = 0)
         {
-            return DbConnection.Queryable<T>()
+            return _ormService.CreateConnection(_connName).Queryable<T>()
                 .WithCacheIF(cacheExpireSeconds > 0, cacheExpireSeconds)
                 .FirstAsync(expression);
         }
@@ -100,7 +97,7 @@ namespace DwFramework.ORM.Plugins
         /// <returns></returns>
         public Task<T> InsertAsync(T newRecord)
         {
-            return DbConnection.Insertable(newRecord)
+            return _ormService.CreateConnection(_connName).Insertable(newRecord)
                 .RemoveDataCache()
                 .ExecuteReturnEntityAsync();
         }
@@ -112,7 +109,7 @@ namespace DwFramework.ORM.Plugins
         /// <returns></returns>
         public Task<int> InsertAsync(T[] newRecords)
         {
-            return DbConnection.Insertable(newRecords)
+            return _ormService.CreateConnection(_connName).Insertable(newRecords)
                 .RemoveDataCache()
                 .ExecuteCommandAsync();
         }
@@ -124,7 +121,7 @@ namespace DwFramework.ORM.Plugins
         /// <returns></returns>
         public Task<int> DeleteAsync(Expression<Func<T, bool>> expression)
         {
-            return DbConnection.Deleteable(expression)
+            return _ormService.CreateConnection(_connName).Deleteable(expression)
                 .RemoveDataCache()
                 .ExecuteCommandAsync();
         }
@@ -136,7 +133,7 @@ namespace DwFramework.ORM.Plugins
         /// <returns></returns>
         public Task<bool> UpdateAsync(T updatedRecord)
         {
-            return DbConnection.Updateable(updatedRecord)
+            return _ormService.CreateConnection(_connName).Updateable(updatedRecord)
                 .RemoveDataCache()
                 .ExecuteCommandHasChangeAsync();
         }
@@ -148,7 +145,7 @@ namespace DwFramework.ORM.Plugins
         /// <returns></returns>
         public Task<int> UpdateAsync(T[] updatedRecords)
         {
-            return DbConnection.Updateable(updatedRecords)
+            return _ormService.CreateConnection(_connName).Updateable(updatedRecords)
                 .RemoveDataCache()
                 .ExecuteCommandAsync();
         }

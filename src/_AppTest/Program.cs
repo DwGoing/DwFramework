@@ -28,6 +28,7 @@ namespace _AppTest
                 host.OnInitialized += p =>
                 {
                     var s = p.GetORMService();
+                    var r= s.CreateConnection("DB2").Queryable<dynamic>().AS("zsy").ToDataTable();
                 };
                 host.Run();
             }
