@@ -3,7 +3,7 @@
     <PropertyGroup>
         <TargetFramework>netcoreapp3.1</TargetFramework>
         <ReleaseVersion>2.1.1</ReleaseVersion>
-        <SubVersion>7</SubVersion>
+        <SubVersion>8</SubVersion>
         <Version>$(ReleaseVersion).$(SubVersion)</Version>
         <Authors>DwGoing</Authors>
         <Description>DwFramework RPC插件库</Description>
