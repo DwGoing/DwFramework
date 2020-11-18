@@ -54,6 +54,17 @@ namespace DwFramework.ORM
         }
 
         /// <summary>
+        /// 获取数据库类型
+        /// </summary>
+        /// <param name="connName"></param>
+        /// <returns></returns>
+        public DbType GetDbType(string connName)
+        {
+            if (!_config.ConnectionConfigs.ContainsKey(connName)) throw new Exception("未知数据库");
+            return _config.ConnectionConfigs[connName].ParseDbType();
+        }
+
+        /// <summary>
         /// 创建连接
         /// </summary>
         /// <param name="connName"></param>
