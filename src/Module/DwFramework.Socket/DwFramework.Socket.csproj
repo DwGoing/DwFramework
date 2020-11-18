@@ -3,7 +3,7 @@
     <PropertyGroup>
         <TargetFramework>netcoreapp3.1</TargetFramework>
         <ReleaseVersion>2.1.1</ReleaseVersion>
-        <SubVersion>5</SubVersion>
+        <SubVersion>6</SubVersion>
         <Version>$(ReleaseVersion).$(SubVersion)</Version>
         <Authors>DwGoing</Authors>
         <Description>DwFramework Socket库</Description>

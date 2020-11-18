@@ -87,7 +87,7 @@ namespace DwFramework.Socket
                 _server.Bind(new IPEndPoint(string.IsNullOrEmpty(ipAndPort[0]) ? IPAddress.Any : IPAddress.Parse(ipAndPort[0]), int.Parse(ipAndPort[1])));
                 _server.Listen(_config.BackLog);
                 _server.BeginAccept(OnConnectHandler, _server);
-                _logger?.LogDebug($"Socket服务已开启 => 监听地址:{_config.Listen}");
+                _logger?.LogInformationAsync($"Socket服务已开启 => 监听地址:{_config.Listen}");
             });
         }
 
