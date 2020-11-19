@@ -32,18 +32,18 @@ namespace DwFramework.Core.Plugins
         /// <param name="startTime"></param>
         public SnowflakeGenerater(long workerId = 0, DateTime? startTime = null)
         {
-            StartTime = startTime != null ? startTime.Value : DateTime.Parse("1970.01.01");
             MaxTimestamp = 2L << TimestampBits;
             MaxWorkerId = (2L << WorkerIdBits) - 1;
             MaxSequence = (2L << SequenceBits) - 1;
 
             if (workerId < 0 || workerId > MaxWorkerId) throw new Exception("机器ID超过上限");
+            WorkerId = workerId;
+            StartTime = startTime != null ? startTime.Value : DateTime.Parse("1970.01.01");
         }
 
         /// <summary>
         /// 雪花算法
         /// </summary>
-        /// <param name="workerId"></param>
         /// <returns></returns>
         public long GenerateId()
         {
@@ -61,8 +61,7 @@ namespace DwFramework.Core.Plugins
                     _currentSequence = 0;
                 }
 
-                var id = _currentTimestamp << (WorkerIdBits + SequenceBits) | WorkerId << SequenceBits | _currentSequence;
-                return id;
+                return _currentTimestamp << (WorkerIdBits + SequenceBits) | WorkerId << SequenceBits | _currentSequence;
             }
         }
     }
