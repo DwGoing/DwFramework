@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
+using DwFramework.Core.Plugins;
+
 namespace DwFramework.Core.Extensions
 {
     public static class IEnumerableExtension
@@ -13,35 +15,43 @@ namespace DwFramework.Core.Extensions
         /// <typeparam name="T"></typeparam>
         /// <param name="enumerable"></param>
         /// <param name="action"></param>
-        public static void ForEach<T>(this IEnumerable<T> enumerable, Action<T> action)
+        /// <param name="onException"></param>
+        public static void ForEach<T>(this IEnumerable<T> enumerable, Action<T> action, Action<T, Exception> onException = null)
         {
-            foreach (var item in enumerable) action(item);
+            foreach (var item in enumerable)
+            {
+                try
+                {
+                    action(item);
+                }
+                catch (Exception ex)
+                {
+                    onException?.Invoke(item, ex);
+                }
+            }
         }
 
         /// <summary>
-        /// 遍历
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="enumerable"></param>
-        /// <param name="action"></param>
-        public static Task ForEachAsync<T>(this IEnumerable<T> enumerable, Action<T> action) => Task.Run(() => ForEach(enumerable, action));
-
-        /// <summary>
         /// 遍历（并行）
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="enumerable"></param>
         /// <param name="action"></param>
-        public static void ForEachParallel<T>(this IEnumerable<T> enumerable, Action<T> action) => Parallel.ForEach(enumerable, action);
-
-        /// <summary>
-        /// 遍历（并行）
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="enumerable"></param>
-        /// <param name="action"></param>
-        /// <returns></returns>
-        public static Task ForEachParallelAsync<T>(this IEnumerable<T> enumerable, Action<T> action) => Task.Run(() => Parallel.ForEach(enumerable, action));
+        /// <param name="onException"></param>
+        public static void ForEachParallel<T>(this IEnumerable<T> enumerable, Action<T> action, Action<T, Exception> onException = null)
+        {
+            Parallel.ForEach(enumerable, item =>
+            {
+                try
+                {
+                    action(item);
+                }
+                catch (Exception ex)
+                {
+                    onException?.Invoke(item, ex);
+                }
+            });
+        }
 
         /// <summary>
         /// 按字段去重
