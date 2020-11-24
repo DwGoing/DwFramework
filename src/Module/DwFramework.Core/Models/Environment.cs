@@ -48,7 +48,7 @@ namespace DwFramework.Core
         /// <summary>
         /// 构建环境配置
         /// </summary>
-        public void Build() => _configurationBuilders.ForEach(item => _configurations[item.Key] = item.Value.Build());
+        public void Build() => _configurationBuilders.ForEach(item => _configurations[item.Key] = item.Value.Build(), (_, ex) => throw ex);
 
         /// <summary>
         /// 获取配置
