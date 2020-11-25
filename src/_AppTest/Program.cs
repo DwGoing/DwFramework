@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.Json;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -18,10 +19,30 @@ namespace _AppTest
 {
     class Program
     {
-        class Obj
+        public class Config
         {
-            public int A { get; set; }
-            public string B { get; set; }
+            public Dictionary<string, RawDataStruct> RawDataStructs { get; set; }
+        }
+
+        public enum Method
+        {
+            Unknow,
+            View,
+            Request,
+            Push
+        }
+
+        public class RawDataStruct
+        {
+            public Method Method { get; set; }
+            public Dictionary<string, Property> Properties { get; set; }
+        }
+
+        public class Property
+        {
+            public string Map { get; set; }
+            public bool IsEnum { get; set; }
+            public string EnumName { get; set; }
         }
 
         static void Main(string[] args)
@@ -33,7 +54,8 @@ namespace _AppTest
                 host.AddJsonConfig("Config.json");
                 host.OnInitialized += p =>
                 {
-                    var config = p.GetService<DwFramework.Core.Environment>().GetConfiguration().GetConfig<Obj[]>("RawInfos");
+                    var config = p.GetService<DwFramework.Core.Environment>().GetConfiguration().GetConfig<Config>();
+                    var a = JsonDocument.Parse("{\"A\":{\"B\":10}}");
                 };
                 host.Run();
             }

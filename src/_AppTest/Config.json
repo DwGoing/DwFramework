@@ -1,12 +1,48 @@
-﻿{
-  "Rpc": {
-    "Listen": {
-      "http": ":5020"
+﻿//{
+//  "Rpc": {
+//    "Listen": {
+//      "http": ":5020"
+//    }
+//  },
+//  "Cluster": {
+//    "LinkUrl": "127.0.0.1:5020",
+//    "BootPeer": ""
+//  },
+//  "Type": 0
+//}
+
+
+{
+  "RawDataStructs": {
+    "XXXRawData": {
+      "Method": 1,
+      "Properties": {
+        "Name": {
+          "Map": "",
+          "IsEnum": false,
+          "EnumName": ""
+        },
+        "Sex": {
+          "Map": "",
+          "IsEnum": false,
+          "EnumName": ""
+        }
+      }
+    },
+    "YYYRawData": {
+      "Method": 1,
+      "Properties": {
+        "Name": {
+          "Map": "",
+          "IsEnum": false,
+          "EnumName": ""
+        },
+        "Sex": {
+          "Map": "",
+          "IsEnum": false,
+          "EnumName": ""
+        }
+      }
     }
-  },
-  "Cluster": {
-    "LinkUrl": "127.0.0.1:5020",
-    "BootPeer": ""
-  },
-  "Type": 0
+  }
 }
