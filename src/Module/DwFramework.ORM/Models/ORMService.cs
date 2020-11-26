@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using SqlSugar;
@@ -69,8 +70,10 @@ namespace DwFramework.ORM
         /// </summary>
         /// <param name="connName"></param>
         /// <param name="initKeyType"></param>
+        /// <param name="entityNameService"></param>
+        /// <param name="entityService"></param>
         /// <returns></returns>
-        public SqlSugarClient CreateConnection(string connName, InitKeyType initKeyType = InitKeyType.Attribute)
+        public SqlSugarClient CreateConnection(string connName, InitKeyType initKeyType = InitKeyType.Attribute, Action<Type, EntityInfo> entityNameService = null, Action<PropertyInfo, EntityColumnInfo> entityService = null)
         {
             if (!_config.ConnectionConfigs.ContainsKey(connName)) return null;
             var connConfig = _config.ConnectionConfigs[connName];
@@ -96,6 +99,8 @@ namespace DwFramework.ORM
                     });
                 }
             }
+            if (entityNameService != null) config.ConfigureExternalServices.EntityNameService = entityNameService;
+            if (entityService != null) config.ConfigureExternalServices.EntityService = entityService;
             var db = new SqlSugarClient(config);
             if (db == null) throw new Exception("ORM创建连接异常 => 数据库连接创建异常");
             return db;
