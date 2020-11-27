@@ -59,20 +59,20 @@ if [ "$buildVersion"x == ""x ]; then
     echo "未提供BuildVersion!"
     exit 5
 fi
-gsed -i "s/\(<BuildVersion>\)[^<]*\(<\)/\1$buildVersion\2/g" $file
+sed -i "" "s/\(<BuildVersion>\)[^<]*\(<\)/\1$buildVersion\2/g" $file
 
 # 计算时间戳版本号
 Y=$(date +%Y)
 start=$(date -j -f %Y-%m-%dT%H:%M:%S ${Y}-01-01T00:00:00 +%s)
 current=$(date +%s)
 reversion=$(expr $(expr $current - $start) / 60)
-gsed -i "s/\(<Reversion>\)[^<]*\(<\)/\1$reversion\2/g" $file
+sed -i "" "s/\(<Reversion>\)[^<]*\(<\)/\1$reversion\2/g" $file
 
 # 版本后缀
 if [ "$suffix"x != ""x ]; then
     suffix="-"$suffix
 fi
-gsed -i "s/\(<VersionSuffix>\)[^<]*\(<\)/\1$suffix\2/g" $file
+sed -i "" "s/\(<VersionSuffix>\)[^<]*\(<\)/\1$suffix\2/g" $file
 
 # 构建
 dotnet pack -c $configuration -o $output $file
