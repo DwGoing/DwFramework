@@ -2,9 +2,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <TargetFramework>netcoreapp3.1</TargetFramework>
-        <ReleaseVersion>2.1.1</ReleaseVersion>
-        <SubVersion>7</SubVersion>
-        <Version>$(ReleaseVersion).$(SubVersion)</Version>
+        <ReleaseVersion>2.1</ReleaseVersion>
+        <BuildVersion>6.10</BuildVersion>
+        <Reversion>477713</Reversion>
+        <VersionSuffix></VersionSuffix>
+        <Version>$(ReleaseVersion).$(BuildVersion)-$(Reversion)$(VersionSuffix)</Version>
         <Authors>DwGoing</Authors>
         <Description>DwFramework WebSocket库</Description>
         <PackageProjectUrl>https://github.com/Dwgoing/DwFramework</PackageProjectUrl>
