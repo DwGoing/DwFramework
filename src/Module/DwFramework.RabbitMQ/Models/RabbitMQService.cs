@@ -220,8 +220,7 @@ namespace DwFramework.RabbitMQ
             {
                 var task = TaskManager.CreateTask(token =>
                 {
-                    using var connection = _connectionFactory.CreateConnection();
-                    using var channel = connection.CreateModel();
+                    using var channel = GetConnection().CreateModel();
                     var consumer = new EventingBasicConsumer(channel);
                     channel.BasicConsume(queue, autoAck, consumer);
                     channel.BasicQos(0, qosCount, true);
