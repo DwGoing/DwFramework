@@ -3,8 +3,8 @@
     <PropertyGroup>
         <TargetFramework>netcoreapp3.1</TargetFramework>
         <ReleaseVersion>2.1</ReleaseVersion>
-        <BuildVersion>6.10</BuildVersion>
-        <Reversion>477713</Reversion>
+        <BuildVersion>1.10</BuildVersion>
+        <Reversion>487829</Reversion>
         <VersionSuffix></VersionSuffix>
         <Version>$(ReleaseVersion).$(BuildVersion)-$(Reversion)$(VersionSuffix)</Version>
         <Authors>DwGoing</Authors>
