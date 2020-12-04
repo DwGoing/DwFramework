@@ -37,7 +37,7 @@ namespace DwFramework.RabbitMQ
         private int _connectionPointer = 0;
         private readonly IConnection[] _connectionPool;
         private static readonly object _connectionPoolLock = new object();
-        private readonly Dictionary<string, KeyValuePair<CancellationTokenSource, Task>> _subscribers;
+        private readonly Dictionary<string, KeyValuePair<CancellationTokenSource, Task>[]> _subscribers;
 
         /// <summary>
         /// 构造函数
@@ -57,7 +57,7 @@ namespace DwFramework.RabbitMQ
                 VirtualHost = _config.VirtualHost
             };
             _connectionPool = new IConnection[_config.ConnectionPoolSize];
-            _subscribers = new Dictionary<string, KeyValuePair<CancellationTokenSource, Task>>();
+            _subscribers = new Dictionary<string, KeyValuePair<CancellationTokenSource, Task>[]>();
 
             // 初始化连接池
             // 预创建3条链接
@@ -210,22 +210,26 @@ namespace DwFramework.RabbitMQ
         /// <param name="queue"></param>
         /// <param name="autoAck"></param>
         /// <param name="handler"></param>
-        /// <returns></returns>
-        public void Subscribe(string queue, bool autoAck, Action<IModel, BasicDeliverEventArgs> handler)
+        /// <param name="threadCount"></param>
+        /// <param name="qosCount"></param>
+        public void Subscribe(string queue, bool autoAck, Action<IModel, BasicDeliverEventArgs> handler, int threadCount = 5, ushort qosCount = 300)
         {
-            var task = TaskManager.CreateTask(token =>
+            if (_subscribers.ContainsKey(queue)) Unsubscribe(queue);
+            _subscribers[queue] = new KeyValuePair<CancellationTokenSource, Task>[threadCount];
+            for (var i = 0; i < _subscribers[queue].Length; i++)
             {
-                using var connection = _connectionFactory.CreateConnection();
-                using var channel = connection.CreateModel();
-                var consumer = new EventingBasicConsumer(channel);
-                channel.BasicConsume(queue, autoAck, consumer);
-                consumer.Received += (sender, args) =>
+                var task = TaskManager.CreateTask(token =>
                 {
-                    handler(channel, args);
-                };
-                while (!token.IsCancellationRequested) Thread.Sleep(1);
-            }, out var cancellationToken);
-            _subscribers[queue] = new KeyValuePair<CancellationTokenSource, Task>(cancellationToken, task);
+                    using var connection = _connectionFactory.CreateConnection();
+                    using var channel = connection.CreateModel();
+                    var consumer = new EventingBasicConsumer(channel);
+                    channel.BasicConsume(queue, autoAck, consumer);
+                    channel.BasicQos(0, qosCount, true);
+                    consumer.Received += (sender, args) => handler(channel, args);
+                    while (!token.IsCancellationRequested) Thread.Sleep(1);
+                }, out var cancellationToken);
+                _subscribers[queue][i] = new KeyValuePair<CancellationTokenSource, Task>(cancellationToken, task);
+            }
         }
 
         /// <summary>
@@ -235,9 +239,8 @@ namespace DwFramework.RabbitMQ
         /// <returns></returns>
         public void Unsubscribe(string queue)
         {
-            if (!_subscribers.ContainsKey(queue))
-                throw new Exception("该队列不存在");
-            _subscribers[queue].Key.Cancel();
+            if (!_subscribers.ContainsKey(queue)) return;
+            _subscribers[queue].ForEach(item => item.Key.Cancel());
             _subscribers.Remove(queue);
         }
 
