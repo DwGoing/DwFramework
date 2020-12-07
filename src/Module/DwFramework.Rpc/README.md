@@ -29,7 +29,7 @@ PM> Install-Package DwFramework.RPC
 host.RegisterFromAssemblies();
 host.RegisterType<AService>();
 // 对于非自定义的RPC服务类(无法使用[RPC]特性标签)
-// 可以通过服务一起注册或者手动注册
+// 可以通过服务自动注册或者手动注册
 host.OnInitializing += p => p.GetRPCService().AddService(p.GetService<AService>()); // 一定要在注册服务之前
 // 注册服务
 host.RegisterRPCService("RPC.json");
