@@ -35,7 +35,7 @@ namespace DwFramework.RabbitMQ
         private readonly ConnectionFactory _connectionFactory;
         private IConnection _publishConnection;
         private IConnection _subscribeConnection;
-        private readonly Dictionary<string, KeyValuePair<CancellationTokenSource, Task>[]> _subscribers;
+        private readonly Dictionary<string, EventingBasicConsumer[]> _subscribers;
 
         /// <summary>
         /// 构造函数
@@ -56,7 +56,7 @@ namespace DwFramework.RabbitMQ
             };
             _publishConnection = _connectionFactory.CreateConnection();
             _subscribeConnection = _connectionFactory.CreateConnection();
-            _subscribers = new Dictionary<string, KeyValuePair<CancellationTokenSource, Task>[]>();
+            _subscribers = new Dictionary<string, EventingBasicConsumer[]>();
         }
 
         /// <summary>
@@ -194,25 +194,20 @@ namespace DwFramework.RabbitMQ
         /// <param name="queue"></param>
         /// <param name="autoAck"></param>
         /// <param name="handler"></param>
-        /// <param name="threadCount"></param>
+        /// <param name="consumerCount"></param>
         /// <param name="qosCount"></param>
-        public void Subscribe(string queue, bool autoAck, Action<IModel, BasicDeliverEventArgs> handler, int threadCount = 1, ushort qosCount = 300)
+        public void Subscribe(string queue, bool autoAck, Action<IModel, BasicDeliverEventArgs> handler, int consumerCount = 1, ushort qosCount = 100)
         {
-            if (_subscribers.ContainsKey(queue)) Unsubscribe(queue);
-            _publishConnection ??= _connectionFactory.CreateConnection();
-            _subscribers[queue] = new KeyValuePair<CancellationTokenSource, Task>[threadCount];
-            for (var i = 0; i < _subscribers[queue].Length; i++)
+            _subscribeConnection ??= _connectionFactory.CreateConnection();
+            _subscribers[queue] = new EventingBasicConsumer[consumerCount];
+            for (var i = 0; i < consumerCount; i++)
             {
-                var task = TaskManager.CreateTask(token =>
-                {
-                    using var channel = _publishConnection.CreateModel();
-                    var consumer = new EventingBasicConsumer(channel);
-                    channel.BasicConsume(queue, autoAck, consumer);
-                    channel.BasicQos(0, qosCount, true);
-                    consumer.Received += (sender, args) => handler(channel, args);
-                    while (!token.IsCancellationRequested) Thread.Sleep(1);
-                }, out var cancellationToken);
-                _subscribers[queue][i] = new KeyValuePair<CancellationTokenSource, Task>(cancellationToken, task);
+                var channel = _subscribeConnection.CreateModel();
+                var consumer = new EventingBasicConsumer(channel);
+                consumer.Received += (sender, args) => handler(channel, args);
+                channel.BasicQos(0, qosCount, true);
+                channel.BasicConsume(queue, autoAck, consumer);
+                _subscribers[queue][i] = consumer;
             }
         }
 
@@ -224,7 +219,7 @@ namespace DwFramework.RabbitMQ
         public void Unsubscribe(string queue)
         {
             if (!_subscribers.ContainsKey(queue)) return;
-            _subscribers[queue].ForEach(item => item.Key.Cancel());
+            _subscribers[queue].ForEach(item => item.Model.Abort());
             _subscribers.Remove(queue);
         }
 
