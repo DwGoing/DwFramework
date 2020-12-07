@@ -33,31 +33,25 @@ namespace _AppTest
                     try
                     {
                         var mq = p.GetRabbitMQService();
-                        mq.Subscribe("queue.indexservice.datapush.DiagnosisAndTreatment", true, (m, a) =>
+                        //mq.Subscribe("queue.indexservice.datapush.DiagnosisAndTreatment", false, (m, a) =>
+                        //{
+                        //    Console.WriteLine("DiagnosisAndTreatment");
+                        //    Thread.Sleep(200);
+                        //    m.BasicAck(a.DeliveryTag, false);
+                        //}, 2, 5);
+                        //mq.Subscribe("queue.indexservice.datapush.FamilyMedicine", false, (m, a) =>
+                        //{
+                        //    Console.WriteLine("FamilyMedicine");
+                        //    Thread.Sleep(200);
+                        //    m.BasicAck(a.DeliveryTag, false);
+                        //}, 2, 5);
+                        mq.Subscribe("queue.indexservice.datapush.PublicHealth", false, (m, a) =>
                         {
-                            Console.WriteLine(System.Text.Encoding.UTF8.GetString(a.Body.ToArray()));
-                        });
-                        mq.Subscribe("queue.indexservice.datapush.FamilyMedicine", true, (m, a) =>
-                        {
-                            Console.WriteLine(System.Text.Encoding.UTF8.GetString(a.Body.ToArray()));
-                        });
-                        mq.Subscribe("queue.indexservice.datapush.LifeStyle", true, (m, a) =>
-                        {
-                            Console.WriteLine(System.Text.Encoding.UTF8.GetString(a.Body.ToArray()));
-                        });
-                        mq.Subscribe("queue.indexservice.datapush.PhysiologicalMetric", true, (m, a) =>
-                        {
-                            Console.WriteLine(System.Text.Encoding.UTF8.GetString(a.Body.ToArray()));
-                        });
-                        mq.Subscribe("queue.indexservice.datapush.PublicHealth", true, (m, a) =>
-                        {
-                            Console.WriteLine(System.Text.Encoding.UTF8.GetString(a.Body.ToArray()));
-                        });
-                        mq.Publish(new { A = 111 }, "exchange.indexservice.direct", "datapush.DiagnosisAndTreatment", System.Text.Encoding.UTF8);
-                        mq.Publish(new { A = 222 }, "exchange.indexservice.direct", "datapush.FamilyMedicine", System.Text.Encoding.UTF8);
-                        mq.Publish(new { A = 333 }, "exchange.indexservice.direct", "datapush.LifeStyle", System.Text.Encoding.UTF8);
-                        mq.Publish(new { A = 444 }, "exchange.indexservice.direct", "datapush.PhysiologicalMetric", System.Text.Encoding.UTF8);
-                        mq.Publish(new { A = 555 }, "exchange.indexservice.direct", "datapush.PublicHealth", System.Text.Encoding.UTF8);
+                            var i = new Random().Next(50, 200);
+                            Console.WriteLine(i + "ms");
+                            Thread.Sleep(i);
+                            m.BasicAck(a.DeliveryTag, false);
+                        }, 3, 10);
                     }
                     catch (Exception ex)
                     {
