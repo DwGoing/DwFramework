@@ -2,11 +2,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <TargetFramework>netcoreapp3.1</TargetFramework>
-        <ReleaseVersion>2.1</ReleaseVersion>
+        <ReleaseVersion>2</ReleaseVersion>
         <BuildVersion>6.10</BuildVersion>
-        <Reversion>477713</Reversion>
         <VersionSuffix></VersionSuffix>
-        <Version>$(ReleaseVersion).$(BuildVersion)-$(Reversion)$(VersionSuffix)</Version>
+        <Version>$(ReleaseVersion).$(BuildVersion)$(VersionSuffix)</Version>
         <Authors>DwGoing</Authors>
         <Description>DwFramework RPC插件库</Description>
         <PackageProjectUrl>https://github.com/Dwgoing/DwFramework</PackageProjectUrl>
