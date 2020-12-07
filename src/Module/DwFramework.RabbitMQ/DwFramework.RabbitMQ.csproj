@@ -3,7 +3,7 @@
     <PropertyGroup>
         <TargetFramework>netcoreapp3.1</TargetFramework>
         <ReleaseVersion>2</ReleaseVersion>
-        <BuildVersion>1.100.9652</BuildVersion>
+        <BuildVersion>1.100.9662</BuildVersion>
         <VersionSuffix></VersionSuffix>
         <Version>$(ReleaseVersion).$(BuildVersion)$(VersionSuffix)</Version>
         <Authors>DwGoing</Authors>
