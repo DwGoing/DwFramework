@@ -1,5 +1,5 @@
 #!/bin/bash
-usage="Usage:\n-c|--configuration <CONFIGURATION>\n-o|--output <OUTPUT_DIRECTORY>\n-v|--buildversion <BUILD_VERSION>\n-s|--suffix <VERSION_SUFFIX>"
+usage="Usage:\n-c|--configuration <CONFIGURATION>\n-o|--output <OUTPUT_DIRECTORY>\n-s|--suffix <VERSION_SUFFIX>\n-v|--version <VERSION>"
 # 参数校验
 if [ $# -eq 0 ]; then
     echo -e usage
@@ -13,13 +13,14 @@ fi
 tag=""
 configuration=Debug
 output=.
-buildVersion=""
+version=""
 reversion=""
 suffix=""
+startYear=2018
 file=${@: -1}
 for i; do
     case $i in
-    -c | --configuration | -o | --output | -v | --buildversion | -s | --suffix)
+    -c | --configuration | -o | --output | -s | --suffix | -v | --buildversion)
         tag=$i
         ;;
     *)
@@ -32,12 +33,12 @@ for i; do
             output=$i
             tag=""
             ;;
-        -v | --buildversion)
-            buildVersion=$i
-            tag=""
-            ;;
         -s | --suffix)
             suffix=$i
+            tag=""
+            ;;
+        -v | --version)
+            version=$i
             tag=""
             ;;
         esac
@@ -55,18 +56,24 @@ if [ "${file##*.}"x != "csproj"x ]; then
     exit 4
 fi
 
-if [ "$buildVersion"x == ""x ]; then
-    echo "未提供BuildVersion!"
+if [ "$version"x == ""x ]; then
+    echo "未提供Version!"
     exit 5
 fi
-sed -i "" "s/\(<BuildVersion>\)[^<]*\(<\)/\1$buildVersion\2/g" $file
+
+currentYear=$(date +%Y)
+if [[ $version -lt 0 || $(expr $currentYear - $startYear) -lt $version ]]; then
+    echo "Version不可用!"
+    exit 5
+fi
 
 # 计算时间戳版本号
-Y=$(date +%Y)
-start=$(date -j -f %Y-%m-%dT%H:%M:%S ${Y}-01-01T00:00:00 +%s)
+start=$(date -j -f %Y-%m-%dT%H:%M:%S $(expr $startYear + $version)-01-01T00:00:00 +%s)
 current=$(date +%s)
-reversion=$(expr $(expr $current - $start) / 60)
-sed -i "" "s/\(<Reversion>\)[^<]*\(<\)/\1$reversion\2/g" $file
+timestamp=$(expr $current - $start)
+week=$(expr $timestamp / 604800)
+buildVersion=$version.$week.$(expr $(expr $timestamp % 604800) / 60)
+sed -i "" "s/\(<BuildVersion>\)[^<]*\(<\)/\1$buildVersion\2/g" $file
 
 # 版本后缀
 if [ "$suffix"x != ""x ]; then
