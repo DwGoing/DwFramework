@@ -37,7 +37,27 @@ namespace _AppTest
                         {
                             Console.WriteLine(System.Text.Encoding.UTF8.GetString(a.Body.ToArray()));
                         });
+                        mq.Subscribe("queue.indexservice.datapush.FamilyMedicine", true, (m, a) =>
+                        {
+                            Console.WriteLine(System.Text.Encoding.UTF8.GetString(a.Body.ToArray()));
+                        });
+                        mq.Subscribe("queue.indexservice.datapush.LifeStyle", true, (m, a) =>
+                        {
+                            Console.WriteLine(System.Text.Encoding.UTF8.GetString(a.Body.ToArray()));
+                        });
+                        mq.Subscribe("queue.indexservice.datapush.PhysiologicalMetric", true, (m, a) =>
+                        {
+                            Console.WriteLine(System.Text.Encoding.UTF8.GetString(a.Body.ToArray()));
+                        });
+                        mq.Subscribe("queue.indexservice.datapush.PublicHealth", true, (m, a) =>
+                        {
+                            Console.WriteLine(System.Text.Encoding.UTF8.GetString(a.Body.ToArray()));
+                        });
                         mq.Publish(new { A = 111 }, "exchange.indexservice.direct", "datapush.DiagnosisAndTreatment", System.Text.Encoding.UTF8);
+                        mq.Publish(new { A = 222 }, "exchange.indexservice.direct", "datapush.FamilyMedicine", System.Text.Encoding.UTF8);
+                        mq.Publish(new { A = 333 }, "exchange.indexservice.direct", "datapush.LifeStyle", System.Text.Encoding.UTF8);
+                        mq.Publish(new { A = 444 }, "exchange.indexservice.direct", "datapush.PhysiologicalMetric", System.Text.Encoding.UTF8);
+                        mq.Publish(new { A = 555 }, "exchange.indexservice.direct", "datapush.PublicHealth", System.Text.Encoding.UTF8);
                     }
                     catch (Exception ex)
                     {

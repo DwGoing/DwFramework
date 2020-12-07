@@ -27,16 +27,14 @@ namespace DwFramework.RabbitMQ
         public string UserName { get; set; }
         public string Password { get; set; }
         public string VirtualHost { get; set; } = "/";
-        public int ConnectionPoolSize { get; set; } = 3;
     }
 
     public sealed class RabbitMQService
     {
         private readonly Config _config;
         private readonly ConnectionFactory _connectionFactory;
-        private int _connectionPointer = 0;
-        private readonly IConnection[] _connectionPool;
-        private static readonly object _connectionPoolLock = new object();
+        private IConnection _publishConnection;
+        private IConnection _subscribeConnection;
         private readonly Dictionary<string, KeyValuePair<CancellationTokenSource, Task>[]> _subscribers;
 
         /// <summary>
@@ -56,28 +54,9 @@ namespace DwFramework.RabbitMQ
                 Password = _config.Password,
                 VirtualHost = _config.VirtualHost
             };
-            _connectionPool = new IConnection[_config.ConnectionPoolSize];
+            _publishConnection = _connectionFactory.CreateConnection();
+            _subscribeConnection = _connectionFactory.CreateConnection();
             _subscribers = new Dictionary<string, KeyValuePair<CancellationTokenSource, Task>[]>();
-
-            // 初始化连接池
-            // 预创建3条链接
-            for (int i = 0; i < 3; i++) _connectionPool[i] = _connectionFactory.CreateConnection();
-        }
-
-        /// <summary>
-        /// 获取连接
-        /// </summary>
-        /// <returns></returns>
-        private IConnection GetConnection()
-        {
-            lock (_connectionPoolLock)
-            {
-                var connection = _connectionPool[_connectionPointer];
-                if (connection == null || !connection.IsOpen) _connectionPool[_connectionPointer] = _connectionFactory.CreateConnection();
-                _connectionPointer++;
-                if (_connectionPointer >= _connectionPool.Length) _connectionPointer = 0;
-                return connection;
-            }
         }
 
         /// <summary>
@@ -91,7 +70,8 @@ namespace DwFramework.RabbitMQ
         /// <returns></returns>
         public void ExchangeDeclare(string exchange, string type, bool durable = false, bool autoDelete = false, IDictionary<string, object> arguments = null)
         {
-            using var channel = GetConnection().CreateModel();
+            _publishConnection ??= _connectionFactory.CreateConnection();
+            using var channel = _publishConnection.CreateModel();
             channel.ExchangeDeclare(exchange, type, durable, autoDelete, arguments);
         }
 
@@ -106,7 +86,8 @@ namespace DwFramework.RabbitMQ
         /// <returns></returns>
         public void QueueDeclare(string queue, bool durable = false, bool exclusive = false, bool autoDelete = false, IDictionary<string, object> arguments = null)
         {
-            using var channel = GetConnection().CreateModel();
+            _publishConnection ??= _connectionFactory.CreateConnection();
+            using var channel = _publishConnection.CreateModel();
             channel.QueueDeclare(queue, durable, exclusive, autoDelete, arguments);
         }
 
@@ -120,7 +101,8 @@ namespace DwFramework.RabbitMQ
         /// <returns></returns>
         public void QueueBind(string queue, string exchange, string routingKey = "", IDictionary<string, object> arguments = null)
         {
-            using var channel = GetConnection().CreateModel();
+            _publishConnection ??= _connectionFactory.CreateConnection();
+            using var channel = _publishConnection.CreateModel();
             channel.QueueBind(queue, exchange, routingKey, arguments);
         }
 
@@ -135,7 +117,8 @@ namespace DwFramework.RabbitMQ
         /// <param name="returnAction"></param>
         public void Publish(object data, string exchange = "", string routingKey = "", Encoding encoding = null, Action<IBasicProperties> basicPropertiesSetting = null, Action<BasicReturnEventArgs> returnAction = null)
         {
-            using var channel = GetConnection().CreateModel();
+            _publishConnection ??= _connectionFactory.CreateConnection();
+            using var channel = _publishConnection.CreateModel();
             IBasicProperties basicProperties = null;
             if (basicPropertiesSetting != null)
             {
@@ -174,7 +157,8 @@ namespace DwFramework.RabbitMQ
         /// <returns></returns>
         public bool PublishWaitForAck(object data, string exchange = "", string routingKey = "", Encoding encoding = null, Action<IBasicProperties> basicPropertiesSetting = null, int timeoutSeconds = 0, Action<BasicReturnEventArgs> returnAction = null)
         {
-            using var channel = GetConnection().CreateModel();
+            _publishConnection ??= _connectionFactory.CreateConnection();
+            using var channel = _publishConnection.CreateModel();
             channel.ConfirmSelect();
             IBasicProperties basicProperties = null;
             if (basicPropertiesSetting != null)
@@ -212,15 +196,16 @@ namespace DwFramework.RabbitMQ
         /// <param name="handler"></param>
         /// <param name="threadCount"></param>
         /// <param name="qosCount"></param>
-        public void Subscribe(string queue, bool autoAck, Action<IModel, BasicDeliverEventArgs> handler, int threadCount = 5, ushort qosCount = 300)
+        public void Subscribe(string queue, bool autoAck, Action<IModel, BasicDeliverEventArgs> handler, int threadCount = 1, ushort qosCount = 300)
         {
             if (_subscribers.ContainsKey(queue)) Unsubscribe(queue);
+            _publishConnection ??= _connectionFactory.CreateConnection();
             _subscribers[queue] = new KeyValuePair<CancellationTokenSource, Task>[threadCount];
             for (var i = 0; i < _subscribers[queue].Length; i++)
             {
                 var task = TaskManager.CreateTask(token =>
                 {
-                    using var channel = GetConnection().CreateModel();
+                    using var channel = _publishConnection.CreateModel();
                     var consumer = new EventingBasicConsumer(channel);
                     channel.BasicConsume(queue, autoAck, consumer);
                     channel.BasicQos(0, qosCount, true);

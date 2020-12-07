@@ -4,7 +4,7 @@
         <IsPackable>false</IsPackable>
         <OutputType>Exe</OutputType>
         <TargetFramework>netcoreapp3.1</TargetFramework>
-        <ReleaseVersion>2.1</ReleaseVersion>
+        <ReleaseVersion>2</ReleaseVersion>
     </PropertyGroup>
     <ItemGroup>
         <ProjectReference Include="..\Module\DwFramework.Core\DwFramework.Core.csproj" />
