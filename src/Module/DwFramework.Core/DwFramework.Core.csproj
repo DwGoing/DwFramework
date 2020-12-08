@@ -3,7 +3,7 @@
     <PropertyGroup>
         <TargetFramework>netcoreapp3.1</TargetFramework>
         <ReleaseVersion>2</ReleaseVersion>
-        <BuildVersion>1.48.7858</BuildVersion>
+        <BuildVersion>1.101.591</BuildVersion>
         <VersionSuffix></VersionSuffix>
         <Version>$(ReleaseVersion).$(BuildVersion)$(VersionSuffix)</Version>
         <Authors>DwGoing</Authors>
@@ -11,7 +11,7 @@
         <PackageProjectUrl>https://github.com/Dwgoing/DwFramework</PackageProjectUrl>
     </PropertyGroup>
     <ItemGroup>
-        <PackageReference Include="Autofac" Version="6.0.0" />
+        <PackageReference Include="Autofac" Version="6.1.0" />
         <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="7.1.0" />
         <PackageReference Include="Autofac.Extras.DynamicProxy" Version="6.0.0" />
         <PackageReference Include="Microsoft.AspNetCore.Hosting" Version="2.2.7" />
@@ -19,7 +19,7 @@
         <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="5.0.0" />
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.0" />
         <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="5.0.0" />
-        <PackageReference Include="NLog" Version="4.7.5" />
+        <PackageReference Include="NLog" Version="4.7.6" />
         <PackageReference Include="NLog.Extensions.Logging" Version="1.6.5" />
         <PackageReference Include="NLog.MailKit" Version="3.3.0" />
         <PackageReference Include="NLog.Targets.ElasticSearch" Version="7.5.0" />
