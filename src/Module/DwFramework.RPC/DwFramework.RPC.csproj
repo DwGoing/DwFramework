@@ -4,7 +4,8 @@
         <TargetFramework>netcoreapp3.1</TargetFramework>
         <ReleaseVersion>2</ReleaseVersion>
         <BuildVersion>1.101.592</BuildVersion>
-        <VersionSuffix></VersionSuffix>
+        <VersionSuffix>
+        </VersionSuffix>
         <Version>$(ReleaseVersion).$(BuildVersion)$(VersionSuffix)</Version>
         <Authors>DwGoing</Authors>
         <Description>DwFramework RPC库</Description>

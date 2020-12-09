@@ -4,20 +4,21 @@
         <TargetFramework>netcoreapp3.1</TargetFramework>
         <ReleaseVersion>2</ReleaseVersion>
         <BuildVersion>6.10</BuildVersion>
-        <VersionSuffix></VersionSuffix>
+        <VersionSuffix>
+        </VersionSuffix>
         <Version>$(ReleaseVersion).$(BuildVersion)$(VersionSuffix)</Version>
         <Authors>DwGoing</Authors>
         <Description>DwFramework RPC插件库</Description>
         <PackageProjectUrl>https://github.com/Dwgoing/DwFramework</PackageProjectUrl>
     </PropertyGroup>
     <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-      <OutputPath>..\DwFramework.RPC.Plugins\bin\Debug</OutputPath>
+        <OutputPath>..\DwFramework.RPC.Plugins\bin\Debug</OutputPath>
     </PropertyGroup>
     <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-      <OutputPath>..\DwFramework.RPC.Plugins\bin\Release</OutputPath>
+        <OutputPath>..\DwFramework.RPC.Plugins\bin\Release</OutputPath>
     </PropertyGroup>
     <ItemGroup>
-      <ProjectReference Include="..\..\Module\DwFramework.RPC\DwFramework.RPC.csproj" />
+        <ProjectReference Include="..\..\Module\DwFramework.RPC\DwFramework.RPC.csproj" />
     </ItemGroup>
     <ItemGroup>
         <PackageReference Include="Google.Protobuf" Version="3.14.0" />

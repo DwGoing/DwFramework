@@ -4,14 +4,15 @@
         <TargetFramework>netcoreapp3.1</TargetFramework>
         <ReleaseVersion>2</ReleaseVersion>
         <BuildVersion>6.10</BuildVersion>
-        <VersionSuffix></VersionSuffix>
+        <VersionSuffix>
+        </VersionSuffix>
         <Version>$(ReleaseVersion).$(BuildVersion)$(VersionSuffix)</Version>
         <Authors>DwGoing</Authors>
         <Description>DwFramework WebAPI插件库</Description>
         <PackageProjectUrl>https://github.com/Dwgoing/DwFramework</PackageProjectUrl>
     </PropertyGroup>
     <ItemGroup>
-      <ProjectReference Include="..\..\Module\DwFramework.WebAPI\DwFramework.WebAPI.csproj" />
+        <ProjectReference Include="..\..\Module\DwFramework.WebAPI\DwFramework.WebAPI.csproj" />
     </ItemGroup>
     <ItemGroup>
         <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.8.0" />

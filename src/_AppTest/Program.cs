@@ -15,19 +15,35 @@ using DwFramework.Socket;
 using DwFramework.TaskSchedule;
 using DwFramework.WebAPI;
 using DwFramework.WebSocket;
+using Quartz;
+using Microsoft.Extensions.Logging;
 
 namespace _AppTest
 {
     class Program
     {
+        [DisallowConcurrentExecution]
+        class Job : IJob
+        {
+            public Task Execute(IJobExecutionContext context)
+            {
+                var id = (int)context.MergedJobDataMap.Get("id");
+                Console.WriteLine(id);
+                return Task.CompletedTask;
+            }
+        }
+
         static void Main(string[] args)
         {
             try
             {
                 var host = new ServiceHost();
                 host.RegisterLog();
-                host.AddJsonConfig("RPC.json");
-                host.RegisterRPCService();
+                host.RegisterTaskScheduleService();
+                host.OnInitialized += p =>
+                {
+                    var s = p.GetLogger<Job>();
+                };
                 host.Run();
             }
             catch (Exception ex)

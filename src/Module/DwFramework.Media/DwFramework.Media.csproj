@@ -3,19 +3,16 @@
     <PropertyGroup>
         <TargetFramework>netcoreapp3.1</TargetFramework>
         <ReleaseVersion>2</ReleaseVersion>
-        <BuildVersion>6.10</BuildVersion>
+        <BuildVersion>1.101.591</BuildVersion>
         <VersionSuffix>
         </VersionSuffix>
         <Version>$(ReleaseVersion).$(BuildVersion)$(VersionSuffix)</Version>
         <Authors>DwGoing</Authors>
-        <Description>DwFramework Socket库</Description>
+        <Description>DwFramework 媒体库</Description>
         <PackageProjectUrl>https://github.com/Dwgoing/DwFramework</PackageProjectUrl>
     </PropertyGroup>
     <ItemGroup>
-        <ProjectReference Include="..\DwFramework.Core\DwFramework.Core.csproj" />
-    </ItemGroup>
-    <ItemGroup>
-        <None Include="README.md">
+        <None Update="README.md">
             <IncludeInPackage>true</IncludeInPackage>
         </None>
         <None Include="..\..\..\LICENSE" Link="LICENSE">
