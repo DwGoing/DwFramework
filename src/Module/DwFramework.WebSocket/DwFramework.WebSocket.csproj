@@ -4,7 +4,8 @@
         <TargetFramework>netcoreapp3.1</TargetFramework>
         <ReleaseVersion>2</ReleaseVersion>
         <BuildVersion>6.10</BuildVersion>
-        <VersionSuffix></VersionSuffix>
+        <VersionSuffix>
+        </VersionSuffix>
         <Version>$(ReleaseVersion).$(BuildVersion)$(VersionSuffix)</Version>
         <Authors>DwGoing</Authors>
         <Description>DwFramework WebSocket库</Description>

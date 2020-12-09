@@ -30,7 +30,7 @@ namespace DwFramework.Core.Plugins
         /// <typeparam name="T"></typeparam>
         /// <param name="provider"></param>
         /// <returns></returns>
-        public static ILogger<T> GetLogger<T>(this IServiceProvider provider) => (ILogger<T>)provider.GetService(typeof(ILogger<T>));
+        public static ILogger<T> GetLogger<T>(this IServiceProvider provider) => provider.GetService<ILogger<T>>();
 
         /// <summary>
         /// Debug
