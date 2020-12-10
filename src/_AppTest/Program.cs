@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Text.Json;
+using System.Text;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -22,27 +22,30 @@ namespace _AppTest
 {
     class Program
     {
-        [DisallowConcurrentExecution]
-        class Job : IJob
-        {
-            public Task Execute(IJobExecutionContext context)
-            {
-                var id = (int)context.MergedJobDataMap.Get("id");
-                Console.WriteLine(id);
-                return Task.CompletedTask;
-            }
-        }
-
         static void Main(string[] args)
         {
             try
             {
-                var host = new ServiceHost();
-                host.RegisterLog();
-                host.RegisterTaskScheduleService();
+                var host = new ServiceHost(configFilePath: "WebSocket.json");
+                host.RegisterWebSocketService();
                 host.OnInitialized += p =>
                 {
-                    var s = p.GetLogger<Job>();
+                    var s = p.GetWebSocketService();
+                    s.OnConnect += (a, c) => Console.WriteLine(a.ID);
+                    s.OnReceive += async (a, c) =>
+                    {
+                        Console.WriteLine(Encoding.UTF8.GetString(c.Data));
+                        await a.CloseAsync();
+                    };
+                    s.OnClose += (a, c) => Console.WriteLine(a.ID);
+                };
+                host.OnInitialized += async p =>
+                {
+                    Thread.Sleep(2000);
+                    var client = new WebSocketClient();
+                    await client.ConnectAsync("ws://127.0.0.1:10090");
+                    await client.SendAsync(Encoding.UTF8.GetBytes("XXX"));
+                    await client.CloseAsync();
                 };
                 host.Run();
             }

@@ -27,13 +27,13 @@ namespace DwFramework.WebSocket
         /// </summary>
         /// <param name="buffer"></param>
         /// <returns></returns>
-        public Task SendAsync(byte[] buffer) => WebSocket.SendAsync(new ArraySegment<byte>(buffer), WebSocketMessageType.Text, true, CancellationToken.None);
+        public async Task SendAsync(byte[] buffer) => await WebSocket.SendAsync(new ArraySegment<byte>(buffer), WebSocketMessageType.Text, true, CancellationToken.None);
 
         /// <summary>
         /// 断开连接
         /// </summary>
         /// <returns></returns>
-        public Task CloseAsync() => WebSocket.CloseOutputAsync(WebSocketCloseStatus.NormalClosure, null, CancellationToken.None).ContinueWith(a => Dispose());
+        public async Task CloseAsync() => await WebSocket.CloseOutputAsync(WebSocketCloseStatus.NormalClosure, null, CancellationToken.None).ContinueWith(task => Dispose());
 
         /// <summary>
         /// 释放连接
