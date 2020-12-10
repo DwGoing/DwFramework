@@ -5,6 +5,7 @@ using System.Net.WebSockets;
 using System.Text;
 using System.Collections.Generic;
 
+using DwFramework.Core.Extensions;
 using DwFramework.Core.Plugins;
 
 namespace DwFramework.WebSocket
@@ -71,6 +72,7 @@ namespace DwFramework.WebSocket
                 else _bufferSize = value;
             }
         }
+        public WebSocketState State => _client.State;
 
         /// <summary>
         /// 构造函数
@@ -116,6 +118,7 @@ namespace DwFramework.WebSocket
                         }
                     }
                     OnClose?.Invoke(new OnCloceEventargs() { });
+                    ClearAllEvent();
                 });
             });
         }
@@ -148,6 +151,38 @@ namespace DwFramework.WebSocket
         public Task CloseAsync()
         {
             return _client.CloseAsync(WebSocketCloseStatus.NormalClosure, null, CancellationToken.None);
+        }
+
+        /// <summary>
+        /// 清空事件列表
+        /// </summary>
+        private void ClearAllEvent()
+        {
+            if (OnConnect != null)
+            {
+                var actions = OnConnect.GetInvocationList();
+                actions.ForEach(item => OnConnect -= (Action<OnConnectEventargs>)item);
+            }
+            if (OnClose != null)
+            {
+                var actions = OnClose.GetInvocationList();
+                actions.ForEach(item => OnClose -= (Action<OnCloceEventargs>)item);
+            }
+            if (OnError != null)
+            {
+                var actions = OnError.GetInvocationList();
+                actions.ForEach(item => OnError -= (Action<OnErrorEventargs>)item);
+            }
+            if (OnSend != null)
+            {
+                var actions = OnSend.GetInvocationList();
+                actions.ForEach(item => OnSend -= (Action<OnSendEventargs>)item);
+            }
+            if (OnReceive != null)
+            {
+                var actions = OnReceive.GetInvocationList();
+                actions.ForEach(item => OnReceive -= (Action<OnReceiveEventargs>)item);
+            }
         }
     }
 }
