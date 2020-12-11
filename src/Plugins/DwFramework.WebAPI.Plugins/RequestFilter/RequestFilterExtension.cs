@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Diagnostics;
@@ -16,16 +17,6 @@ namespace DwFramework.WebAPI.Plugins
         public static string GetRequestId() => Trace.CorrelationManager.ActivityId.ToString();
 
         /// <summary>
-        /// 重载Body
-        /// </summary>
-        /// <param name="context"></param>
-        public static void ReloadBody(this HttpContext context)
-        {
-            context.Request.EnableBuffering();
-            context.Request.Body.Position = 0;
-        }
-
-        /// <summary>
         /// 注册过滤器
         /// </summary>
         /// <param name="app"></param>
@@ -37,13 +28,13 @@ namespace DwFramework.WebAPI.Plugins
             {
                 try
                 {
-                    Trace.CorrelationManager.ActivityId = Guid.NewGuid();
+                    context.Request.Body.Seek(0, SeekOrigin.Begin);
                     await next();
                 }
                 catch (Exception ex)
                 {
-                    context.ReloadBody();
-                    exceptionHandler(context, ex);
+                    context.Request.Body.Seek(0, SeekOrigin.Begin);
+                    exceptionHandler?.Invoke(context, ex);
                 }
             });
             return app;
@@ -63,16 +54,16 @@ namespace DwFramework.WebAPI.Plugins
             {
                 try
                 {
-                    Trace.CorrelationManager.ActivityId = Guid.NewGuid();
-                    context.ReloadBody();
+                    context.Request.Body.Seek(0, SeekOrigin.Begin);
                     startHandler(context);
+                    context.Request.Body.Seek(0, SeekOrigin.Begin);
                     await next();
-                    context.ReloadBody();
+                    context.Request.Body.Seek(0, SeekOrigin.Begin);
                     endHandler(context);
                 }
                 catch (Exception ex)
                 {
-                    context.ReloadBody();
+                    context.Request.Body.Seek(0, SeekOrigin.Begin);
                     exceptionHandler?.Invoke(context, ex);
                 }
             });
@@ -92,20 +83,20 @@ namespace DwFramework.WebAPI.Plugins
             {
                 try
                 {
-                    Trace.CorrelationManager.ActivityId = Guid.NewGuid();
                     foreach (var item in handlers)
                     {
                         if (Regex.Match(context.Request.Path, item.Key).Success)
                         {
-                            context.ReloadBody();
+                            context.Request.Body.Seek(0, SeekOrigin.Begin);
                             item.Value.Invoke(context);
                         }
                     }
+                    context.Request.Body.Seek(0, SeekOrigin.Begin);
                     await next();
                 }
                 catch (Exception ex)
                 {
-                    context.ReloadBody();
+                    context.Request.Body.Seek(0, SeekOrigin.Begin);
                     exceptionHandler?.Invoke(context, ex);
                 }
             });

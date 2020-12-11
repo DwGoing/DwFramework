@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -39,9 +40,9 @@ namespace DwFramework.WebAPI
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public Task OpenServiceAsync<T>() where T : class
+        public async Task OpenServiceAsync<T>() where T : class
         {
-            return Host.CreateDefaultBuilder()
+            var builder = Host.CreateDefaultBuilder()
                 .ConfigureWebHostDefaults(builder =>
                 {
                     builder.ConfigureLogging(builder => builder.AddFilter("Microsoft", LogLevel.Warning))
@@ -77,7 +78,8 @@ namespace DwFramework.WebAPI
                         _logger?.LogInformationAsync($"WebAPI服务已开启 => 监听地址:{listen}");
                     })
                     .UseStartup<T>();
-                }).Build().RunAsync();
+                });
+            await builder.Build().RunAsync();
         }
     }
 }
