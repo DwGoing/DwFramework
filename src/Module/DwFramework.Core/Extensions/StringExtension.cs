@@ -313,5 +313,45 @@ namespace DwFramework.Core.Extensions
                 }
             return 1 - (double)diff[len1, len2] / Math.Max(len1, len2);
         }
+
+        /// <summary>
+        /// 是否为中文字符
+        /// </summary>
+        /// <param name="char"></param>
+        /// <returns></returns>
+        public static bool IsChinese(this char @char)
+        {
+            var pattern = @"^[\u4e00-\u9fa5]$";
+            if (Regex.IsMatch(@char.ToString(), pattern)) return true;
+            return false;
+        }
+
+        /// <summary>
+        /// 是否为全角字符
+        /// </summary>
+        /// <param name="char"></param>
+        /// <returns></returns>
+        public static bool IsSBC(this char @char)
+        {
+            var pattern = @"^[\uFF00-\uFFFF]$";
+            if (Regex.IsMatch(@char.ToString(), pattern)) return true;
+            return false;
+        }
+
+        /// <summary>
+        /// 获取字符串长度
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns></returns>
+        public static int GetLength(this string str)
+        {
+            var len = 0;
+            foreach (var @char in str)
+            {
+                if (@char.IsChinese() || @char.IsSBC()) len += 2;
+                else len++;
+            }
+            return len;
+        }
     }
 }
