@@ -30,6 +30,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DwFramework.WebAPI.Plugins"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DwFramework.Media", "Module\DwFramework.Media\DwFramework.Media.csproj", "{7FDEE232-4A5E-4D9A-9AAA-437777DAF536}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DwFramework.TensorFlow", "Module\DwFramework.TensorFlow\DwFramework.TensorFlow.csproj", "{5F1E2949-75B0-487E-A2E0-744D9CEDA5AB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -92,6 +94,10 @@ Global
 		{7FDEE232-4A5E-4D9A-9AAA-437777DAF536}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7FDEE232-4A5E-4D9A-9AAA-437777DAF536}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7FDEE232-4A5E-4D9A-9AAA-437777DAF536}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5F1E2949-75B0-487E-A2E0-744D9CEDA5AB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5F1E2949-75B0-487E-A2E0-744D9CEDA5AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5F1E2949-75B0-487E-A2E0-744D9CEDA5AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5F1E2949-75B0-487E-A2E0-744D9CEDA5AB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
