@@ -171,7 +171,7 @@ namespace DwFramework.WebSocket
                         catch (Exception ex)
                         {
                             OnError?.Invoke(connection, new OnErrorEventargs(ex));
-                            break;
+                            continue;
                         }
                     }
                     OnClose?.Invoke(connection, new OnCloceEventargs() { });
