@@ -44,11 +44,11 @@ namespace DwFramework.Core.Plugins
             var split = builder.ToString();
             for (var i = 0; i < rowCount; i++)
             {
-                builder.Append("+");
+                builder.Append("|");
                 for (var j = 0; j < labels.Length; j++)
                 {
                     builder.Append(rows[i, j].PadLeft(labelWidths[j] - 1, ' '));
-                    builder.Append(" +");
+                    builder.Append(" |");
                 }
                 builder.Append("\n");
                 builder.Append(split);
