@@ -33,8 +33,4 @@
       <PackageReference Include="OpenCvSharp4.runtime.osx.10.15-x64" Version="4.5.0.20201013" />
       <PackageReference Include="SkiaSharp" Version="2.80.2" />
     </ItemGroup>
-    <ItemGroup>
-      <Folder Include="Models\" />
-      <Folder Include="Helpers\" />
-    </ItemGroup>
 </Project>
