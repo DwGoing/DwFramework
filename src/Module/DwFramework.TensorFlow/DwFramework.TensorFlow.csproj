@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <ReleaseVersion>2</ReleaseVersion>
+        <BuildVersion>1.101.591</BuildVersion>
+        <VersionSuffix>
+        </VersionSuffix>
+        <Version>$(ReleaseVersion).$(BuildVersion)$(VersionSuffix)</Version>
+        <Authors>DwGoing</Authors>
+        <Description>DwFramework TensorFlow库</Description>
+        <PackageProjectUrl>https://github.com/Dwgoing/DwFramework</PackageProjectUrl>
+    </PropertyGroup>
+    <ItemGroup>
+        <None Update="README.md">
+            <IncludeInPackage>true</IncludeInPackage>
+        </None>
+        <None Include="..\..\..\LICENSE" Link="LICENSE">
+            <IncludeInPackage>true</IncludeInPackage>
+        </None>
+    </ItemGroup>
+    <ItemGroup>
+      <PackageReference Include="TensorFlow.NET" Version="0.31.1" />
+    </ItemGroup>
+</Project>
