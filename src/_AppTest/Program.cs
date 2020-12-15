@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq.Expressions;
 using System.Text;
 using System.Collections.Generic;
 using System.Threading;
@@ -20,34 +21,24 @@ using Microsoft.Extensions.Logging;
 
 namespace _AppTest
 {
+    class AA
+    {
+        public int id { get; set; }
+        public string Name { get; set; }
+        public string IsOk { get; set; }
+    }
+
     class Program
     {
         static void Main(string[] args)
         {
             try
             {
-                var host = new ServiceHost(configFilePath: "WebSocket.json");
-                host.RegisterWebSocketService();
-                host.OnInitialized += p =>
-                {
-                    var s = p.GetWebSocketService();
-                    s.OnConnect += (a, c) => Console.WriteLine(a.ID);
-                    s.OnReceive += async (a, c) =>
-                    {
-                        Console.WriteLine(Encoding.UTF8.GetString(c.Data));
-                        await a.CloseAsync();
-                    };
-                    s.OnClose += (a, c) => Console.WriteLine(a.ID);
-                };
-                host.OnInitialized += async p =>
-                {
-                    Thread.Sleep(2000);
-                    var client = new WebSocketClient();
-                    await client.ConnectAsync("ws://127.0.0.1:10090");
-                    await client.SendAsync(Encoding.UTF8.GetBytes("XXX"));
-                    await client.CloseAsync();
-                };
-                host.Run();
+                //var host = new ServiceHost(configFilePath: "WebAPI.json");
+                //host.RegisterLog();
+                //host.RegisterWebAPIService<Startup>();
+                //host.Run();
+
             }
             catch (Exception ex)
             {

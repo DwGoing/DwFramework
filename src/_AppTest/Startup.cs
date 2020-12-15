@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Net;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -10,8 +9,9 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
 using DwFramework.Core;
-using DwFramework.Core.Extensions;
 using DwFramework.Core.Plugins;
+using DwFramework.Core.Extensions;
+using DwFramework.WebAPI;
 using DwFramework.WebAPI.Plugins;
 
 namespace _AppTest
@@ -45,6 +45,9 @@ namespace _AppTest
 
         public void Configure(IApplicationBuilder app, IHostApplicationLifetime lifetime)
         {
+            app.UseDefaultOperation();
+            if (ServiceHost.Environment.EnvironmentType == EnvironmentType.Develop)
+                app.UseSwagger("IndexServiceDoc", "索引服务");
             // 请求过滤器
             app.UseRequestFilter(new Dictionary<string, Action<HttpContext>>
             {
@@ -52,17 +55,14 @@ namespace _AppTest
                 {"/*",async context =>await _logger.LogDebugAsync($"接收到请求:{context.Request.Path} ({GetIP(context)})")}
             }, async (context, ex) =>
             {
-                await _logger.LogDebugAsync(ex.Message);
-                context.Response.Headers.Add("Content-type", "application/json");
+                context.Response.ContentType = "application/json";
                 await context.Response.WriteAsync(ResultInfo.Fail(ex.Message).ToJson());
                 return;
             });
-            if (ServiceHost.Environment.EnvironmentType == EnvironmentType.Develop)
-                app.UseSwagger("IndexServiceDoc", "索引服务");
             //app.UseConsul(lifetime, ServiceHost.Environment.GetConfiguration("WebAPI"), "Consul");
             //app.UseAuthentication();
-            app.UseRouting();
             //app.UseAuthorization();
+            app.UseRouting();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

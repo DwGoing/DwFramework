@@ -9,13 +9,24 @@ namespace DwFramework.Media
         /// <summary>
         /// 解析二维码
         /// </summary>
+        /// <param name="image"></param>
+        /// <returns></returns>
+        public static string Decode(ImageData image)
+        {
+            var detector = new QRCodeDetector();
+            using var mat = image.ToMat();
+            return detector.DetectAndDecode(mat, out var _);
+        }
+
+        /// <summary>
+        /// 解析二维码
+        /// </summary>
         /// <param name="path"></param>
         /// <returns></returns>
         public static string Decode(string path)
         {
-            var src = new ImageData(path);
-            var detector = new QRCodeDetector();
-            return detector.DetectAndDecode(src.ToMat(), out var _);
+            using var src = new ImageData(path);
+            return Decode(src);
         }
 
         /// <summary>
@@ -25,9 +36,8 @@ namespace DwFramework.Media
         /// <returns></returns>
         public static string Decode(Stream stream)
         {
-            var src = new ImageData(stream);
-            var detector = new QRCodeDetector();
-            return detector.DetectAndDecode(src.ToMat(), out var _);
+            using var src = new ImageData(stream);
+            return Decode(src);
         }
     }
 }
