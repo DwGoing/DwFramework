@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Text;
 
+using DwFramework.Core.Extensions;
+
 namespace DwFramework.Core.Plugins
 {
     public static class Logger
@@ -45,8 +47,8 @@ namespace DwFramework.Core.Plugins
                 builder.Append("+");
                 for (var j = 0; j < labels.Length; j++)
                 {
-                    builder.Append(rows[i, j].PadLeft(labelWidths[j] - 1, ' ').PadRight(labelWidths[j], ' '));
-                    builder.Append("+");
+                    builder.Append(rows[i, j].PadLeft(labelWidths[j] - 1, ' '));
+                    builder.Append(" +");
                 }
                 builder.Append("\n");
                 builder.Append(split);
