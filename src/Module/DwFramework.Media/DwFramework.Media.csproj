@@ -12,25 +12,28 @@
         <PackageProjectUrl>https://github.com/Dwgoing/DwFramework</PackageProjectUrl>
     </PropertyGroup>
     <ItemGroup>
+        <ProjectReference Include="..\DwFramework.Core\DwFramework.Core.csproj" />
+    </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="OpenCvSharp4" Version="4.5.0.20201013" />
+        <PackageReference Include="OpenCvSharp4.runtime.win" Version="4.5.0.20201013" />
+        <PackageReference Include="OpenCvSharp4.Windows" Version="4.5.0.20201013" />
+        <PackageReference Include="OpenCvSharp4.runtime.ubuntu.18.04-x64" Version="4.5.0.20201013" />
+        <PackageReference Include="OpenCvSharp4.runtime.multi-arch" Version="4.3.0.20200527" />
+        <PackageReference Include="OpenCvSharp4.runtime.raspbian.stretch" Version="4.3.0.20200527" />
+        <PackageReference Include="OpenCvSharp4.runtime.centos7-x64" Version="4.0.0.20190129" />
+        <PackageReference Include="OpenCvSharp4.runtime.uwp" Version="4.5.0.20201013" />
+        <PackageReference Include="OpenCvSharp4.WpfExtensions" Version="4.5.0.20201013" />
+        <PackageReference Include="OpenCvSharp4.runtime.debian.10-amd64" Version="4.3.0.20200424" />
+        <PackageReference Include="OpenCvSharp4.runtime.osx.10.15-x64" Version="4.5.0.20201013" />
+        <PackageReference Include="Tesseract" Version="4.1.1" />
+    </ItemGroup>
+    <ItemGroup>
         <None Update="README.md">
             <IncludeInPackage>true</IncludeInPackage>
         </None>
         <None Include="..\..\..\LICENSE" Link="LICENSE">
             <IncludeInPackage>true</IncludeInPackage>
         </None>
-    </ItemGroup>
-    <ItemGroup>
-      <PackageReference Include="OpenCvSharp4" Version="4.5.0.20201013" />
-      <PackageReference Include="OpenCvSharp4.runtime.win" Version="4.5.0.20201013" />
-      <PackageReference Include="OpenCvSharp4.Windows" Version="4.5.0.20201013" />
-      <PackageReference Include="OpenCvSharp4.runtime.ubuntu.18.04-x64" Version="4.5.0.20201013" />
-      <PackageReference Include="OpenCvSharp4.runtime.multi-arch" Version="4.3.0.20200527" />
-      <PackageReference Include="OpenCvSharp4.runtime.raspbian.stretch" Version="4.3.0.20200527" />
-      <PackageReference Include="OpenCvSharp4.runtime.centos7-x64" Version="4.0.0.20190129" />
-      <PackageReference Include="OpenCvSharp4.runtime.uwp" Version="4.5.0.20201013" />
-      <PackageReference Include="OpenCvSharp4.WpfExtensions" Version="4.5.0.20201013" />
-      <PackageReference Include="OpenCvSharp4.runtime.debian.10-amd64" Version="4.3.0.20200424" />
-      <PackageReference Include="OpenCvSharp4.runtime.osx.10.15-x64" Version="4.5.0.20201013" />
-      <PackageReference Include="SkiaSharp" Version="2.80.2" />
     </ItemGroup>
 </Project>
