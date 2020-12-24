@@ -9,34 +9,33 @@ namespace DwFramework.Media
         /// <summary>
         /// 解析二维码
         /// </summary>
-        /// <param name="image"></param>
+        /// <param name="input"></param>
         /// <returns></returns>
-        public static string Decode(ImageData image)
+        public static string Decode(Mat input)
         {
             var detector = new QRCodeDetector();
-            using var mat = image.ToMat();
-            return detector.DetectAndDecode(mat, out var _);
+            return detector.DetectAndDecode(input, out var _);
         }
 
         /// <summary>
         /// 解析二维码
         /// </summary>
-        /// <param name="path"></param>
+        /// <param name="input"></param>
         /// <returns></returns>
-        public static string Decode(string path)
+        public static string Decode(string input)
         {
-            using var src = new ImageData(path);
+            using var src = new Mat(input);
             return Decode(src);
         }
 
         /// <summary>
         /// 解析二维码
         /// </summary>
-        /// <param name="stream"></param>
+        /// <param name="input"></param>
         /// <returns></returns>
-        public static string Decode(Stream stream)
+        public static string Decode(Stream input)
         {
-            using var src = new ImageData(stream);
+            using var src = Mat.FromStream(input, ImreadModes.Unchanged);
             return Decode(src);
         }
     }

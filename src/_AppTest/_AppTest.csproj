@@ -6,6 +6,10 @@
         <TargetFramework>netcoreapp3.1</TargetFramework>
         <ReleaseVersion>2</ReleaseVersion>
     </PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+      <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    </PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' " />
     <ItemGroup>
         <ProjectReference Include="..\Module\DwFramework.Core\DwFramework.Core.csproj" />
         <ProjectReference Include="..\Module\DwFramework.ORM\DwFramework.ORM.csproj" />
@@ -59,6 +63,12 @@
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
         <None Update="Socket.json">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="1.png">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="2.jpg">
           <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
     </ItemGroup>
