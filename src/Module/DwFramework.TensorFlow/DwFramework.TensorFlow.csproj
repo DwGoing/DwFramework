@@ -21,5 +21,9 @@
     </ItemGroup>
     <ItemGroup>
       <PackageReference Include="TensorFlow.NET" Version="0.31.1" />
+      <PackageReference Include="SciSharp.TensorFlow.Redist" Version="2.4.0" />
+    </ItemGroup>
+    <ItemGroup>
+      <Folder Include="Models\" />
     </ItemGroup>
 </Project>

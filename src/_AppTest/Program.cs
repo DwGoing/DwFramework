@@ -15,6 +15,8 @@ namespace _AppTest
         {
             try
             {
+
+
                 //// 矩阵乘法
                 //var matrix1 = tf.constant(np.array(new float[,] { { 1, 2 }, { 3, 4 } }));
                 //var matrix2 = tf.constant(np.array(new float[,] { { 5, 6 }, { 7, 8 } }));
