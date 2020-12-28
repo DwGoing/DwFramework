@@ -18,7 +18,7 @@
         <PackageReference Include="Microsoft.AspNetCore.Hosting" Version="2.2.7" />
         <PackageReference Include="Microsoft.Extensions.Configuration" Version="5.0.0" />
         <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="5.0.0" />
-        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.0" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.1" />
         <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="5.0.0" />
         <PackageReference Include="NLog" Version="4.7.6" />
         <PackageReference Include="NLog.Extensions.Logging" Version="1.6.5" />
@@ -29,6 +29,7 @@
         <PackageReference Include="CHSPinYinConv" Version="1.0.0" />
         <PackageReference Include="K4os.Compression.LZ4.Streams" Version="1.2.6" />
         <PackageReference Include="Mapster" Version="7.0.1" />
+        <PackageReference Include="AdvancedDLSupport" Version="3.2.0" />
     </ItemGroup>
     <ItemGroup>
         <None Update="README.md">
