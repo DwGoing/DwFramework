@@ -2,7 +2,7 @@
 
 namespace DwFramework.Core.Plugins
 {
-    public class Stopwatch
+    public sealed class Stopwatch
     {
         public DateTime StartTime { get; private set; }
 

@@ -8,7 +8,7 @@ using DwFramework.Core.Extensions;
 
 namespace DwFramework.Core.Plugins
 {
-    public class RSA
+    public sealed class RSA
     {
         /// <summary>
         /// 填充位数

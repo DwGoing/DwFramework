@@ -4,7 +4,7 @@ using Castle.DynamicProxy;
 
 namespace DwFramework.Core.Plugins
 {
-    public class CallInfo
+    public sealed class CallInfo
     {
         private readonly IInvocation _invocation;
 

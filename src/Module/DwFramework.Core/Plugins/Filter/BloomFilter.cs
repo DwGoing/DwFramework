@@ -2,20 +2,21 @@
 
 namespace DwFramework.Core.Plugins
 {
-    public class BloomFilter
+    public sealed class BloomFilter
     {
+        private readonly object _lock = new object();
         private readonly int[] _countArray;
-        private readonly static object _countArrayLock = new object();
-        private readonly int _numberOfHash;
+        private readonly int _countOfHash;
 
         /// <summary>
         /// 构造函数
         /// </summary>
         /// <param name="size"></param>
-        public BloomFilter(long size = 100000, int numberOfHash = 3)
+        /// <param name="countOfHash"></param>
+        public BloomFilter(long size = 100000, int countOfHash = 3)
         {
             _countArray = new int[size];
-            _numberOfHash = numberOfHash;
+            _countOfHash = countOfHash;
         }
 
         /// <summary>
@@ -24,10 +25,13 @@ namespace DwFramework.Core.Plugins
         /// <param name="value"></param>
         public void Add(object value)
         {
-            var random = new Random(value.GetHashCode());
-            for (var i = 0; i < _numberOfHash; i++)
+            lock (_lock)
             {
-                _countArray[random.Next(_countArray.Length - 1)]++;
+                var random = new Random(value.GetHashCode());
+                for (var i = 0; i < _countOfHash; i++)
+                {
+                    _countArray[random.Next(_countArray.Length - 1)]++;
+                }
             }
         }
 
@@ -37,10 +41,13 @@ namespace DwFramework.Core.Plugins
         /// <param name="value"></param>
         public void Remove(object value)
         {
-            var random = new Random(value.GetHashCode());
-            for (var i = 0; i < _numberOfHash; i++)
+            lock (_lock)
             {
-                _countArray[random.Next(_countArray.Length - 1)]--;
+                var random = new Random(value.GetHashCode());
+                for (var i = 0; i < _countOfHash; i++)
+                {
+                    _countArray[random.Next(_countArray.Length - 1)]--;
+                }
             }
         }
 
@@ -51,13 +58,16 @@ namespace DwFramework.Core.Plugins
         /// <returns></returns>
         public bool IsExist(object value)
         {
-            var random = new Random(value.GetHashCode());
-            for (var i = 0; i < _numberOfHash; i++)
+            lock (_lock)
             {
-                if (_countArray[random.Next(_countArray.Length - 1)] == 0)
-                    return false;
+                var random = new Random(value.GetHashCode());
+                for (var i = 0; i < _countOfHash; i++)
+                {
+                    if (_countArray[random.Next(_countArray.Length - 1)] == 0)
+                        return false;
+                }
+                return true;
             }
-            return true;
         }
     }
 }

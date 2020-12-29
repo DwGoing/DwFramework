@@ -93,10 +93,7 @@ namespace DwFramework.Core.Plugins
         /// <param name="id"></param>
         /// <param name="startTime"></param>
         /// <returns></returns>
-        public static SnowflakeIdInfo DecodeId(long id, DateTime? startTime = null)
-        {
-            return new SnowflakeIdInfo(id, startTime);
-        }
+        public static SnowflakeIdInfo DecodeId(long id, DateTime? startTime = null) => new SnowflakeIdInfo(id, startTime);
     }
 
     /// <summary>

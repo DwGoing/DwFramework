@@ -5,7 +5,7 @@ using DwFramework.Core.Extensions;
 
 namespace DwFramework.Core.Plugins
 {
-    public class AES
+    public sealed class AES
     {
         /// <summary>
         /// 加密

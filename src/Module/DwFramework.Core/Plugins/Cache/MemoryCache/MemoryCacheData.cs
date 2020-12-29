@@ -2,7 +2,7 @@
 
 namespace DwFramework.Core.Plugins
 {
-    internal class MemoryCacheData
+    public sealed class MemoryCacheData
     {
         public readonly string Key;
         public readonly object Value;
