@@ -13,7 +13,7 @@ namespace DwFramework.Core.Extensions
         /// <returns></returns>
         public static long GetTimeDiff(this DateTime startTime, DateTime? endTime = null, bool isMilliseconds = false)
         {
-            var diffTime = (endTime ?? DateTime.UtcNow) - startTime;
+            var diffTime = (endTime ?? DateTime.Now).ToUniversalTime() - startTime.ToUniversalTime();
             if (isMilliseconds) return (long)diffTime.TotalMilliseconds;
             else return (long)diffTime.TotalSeconds;
         }

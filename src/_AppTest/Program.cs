@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
 using DwFramework.Core;
+using DwFramework.Core.Plugins;
+using DwFramework.Core.Extensions;
 using DwFramework.Media;
 
 using OpenCvSharp;
@@ -13,7 +15,9 @@ namespace _AppTest
         {
             try
             {
-                Console.WriteLine(DwFramework.Core.Plugins.RandomGenerater.RandomNumber(3.1, 6.7));
+                var gen = new SnowflakeGenerater(1, DateTime.Parse("2020.01.01"));
+                var id = gen.GenerateId();
+                Console.WriteLine(SnowflakeGenerater.DecodeId(id, DateTime.Parse("2020.01.01")).ToJson());
             }
             catch (Exception ex)
             {
