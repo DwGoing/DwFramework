@@ -73,7 +73,7 @@ namespace DwFramework.Core.Plugins
     {
         private static readonly object _lock = new object();
 
-        private static DateTime _startTime = DateTime.Parse("1970.01.01");
+        private static readonly DateTime _startTime = DateTime.Parse("1970.01.01");
         private static int _nonce = 0;
         private static long _currentTimestamp = 0;
 
@@ -87,13 +87,13 @@ namespace DwFramework.Core.Plugins
         {
             lock (_lock)
             {
-                StringBuilder builder = new StringBuilder();
+                var builder = new StringBuilder();
                 // 自定义标识
                 if (customTag != null) builder.Append(customTag);
-                DateTime nowTime = DateTime.Now;
+                var nowTime = DateTime.Now;
                 // 日期+时间
                 builder.Append(nowTime.ToString("yyyyMMddHHmm"));
-                Random random = new Random((int)RandomGenerater.RandomNumber());
+                var random = RandomGenerater.GetRandom();
                 // 随机数
                 builder.Append(random.Next(100000000).ToString().PadLeft(8, '0'));
                 // Nonce

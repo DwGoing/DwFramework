@@ -6,10 +6,39 @@ namespace DwFramework.Core.Plugins
     public static class RandomGenerater
     {
         /// <summary>
-        /// 生成随机数
+        /// 随机数生成器
         /// </summary>
         /// <returns></returns>
-        public static long RandomNumber() => BitConverter.ToInt64(Guid.NewGuid().ToByteArray());
+        public static Random GetRandom()
+        {
+            var seed = BitConverter.ToInt64(Guid.NewGuid().ToByteArray());
+            return new Random((int)seed);
+        }
+
+        /// <summary>
+        /// 生成随机数
+        /// </summary>
+        /// <param name="start"></param>
+        /// <param name="end"></param>
+        /// <returns></returns>
+        public static int RandomNumber(int start, int end)
+        {
+            var random = GetRandom();
+            return random.Next(start, end);
+        }
+
+        /// <summary>
+        /// 生成随机数
+        /// </summary>
+        /// <param name="start"></param>
+        /// <param name="end"></param>
+        /// <returns></returns>
+        public static double RandomNumber(double start, double end)
+        {
+            if (end - start <= 0) throw new Exception("end必须大于start");
+            var random = GetRandom();
+            return (end - start) * random.NextDouble() + start;
+        }
 
         /// <summary>
         /// 生成随机字符串
@@ -19,10 +48,9 @@ namespace DwFramework.Core.Plugins
         private const string CHARS = @"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
         public static string RandomString(int length)
         {
-            char[] chars = CHARS.ToCharArray();
-            Random random = new Random((int)RandomNumber());
-            StringBuilder builder = new StringBuilder();
-            for (int i = 0; i < length; i++) builder.Append(chars[random.Next(chars.Length)]);
+            var chars = CHARS.ToCharArray();
+            var builder = new StringBuilder();
+            for (int i = 0; i < length; i++) builder.Append(chars[RandomNumber(0, chars.Length)]);
             return builder.ToString();
         }
     }

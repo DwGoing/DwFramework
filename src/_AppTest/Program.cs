@@ -3,8 +3,6 @@ using System.Threading.Tasks;
 using DwFramework.Core;
 using DwFramework.Media;
 
-using static Tensorflow.Binding;
-using NumSharp;
 using OpenCvSharp;
 
 namespace _AppTest
@@ -15,14 +13,7 @@ namespace _AppTest
         {
             try
             {
-
-
-                //// 矩阵乘法
-                //var matrix1 = tf.constant(np.array(new float[,] { { 1, 2 }, { 3, 4 } }));
-                //var matrix2 = tf.constant(np.array(new float[,] { { 5, 6 }, { 7, 8 } }));
-                //var product = tf.matmul(matrix1, matrix2);
-                //// 类型转换：tensor转换成numpy
-                //print("product =", product.numpy());
+                Console.WriteLine(DwFramework.Core.Plugins.RandomGenerater.RandomNumber(3.1, 6.7));
             }
             catch (Exception ex)
             {
