@@ -8,7 +8,7 @@ using DwFramework.Core.Extensions;
 
 namespace DwFramework.Core.Plugins
 {
-    public class MemoryCacheStore
+    public sealed class MemoryCacheStore
     {
         private readonly Hashtable _Datas;
         private readonly System.Timers.Timer _Timer;

@@ -15,9 +15,10 @@ namespace _AppTest
         {
             try
             {
-                var gen = new SnowflakeGenerater(1, DateTime.Parse("2020.01.01"));
-                var id = gen.GenerateId();
-                Console.WriteLine(SnowflakeGenerater.DecodeId(id, DateTime.Parse("2020.01.01")).ToJson());
+                var a = 1;
+                var f = new BloomFilter();
+                f.Add(a);
+                Console.WriteLine(f.IsExist(2));
             }
             catch (Exception ex)
             {

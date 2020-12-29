@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace DwFramework.Core.Plugins
 {
-    public class MemoryCache : ICache
+    public sealed class MemoryCache : ICache
     {
         private readonly MemoryCacheStore[] _memoryCacheStores;
 

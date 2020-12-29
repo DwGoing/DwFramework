@@ -2,7 +2,7 @@
 
 namespace DwFramework.Core.Plugins
 {
-    public class MD5
+    public sealed class MD5
     {
         /// <summary>
         /// 加密

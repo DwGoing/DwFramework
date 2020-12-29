@@ -34,10 +34,7 @@ namespace DwFramework.Core.Plugins
         /// <param name="key"></param>
         /// <param name="code"></param>
         /// <returns></returns>
-        public static bool VerifyCode(string key, string code)
-        {
-            return code == GenerateCode(key);
-        }
+        public static bool VerifyCode(string key, string code) => code == GenerateCode(key);
 
         /// <summary>
         /// 按照次数生成哈希编码
@@ -48,27 +45,18 @@ namespace DwFramework.Core.Plugins
         /// <returns>返回验证码</returns>
         private static string GenerateHashedCode(string secret, long iterationNumber, int digits = 6)
         {
-            byte[] counter = BitConverter.GetBytes(iterationNumber);
-
+            var counter = BitConverter.GetBytes(iterationNumber);
             if (BitConverter.IsLittleEndian)
                 Array.Reverse(counter);
-
-            byte[] key = Encoding.ASCII.GetBytes(secret);
-
-            HMACSHA1 hmac = new HMACSHA1(key, true);
-
-            byte[] hash = hmac.ComputeHash(counter);
-
-            int offset = hash[hash.Length - 1] & 0xf;
-
-            int binary =
-                ((hash[offset] & 0x7f) << 24)
+            var key = Encoding.ASCII.GetBytes(secret);
+            var hmac = new HMACSHA1(key, true);
+            var hash = hmac.ComputeHash(counter);
+            var offset = hash[hash.Length - 1] & 0xf;
+            var binary = ((hash[offset] & 0x7f) << 24)
                 | ((hash[offset + 1] & 0xff) << 16)
                 | ((hash[offset + 2] & 0xff) << 8)
                 | (hash[offset + 3] & 0xff);
-
-            int password = binary % (int)Math.Pow(10, digits); // 6 digits
-
+            var password = binary % (int)Math.Pow(10, digits); // 6 digits
             return password.ToString(new string('0', digits));
         }
     }
