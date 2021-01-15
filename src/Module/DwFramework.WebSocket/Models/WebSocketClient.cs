@@ -39,7 +39,12 @@ namespace DwFramework.WebSocket
 
         public class OnCloceEventargs : EventArgs
         {
+            public WebSocketCloseStatus? CloseStatus { get; }
 
+            public OnCloceEventargs(WebSocketCloseStatus? closeStatus)
+            {
+                CloseStatus = closeStatus;
+            }
         }
 
         public class OnErrorEventargs : EventArgs
@@ -100,12 +105,17 @@ namespace DwFramework.WebSocket
                 {
                     var buffer = new byte[_bufferSize];
                     var dataBytes = new List<byte>();
+                    WebSocketCloseStatus? closeStates = null;
                     while (true)
                     {
                         try
                         {
                             var result = await _client.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
-                            if (result.CloseStatus.HasValue) break;
+                            if (result.CloseStatus.HasValue)
+                            {
+                                closeStates = result.CloseStatus;
+                                break;
+                            }
                             dataBytes.AddRange(buffer.Take(result.Count));
                             if (!result.EndOfMessage) continue;
                             OnReceive?.Invoke(new OnReceiveEventargs(dataBytes.ToArray()));
@@ -117,7 +127,7 @@ namespace DwFramework.WebSocket
                             continue;
                         }
                     }
-                    OnClose?.Invoke(new OnCloceEventargs() { });
+                    OnClose?.Invoke(new OnCloceEventargs(closeStates));
                     ClearAllEvent();
                     if (_client.State == WebSocketState.CloseReceived) await CloseAsync();
                 });
