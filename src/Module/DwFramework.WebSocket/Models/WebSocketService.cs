@@ -185,7 +185,7 @@ namespace DwFramework.WebSocket
                     }
                     OnClose?.Invoke(connection, new OnCloceEventargs(closeStates));
                     if (connection.WebSocket.State == WebSocketState.CloseReceived)
-                        await connection.CloseAsync();
+                        await connection.CloseAsync(WebSocketCloseStatus.NormalClosure);
                     connection.Dispose();
                     _connections.Remove(connection.ID);
                 });
@@ -242,22 +242,22 @@ namespace DwFramework.WebSocket
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public async Task CloseAsync(string id)
+        public async Task CloseAsync(string id, WebSocketCloseStatus closeStatus)
         {
             RequireClient(id);
             var connection = _connections[id];
-            await connection.CloseAsync();
+            await connection.CloseAsync(closeStatus);
         }
 
         /// <summary>
         /// 断开所有连接
         /// </summary>
         /// <returns></returns>
-        public async Task CloseAllAsync()
+        public async Task CloseAllAsync(WebSocketCloseStatus closeStatus)
         {
             foreach (var item in _connections.Values)
             {
-                await item.CloseAsync();
+                await item.CloseAsync(closeStatus);
             }
         }
     }

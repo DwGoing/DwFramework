@@ -33,7 +33,7 @@ namespace DwFramework.WebSocket
         /// 断开连接
         /// </summary>
         /// <returns></returns>
-        public async Task CloseAsync() => await WebSocket.CloseOutputAsync(WebSocketCloseStatus.NormalClosure, null, CancellationToken.None).ContinueWith(task => Dispose());
+        public async Task CloseAsync(WebSocketCloseStatus closeStatus) => await WebSocket.CloseOutputAsync(closeStatus, null, CancellationToken.None).ContinueWith(task => Dispose());
 
         /// <summary>
         /// 释放连接
