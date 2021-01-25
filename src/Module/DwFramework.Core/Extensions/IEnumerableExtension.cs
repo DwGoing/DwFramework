@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-using DwFramework.Core.Plugins;
-
 namespace DwFramework.Core.Extensions
 {
     public static class IEnumerableExtension
@@ -22,10 +20,11 @@ namespace DwFramework.Core.Extensions
             {
                 try
                 {
-                    action(item);
+                    action?.Invoke(item);
                 }
                 catch (Exception ex)
                 {
+                    if (onException == null) throw ex;
                     onException?.Invoke(item, ex);
                 }
             }
@@ -40,14 +39,19 @@ namespace DwFramework.Core.Extensions
         /// <param name="onException"></param>
         public static void ForEachParallel<T>(this IEnumerable<T> enumerable, Action<T> action, Action<T, Exception> onException = null)
         {
-            Parallel.ForEach(enumerable, item =>
+            Parallel.ForEach(enumerable, (item, state) =>
             {
                 try
                 {
-                    action(item);
+                    action?.Invoke(item);
                 }
                 catch (Exception ex)
                 {
+                    if (onException == null)
+                    {
+                        state.Break();
+                        throw ex;
+                    }
                     onException?.Invoke(item, ex);
                 }
             });
@@ -75,7 +79,7 @@ namespace DwFramework.Core.Extensions
         /// <param name="values"></param>
         public static void AddRange<T>(this ICollection<T> collection, params T[] values)
         {
-            foreach (var item in values) collection.Add(item);
+            values.ForEach(item => collection.Add(item));
         }
 
         /// <summary>
@@ -87,7 +91,7 @@ namespace DwFramework.Core.Extensions
         /// <param name="values"></param>
         public static void AddRangeIf<T>(this ICollection<T> collection, Func<T, bool> predicate, params T[] values)
         {
-            foreach (var item in values) if (predicate(item)) collection.Add(item);
+            values.ForEach(item => { if (predicate(item)) collection.Add(item); });
         }
 
         /// <summary>
@@ -98,7 +102,7 @@ namespace DwFramework.Core.Extensions
         /// <param name="values"></param>
         public static void AddRangeIfNotContains<T>(this ICollection<T> collection, params T[] values)
         {
-            foreach (T item in values) if (!collection.Contains(item)) collection.Add(item);
+            values.ForEach(item => { if (!collection.Contains(item)) collection.Add(item); });
         }
 
         /// <summary>
@@ -109,7 +113,7 @@ namespace DwFramework.Core.Extensions
         /// <param name="predicate"></param>
         public static void RemoveWhere<T>(this ICollection<T> collection, Func<T, bool> predicate)
         {
-            foreach (var item in collection.Where(predicate).ToList()) collection.Remove(item);
+            collection.Where(predicate).ForEach(item => collection.Remove(item));
         }
 
         /// <summary>
@@ -121,11 +125,12 @@ namespace DwFramework.Core.Extensions
         /// <param name="value">值</param>
         public static void InsertAfter<T>(this IList<T> list, Func<T, bool> predicate, T value)
         {
-            foreach (var item in list.Select((item, index) => new { item, index }).Where(p => predicate(p.item)).OrderByDescending(p => p.index))
+            var tmp = list.Select((item, index) => new { item, index }).Where(p => predicate(p.item)).OrderByDescending(p => p.index);
+            tmp.ForEach(item =>
             {
                 if (item.index + 1 == list.Count) list.Add(value);
                 else list.Insert(item.index + 1, value);
-            }
+            });
         }
 
         /// <summary>
@@ -137,11 +142,12 @@ namespace DwFramework.Core.Extensions
         /// <param name="value">值</param>
         public static void InsertAfter<T>(this IList<T> list, int index, T value)
         {
-            foreach (var item in list.Select((v, i) => new { Value = v, Index = i }).Where(p => p.Index == index).OrderByDescending(p => p.Index))
+            var tmp = list.Select((v, i) => new { Value = v, Index = i }).Where(p => p.Index == index).OrderByDescending(p => p.Index);
+            tmp.ForEach(item =>
             {
                 if (item.Index + 1 == list.Count) list.Add(value);
                 else list.Insert(item.Index + 1, value);
-            }
+            });
         }
 
         /// <summary>
