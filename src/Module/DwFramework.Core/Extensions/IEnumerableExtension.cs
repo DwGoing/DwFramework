@@ -43,13 +43,14 @@ namespace DwFramework.Core.Extensions
             {
                 try
                 {
+                    if (state.ShouldExitCurrentIteration) return;
                     action?.Invoke(item);
                 }
                 catch (Exception ex)
                 {
                     if (onException == null)
                     {
-                        state.Break();
+                        state.Stop();
                         throw ex;
                     }
                     onException?.Invoke(item, ex);
