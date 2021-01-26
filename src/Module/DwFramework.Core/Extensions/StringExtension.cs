@@ -41,42 +41,33 @@ namespace DwFramework.Core.Extensions
         /// <summary>
         /// 字符转int
         /// </summary>
-        /// <param name="c"></param>
+        /// <param name="char"></param>
         /// <returns></returns>
         public static int ToBase32Value(this char @char)
         {
             var value = (int)@char;
-            if (value < 91 && value > 64)
+            return value switch
             {
-                return value - 65;
-            }
-            if (value < 56 && value > 49)
-            {
-                return value - 24;
-            }
-            if (value < 123 && value > 96)
-            {
-                return value - 97;
-            }
-            throw new ArgumentException("Character is not a Base32 character.", "@char");
+                > 49 and < 56 => value - 24,
+                > 64 and < 91 => value - 65,
+                > 96 and < 123 => value - 97,
+                _ => throw new Exception($"非Base32字符:{@char}")
+            };
         }
 
         /// <summary>
         /// int转字符
         /// </summary>
-        /// <param name="b"></param>
+        /// <param name="byte"></param>
         /// <returns></returns>
         public static char ToBase32Char(this byte @byte)
         {
-            if (@byte < 26)
+            return @byte switch
             {
-                return (char)(@byte + 65);
-            }
-            if (@byte < 32)
-            {
-                return (char)(@byte + 24);
-            }
-            throw new ArgumentException("Byte is not a value Base32 value.", "@byte");
+                < 26 => (char)(@byte + 65),
+                > 26 and < 32 => (char)(@byte + 24),
+                _ => throw new Exception($"非Base32字符值:{@byte}")
+            };
         }
 
         /// <summary>
@@ -86,22 +77,19 @@ namespace DwFramework.Core.Extensions
         /// <returns></returns>
         public static byte[] FromBase32String(this string str)
         {
-            if (string.IsNullOrEmpty(str))
-            {
-                throw new ArgumentNullException("input");
-            }
+            if (string.IsNullOrEmpty(str)) throw new Exception("参数为空");
 
             str = str.TrimEnd('=');
             int byteCount = str.Length * 5 / 8;
             byte[] returnArray = new byte[byteCount];
 
             byte curByte = 0, bitsRemaining = 8;
-            int mask = 0, arrayIndex = 0;
+            int arrayIndex = 0;
 
-            foreach (char c in str)
+            str.ForEach(item =>
             {
-                int cValue = ToBase32Value(c);
-
+                int cValue = ToBase32Value(item);
+                int mask;
                 if (bitsRemaining > 5)
                 {
                     mask = cValue << (bitsRemaining - 5);
@@ -116,7 +104,7 @@ namespace DwFramework.Core.Extensions
                     curByte = (byte)(cValue << (3 + bitsRemaining));
                     bitsRemaining += 3;
                 }
-            }
+            });
 
             if (arrayIndex != byteCount)
             {
@@ -132,10 +120,7 @@ namespace DwFramework.Core.Extensions
         /// <returns></returns>
         public static string ToBase32String(this byte[] bytes)
         {
-            if (bytes == null || bytes.Length == 0)
-            {
-                throw new ArgumentNullException("input");
-            }
+            if (bytes == null || bytes.Length == 0) throw new Exception("参数为空");
 
             int charCount = (int)Math.Ceiling(bytes.Length / 5d) * 8;
             char[] returnArray = new char[charCount];
@@ -143,21 +128,21 @@ namespace DwFramework.Core.Extensions
             byte nextChar = 0, bitsRemaining = 5;
             int arrayIndex = 0;
 
-            foreach (byte b in bytes)
+            bytes.ForEach(item =>
             {
-                nextChar = (byte)(nextChar | (b >> (8 - bitsRemaining)));
+                nextChar = (byte)(nextChar | (item >> (8 - bitsRemaining)));
                 returnArray[arrayIndex++] = ToBase32Char(nextChar);
 
                 if (bitsRemaining < 4)
                 {
-                    nextChar = (byte)((b >> (3 - bitsRemaining)) & 31);
+                    nextChar = (byte)((item >> (3 - bitsRemaining)) & 31);
                     returnArray[arrayIndex++] = ToBase32Char(nextChar);
                     bitsRemaining += 5;
                 }
 
                 bitsRemaining -= 3;
-                nextChar = (byte)((b << bitsRemaining) & 31);
-            }
+                nextChar = (byte)((item << bitsRemaining) & 31);
+            });
 
             if (arrayIndex != charCount)
             {
@@ -173,20 +158,14 @@ namespace DwFramework.Core.Extensions
         /// </summary>
         /// <param name="bytes"></param>
         /// <returns></returns>
-        public static string ToBase64String(this byte[] bytes)
-        {
-            return Convert.ToBase64String(bytes, 0, bytes.Length);
-        }
+        public static string ToBase64String(this byte[] bytes) => Convert.ToBase64String(bytes, 0, bytes.Length);
 
         /// <summary>
         /// Base64转字节数组
         /// </summary>
         /// <param name="base64String"></param>
         /// <returns></returns>
-        public static byte[] FromBase64String(this string base64String)
-        {
-            return Convert.FromBase64String(base64String);
-        }
+        public static byte[] FromBase64String(this string base64String) => Convert.FromBase64String(base64String);
 
         /// <summary>
         /// 字节数组转Hex
@@ -219,21 +198,27 @@ namespace DwFramework.Core.Extensions
         }
 
         /// <summary>
+        /// 是否为中文字符
+        /// </summary>
+        /// <param name="char"></param>
+        /// <returns></returns>
+        public static bool IsChinese(this char @char)
+        {
+            var pattern = @"^[\u4e00-\u9fa5]$";
+            if (Regex.IsMatch(@char.ToString(), pattern)) return true;
+            return false;
+        }
+
+        /// <summary>
         /// 获取中文字符的拼音
         /// </summary>
         /// <param name="@char"></param>
         /// <returns></returns>
         public static string[] GetPinYin(this char @char)
         {
-            try
-            {
-                var decoder = new ChineseChar(@char);
-                return decoder.Pinyins;
-            }
-            catch
-            {
-                return null;
-            }
+            if (!IsChinese(@char)) return null;
+            var decoder = new ChineseChar(@char);
+            return decoder.Pinyins;
         }
 
         /// <summary>
@@ -306,24 +291,15 @@ namespace DwFramework.Core.Extensions
             for (var i = 1; i <= len2; i++) diff[0, i] = i;
             var ch1 = source.ToCharArray();
             var ch2 = target.ToCharArray();
-            for (int i = 1; i <= len1; i++) for (int j = 1; j <= len2; j++)
+            for (int i = 1; i <= len1; i++)
+            {
+                for (int j = 1; j <= len2; j++)
                 {
                     var min = new int[] { diff[i - 1, j - 1], diff[i - 1, j], diff[i, j - 1] }.Min();
                     diff[i, j] = ch1[i - 1] == ch2[j - 1] ? min : min + 1;
                 }
+            }
             return 1 - (double)diff[len1, len2] / Math.Max(len1, len2);
-        }
-
-        /// <summary>
-        /// 是否为中文字符
-        /// </summary>
-        /// <param name="char"></param>
-        /// <returns></returns>
-        public static bool IsChinese(this char @char)
-        {
-            var pattern = @"^[\u4e00-\u9fa5]$";
-            if (Regex.IsMatch(@char.ToString(), pattern)) return true;
-            return false;
         }
 
         /// <summary>
@@ -346,11 +322,11 @@ namespace DwFramework.Core.Extensions
         public static int GetLength(this string str)
         {
             var len = 0;
-            foreach (var @char in str)
+            str.ForEach(item =>
             {
-                if (@char.IsChinese() || @char.IsSBC()) len += 2;
+                if (item.IsChinese() || item.IsSBC()) len += 2;
                 else len++;
-            }
+            });
             return len;
         }
     }
