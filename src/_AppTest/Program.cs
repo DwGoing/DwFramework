@@ -36,7 +36,6 @@ namespace _AppTest
             Console.WriteLine($"TestClass2:{str}");
         }
     }
-
     class Program
     {
         static void Main(string[] args)
