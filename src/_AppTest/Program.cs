@@ -16,15 +16,6 @@ namespace _AppTest
         {
             try
             {
-                var l = new List<int>();
-                for (var i = 0; i < 1000; i++) l.Add(i);
-                l.ForEachParallel(item =>
-                {
-                    if (item == 5) throw new Exception("TEST");
-                    Thread.Sleep(new Random().Next(10000));
-                    Console.WriteLine(item);
-                });
-
                 //var host = new ServiceHost();
                 //host.AddJsonConfig("WebSocket.json");
                 //host.RegisterLog();
