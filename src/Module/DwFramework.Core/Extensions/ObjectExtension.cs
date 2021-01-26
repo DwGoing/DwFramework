@@ -13,7 +13,10 @@ namespace DwFramework.Core.Extensions
         /// <param name="obj"></param>
         /// <param name="type"></param>
         /// <returns></returns>
-        public static object ConvertTo(this object obj, Type type) => obj.Adapt(obj.GetType(), type);
+        public static object ConvertTo(this object obj, Type type)
+        {
+            return obj.Adapt(obj.GetType(), type);
+        }
 
         /// <summary>
         /// 类型转换
@@ -21,7 +24,10 @@ namespace DwFramework.Core.Extensions
         /// <typeparam name="T"></typeparam>
         /// <param name="obj"></param>
         /// <returns></returns>
-        public static T ConvertTo<T>(this object obj) => obj.Adapt<T>();
+        public static T ConvertTo<T>(this object obj)
+        {
+            return obj.Adapt<T>();
+        }
 
         /// <summary>
         /// 序列化
@@ -30,7 +36,10 @@ namespace DwFramework.Core.Extensions
         /// <param name="type"></param>
         /// <param name="options"></param>
         /// <returns></returns>
-        public static string ToJson(this object obj, Type type, JsonSerializerOptions options = null) => JsonSerializer.Serialize(obj, type, options);
+        public static string ToJson(this object obj, Type type, JsonSerializerOptions options = null)
+        {
+            return JsonSerializer.Serialize(obj, type, options);
+        }
 
         /// <summary>
         /// 序列化
@@ -39,7 +48,10 @@ namespace DwFramework.Core.Extensions
         /// <param name="obj"></param>
         /// <param name="options"></param>
         /// <returns></returns>
-        public static string ToJson<T>(this T obj, JsonSerializerOptions options = null) => JsonSerializer.Serialize(obj, options);
+        public static string ToJson<T>(this T obj, JsonSerializerOptions options = null)
+        {
+            return JsonSerializer.Serialize(obj, options);
+        }
 
         /// <summary>
         /// 反序列化
@@ -48,7 +60,10 @@ namespace DwFramework.Core.Extensions
         /// <param name="type"></param>
         /// <param name="options"></param>
         /// <returns></returns>
-        public static object ToObject(this string json, Type type, JsonSerializerOptions options = null) => JsonSerializer.Deserialize(json, type, options);
+        public static object ToObject(this string json, Type type, JsonSerializerOptions options = null)
+        {
+            return JsonSerializer.Deserialize(json, type, options);
+        }
 
         /// <summary>
         /// 反序列化
@@ -56,7 +71,10 @@ namespace DwFramework.Core.Extensions
         /// <typeparam name="T"></typeparam>
         /// <param name="json"></param>
         /// <returns></returns>
-        public static T ToObject<T>(this string json, JsonSerializerOptions options = null) => JsonSerializer.Deserialize<T>(json, options);
+        public static T ToObject<T>(this string json, JsonSerializerOptions options = null)
+        {
+            return JsonSerializer.Deserialize<T>(json, options);
+        }
 
         /// <summary>
         /// 序列化

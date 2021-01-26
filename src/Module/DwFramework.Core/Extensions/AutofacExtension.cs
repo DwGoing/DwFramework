@@ -14,7 +14,10 @@ namespace DwFramework.Core
         /// <typeparam name="T"></typeparam>
         /// <param name="provider"></param>
         /// <returns></returns>
-        public static bool IsRegistered<T>(this IServiceProvider provider) where T : class => provider.GetServices<T>().Any();
+        public static bool IsRegistered<T>(this IServiceProvider provider) where T : class
+        {
+            return provider.GetServices<T>().Any();
+        }
 
         /// <summary>
         /// 获取服务
@@ -22,7 +25,10 @@ namespace DwFramework.Core
         /// <typeparam name="T"></typeparam>
         /// <param name="provider"></param>
         /// <returns></returns>
-        public static T GetService<T>(this IServiceProvider provider) where T : class => provider.GetService(typeof(T)) as T;
+        public static T GetService<T>(this IServiceProvider provider) where T : class
+        {
+            return provider.GetService(typeof(T)) as T;
+        }
 
         /// <summary>
         /// 获取服务
@@ -30,7 +36,10 @@ namespace DwFramework.Core
         /// <typeparam name="T"></typeparam>
         /// <param name="provider"></param>
         /// <returns></returns>
-        public static IEnumerable<T> GetServices<T>(this IServiceProvider provider) where T : class => provider.GetServices(typeof(T)).Cast<T>();
+        public static IEnumerable<T> GetServices<T>(this IServiceProvider provider) where T : class
+        {
+            return provider.GetServices(typeof(T)).Cast<T>();
+        }
 
         /// <summary>
         /// 获取服务
@@ -38,6 +47,9 @@ namespace DwFramework.Core
         /// <typeparam name="T"></typeparam>
         /// <param name="scope"></param>
         /// <returns></returns>
-        public static T GetService<T>(this ILifetimeScope scope) where T : class => scope.Resolve<T>();
+        public static T GetService<T>(this ILifetimeScope scope) where T : class
+        {
+            return scope.Resolve<T>();
+        }
     }
 }

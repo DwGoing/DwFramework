@@ -48,7 +48,10 @@ namespace DwFramework.Core
         /// <param name="configFilePath"></param>
         /// <param name="key"></param>
         /// <param name="onChange"></param>
-        public static void AddJsonConfig(string configFilePath, string key = null, Action onChange = null) => Environment?.AddJsonConfig(configFilePath, key, onChange);
+        public static void AddJsonConfig(string configFilePath, string key = null, Action onChange = null)
+        {
+            Environment?.AddJsonConfig(configFilePath, key, onChange);
+        }
 
         /// <summary>
         /// 开启服务
@@ -87,7 +90,10 @@ namespace DwFramework.Core
         /// <typeparam name="T"></typeparam>
         /// <param name="func"></param>
         /// <returns></returns>
-        public IRegistrationBuilder<T, SimpleActivatorData, SingleRegistrationStyle> Register<T>(Func<IComponentContext, T> func) where T : class => _containerBuilder.Register(func).AsSelf();
+        public IRegistrationBuilder<T, SimpleActivatorData, SingleRegistrationStyle> Register<T>(Func<IComponentContext, T> func) where T : class
+        {
+            return _containerBuilder.Register(func).AsSelf();
+        }
 
         /// <summary>
         /// 注册服务
@@ -96,34 +102,49 @@ namespace DwFramework.Core
         /// <typeparam name="I"></typeparam>
         /// <param name="func"></param>
         /// <returns></returns>
-        public IRegistrationBuilder<T, SimpleActivatorData, SingleRegistrationStyle> Register<T, I>(Func<IComponentContext, T> func) where T : class where I : class => Register(func).As<I>();
+        public IRegistrationBuilder<T, SimpleActivatorData, SingleRegistrationStyle> Register<T, I>(Func<IComponentContext, T> func) where T : class where I : class
+        {
+            return Register(func).As<I>();
+        }
 
         /// <summary>
         /// 注册服务
         /// </summary>
         /// <param name="action"></param>
-        public void RegisterService(Action<ServiceCollection> action) => action?.Invoke(_services);
+        public void RegisterService(Action<ServiceCollection> action)
+        {
+            action?.Invoke(_services);
+        }
 
         /// <summary>
         /// 注册服务
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public IModuleRegistrar RegisterModule<T>() where T : class, IModule, new() => _containerBuilder.RegisterModule<T>();
+        public IModuleRegistrar RegisterModule<T>() where T : class, IModule, new()
+        {
+            return _containerBuilder.RegisterModule<T>();
+        }
 
         /// <summary>
         /// 注册服务
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public IRegistrationBuilder<T, ConcreteReflectionActivatorData, SingleRegistrationStyle> RegisterType<T>() where T : class => _containerBuilder.RegisterType<T>().AsSelf();
+        public IRegistrationBuilder<T, ConcreteReflectionActivatorData, SingleRegistrationStyle> RegisterType<T>() where T : class
+        {
+            return _containerBuilder.RegisterType<T>().AsSelf();
+        }
 
         /// <summary>
         /// 注册服务
         /// </summary>
         /// <param name="type"></param>
         /// <returns></returns>
-        public IRegistrationBuilder<object, ConcreteReflectionActivatorData, SingleRegistrationStyle> RegisterType(Type type) => _containerBuilder.RegisterType(type).AsSelf();
+        public IRegistrationBuilder<object, ConcreteReflectionActivatorData, SingleRegistrationStyle> RegisterType(Type type)
+        {
+            return _containerBuilder.RegisterType(type).AsSelf();
+        }
 
         /// <summary>
         /// 注册服务
@@ -131,7 +152,10 @@ namespace DwFramework.Core
         /// <typeparam name="T"></typeparam>
         /// <typeparam name="I"></typeparam>
         /// <returns></returns>
-        public IRegistrationBuilder<T, ConcreteReflectionActivatorData, SingleRegistrationStyle> RegisterType<T, I>() where T : class where I : class => RegisterType<T>().As<I>();
+        public IRegistrationBuilder<T, ConcreteReflectionActivatorData, SingleRegistrationStyle> RegisterType<T, I>() where T : class where I : class
+        {
+            return RegisterType<T>().As<I>();
+        }
 
         /// <summary>
         /// 注册服务
@@ -139,7 +163,10 @@ namespace DwFramework.Core
         /// <typeparam name="T"></typeparam>
         /// <param name="instance"></param>
         /// <returns></returns>
-        public IRegistrationBuilder<T, SimpleActivatorData, SingleRegistrationStyle> RegisterInstance<T>(T instance) where T : class => _containerBuilder.RegisterInstance(instance).AsSelf();
+        public IRegistrationBuilder<T, SimpleActivatorData, SingleRegistrationStyle> RegisterInstance<T>(T instance) where T : class
+        {
+            return _containerBuilder.RegisterInstance(instance).AsSelf();
+        }
 
         /// <summary>
         /// 注册服务
@@ -148,13 +175,19 @@ namespace DwFramework.Core
         /// <typeparam name="I"></typeparam>
         /// <param name="instance"></param>
         /// <returns></returns>
-        public IRegistrationBuilder<T, SimpleActivatorData, SingleRegistrationStyle> RegisterInstance<T, I>(T instance) where T : class where I : class => RegisterInstance(instance).As<I>();
+        public IRegistrationBuilder<T, SimpleActivatorData, SingleRegistrationStyle> RegisterInstance<T, I>(T instance) where T : class where I : class
+        {
+            return RegisterInstance(instance).As<I>();
+        }
 
         /// <summary>
         /// 注册服务
         /// </summary>
         /// <param name="genericType"></param>
-        public IRegistrationBuilder<object, ReflectionActivatorData, DynamicRegistrationStyle> RegisterGeneric(Type genericType) => _containerBuilder.RegisterGeneric(genericType);
+        public IRegistrationBuilder<object, ReflectionActivatorData, DynamicRegistrationStyle> RegisterGeneric(Type genericType)
+        {
+            return _containerBuilder.RegisterGeneric(genericType);
+        }
 
         /// <summary>
         /// 注册服务
@@ -197,13 +230,19 @@ namespace DwFramework.Core
         /// 创建生命周期
         /// </summary>
         /// <returns></returns>
-        public static ILifetimeScope CreateLifetimeScope() => Provider.LifetimeScope.BeginLifetimeScope();
+        public static ILifetimeScope CreateLifetimeScope()
+        {
+            return Provider?.LifetimeScope.BeginLifetimeScope();
+        }
 
         /// <summary>
         /// 创建生命周期
         /// </summary>
         /// <param name="tag"></param>
         /// <returns></returns>
-        public static ILifetimeScope CreateLifetimeScope(object tag) => Provider.LifetimeScope.BeginLifetimeScope(tag);
+        public static ILifetimeScope CreateLifetimeScope(object tag)
+        {
+            return Provider?.LifetimeScope.BeginLifetimeScope(tag);
+        }
     }
 }

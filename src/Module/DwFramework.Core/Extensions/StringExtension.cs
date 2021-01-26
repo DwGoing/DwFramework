@@ -160,14 +160,20 @@ namespace DwFramework.Core.Extensions
         /// </summary>
         /// <param name="bytes"></param>
         /// <returns></returns>
-        public static string ToBase64String(this byte[] bytes) => Convert.ToBase64String(bytes, 0, bytes.Length);
+        public static string ToBase64String(this byte[] bytes)
+        {
+            return Convert.ToBase64String(bytes, 0, bytes.Length);
+        }
 
         /// <summary>
         /// Base64转字节数组
         /// </summary>
         /// <param name="base64String"></param>
         /// <returns></returns>
-        public static byte[] FromBase64String(this string base64String) => Convert.FromBase64String(base64String);
+        public static byte[] FromBase64String(this string base64String)
+        {
+            return Convert.FromBase64String(base64String);
+        }
 
         /// <summary>
         /// 字节数组转Hex
