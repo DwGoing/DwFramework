@@ -34,7 +34,10 @@ namespace DwFramework.Core.Plugins
         /// <param name="key"></param>
         /// <param name="code"></param>
         /// <returns></returns>
-        public static bool VerifyCode(string key, string code) => code == GenerateCode(key);
+        public static bool VerifyCode(string key, string code)
+        {
+            return code == GenerateCode(key);
+        }
 
         /// <summary>
         /// 按照次数生成哈希编码

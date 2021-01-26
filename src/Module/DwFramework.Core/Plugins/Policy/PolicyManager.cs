@@ -18,7 +18,10 @@ namespace DwFramework.Core.Plugins
         /// </summary>
         /// <param name="policies"></param>
         /// <returns></returns>
-        public static PolicyWrap Wrap(params ISyncPolicy[] policies) => Policy.Wrap(policies);
+        public static PolicyWrap Wrap(params ISyncPolicy[] policies)
+        {
+            return Policy.Wrap(policies);
+        }
 
         /// <summary>
         /// 组合策略
@@ -26,7 +29,10 @@ namespace DwFramework.Core.Plugins
         /// <typeparam name="TResult"></typeparam>
         /// <param name="policies"></param>
         /// <returns></returns>
-        public static PolicyWrap<TResult> Wrap<TResult>(params ISyncPolicy<TResult>[] policies) => Policy.Wrap(policies);
+        public static PolicyWrap<TResult> Wrap<TResult>(params ISyncPolicy<TResult>[] policies)
+        {
+            return Policy.Wrap(policies);
+        }
 
         /// <summary>
         /// 异常后重试
@@ -230,7 +236,10 @@ namespace DwFramework.Core.Plugins
         /// </summary>
         /// <param name="timeoutMilliseconds"></param>
         /// <returns></returns>
-        public static TimeoutPolicy Timeout(long timeoutMilliseconds) => Policy.Timeout(TimeSpan.FromMilliseconds(timeoutMilliseconds), TimeoutStrategy.Pessimistic);
+        public static TimeoutPolicy Timeout(long timeoutMilliseconds)
+        {
+            return Policy.Timeout(TimeSpan.FromMilliseconds(timeoutMilliseconds), TimeoutStrategy.Pessimistic);
+        }
 
         /// <summary>
         /// 并发控制

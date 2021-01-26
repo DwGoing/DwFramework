@@ -19,18 +19,15 @@ namespace DwFramework.Core.Plugins
         /// <returns></returns>
         public static byte[] Encrypt(string str, string key, string iv, CipherMode mode = CipherMode.ECB, PaddingMode padding = PaddingMode.PKCS7, Encoding encoding = null)
         {
-            if (encoding == null)
-                encoding = Encoding.UTF8;
-            byte[] bytes = encoding.GetBytes(str);
-            using (var aes = Aes.Create())
-            {
-                aes.Key = encoding.GetBytes(key);
-                aes.IV = encoding.GetBytes(iv);
-                aes.Mode = mode;
-                aes.Padding = padding;
-                var encryptor = aes.CreateEncryptor(aes.Key, aes.IV);
-                return encryptor.TransformFinalBlock(bytes, 0, bytes.Length);
-            }
+            encoding ??= Encoding.UTF8;
+            var bytes = encoding.GetBytes(str);
+            using var aes = Aes.Create();
+            aes.Key = encoding.GetBytes(key);
+            aes.IV = encoding.GetBytes(iv);
+            aes.Mode = mode;
+            aes.Padding = padding;
+            var encryptor = aes.CreateEncryptor(aes.Key, aes.IV);
+            return encryptor.TransformFinalBlock(bytes, 0, bytes.Length);
         }
 
         /// <summary>
@@ -73,17 +70,14 @@ namespace DwFramework.Core.Plugins
         /// <returns></returns>
         public static string Decrypt(byte[] bytes, string key, string iv, CipherMode mode = CipherMode.ECB, PaddingMode padding = PaddingMode.PKCS7, Encoding encoding = null)
         {
-            if (encoding == null)
-                encoding = Encoding.UTF8;
-            using (var aes = System.Security.Cryptography.Aes.Create())
-            {
-                aes.Key = encoding.GetBytes(key);
-                aes.IV = encoding.GetBytes(iv);
-                aes.Mode = mode;
-                aes.Padding = padding;
-                var decryptor = aes.CreateDecryptor(aes.Key, aes.IV);
-                return encoding.GetString(decryptor.TransformFinalBlock(bytes, 0, bytes.Length));
-            }
+            encoding ??= Encoding.UTF8;
+            using var aes = System.Security.Cryptography.Aes.Create();
+            aes.Key = encoding.GetBytes(key);
+            aes.IV = encoding.GetBytes(iv);
+            aes.Mode = mode;
+            aes.Padding = padding;
+            var decryptor = aes.CreateDecryptor(aes.Key, aes.IV);
+            return encoding.GetString(decryptor.TransformFinalBlock(bytes, 0, bytes.Length));
         }
 
         /// <summary>

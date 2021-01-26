@@ -33,12 +33,12 @@ namespace DwFramework.Core.Plugins
         {
             padding ??= RSAEncryptionPadding.Pkcs1;
             byte[] result;
-            int maxLength = rsa.KeySize / 8 - PaddingLength[padding];
+            var maxLength = rsa.KeySize / 8 - PaddingLength[padding];
             // 长数据分割
             if (maxLength < data.Length)
             {
-                int pointer = 0;
-                List<byte> resBytes = new List<byte>();
+                var pointer = 0;
+                var resBytes = new List<byte>();
                 while (pointer < data.Length)
                 {
                     var length = pointer + maxLength > data.Length ? data.Length - pointer : maxLength;
@@ -62,12 +62,12 @@ namespace DwFramework.Core.Plugins
         {
             padding ??= RSAEncryptionPadding.Pkcs1;
             byte[] result;
-            int step = rsa.KeySize / 8;
+            var step = rsa.KeySize / 8;
             // 长数据分割
             if (step != encryptedData.Length)
             {
-                int pointer = 0;
-                List<byte> resBytes = new List<byte>();
+                var pointer = 0;
+                var resBytes = new List<byte>();
                 while (pointer < encryptedData.Length)
                 {
                     resBytes.AddRange(rsa.Decrypt(encryptedData.Skip(pointer).Take(step).ToArray(), padding));
@@ -90,11 +90,9 @@ namespace DwFramework.Core.Plugins
         /// <returns></returns>
         public static byte[] EncryptWithPublicKey(byte[] data, RSAKeyType type, string publicKey, bool isPem = false, RSAEncryptionPadding padding = null)
         {
-            using (var rsa = System.Security.Cryptography.RSA.Create())
-            {
-                rsa.ImportPublicKey(type, publicKey, isPem);
-                return Encrypt(rsa, data, padding);
-            }
+            using var rsa = System.Security.Cryptography.RSA.Create();
+            rsa.ImportPublicKey(type, publicKey, isPem);
+            return Encrypt(rsa, data, padding);
         }
 
         /// <summary>
@@ -109,7 +107,7 @@ namespace DwFramework.Core.Plugins
         /// <returns></returns>
         public static string EncryptWithPublicKey(string data, RSAKeyType type, string publicKey, bool isPem = false, RSAEncryptionPadding padding = null, Encoding encoding = null)
         {
-            if (encoding == null) encoding = Encoding.UTF8;
+            encoding ??= Encoding.UTF8;
             return EncryptWithPublicKey(encoding.GetBytes(data), type, publicKey, isPem, padding).ToBase64String();
         }
 
@@ -124,11 +122,9 @@ namespace DwFramework.Core.Plugins
         /// <returns></returns>
         public static byte[] EncryptWithPrivateKey(byte[] data, RSAKeyType type, string privateKey, bool isPem = false, RSAEncryptionPadding padding = null)
         {
-            using (var rsa = System.Security.Cryptography.RSA.Create())
-            {
-                rsa.ImportPrivateKey(type, privateKey, isPem);
-                return Encrypt(rsa, data, padding);
-            }
+            using var rsa = System.Security.Cryptography.RSA.Create();
+            rsa.ImportPrivateKey(type, privateKey, isPem);
+            return Encrypt(rsa, data, padding);
         }
 
         /// <summary>
@@ -143,7 +139,7 @@ namespace DwFramework.Core.Plugins
         /// <returns></returns>
         public static string EncryptWithPrivateKey(string data, RSAKeyType type, string privateKey, bool isPem = false, RSAEncryptionPadding padding = null, Encoding encoding = null)
         {
-            if (encoding == null) encoding = Encoding.UTF8;
+            encoding ??= Encoding.UTF8;
             return EncryptWithPrivateKey(encoding.GetBytes(data), type, privateKey, isPem, padding).ToBase64String();
         }
 
@@ -158,11 +154,9 @@ namespace DwFramework.Core.Plugins
         /// <returns></returns>
         public static byte[] Decrypt(byte[] encryptedData, RSAKeyType type, string privateKey, bool isPem = false, RSAEncryptionPadding padding = null)
         {
-            using (var rsa = System.Security.Cryptography.RSA.Create())
-            {
-                rsa.ImportPrivateKey(type, privateKey, isPem);
-                return Decrypt(rsa, encryptedData, padding);
-            }
+            using var rsa = System.Security.Cryptography.RSA.Create();
+            rsa.ImportPrivateKey(type, privateKey, isPem);
+            return Decrypt(rsa, encryptedData, padding);
         }
 
         /// <summary>
@@ -177,7 +171,7 @@ namespace DwFramework.Core.Plugins
         /// <returns></returns>
         public static string Decrypt(string encryptedData, RSAKeyType type, string privateKey, bool isPem = false, RSAEncryptionPadding padding = null, Encoding encoding = null)
         {
-            if (encoding == null) encoding = Encoding.UTF8;
+            encoding ??= Encoding.UTF8;
             return encoding.GetString(Decrypt(encryptedData.FromBase64String(), type, privateKey, isPem, padding));
         }
     }

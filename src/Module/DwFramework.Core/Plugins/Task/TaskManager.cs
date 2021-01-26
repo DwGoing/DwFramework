@@ -11,7 +11,10 @@ namespace DwFramework.Core.Plugins
         /// </summary>
         /// <param name="action"></param>
         /// <returns></returns>
-        public static Task CreateTask(Action action) => Task.Run(action);
+        public static Task CreateTask(Action action)
+        {
+            return Task.Run(action);
+        }
 
         /// <summary>
         /// 创建限时任务
@@ -57,7 +60,10 @@ namespace DwFramework.Core.Plugins
         /// <typeparam name="T"></typeparam>
         /// <param name="action"></param>
         /// <returns></returns>
-        public static Task<T> CreateTask<T>(Func<T> action) => Task.Run(action);
+        public static Task<T> CreateTask<T>(Func<T> action)
+        {
+            return Task.Run(action);
+        }
 
         /// <summary>
         /// 创建限时任务

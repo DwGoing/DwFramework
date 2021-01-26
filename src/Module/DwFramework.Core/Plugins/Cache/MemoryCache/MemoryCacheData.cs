@@ -4,17 +4,10 @@ namespace DwFramework.Core.Plugins
 {
     public sealed class MemoryCacheData
     {
-        public readonly string Key;
-        public readonly object Value;
+        public string Key { get; init; }
+        public object Value { get; init; }
         public DateTime? ExpireAt { get; private set; } = null;
-        public bool IsExpired
-        {
-            get
-            {
-                if (ExpireAt == null) return false;
-                return ExpireAt <= DateTime.UtcNow;
-            }
-        }
+        public bool IsExpired => ExpireAt != null || ExpireAt <= DateTime.Now;
 
         /// <summary>
         /// 构造函数
@@ -33,7 +26,7 @@ namespace DwFramework.Core.Plugins
         /// <param name="expireAt"></param>
         public void SetExpireTime(DateTime expireAt)
         {
-            ExpireAt = expireAt.ToUniversalTime();
+            ExpireAt = expireAt;
         }
 
         /// <summary>
@@ -42,7 +35,7 @@ namespace DwFramework.Core.Plugins
         /// <param name="expireTime"></param>
         public void SetExpireTime(TimeSpan expireTime)
         {
-            var expireAt = DateTime.UtcNow.Add(expireTime);
+            var expireAt = DateTime.Now.Add(expireTime);
             SetExpireTime(expireAt);
         }
     }

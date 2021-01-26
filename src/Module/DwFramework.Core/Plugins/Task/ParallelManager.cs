@@ -9,6 +9,9 @@ namespace DwFramework.Core.Plugins
         /// </summary>
         /// <param name="actions"></param>
         /// <returns></returns>
-        public static ParallelTask Create(params Action[] actions) => new ParallelTask(actions);
+        public static ParallelTask Create(params Action[] actions)
+        {
+            return new ParallelTask(actions);
+        }
     }
 }

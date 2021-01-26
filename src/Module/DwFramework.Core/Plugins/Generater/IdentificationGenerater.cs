@@ -29,26 +29,25 @@ namespace DwFramework.Core.Plugins
             {
                 ID = id;
                 StartTime = startTime != null ? startTime.Value : DateTime.UnixEpoch;
-                var timestamp = id >> (SnowflakeGenerater.WorkerIdBits + SnowflakeGenerater.SequenceBits);
+                var timestamp = id >> (WorkerIdBits + SequenceBits);
                 Timestamp = timestamp + DateTime.UnixEpoch.GetTimeDiff(startTime);
-                WorkId = (id ^ (timestamp << (SnowflakeGenerater.WorkerIdBits + SnowflakeGenerater.SequenceBits))) >> SnowflakeGenerater.SequenceBits;
-                Sequence = id ^ (timestamp << (SnowflakeGenerater.WorkerIdBits + SnowflakeGenerater.SequenceBits) | WorkId << SnowflakeGenerater.SequenceBits);
+                WorkId = (id ^ (timestamp << (WorkerIdBits + SequenceBits))) >> SequenceBits;
+                Sequence = id ^ (timestamp << (WorkerIdBits + SequenceBits) | WorkId << SequenceBits);
             }
         }
-
-        public static readonly int TimestampBits = 41;
-        public static readonly int WorkerIdBits = 10;
-        public static readonly int SequenceBits = 12;
 
         private readonly object _lock = new object();
         private long _currentTimestamp;
         private long _currentSequence;
 
-        public readonly long WorkerId;
-        public readonly DateTime StartTime;
-        public readonly long MaxTimestamp;
-        public readonly long MaxWorkerId;
-        public readonly long MaxSequence;
+        public static int TimestampBits { get; } = 41;
+        public static int WorkerIdBits { get; } = 10;
+        public static int SequenceBits { get; } = 12;
+        public long WorkerId { get; }
+        public DateTime StartTime { get; }
+        public long MaxTimestamp { get; }
+        public long MaxWorkerId { get; }
+        public long MaxSequence { get; }
 
         /// <summary>
         /// 构造函数

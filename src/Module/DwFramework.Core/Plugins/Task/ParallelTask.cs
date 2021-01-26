@@ -37,7 +37,10 @@ namespace DwFramework.Core.Plugins
         /// 添加操作
         /// </summary>
         /// <param name="actions"></param>
-        public void AddActionRange(IEnumerable<Action> actions) => _actions.AddRange(actions);
+        public void AddActionRange(IEnumerable<Action> actions)
+        {
+            _actions.AddRange(actions);
+        }
 
         /// <summary>
         /// 开始任务

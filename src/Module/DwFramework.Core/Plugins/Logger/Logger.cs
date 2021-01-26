@@ -32,13 +32,13 @@ namespace DwFramework.Core.Plugins
             }
             // 创建表结构
             var builder = new StringBuilder();
-            builder.Append("+");
+            builder.Append('+');
             for (var i = 0; i < labels.Length; i++)
             {
                 builder.Append("".PadLeft(labelWidths[i], '-'));
-                builder.Append("+");
+                builder.Append('+');
             }
-            builder.Append("\n");
+            builder.Append('\n');
             var split = builder.ToString();
             for (var i = 0; i < rowCount; i++)
             {
@@ -48,7 +48,7 @@ namespace DwFramework.Core.Plugins
                     builder.Append(rows[i, j].PadLeft(labelWidths[j] - 1, ' '));
                     builder.Append(" |");
                 }
-                builder.Append("\n");
+                builder.Append('\n');
                 builder.Append(split);
             }
             return builder.ToString(); ;

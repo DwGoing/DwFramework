@@ -13,10 +13,8 @@ namespace DwFramework.Core.Plugins
         /// <returns></returns>
         public static (string PrivateKey, string PublicKey) RsaKeyPair(RSAKeyType type = RSAKeyType.Pkcs1, int size = 1024, bool isPem = false)
         {
-            using (var rsa = System.Security.Cryptography.RSA.Create(size))
-            {
-                return (rsa.ExportPrivateKey(type, isPem), rsa.ExportPublicKey(type, isPem));
-            }
+            using var rsa = System.Security.Cryptography.RSA.Create(size);
+            return (rsa.ExportPrivateKey(type, isPem), rsa.ExportPublicKey(type, isPem));
         }
     }
 }

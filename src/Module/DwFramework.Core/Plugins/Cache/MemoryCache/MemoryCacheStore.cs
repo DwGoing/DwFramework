@@ -10,7 +10,7 @@ namespace DwFramework.Core.Plugins
 {
     public sealed class MemoryCacheStore
     {
-        private readonly Hashtable _Datas;
+        private readonly Hashtable _datas;
         private readonly System.Timers.Timer _Timer;
         private bool IsClean = false;
 
@@ -19,7 +19,7 @@ namespace DwFramework.Core.Plugins
         /// </summary>
         public MemoryCacheStore()
         {
-            _Datas = Hashtable.Synchronized(new Hashtable());
+            _datas = Hashtable.Synchronized(new Hashtable());
             _Timer = new System.Timers.Timer(30 * 1000)
             {
                 AutoReset = true
@@ -40,12 +40,12 @@ namespace DwFramework.Core.Plugins
             TaskManager.CreateTask(() =>
             {
                 IsClean = true;
-                var keys = _Datas.Keys;
-                foreach (var key in keys)
+                var keys = _datas.Keys;
+                keys.ForEach(item =>
                 {
-                    var data = (MemoryCacheData)_Datas[key];
-                    if (data.IsExpired) Del((string)key);
-                }
+                    var data = (MemoryCacheData)_datas[item];
+                    if (data.IsExpired) Del((string)item);
+                });
                 IsClean = false;
             });
         }
@@ -58,7 +58,7 @@ namespace DwFramework.Core.Plugins
         public void Set(string key, object value)
         {
             var data = new MemoryCacheData(key, value);
-            _Datas[data.Key] = data;
+            _datas[data.Key] = data;
         }
 
         /// <summary>
@@ -71,7 +71,7 @@ namespace DwFramework.Core.Plugins
         {
             var data = new MemoryCacheData(key, value);
             data.SetExpireTime(expireAt);
-            _Datas[data.Key] = data;
+            _datas[data.Key] = data;
         }
 
         /// <summary>
@@ -84,7 +84,7 @@ namespace DwFramework.Core.Plugins
         {
             var data = new MemoryCacheData(key, value);
             data.SetExpireTime(expireTime);
-            _Datas[data.Key] = data;
+            _datas[data.Key] = data;
         }
 
         /// <summary>
@@ -94,7 +94,7 @@ namespace DwFramework.Core.Plugins
         /// <returns></returns>
         public object Get(string key)
         {
-            var data = (MemoryCacheData)_Datas[key];
+            var data = (MemoryCacheData)_datas[key];
             if (data == null) return null;
             if (data.IsExpired)
             {
@@ -121,7 +121,10 @@ namespace DwFramework.Core.Plugins
         /// 删除数据（对象）
         /// </summary>
         /// <param name="key"></param>
-        public void Del(string key) => _Datas.Remove(key);
+        public void Del(string key)
+        {
+            _datas.Remove(key);
+        }
 
         /// <summary>
         /// 获取所有Key
@@ -129,7 +132,7 @@ namespace DwFramework.Core.Plugins
         /// <returns></returns>
         public string[] AllKeys()
         {
-            var keys = _Datas.Keys;
+            var keys = _datas.Keys;
             var result = new string[keys.Count];
             keys.CopyTo(result, 0);
             return result;
@@ -142,7 +145,7 @@ namespace DwFramework.Core.Plugins
         /// <returns></returns>
         public string[] KeysWhere(string pattern)
         {
-            var keys = _Datas.Keys;
+            var keys = _datas.Keys;
             var result = new string[keys.Count];
             keys.CopyTo(result, 0);
             return result.Where(item => Regex.IsMatch(item, pattern)).ToArray();
@@ -156,10 +159,10 @@ namespace DwFramework.Core.Plugins
         /// <param name="value"></param>
         public void HSet(string key, string field, object value)
         {
-            MemoryCacheData data = (MemoryCacheData)_Datas[key];
+            var data = (MemoryCacheData)_datas[key];
             if (data == null) data = new MemoryCacheData(key, Hashtable.Synchronized(new Hashtable()));
             (data.Value as Hashtable).Add(field, value);
-            _Datas[data.Key] = data;
+            _datas[data.Key] = data;
         }
 
         /// <summary>
@@ -187,7 +190,7 @@ namespace DwFramework.Core.Plugins
             var table = Get<Hashtable>(key);
             if (table == null) return default;
             var dic = new Dictionary<string, object>();
-            foreach (DictionaryEntry item in table) dic.Add((string)item.Key, item.Value);
+            table.ForEach(item => dic.Add((string)((DictionaryEntry)item).Key, ((DictionaryEntry)item).Value));
             return dic;
         }
 
@@ -210,7 +213,7 @@ namespace DwFramework.Core.Plugins
         /// <param name="expireAt"></param>
         public void SetExpireTime(string key, DateTime expireAt)
         {
-            var data = (MemoryCacheData)_Datas[key];
+            var data = (MemoryCacheData)_datas[key];
             if (data == null) return;
             data.SetExpireTime(expireAt);
         }
@@ -222,7 +225,7 @@ namespace DwFramework.Core.Plugins
         /// <param name="expireTime"></param>
         public void SetExpireTime(string key, TimeSpan expireTime)
         {
-            var data = (MemoryCacheData)_Datas[key];
+            var data = (MemoryCacheData)_datas[key];
             if (data == null) return;
             data.SetExpireTime(expireTime);
         }

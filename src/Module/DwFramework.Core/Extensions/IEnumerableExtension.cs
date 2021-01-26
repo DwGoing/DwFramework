@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -7,6 +8,28 @@ namespace DwFramework.Core.Extensions
 {
     public static class IEnumerableExtension
     {
+        /// <summary>
+        /// 遍历
+        /// </summary>
+        /// <param name="enumerable"></param>
+        /// <param name="action"></param>
+        /// <param name="onException"></param>
+        public static void ForEach(this IEnumerable enumerable, Action<object> action, Action<object, Exception> onException = null)
+        {
+            foreach (var item in enumerable)
+            {
+                try
+                {
+                    action?.Invoke(item);
+                }
+                catch (Exception ex)
+                {
+                    if (onException == null) throw;
+                    onException?.Invoke(item, ex);
+                }
+            }
+        }
+
         /// <summary>
         /// 遍历
         /// </summary>

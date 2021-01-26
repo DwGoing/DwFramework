@@ -30,7 +30,10 @@ namespace DwFramework.Core.Plugins
         /// <typeparam name="T"></typeparam>
         /// <param name="provider"></param>
         /// <returns></returns>
-        public static ILogger<T> GetLogger<T>(this IServiceProvider provider) => provider.GetService<ILogger<T>>();
+        public static ILogger<T> GetLogger<T>(this IServiceProvider provider)
+        {
+            return provider.GetService<ILogger<T>>();
+        }
 
         /// <summary>
         /// Debug
@@ -39,7 +42,10 @@ namespace DwFramework.Core.Plugins
         /// <param name="message"></param>
         /// <param name="args"></param>
         /// <returns></returns>
-        public static async Task LogDebugAsync(this ILogger logger, string message, params object[] args) => await TaskManager.CreateTask(() => logger.LogDebug(message, args));
+        public static async Task LogDebugAsync(this ILogger logger, string message, params object[] args)
+        {
+            await TaskManager.CreateTask(() => logger.LogDebug(message, args));
+        }
 
         /// <summary>
         /// Trace
@@ -48,7 +54,10 @@ namespace DwFramework.Core.Plugins
         /// <param name="message"></param>
         /// <param name="args"></param>
         /// <returns></returns>
-        public static async Task LogTraceAsync(this ILogger logger, string message, params object[] args) => await TaskManager.CreateTask(() => logger.LogTrace(message, args));
+        public static async Task LogTraceAsync(this ILogger logger, string message, params object[] args)
+        {
+            await TaskManager.CreateTask(() => logger.LogTrace(message, args));
+        }
 
         /// <summary>
         /// Information
@@ -57,7 +66,10 @@ namespace DwFramework.Core.Plugins
         /// <param name="message"></param>
         /// <param name="args"></param>
         /// <returns></returns>
-        public static async Task LogInformationAsync(this ILogger logger, string message, params object[] args) => await TaskManager.CreateTask(() => logger.LogInformation(message, args));
+        public static async Task LogInformationAsync(this ILogger logger, string message, params object[] args)
+        {
+            await TaskManager.CreateTask(() => logger.LogInformation(message, args));
+        }
 
         /// <summary>
         /// Warning
@@ -66,7 +78,10 @@ namespace DwFramework.Core.Plugins
         /// <param name="message"></param>
         /// <param name="args"></param>
         /// <returns></returns>
-        public static async Task LogWarningAsync(this ILogger logger, string message, params object[] args) => await TaskManager.CreateTask(() => logger.LogWarning(message, args));
+        public static async Task LogWarningAsync(this ILogger logger, string message, params object[] args)
+        {
+            await TaskManager.CreateTask(() => logger.LogWarning(message, args));
+        }
 
         /// <summary>
         /// Error
@@ -75,6 +90,9 @@ namespace DwFramework.Core.Plugins
         /// <param name="message"></param>
         /// <param name="args"></param>
         /// <returns></returns>
-        public static async Task LogErrorAsync(this ILogger logger, string message, params object[] args) => await TaskManager.CreateTask(() => logger.LogError(message, args));
+        public static async Task LogErrorAsync(this ILogger logger, string message, params object[] args)
+        {
+            await TaskManager.CreateTask(() => logger.LogError(message, args));
+        }
     }
 }
