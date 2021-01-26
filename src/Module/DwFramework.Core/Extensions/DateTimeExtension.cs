@@ -2,7 +2,7 @@
 
 namespace DwFramework.Core.Extensions
 {
-    public static class DateExtension
+    public static class DateTimeExtension
     {
         /// <summary>
         /// 计算时间差
