@@ -1,7 +1,0 @@
-﻿{
-  "Database": {
-    "ConnectionString": "", // 连接字符串
-    "DbType": "MySQL", // 数据库类型
-    "UseMemoryCache": true // 使用缓存
-  }
-}

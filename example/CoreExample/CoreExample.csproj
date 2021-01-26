@@ -2,16 +2,15 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Update="Config.json">
+    <None Update="NLog.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="DwFramework.Core" Version="2.0.1.11" />
-    <PackageReference Include="DwFramework.WebAPI" Version="2.0.1.6" />
+    <PackageReference Include="DwFramework.Core" Version="2.2.55.9213" />
   </ItemGroup>
 </Project>
