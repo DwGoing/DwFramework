@@ -9,10 +9,10 @@ namespace DwFramework.Core
 {
     public sealed class Environment
     {
-        public readonly EnvironmentType EnvironmentType;
+        public EnvironmentType EnvironmentType { get; }
 
-        private readonly Dictionary<string, ConfigurationBuilder> _configurationBuilders;
-        private readonly Dictionary<string, IConfiguration> _configurations;
+        private Dictionary<string, ConfigurationBuilder> _configurationBuilders { get; }
+        private Dictionary<string, IConfiguration> _configurations { get; }
 
         /// <summary>
         /// 构造函数
@@ -40,7 +40,7 @@ namespace DwFramework.Core
         {
             key ??= "Global";
             if (!_configurationBuilders.ContainsKey(key)) _configurationBuilders[key] = new ConfigurationBuilder();
-            IConfigurationBuilder builder = _configurationBuilders[key];
+            var builder = _configurationBuilders[key];
             builder.AddJsonFile(configFilePath);
             if (onChange != null) ChangeToken.OnChange(() => builder.GetFileProvider().Watch(configFilePath), () => onChange());
         }

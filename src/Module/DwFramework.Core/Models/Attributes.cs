@@ -8,9 +8,9 @@ namespace DwFramework.Core
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
     public sealed class RegisterableAttribute : Attribute
     {
-        public Type InterfaceType { get; private set; }
-        public Lifetime Lifetime { get; private set; }
-        public bool IsAutoActivate { get; private set; }
+        public Type InterfaceType { get; }
+        public Lifetime Lifetime { get; }
+        public bool IsAutoActivate { get; }
 
         /// <summary>
         /// 构造函数

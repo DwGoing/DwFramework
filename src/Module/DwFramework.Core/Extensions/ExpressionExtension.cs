@@ -29,7 +29,7 @@ namespace DwFramework.Core.Extensions
         public static Expression<Func<T, bool>> Merge<T>(this Expression<Func<T, bool>> exp1, Expression<Func<T, bool>> exp2, Func<Expression, Expression, Expression> merge)
         {
             var parameter = Expression.Parameter(typeof(T), "parameter");
-            SetParamExpressionVisitor visitor = new SetParamExpressionVisitor(parameter);
+            var visitor = new SetParamExpressionVisitor(parameter);
             var newExp1 = visitor.Modify(exp1.Body);
             var newExp2 = visitor.Modify(exp2.Body);
             var newBodyExp = merge(newExp1, newExp2);

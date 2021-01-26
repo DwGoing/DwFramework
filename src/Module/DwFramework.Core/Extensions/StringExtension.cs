@@ -80,15 +80,16 @@ namespace DwFramework.Core.Extensions
             if (string.IsNullOrEmpty(str)) throw new Exception("参数为空");
 
             str = str.TrimEnd('=');
-            int byteCount = str.Length * 5 / 8;
-            byte[] returnArray = new byte[byteCount];
+            var byteCount = str.Length * 5 / 8;
+            var returnArray = new byte[byteCount];
 
-            byte curByte = 0, bitsRemaining = 8;
-            int arrayIndex = 0;
+            var curByte = (byte)0;
+            var bitsRemaining = (byte)8;
+            var arrayIndex = 0;
 
             str.ForEach(item =>
             {
-                int cValue = ToBase32Value(item);
+                var cValue = ToBase32Value(item);
                 int mask;
                 if (bitsRemaining > 5)
                 {
@@ -122,11 +123,12 @@ namespace DwFramework.Core.Extensions
         {
             if (bytes == null || bytes.Length == 0) throw new Exception("参数为空");
 
-            int charCount = (int)Math.Ceiling(bytes.Length / 5d) * 8;
-            char[] returnArray = new char[charCount];
+            var charCount = (int)Math.Ceiling(bytes.Length / 5d) * 8;
+            var returnArray = new char[charCount];
 
-            byte nextChar = 0, bitsRemaining = 5;
-            int arrayIndex = 0;
+            var nextChar = (byte)0;
+            var bitsRemaining = (byte)5;
+            var arrayIndex = 0;
 
             bytes.ForEach(item =>
             {
@@ -174,8 +176,8 @@ namespace DwFramework.Core.Extensions
         /// <returns></returns>
         public static string ToHex(this byte[] bytes)
         {
-            StringBuilder builder = new StringBuilder();
-            for (int i = 0; i < bytes.Length; i++)
+            var builder = new StringBuilder();
+            for (var i = 0; i < bytes.Length; i++)
             {
                 builder.Append(bytes[i].ToString("x2"));
             }
@@ -190,7 +192,7 @@ namespace DwFramework.Core.Extensions
         public static byte[] FromHex(this string hexString)
         {
             var bytes = new byte[hexString.Length / 2];
-            for (int i = 0; i < bytes.Length; i++)
+            for (var i = 0; i < bytes.Length; i++)
             {
                 bytes[i] = (byte)Convert.ToInt32(hexString.Substring(i * 2, 2), 16);
             }
@@ -291,9 +293,9 @@ namespace DwFramework.Core.Extensions
             for (var i = 1; i <= len2; i++) diff[0, i] = i;
             var ch1 = source.ToCharArray();
             var ch2 = target.ToCharArray();
-            for (int i = 1; i <= len1; i++)
+            for (var i = 1; i <= len1; i++)
             {
-                for (int j = 1; j <= len2; j++)
+                for (var j = 1; j <= len2; j++)
                 {
                     var min = new int[] { diff[i - 1, j - 1], diff[i - 1, j], diff[i, j - 1] }.Min();
                     diff[i, j] = ch1[i - 1] == ch2[j - 1] ? min : min + 1;

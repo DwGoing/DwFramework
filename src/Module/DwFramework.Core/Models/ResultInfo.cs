@@ -2,34 +2,22 @@
 {
     public partial class ResultInfo
     {
-        public const int Ok = 200;
-        public const int Error = 400;
+        public const int OK = 200;
+        public const int ERROR = 400;
 
-        public int Code { get; set; }
-        public string Message { get; set; }
-        public dynamic Data { get; set; }
+        public int Code { get; init; }
+        public string Message { get; init; }
+        public dynamic Data { get; init; }
 
-        /// <summary>
-        /// 成功
-        /// </summary>
-        /// <param name="message"></param>
-        /// <returns></returns>
-        public static ResultInfo Success(string message)
-        {
-            return new ResultInfo()
-            {
-                Code = Ok,
-                Message = message
-            };
-        }
+        private ResultInfo() { }
 
         /// <summary>
-        /// 失败
+        /// 创建结果信息
         /// </summary>
-        /// <param name="message"></param>
         /// <param name="code"></param>
+        /// <param name="message"></param>
         /// <returns></returns>
-        public static ResultInfo Fail(string message, int code = Error)
+        public static ResultInfo Create(int code = OK, string message = "Success")
         {
             return new ResultInfo()
             {
@@ -39,32 +27,21 @@
         }
 
         /// <summary>
-        /// 成功
+        /// 创建结果信息
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="message"></param>
-        /// <param name="data"></param>
-        /// <returns></returns>
-        public static ResultInfo Success<T>(string message, T data)
-        {
-            var result = Success(message);
-            result.Data = data;
-            return result;
-        }
-
-        /// <summary>
-        /// 失败
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="message"></param>
-        /// <param name="data"></param>
         /// <param name="code"></param>
+        /// <param name="message"></param>
+        /// <param name="data"></param>
         /// <returns></returns>
-        public static ResultInfo Fail<T>(string message, T data, int code = Error)
+        public static ResultInfo Create<T>(int code = OK, string message = "Success", T data = default)
         {
-            var result = Fail(message, code);
-            result.Data = data;
-            return result;
+            return new ResultInfo()
+            {
+                Code = code,
+                Message = message,
+                Data = data
+            };
         }
     }
 }
