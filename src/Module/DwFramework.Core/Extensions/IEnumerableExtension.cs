@@ -24,7 +24,7 @@ namespace DwFramework.Core.Extensions
                 }
                 catch (Exception ex)
                 {
-                    if (onException == null) throw ex;
+                    if (onException == null) throw;
                     onException?.Invoke(item, ex);
                 }
             }
@@ -51,7 +51,7 @@ namespace DwFramework.Core.Extensions
                     if (onException == null)
                     {
                         state.Stop();
-                        throw ex;
+                        throw;
                     }
                     onException?.Invoke(item, ex);
                 }
