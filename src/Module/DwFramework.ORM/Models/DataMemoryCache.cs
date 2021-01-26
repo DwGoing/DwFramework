@@ -5,6 +5,8 @@ using System.Reflection;
 using Microsoft.Extensions.Caching.Memory;
 using SqlSugar;
 
+using DwFramework.Core.Extensions;
+
 namespace DwFramework.ORM
 {
     public class DataMemoryCache : ICacheService
@@ -77,11 +79,8 @@ namespace DwFramework.ORM
             const BindingFlags flags = BindingFlags.Instance | BindingFlags.NonPublic;
             var entries = typeof(MemoryCache).GetField("_entries", flags).GetValue(_cacheManager);
             var keys = new List<string>();
-            if (!(entries is IDictionary cacheItems)) return keys;
-            foreach (DictionaryEntry cacheItem in cacheItems)
-            {
-                keys.Add(cacheItem.Key.ToString());
-            }
+            if (entries is not IDictionary cacheItems) return keys;
+            cacheItems.ForEach(item => keys.Add(((DictionaryEntry)item).Key.ToString()));
             return keys;
         }
 

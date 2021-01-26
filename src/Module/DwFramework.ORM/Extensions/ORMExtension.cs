@@ -10,11 +10,11 @@ namespace DwFramework.ORM
         /// 注册服务
         /// </summary>
         /// <param name="host"></param>
-        /// <param name="configKey"></param>
-        /// <param name="configPath"></param>
-        public static void RegisterORMService(this ServiceHost host, string configKey = null, string configPath = null)
+        /// <param name="path"></param>
+        /// <param name="key"></param>
+        public static void RegisterORMService(this ServiceHost host, string path = null, string key = null)
         {
-            host.Register(c => new ORMService(configKey, configPath)).SingleInstance();
+            host.Register(_ => new ORMService(path, key)).SingleInstance();
         }
 
         /// <summary>
@@ -22,6 +22,9 @@ namespace DwFramework.ORM
         /// </summary>
         /// <param name="provider"></param>
         /// <returns></returns>
-        public static ORMService GetORMService(this IServiceProvider provider) => provider.GetService<ORMService>();
+        public static ORMService GetORMService(this IServiceProvider provider)
+        {
+            return provider.GetService<ORMService>();
+        }
     }
 }

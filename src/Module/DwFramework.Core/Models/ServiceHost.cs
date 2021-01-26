@@ -45,12 +45,12 @@ namespace DwFramework.Core
         /// <summary>
         /// 添加配置
         /// </summary>
-        /// <param name="configFilePath"></param>
+        /// <param name="filePath"></param>
         /// <param name="key"></param>
         /// <param name="onChange"></param>
-        public static void AddJsonConfig(string configFilePath, string key = null, Action onChange = null)
+        public void AddJsonConfig(string filePath, string key = null, Action onChange = null)
         {
-            Environment?.AddJsonConfig(configFilePath, key, onChange);
+            Environment?.AddJsonConfig(filePath, key, onChange);
         }
 
         /// <summary>

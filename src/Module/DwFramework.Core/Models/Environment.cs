@@ -48,7 +48,10 @@ namespace DwFramework.Core
         /// <summary>
         /// 构建环境配置
         /// </summary>
-        public void Build() => _configurationBuilders.ForEach(item => _configurations[item.Key] = item.Value.Build());
+        public void Build()
+        {
+            _configurationBuilders.ForEach(item => _configurations[item.Key] = item.Value.Build());
+        }
 
         /// <summary>
         /// 获取配置
@@ -66,12 +69,12 @@ namespace DwFramework.Core
         /// 获取配置
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="configKey"></param>
-        /// <param name="configPath"></param>
+        /// <param name="path"></param>
+        /// <param name="key"></param>
         /// <returns></returns>
-        public T GetConfiguration<T>(string configKey = null, string configPath = null)
+        public T GetConfiguration<T>(string path = null, string key = null)
         {
-            return GetConfiguration(configKey).GetConfig<T>(configPath);
+            return GetConfiguration(key).GetConfig<T>(path);
         }
     }
 }

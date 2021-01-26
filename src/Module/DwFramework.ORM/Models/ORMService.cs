@@ -11,15 +11,15 @@ namespace DwFramework.ORM
 {
     public sealed class Config
     {
-        public Dictionary<string, DbConnectionConfig> ConnectionConfigs { get; set; }
+        public Dictionary<string, DbConnectionConfig> ConnectionConfigs { get; init; }
     }
 
     public sealed class DbConnectionConfig
     {
-        public string ConnectionString { get; set; }
-        public string DbType { get; set; }
-        public SlaveDbConnectionConfig[] SlaveConnections { get; set; }
-        public bool UseMemoryCache { get; set; } = false;
+        public string ConnectionString { get; init; }
+        public string DbType { get; init; }
+        public SlaveDbConnectionConfig[] SlaveConnections { get; init; }
+        public bool UseMemoryCache { get; init; } = false;
 
         public DbType ParseDbType()
         {
@@ -35,8 +35,8 @@ namespace DwFramework.ORM
 
     public sealed class SlaveDbConnectionConfig
     {
-        public string ConnectionString { get; set; }
-        public int HitRate { get; set; }
+        public string ConnectionString { get; init; }
+        public int HitRate { get; init; }
     }
 
     public sealed class ORMService
@@ -46,11 +46,11 @@ namespace DwFramework.ORM
         /// <summary>
         /// 构造函数
         /// </summary>
-        /// <param name="configKey"></param>
-        /// <param name="configPath"></param>
-        public ORMService(string configKey = null, string configPath = null)
+        /// <param name="path"></param>
+        /// <param name="key"></param>
+        public ORMService(string path = null, string key = null)
         {
-            _config = ServiceHost.Environment.GetConfiguration<Config>(configKey, configPath);
+            _config = ServiceHost.Environment.GetConfiguration<Config>(path, key);
             if (_config == null) throw new Exception("ORM初始化异常 => 未读取到ORM配置");
         }
 
@@ -114,7 +114,10 @@ namespace DwFramework.ORM
         /// <param name="columns"></param>
         /// <param name="isCreatePrimaryKey"></param>
         /// <returns></returns>
-        public Task<bool> CreateTableAsync(string connName, string tableName, List<DbColumnInfo> columns, bool isCreatePrimaryKey = true) => TaskManager.CreateTask(() => CreateConnection(connName).DbMaintenance.CreateTable(tableName, columns, isCreatePrimaryKey));
+        public Task<bool> CreateTableAsync(string connName, string tableName, List<DbColumnInfo> columns, bool isCreatePrimaryKey = true)
+        {
+            return TaskManager.CreateTask(() => CreateConnection(connName).DbMaintenance.CreateTable(tableName, columns, isCreatePrimaryKey));
+        }
 
         /// <summary>
         /// 删除表
@@ -122,7 +125,10 @@ namespace DwFramework.ORM
         /// <param name="connName"></param>
         /// <param name="tableName"></param>
         /// <returns></returns>
-        public Task<bool> DropTableAsync(string connName, string tableName) => TaskManager.CreateTask(() => CreateConnection(connName).DbMaintenance.DropTable(tableName));
+        public Task<bool> DropTableAsync(string connName, string tableName)
+        {
+            return TaskManager.CreateTask(() => CreateConnection(connName).DbMaintenance.DropTable(tableName));
+        }
 
         /// <summary>
         /// 重置表
@@ -130,7 +136,10 @@ namespace DwFramework.ORM
         /// <param name="connName"></param>
         /// <param name="tableName"></param>
         /// <returns></returns>
-        public Task<bool> TruncateTableAsync(string connName, string tableName) => TaskManager.CreateTask(() => CreateConnection(connName).DbMaintenance.TruncateTable(tableName));
+        public Task<bool> TruncateTableAsync(string connName, string tableName)
+        {
+            return TaskManager.CreateTask(() => CreateConnection(connName).DbMaintenance.TruncateTable(tableName));
+        }
 
         /// <summary>
         /// 复制表结构
