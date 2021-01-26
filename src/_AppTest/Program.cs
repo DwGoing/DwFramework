@@ -24,7 +24,9 @@ namespace _AppTest
         {
             try
             {
+                var host = new ServiceHost(EnvironmentType.Develop, "Config.json");
 
+                host.Run();
             }
             catch (Exception ex)
             {
