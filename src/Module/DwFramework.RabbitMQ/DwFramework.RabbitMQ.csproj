@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFramework>netcoreapp3.1</TargetFramework>
-        <ReleaseVersion>2</ReleaseVersion>
+        <TargetFramework>net5.0</TargetFramework>
+        <ReleaseVersion>5</ReleaseVersion>
         <BuildVersion>2.55.9216</BuildVersion>
         <VersionSuffix>
         </VersionSuffix>
