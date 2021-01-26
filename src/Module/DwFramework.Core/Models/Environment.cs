@@ -9,10 +9,10 @@ namespace DwFramework.Core
 {
     public sealed class Environment
     {
-        public EnvironmentType EnvironmentType { get; }
+        private readonly Dictionary<string, ConfigurationBuilder> _configurationBuilders;
+        private readonly Dictionary<string, IConfiguration> _configurations;
 
-        private Dictionary<string, ConfigurationBuilder> _configurationBuilders { get; }
-        private Dictionary<string, IConfiguration> _configurations { get; }
+        public EnvironmentType EnvironmentType { get; }
 
         /// <summary>
         /// 构造函数
@@ -48,7 +48,7 @@ namespace DwFramework.Core
         /// <summary>
         /// 构建环境配置
         /// </summary>
-        public void Build() => _configurationBuilders.ForEach(item => _configurations[item.Key] = item.Value.Build(), (_, ex) => throw ex);
+        public void Build() => _configurationBuilders.ForEach(item => _configurations[item.Key] = item.Value.Build());
 
         /// <summary>
         /// 获取配置

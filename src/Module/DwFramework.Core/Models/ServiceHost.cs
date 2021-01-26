@@ -9,6 +9,7 @@ using Autofac.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
+using DwFramework.Core.Extensions;
 using DwFramework.Core.Plugins;
 
 namespace DwFramework.Core
@@ -18,10 +19,9 @@ namespace DwFramework.Core
         private readonly AutoResetEvent _autoResetEvent;
         private readonly ContainerBuilder _containerBuilder;
         private readonly ServiceCollection _services;
-
         private ILogger<ServiceHost> _logger;
 
-        public static Environment Environment { get; private set; }
+        public static Environment Environment { get; private set; } = null;
         public static AutofacServiceProvider Provider { get; private set; }
         public event Action<IServiceProvider> OnInitializing;
         public event Action<IServiceProvider> OnInitialized;
@@ -48,7 +48,7 @@ namespace DwFramework.Core
         /// <param name="configFilePath"></param>
         /// <param name="key"></param>
         /// <param name="onChange"></param>
-        public void AddJsonConfig(string configFilePath, string key = null, Action onChange = null) => Environment.AddJsonConfig(configFilePath, key, onChange);
+        public static void AddJsonConfig(string configFilePath, string key = null, Action onChange = null) => Environment?.AddJsonConfig(configFilePath, key, onChange);
 
         /// <summary>
         /// 开启服务
@@ -163,11 +163,11 @@ namespace DwFramework.Core
         public void RegisterFromAssembly(Assembly assembly)
         {
             var types = assembly.GetTypes();
-            foreach (var type in types)
+            types.ForEach(item =>
             {
-                var attr = type.GetCustomAttribute<RegisterableAttribute>();
-                if (attr == null) continue;
-                var builder = _containerBuilder.RegisterType(type);
+                var attr = item.GetCustomAttribute<RegisterableAttribute>();
+                if (attr == null) return;
+                var builder = _containerBuilder.RegisterType(item);
                 if (attr.InterfaceType != null) builder.As(attr.InterfaceType);
                 else builder.AsSelf();
                 switch (attr.Lifetime)
@@ -179,9 +179,8 @@ namespace DwFramework.Core
                         builder.InstancePerLifetimeScope();
                         break;
                 }
-                if (attr.IsAutoActivate)
-                    builder.AutoActivate();
-            }
+                if (attr.IsAutoActivate) builder.AutoActivate();
+            });
         }
 
         /// <summary>
@@ -191,7 +190,7 @@ namespace DwFramework.Core
         public void RegisterFromAssemblies()
         {
             var assemblies = AppDomain.CurrentDomain.GetAssemblies();
-            foreach (var item in assemblies) RegisterFromAssembly(item);
+            assemblies.ForEach(item => RegisterFromAssembly(item));
         }
 
         /// <summary>
