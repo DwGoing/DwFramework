@@ -3,7 +3,7 @@
     <PropertyGroup>
         <TargetFramework>netcoreapp3.1</TargetFramework>
         <ReleaseVersion>2</ReleaseVersion>
-        <BuildVersion>1.101.951</BuildVersion>
+        <BuildVersion>2.55.9218</BuildVersion>
         <VersionSuffix>
         </VersionSuffix>
         <Version>$(ReleaseVersion).$(BuildVersion)$(VersionSuffix)</Version>
@@ -15,7 +15,7 @@
         <ProjectReference Include="..\DwFramework.Core\DwFramework.Core.csproj" />
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="Quartz" Version="3.2.3" />
+        <PackageReference Include="Quartz" Version="3.2.4" />
     </ItemGroup>
     <ItemGroup>
         <None Include="README.md">

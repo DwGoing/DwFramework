@@ -3,7 +3,7 @@
     <PropertyGroup>
         <TargetFramework>netcoreapp3.1</TargetFramework>
         <ReleaseVersion>2</ReleaseVersion>
-        <BuildVersion>1.101.591</BuildVersion>
+        <BuildVersion>2.55.9213</BuildVersion>
         <VersionSuffix>
         </VersionSuffix>
         <Version>$(ReleaseVersion).$(BuildVersion)$(VersionSuffix)</Version>
@@ -20,7 +20,7 @@
         <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="5.0.0" />
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.1" />
         <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="5.0.0" />
-        <PackageReference Include="NLog" Version="4.7.6" />
+        <PackageReference Include="NLog" Version="4.7.7" />
         <PackageReference Include="NLog.Extensions.Logging" Version="1.7.0" />
         <PackageReference Include="NLog.MailKit" Version="3.3.0" />
         <PackageReference Include="NLog.Targets.ElasticSearch" Version="7.5.0" />
@@ -28,7 +28,7 @@
         <PackageReference Include="RSAExtensions" Version="1.0.3" />
         <PackageReference Include="CHSPinYinConv" Version="1.0.0" />
         <PackageReference Include="K4os.Compression.LZ4.Streams" Version="1.2.6" />
-        <PackageReference Include="Mapster" Version="7.0.1" />
+        <PackageReference Include="Mapster" Version="7.1.3" />
     </ItemGroup>
     <ItemGroup>
         <None Update="README.md">

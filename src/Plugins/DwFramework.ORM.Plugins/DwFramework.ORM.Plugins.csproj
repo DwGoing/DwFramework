@@ -3,7 +3,7 @@
     <PropertyGroup>
         <TargetFramework>netcoreapp3.1</TargetFramework>
         <ReleaseVersion>2</ReleaseVersion>
-        <BuildVersion>6.10</BuildVersion>
+        <BuildVersion>2.55.9220</BuildVersion>
         <VersionSuffix>
         </VersionSuffix>
         <Version>$(ReleaseVersion).$(BuildVersion)$(VersionSuffix)</Version>
