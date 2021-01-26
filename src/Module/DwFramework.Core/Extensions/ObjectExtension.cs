@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Text;
-using System.IO;
-using System.Runtime.Serialization;
-using System.Runtime.Serialization.Formatters.Binary;
 using System.Text.Json;
 using Mapster;
 
@@ -69,18 +66,9 @@ namespace DwFramework.Core.Extensions
         /// <returns></returns>
         public static byte[] ToBytes(this object obj, Encoding encoding = null)
         {
-            if (encoding != null)
-            {
-                var json = obj.ToJson();
-                return encoding.GetBytes(json);
-            }
-            else
-            {
-                using var stream = new MemoryStream();
-                IFormatter formatter = new BinaryFormatter();
-                formatter.Serialize(stream, obj);
-                return stream.GetBuffer();
-            }
+            encoding ??= Encoding.UTF8;
+            var json = obj.ToJson();
+            return encoding.GetBytes(json);
         }
 
         /// <summary>
@@ -92,17 +80,9 @@ namespace DwFramework.Core.Extensions
         /// <returns></returns>
         public static object ToObject(this byte[] bytes, Type type, Encoding encoding = null)
         {
-            if (encoding != null)
-            {
-                var json = encoding.GetString(bytes);
-                return json.ToObject(type);
-            }
-            else
-            {
-                using var stream = new MemoryStream(bytes);
-                IFormatter formatter = new BinaryFormatter();
-                return formatter.Deserialize(stream);
-            }
+            encoding ??= Encoding.UTF8;
+            var json = encoding.GetString(bytes);
+            return json.ToObject(type);
         }
 
         /// <summary>
@@ -114,17 +94,9 @@ namespace DwFramework.Core.Extensions
         /// <returns></returns>
         public static T ToObject<T>(this byte[] bytes, Encoding encoding = null)
         {
-            if (encoding != null)
-            {
-                var json = encoding.GetString(bytes);
-                return json.ToObject<T>();
-            }
-            else
-            {
-                using var stream = new MemoryStream(bytes);
-                IFormatter formatter = new BinaryFormatter();
-                return (T)formatter.Deserialize(stream);
-            }
+            encoding ??= Encoding.UTF8;
+            var json = encoding.GetString(bytes);
+            return json.ToObject<T>();
         }
     }
 }
