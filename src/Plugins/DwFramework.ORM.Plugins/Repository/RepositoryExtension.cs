@@ -2,6 +2,7 @@
 using System.Reflection;
 
 using DwFramework.Core;
+using DwFramework.Core.Extensions;
 
 namespace DwFramework.ORM.Plugins
 {
@@ -14,16 +15,16 @@ namespace DwFramework.ORM.Plugins
         public static void RegisterRepositories(this ServiceHost host)
         {
             var assemblies = AppDomain.CurrentDomain.GetAssemblies();
-            foreach (var assembly in assemblies)
+            assemblies.ForEach(assembly =>
             {
                 var types = assembly.GetTypes();
-                foreach (var type in types)
+                types.ForEach(type =>
                 {
                     var attr = type.GetCustomAttribute<RepositoryAttribute>();
-                    if (attr == null) continue;
+                    if (attr == null) return;
                     host.RegisterType(type);
-                }
-            }
+                });
+            });
         }
     }
 }

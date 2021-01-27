@@ -12,12 +12,12 @@ namespace DwFramework.RPC
         /// 注册服务
         /// </summary>
         /// <param name="host"></param>
-        /// <param name="configKey"></param>
-        /// <param name="configPath"></param>
+        /// <param name="path"></param>
+        /// <param name="key"></param>
         /// <param name="services"></param>
-        public static void RegisterRPCService(this ServiceHost host, string configKey = null, string configPath = null, params Type[] services)
+        public static void RegisterRPCService(this ServiceHost host, string path = null, string key = null, params Type[] services)
         {
-            host.Register(c => new RPCService(configKey, configPath)).SingleInstance();
+            host.Register(_ => new RPCService(path, key)).SingleInstance();
             services.ForEach(item =>
             {
                 host.OnInitializing += provider =>

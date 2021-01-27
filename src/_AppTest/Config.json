@@ -1,3 +1,9 @@
 ﻿{
-
+  "ORM": {
+    "ConnectionConfigs": {
+      "A": {
+        "ConnectionConfig": "XXX"
+      }
+    }
+  }
 }
