@@ -1,12 +1,3 @@
 ﻿{
-  "Rpc": {
-    "Listen": {
-      "http": ":5020"
-    }
-  },
-  "Cluster": {
-    "LinkUrl": "127.0.0.1:5020",
-    "BootPeer": ""
-  },
-  "Type": 0
+
 }

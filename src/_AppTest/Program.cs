@@ -3,21 +3,11 @@ using System.Threading.Tasks;
 using DwFramework.Core;
 using DwFramework.Core.Plugins;
 using DwFramework.Core.Extensions;
+using DwFramework.ORM;
+using System.Collections.Generic;
 
 namespace _AppTest
 {
-    class A
-    {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public B B { get; set; }
-    }
-
-    class B
-    {
-        public int Age { get; set; }
-    }
-
     class Program
     {
         static void Main(string[] args)
@@ -25,7 +15,12 @@ namespace _AppTest
             try
             {
                 var host = new ServiceHost(EnvironmentType.Develop, "Config.json");
-
+                host.RegisterLog();
+                host.RegisterORMService("ORM");
+                host.OnInitialized += p =>
+                {
+                    var s = p.GetORMService();
+                };
                 host.Run();
             }
             catch (Exception ex)
