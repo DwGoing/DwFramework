@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.AspNetCore.Mvc;
-using DwFramework.WebAPI;
+﻿using Microsoft.AspNetCore.Mvc;
 
 namespace DwFramework.Example.WebAPI
 {
@@ -17,11 +14,6 @@ namespace DwFramework.Example.WebAPI
         public IActionResult A()
         {
             return Ok();
-            //return Ok(JwtManager.GenerateToken("dwgoing", "0123456789abcdef", customFields: new Dictionary<string, object>() {
-            //    { "A","a" },
-            //    {"B",1 },
-            //    {"C",new {Name="DDD"} }
-            //}));
         }
     }
 }
