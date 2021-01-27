@@ -38,12 +38,12 @@ namespace DwFramework.RPC.Plugins
         /// <summary>
         /// 构造函数
         /// </summary>
-        /// <param name="configKey"></param>
-        /// <param name="configPath"></param>
-        public ClusterImpl(string configKey = null, string configPath = null)
+        /// <param name="path"></param>
+        /// <param name="key"></param>
+        public ClusterImpl(string path = null, string key = null)
         {
-            _config = ServiceHost.Environment.GetConfiguration<Config>(configKey, configPath);
-            if (_config == null) throw new Exception("Cluster初始化异常 => 未读取到Cluster配置");
+            _config = ServiceHost.Environment.GetConfiguration<Config>(path, key);
+            if (_config == null) throw new Exception("未读取到Cluster配置");
             _logger = ServiceHost.Provider.GetLogger<ClusterImpl>();
             ID = RandomGenerater.RandomString(32);
             _header = new Metadata
@@ -55,7 +55,7 @@ namespace DwFramework.RPC.Plugins
             _healthCheckTimer.Elapsed += (_, args) => PeerHealthCheck();
             _healthCheckTimer.AutoReset = true;
             _healthCheckTimer.Start();
-            _logger?.LogInformationAsync($"Cluster初始化 => 节点ID:{ID} ｜ 节点EndPoint:{_config.LinkUrl}");
+            _logger?.LogInformationAsync($"节点ID:{ID} ｜ 节点EndPoint:{_config.LinkUrl}");
         }
 
         /// <summary>
@@ -77,7 +77,7 @@ namespace DwFramework.RPC.Plugins
             _healthCheckTimer.Elapsed += (_, args) => PeerHealthCheck();
             _healthCheckTimer.AutoReset = true;
             _healthCheckTimer.Start();
-            _logger?.LogInformationAsync($"Cluster初始化 => 节点ID:{ID} ｜ 节点EndPoint:{linkUrl}");
+            _logger?.LogInformationAsync($"节点ID:{ID} ｜ 节点EndPoint:{linkUrl}");
         }
 
         /// <summary>
@@ -103,10 +103,10 @@ namespace DwFramework.RPC.Plugins
         {
             var id = context.RequestHeaders.Get("id");
             var url = context.RequestHeaders.Get("linkurl");
-            if (string.IsNullOrEmpty(id?.Value) || url == null || string.IsNullOrEmpty(url?.Value)) throw new Exception($"Cluster加入集群失败 => 无法获取节点信息");
+            if (string.IsNullOrEmpty(id?.Value) || url == null || string.IsNullOrEmpty(url?.Value)) throw new Exception($"无法获取节点信息");
             _peers[id.Value] = url.Value;
             SyncRouteTable();
-            if (!PeerHealthCheck(id.Value)) throw new Exception("Cluster加入集群失败 => LinkUrl不可用");
+            if (!PeerHealthCheck(id.Value)) throw new Exception("LinkUrl不可用");
             OnJoin?.Invoke(id.Value);
             return Task.FromResult(new StringValue() { Value = ID });
         }
@@ -139,15 +139,15 @@ namespace DwFramework.RPC.Plugins
         }
 
         /// <summary>
-        /// 同步数据
+        /// 发送数据
         /// </summary>
         /// <param name="request"></param>
         /// <param name="context"></param>
         /// <returns></returns>
-        public override Task<Empty> SyncData(Data request, ServerCallContext context)
+        public override Task<Empty> SendData(Data request, ServerCallContext context)
         {
             var id = context.RequestHeaders.Get("id");
-            if (id == null || string.IsNullOrEmpty(id.Value)) throw new Exception($"Cluster同步数据失败 => 无法获取节点信息");
+            if (id == null || string.IsNullOrEmpty(id.Value)) throw new Exception($"无法获取节点信息");
             OnReceiveData?.Invoke(id.Value, (DataType)request.Type, request.Hex.FromHex().Decompress(CompressType.LZ4).Result);
             return Task.FromResult(new Empty());
         }
@@ -171,6 +171,22 @@ namespace DwFramework.RPC.Plugins
                 onException?.Invoke(ex);
             }
             finally { channel.ShutdownAsync(); }
+        }
+
+        /// <summary>
+        /// 调用RPC
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="action"></param>
+        /// <param name="onException"></param>
+        private void UseRPC(string id, Action<Cluster.ClusterClient> action, Action<string, Exception> onException = null)
+        {
+            if (!_peers.ContainsKey(id)) return;
+            UseRPC(_peers[id], action, ex =>
+            {
+                onException?.Invoke(id, ex);
+                PeerHealthCheck(id);
+            });
         }
 
         /// <summary>
@@ -199,7 +215,7 @@ namespace DwFramework.RPC.Plugins
         private void PeerHealthCheck()
         {
             var ids = _peers.Keys.ToArray();
-            foreach (var id in ids) PeerHealthCheck(id);
+            ids.ForEach(item => PeerHealthCheck(item));
         }
 
         /// <summary>
@@ -208,8 +224,28 @@ namespace DwFramework.RPC.Plugins
         private void SyncRouteTable()
         {
             var request = new RouteTable();
-            _peers.ForEach(item => request.Value.Add(item.Key, item.Value));
-            _peers.ForEach(item => UseRPC(item.Value, client => client.SyncRouteTableAsync(request)));
+            _peers.ForEach(item =>
+            {
+                request.Value.Add(item.Key, item.Value);
+                UseRPC(item.Key, client => client.SyncRouteTableAsync(request), (id, ex) => { });
+            });
+        }
+
+        /// <summary>
+        /// 发送消息
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="type"></param>
+        /// <param name="data"></param>
+        public void SendData(string id, DataType type, byte[] data)
+        {
+            if (!_peers.ContainsKey(id)) return;
+            var request = new Data()
+            {
+                Type = (int)type,
+                Hex = data.Compress(CompressType.LZ4).Result.ToHex()
+            };
+            UseRPC(id, client => client.SendDataAsync(request, _header), (id, ex) => { });
         }
 
         /// <summary>
@@ -219,12 +255,7 @@ namespace DwFramework.RPC.Plugins
         /// <param name="data"></param>
         public void SyncData(DataType type, byte[] data)
         {
-            var request = new Data()
-            {
-                Type = (int)type,
-                Hex = data.Compress(CompressType.LZ4).Result.ToHex()
-            };
-            _peers.ForEach(item => UseRPC(item.Value, client => client.SyncData(request, _header)));
+            _peers.ForEach(item => SendData(item.Key, type, data));
         }
     }
 }

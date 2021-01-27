@@ -7,7 +7,7 @@ service Cluster {
     rpc Join (google.protobuf.Empty) returns (google.protobuf.StringValue);
     rpc HealthCheck (google.protobuf.Empty) returns (google.protobuf.Empty);
     rpc SyncRouteTable (RouteTable) returns (google.protobuf.Empty);
-    rpc SyncData (Data) returns (google.protobuf.Empty);
+    rpc SendData (Data) returns (google.protobuf.Empty);
 }
 
 message RouteTable {

@@ -11,12 +11,12 @@ namespace DwFramework.RPC.Plugins
         /// 注册集群服务
         /// </summary>
         /// <param name="host"></param>
-        /// <param name="configKey"></param>
-        /// <param name="configPath"></param>
+        /// <param name="path"></param>
+        /// <param name="key"></param>
         /// <returns></returns>
-        public static ServiceHost RegisterClusterImpl(this ServiceHost host, string configKey = null, string configPath = null)
+        public static ServiceHost RegisterClusterImpl(this ServiceHost host, string path = null, string key = null)
         {
-            host.Register(c => new ClusterImpl(configKey, configPath)).SingleInstance();
+            host.Register(_ => new ClusterImpl(path, key)).SingleInstance();
             host.OnInitializing += provider => provider.GetRPCService().AddService(provider.GetClusterImpl());
             host.OnInitialized += provider => provider.GetClusterImpl().Init();
             return host;
