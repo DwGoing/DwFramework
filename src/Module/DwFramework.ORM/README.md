@@ -15,16 +15,25 @@ PM> Install-Package DwFramework.ORM
 ```json
 // ORM
 {
-  "ConnectionString": "", // 连接字符串
-  "DbType": "", // 数据库类型
-  // 主从模式（可选）
-  "SlaveConnections": [
-    {
+  "ConnectionConfigs": {
+    //定义多数据库配置
+    "db_mysql": {
       "ConnectionString": "", // 连接字符串
-      "HitRate": "" // 命中率
+      "DbType": "MySql", // 数据库类型
+      // 主从模式（可选）
+      "SlaveConnections": [
+        {
+          "ConnectionString": "", // 连接字符串
+          "HitRate": "" // 命中率
+        }
+      ],
+      "UseMemoryCache": true
+    },
+    "db_sqlite": {
+      "ConnectionString": "Data Source=Record.db;",
+      "DbType": "SqLite"
     }
-  ],
-  "UseMemoryCache": "" // 使用缓存
+  }
 }
 ```
 
@@ -39,24 +48,24 @@ host.RegisterORMService();
 
 ```c#
 // 定义实体
-public class User
+[SugarTable("record")]
+public class Record
 {
-    [SugarColumn(ColumnName = "id", IsIdentity = true, IsPrimaryKey = true)]
-    public int ID { get; set; }
+    [SugarColumn(ColumnName = "id", IsPrimaryKey = true, IsIdentity = true)]
+    public long ID { get; set; }
     [SugarColumn(ColumnName = "name")]
     public string Name { get; set; }
-    [SugarColumn(ColumnName = "is_enable")]
-    public int IsEnable { get; set; }
 }
 
-// 获取Database服务进行数据库操作
+// 获取ORM服务进行数据库操作
 var host = new ServiceHost();
 host.AddJsonConfig("ORM.json");
 host.RegisterORMService();
 host.OnInitialized += provider =>
 {
-  var db = provider.GetService<ORMService>();
-  var result = db.DbConnection.Queryable<Record>().ToArray();
+    var ormService = provider.GetService<ORMService>();
+    var result = ormService.CreateConnection("db_sqlite").Queryable<Record>()
+    .ToArray();
 };
 host.Run();
 ```
