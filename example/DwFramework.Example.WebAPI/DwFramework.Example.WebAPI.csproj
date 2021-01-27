@@ -11,7 +11,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="DwFramework.Core" Version="2.0.1.11" />
-    <PackageReference Include="DwFramework.WebAPI" Version="2.0.1.6" />
+    <PackageReference Include="DwFramework.WebAPI" Version="2.2.55.9219" />
+    <PackageReference Include="DwFramework.WebAPI.Plugins" Version="2.2.55.9222" />
   </ItemGroup>
 </Project>
