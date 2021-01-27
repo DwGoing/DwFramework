@@ -259,7 +259,44 @@ var str = "DwFramework";
 var md5 = MD5.Encode(str); // MD5
 var aes = AES.EncryptToHex(str, "1234567890abcdef", "1234567890abcdef"); // AES
 var raw = AES.DecryptFromHex(aes, "1234567890abcdef", "1234567890abcdef");
-var keys = RSA.GenerateKeyPair(RSAExtensions.RSAKeyType.Pkcs8, isPem: true); // Pem格式密钥
+var keys = (PublicKey: @"-----BEGIN PUBLIC KEY-----
+MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDOW76CS+tvR0IYNld6K2JMHPmK
+3zhLVrnqaiV58eR7GNtgfXUkf04hvuboLetdWI3K8qPIYEn1tcRLeOY/tn6cFTCq
+lRb3XdfGiUtwTa+Nb76HJgWyufMEktPrOqKgbgn1ojdI53dillF/jwXJjpY+ddSa
+gSCvJMc9vxc83mLQxwIDAQAB
+-----END PUBLIC KEY-----", PrivateKey: @"-----BEGIN PRIVATE KEY-----
+MIICeAIBADANBgkqhkiG9w0BAQEFAASCAmIwggJeAgEAAoGBAM5bvoJL629HQhg2
+V3orYkwc+YrfOEtWuepqJXnx5HsY22B9dSR/TiG+5ugt611Yjcryo8hgSfW1xEt4
+5j+2fpwVMKqVFvdd18aJS3BNr41vvocmBbK58wSS0+s6oqBuCfWiN0jnd2KWUX+P
+BcmOlj511JqBIK8kxz2/FzzeYtDHAgMBAAECgYEAt1W5Fue+XtnvNbWp2EeNCFRB
+vAh/aie9+y6c5w9qT5cQ6FPt7CQSVVbWrPaHAiK3rtQNgOtTKjJ4GBlsbrSDHC3t
+evBLB+r7RZ4A7Z5TWdA73rXJBPRbbKSYV7PC41FiIXxmlXOQcfvbepbjmu5hyB5i
+xYb3H9xWEfirEXY1g0kCQQDt6gCBaUWMuEAAHuF2vRVs7CMpj+LOdpJU5jqPWlyA
+IwBsSTxUi+TY4RtXwGhzK7CZ1J3ZYw3G2rMx6IvAIUKrAkEA3gukpdyAVyFlWjpK
+Zz+IwFBUuONQZk/LAe5AaB+6ImbR5ww3PTt6hS9lnel3YYqB5kaOELXAjQkLPaCu
+XDcKVQJBAL2u0mZbIytVfxlZhZLgoCNuhX5OjJrlqDduM4Q1nAhBX8X2Ada6jmNn
+3h/xdJVWYP/Up2E5ezNvDG2fJUSyf+8CQA/GY/wknjmSddDjM0YCjYScMGiyPZQH
+NzT76Dd9iYvIIkF37LS89QdhRqbhX0nevTvO52jogLWEXvgR4lFK18ECQQDeBWVa
+UMsDDblI3JUNUM9UForz9x5fFdo1aUegEF2qNpAoIisCEImRebxnHG34Ribvokld
+owzUku++6SMSFh5x
+-----END PRIVATE KEY-----");// Pem格式密钥
 var rsa = RSA.EncryptWithPublicKey(str, RSAExtensions.RSAKeyType.Pkcs8, keys.PublicKey, true); // RSA
 raw = RSA.Decrypt(rsa, RSAExtensions.RSAKeyType.Pkcs8, keys.PrivateKey, true);
+```
+##### 0x5 BloomFilter
+```c#
+var bloomFilter = new BloomFilter(10000000, 10);
+for (var i = 0; i < 999999; i++)
+{
+    bloomFilter.Add(i);
+}
+
+var flag = bloomFilter.IsExist(999991);
+```
+
+##### 0x6 SnowflakeGenerater
+```c#
+var snowflakeGenerater = new SnowflakeGenerater(1, DateTime.Parse("2021.01.01"));
+var id = snowflakeGenerater.GenerateId();
+var snowflakeIdInfo = SnowflakeGenerater.DecodeId(id);
 ```
