@@ -86,8 +86,8 @@ namespace DwFramework.ORM.Plugins
         public Task<T> FindSingleAsync(Expression<Func<T, bool>> expression, int cacheExpireSeconds = 0)
         {
             return _ormService.CreateConnection(_connName).Queryable<T>()
-                .WithCacheIF(cacheExpireSeconds > 0, cacheExpireSeconds)
-                .FirstAsync(expression);
+                    .WithCacheIF(cacheExpireSeconds > 0, cacheExpireSeconds)
+                    .FirstAsync(expression);
         }
 
         /// <summary>
@@ -98,8 +98,8 @@ namespace DwFramework.ORM.Plugins
         public Task<T> InsertAsync(T newRecord)
         {
             return _ormService.CreateConnection(_connName).Insertable(newRecord)
-                .RemoveDataCache()
-                .ExecuteReturnEntityAsync();
+                    .RemoveDataCache()
+                    .ExecuteReturnEntityAsync();
         }
 
         /// <summary>
@@ -110,8 +110,8 @@ namespace DwFramework.ORM.Plugins
         public Task<int> InsertAsync(T[] newRecords)
         {
             return _ormService.CreateConnection(_connName).Insertable(newRecords)
-                .RemoveDataCache()
-                .ExecuteCommandAsync();
+                    .RemoveDataCache()
+                    .ExecuteCommandAsync();
         }
 
         /// <summary>
@@ -122,8 +122,8 @@ namespace DwFramework.ORM.Plugins
         public Task<int> DeleteAsync(Expression<Func<T, bool>> expression)
         {
             return _ormService.CreateConnection(_connName).Deleteable(expression)
-                .RemoveDataCache()
-                .ExecuteCommandAsync();
+                    .RemoveDataCache()
+                    .ExecuteCommandAsync();
         }
 
         /// <summary>
@@ -134,8 +134,8 @@ namespace DwFramework.ORM.Plugins
         public Task<bool> UpdateAsync(T updatedRecord)
         {
             return _ormService.CreateConnection(_connName).Updateable(updatedRecord)
-                .RemoveDataCache()
-                .ExecuteCommandHasChangeAsync();
+                    .RemoveDataCache()
+                    .ExecuteCommandHasChangeAsync();
         }
 
         /// <summary>
@@ -146,8 +146,8 @@ namespace DwFramework.ORM.Plugins
         public Task<int> UpdateAsync(T[] updatedRecords)
         {
             return _ormService.CreateConnection(_connName).Updateable(updatedRecords)
-                .RemoveDataCache()
-                .ExecuteCommandAsync();
+                    .RemoveDataCache()
+                    .ExecuteCommandAsync();
         }
     }
 }
