@@ -23,13 +23,13 @@ namespace DwFramework.ORM
 
         public DbType ParseDbType()
         {
-            if (string.IsNullOrEmpty(DbType)) throw new Exception("ORM初始化异常 => 缺少DbType配置");
+            if (string.IsNullOrEmpty(DbType)) throw new Exception("缺少DbType配置");
             foreach (var item in Enum.GetValues(typeof(DbType)))
             {
                 if (string.Compare(item.ToString().ToLower(), DbType.ToLower(), true) == 0)
                     return (DbType)item;
             }
-            throw new Exception("ORM初始化异常 => 无法找到匹配的DbType");
+            throw new Exception("无法找到匹配的DbType");
         }
     }
 
@@ -51,7 +51,7 @@ namespace DwFramework.ORM
         public ORMService(string path = null, string key = null)
         {
             _config = ServiceHost.Environment.GetConfiguration<Config>(path, key);
-            if (_config == null) throw new Exception("ORM初始化异常 => 未读取到ORM配置");
+            if (_config == null) throw new Exception("未读取到ORM配置");
         }
 
         /// <summary>
@@ -102,7 +102,7 @@ namespace DwFramework.ORM
             if (entityNameService != null) config.ConfigureExternalServices.EntityNameService = entityNameService;
             if (entityService != null) config.ConfigureExternalServices.EntityService = entityService;
             var db = new SqlSugarClient(config);
-            if (db == null) throw new Exception("ORM创建连接异常 => 数据库连接创建异常");
+            if (db == null) throw new Exception("数据库连接创建异常");
             return db;
         }
 

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using System.Threading;
 using System.Collections.Generic;
 using System.Text;
 using RabbitMQ.Client;
@@ -42,9 +41,9 @@ namespace DwFramework.RabbitMQ
         /// </summary>
         /// <param name="configKey"></param>
         /// <param name="configPath"></param>
-        public RabbitMQService(string configKey = null, string configPath = null)
+        public RabbitMQService(string path = null, string key = null)
         {
-            _config = ServiceHost.Environment.GetConfiguration<Config>(configKey, configPath);
+            _config = ServiceHost.Environment.GetConfiguration<Config>(path, key);
             if (_config == null) throw new Exception("未读取到RabbitMQ配置");
             _connectionFactory = new ConnectionFactory()
             {
@@ -126,7 +125,7 @@ namespace DwFramework.RabbitMQ
                 basicPropertiesSetting(basicProperties);
             }
             var body = data.ToBytes(encoding);
-            if (returnAction != null) channel.BasicReturn += (sender, args) => returnAction(args);
+            if (returnAction != null) channel.BasicReturn += (sender, args) => returnAction?.Invoke(args);
             channel.BasicPublish(exchange, routingKey, basicProperties, body);
         }
 
@@ -167,7 +166,7 @@ namespace DwFramework.RabbitMQ
                 basicPropertiesSetting(basicProperties);
             }
             var body = data.ToBytes(encoding);
-            if (returnAction != null) channel.BasicReturn += (sender, args) => returnAction(args);
+            if (returnAction != null) channel.BasicReturn += (sender, args) => returnAction?.Invoke(args);
             channel.BasicPublish(exchange, routingKey, basicProperties, body);
             if (timeoutSeconds >= 0) return channel.WaitForConfirms(TimeSpan.FromSeconds(timeoutSeconds));
             else return channel.WaitForConfirms();
@@ -204,7 +203,7 @@ namespace DwFramework.RabbitMQ
             {
                 var channel = _subscribeConnection.CreateModel();
                 var consumer = new EventingBasicConsumer(channel);
-                consumer.Received += (sender, args) => handler(channel, args);
+                consumer.Received += (sender, args) => handler?.Invoke(channel, args);
                 channel.BasicQos(0, qosCount, true);
                 channel.BasicConsume(queue, autoAck, consumer);
                 _subscribers[queue][i] = consumer;

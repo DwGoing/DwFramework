@@ -10,11 +10,11 @@ namespace DwFramework.RabbitMQ
         /// 注册服务
         /// </summary>
         /// <param name="host"></param>
-        /// <param name="configKey"></param>
-        /// <param name="configPath"></param>
-        public static void RegisterRabbitMQService(this ServiceHost host, string configKey = null, string configPath = null)
+        /// <param name="path"></param>
+        /// <param name="key"></param>
+        public static void RegisterRabbitMQService(this ServiceHost host, string path = null, string key = null)
         {
-            host.Register(c => new RabbitMQService(configKey, configPath)).SingleInstance();
+            host.Register(_ => new RabbitMQService(path, key)).SingleInstance();
         }
 
         /// <summary>
