@@ -15,9 +15,9 @@ namespace DwFramework.RPC.Plugins
 {
     public sealed class Config
     {
-        public string LinkUrl { get; set; }
-        public int HealthCheckPerMs { get; set; } = 10000;
-        public string BootPeer { get; set; }
+        public string LinkUrl { get; init; }
+        public int HealthCheckPerMs { get; init; } = 10000;
+        public string BootPeer { get; init; }
     }
 
     public sealed class ClusterImpl : Cluster.ClusterBase

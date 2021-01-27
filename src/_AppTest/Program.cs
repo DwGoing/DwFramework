@@ -1,34 +1,11 @@
 ﻿using System;
-using System.Threading.Tasks;
 using DwFramework.Core;
 using DwFramework.Core.Plugins;
 using DwFramework.Core.Extensions;
-using DwFramework.ORM;
-using DwFramework.ORM.Plugins;
-using SqlSugar;
+using DwFramework.Socket;
 
 namespace _AppTest
 {
-    // 定义实体
-    public class User
-    {
-        [SugarColumn(ColumnName = "id", IsIdentity = true, IsPrimaryKey = true)]
-        public int ID { get; set; }
-        [SugarColumn(ColumnName = "name")]
-        public string Name { get; set; }
-        [SugarColumn(ColumnName = "is_enable")]
-        public int IsEnable { get; set; }
-    }
-    // 定义仓储模型
-    [Repository]
-    public class UserRepository : BaseRepository<User>
-    {
-        public UserRepository(string connName) : base(connName) { }
-        /*
-         * DoSomething
-         */
-    }
-
     class Program
     {
         static void Main(string[] args)
@@ -37,11 +14,29 @@ namespace _AppTest
             {
                 var host = new ServiceHost(EnvironmentType.Develop, "Config.json");
                 host.RegisterLog();
-                host.RegisterORMService("ORM");
-                host.RegisterRepositories();
-                host.OnInitialized += p =>
+                host.RegisterSocketService("Socket");
+                host.OnInitializing += p =>
                 {
-                    var s = p.GetORMService();
+                    var service = p.GetSocketService();
+                    service.OnConnect += (c, a) =>
+                    {
+                        Console.WriteLine($"{c.ID}已连接");
+                    };
+                    service.OnSend += (c, a) =>
+                    {
+                        Console.WriteLine($"向{c.ID}消息：{System.Text.Encoding.UTF8.GetString(a.Data)}");
+                    };
+                    service.OnReceive += (c, a) =>
+                    {
+                        Console.WriteLine($"收到{c.ID}发来的消息：{System.Text.Encoding.UTF8.GetString(a.Data)}");
+                        var data = new { A = "a", B = 123 }.ToJson();
+                        var msg = $"HTTP/1.1 200 OK\r\nContent-Type:application/json;charset=UTF-8\r\nContent-Length:{data.Length}\r\nConnection:close\r\n\r\n{data}";
+                        service.SendAsync(c.ID, msg);
+                    };
+                    service.OnClose += (c, a) =>
+                    {
+                        Console.WriteLine($"{c.ID}已断开");
+                    };
                 };
                 host.Run();
             }

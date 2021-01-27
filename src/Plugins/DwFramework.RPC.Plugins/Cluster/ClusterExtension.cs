@@ -44,6 +44,9 @@ namespace DwFramework.RPC.Plugins
         /// </summary>
         /// <param name="provider"></param>
         /// <returns></returns>
-        public static ClusterImpl GetClusterImpl(this IServiceProvider provider) => provider.GetService<ClusterImpl>();
+        public static ClusterImpl GetClusterImpl(this IServiceProvider provider)
+        {
+            return provider.GetService<ClusterImpl>();
+        }
     }
 }

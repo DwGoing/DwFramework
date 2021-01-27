@@ -1,9 +1,5 @@
 ﻿{
-  "ORM": {
-    "ConnectionConfigs": {
-      "A": {
-        "ConnectionConfig": "XXX"
-      }
-    }
+  "Socket": {
+    "Listen": "0.0.0.0:10100"
   }
 }

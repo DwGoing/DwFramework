@@ -35,13 +35,19 @@ namespace DwFramework.RPC
         /// </summary>
         /// <param name="provider"></param>
         /// <returns></returns>
-        public static RPCService GetRPCService(this IServiceProvider provider) => provider.GetService<RPCService>();
+        public static RPCService GetRPCService(this IServiceProvider provider)
+        {
+            return provider.GetService<RPCService>();
+        }
 
         /// <summary>
         /// 初始化服务
         /// </summary>
         /// <param name="provider"></param>
         /// <returns></returns>
-        public static Task InitRPCServiceAsync(this IServiceProvider provider) => provider.GetRPCService().OpenServiceAsync();
+        public static Task InitRPCServiceAsync(this IServiceProvider provider)
+        {
+            return provider.GetRPCService().OpenServiceAsync();
+        }
     }
 }

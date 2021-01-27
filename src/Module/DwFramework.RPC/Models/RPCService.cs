@@ -14,8 +14,8 @@ namespace DwFramework.RPC
 {
     public sealed class Config
     {
-        public string ContentRoot { get; set; }
-        public Dictionary<string, string> Listen { get; set; }
+        public string ContentRoot { get; init; }
+        public Dictionary<string, string> Listen { get; init; }
     }
 
     public sealed class RPCService

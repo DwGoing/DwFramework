@@ -11,11 +11,11 @@ namespace DwFramework.Socket
         /// 注册服务
         /// </summary>
         /// <param name="host"></param>
-        /// <param name="configKey"></param>
-        /// <param name="configPath"></param>
-        public static void RegisterSocketService(this ServiceHost host, string configKey = null, string configPath = null)
+        /// <param name="path"></param>
+        /// <param name="key"></param>
+        public static void RegisterSocketService(this ServiceHost host, string path = null, string key = null)
         {
-            host.Register(c => new SocketService(configKey, configPath)).SingleInstance();
+            host.Register(_ => new SocketService(path, path)).SingleInstance();
             host.OnInitializing += provider => provider.InitSocketServiceAsync().Wait();
         }
 
@@ -24,13 +24,19 @@ namespace DwFramework.Socket
         /// </summary>
         /// <param name="provider"></param>
         /// <returns></returns>
-        public static SocketService GetSocketService(this IServiceProvider provider) => provider.GetService<SocketService>();
+        public static SocketService GetSocketService(this IServiceProvider provider)
+        {
+            return provider.GetService<SocketService>();
+        }
 
         /// <summary>
         /// 初始化服务
         /// </summary>
         /// <param name="provider"></param>
         /// <returns></returns>
-        public static Task InitSocketServiceAsync(this IServiceProvider provider) => provider.GetSocketService().OpenServiceAsync();
+        public static Task InitSocketServiceAsync(this IServiceProvider provider)
+        {
+            return provider.GetSocketService().OpenServiceAsync();
+        }
     }
 }

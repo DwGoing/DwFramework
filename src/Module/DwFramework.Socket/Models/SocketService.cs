@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 
 using DwFramework.Core;
+using DwFramework.Core.Extensions;
 using DwFramework.Core.Plugins;
 
 namespace DwFramework.Socket
@@ -15,9 +16,9 @@ namespace DwFramework.Socket
     {
         public class Config
         {
-            public string Listen { get; set; }
-            public int BackLog { get; set; } = 100;
-            public int BufferSize { get; set; } = 1024 * 4;
+            public string Listen { get; init; }
+            public int BackLog { get; init; } = 100;
+            public int BufferSize { get; init; } = 1024 * 4;
         }
 
         public class OnConnectEventargs : EventArgs
@@ -27,22 +28,12 @@ namespace DwFramework.Socket
 
         public class OnSendEventargs : EventArgs
         {
-            public byte[] Data { get; private set; }
-
-            public OnSendEventargs(byte[] data)
-            {
-                Data = data;
-            }
+            public byte[] Data { get; init; }
         }
 
         public class OnReceiveEventargs : EventArgs
         {
-            public byte[] Data { get; private set; }
-
-            public OnReceiveEventargs(byte[] data)
-            {
-                Data = data;
-            }
+            public byte[] Data { get; init; }
         }
 
         public class OnCloceEventargs : EventArgs
@@ -63,11 +54,11 @@ namespace DwFramework.Socket
         /// <summary>
         /// 构造函数
         /// </summary>
-        /// <param name="configKey"></param>
-        /// <param name="configPath"></param>
-        public SocketService(string configKey = null, string configPath = null)
+        /// <param name="path"></param>
+        /// <param name="key"></param>
+        public SocketService(string path = null, string key = null)
         {
-            _config = ServiceHost.Environment.GetConfiguration<Config>(configKey, configPath);
+            _config = ServiceHost.Environment.GetConfiguration<Config>(path, key);
             if (_config == null) throw new Exception("未读取到Socket配置");
             _logger = ServiceHost.Provider.GetLogger<SocketService>();
             _connections = new Dictionary<string, SocketConnection>();
@@ -87,7 +78,7 @@ namespace DwFramework.Socket
                 _server.Bind(new IPEndPoint(string.IsNullOrEmpty(ipAndPort[0]) ? IPAddress.Any : IPAddress.Parse(ipAndPort[0]), int.Parse(ipAndPort[1])));
                 _server.Listen(_config.BackLog);
                 _server.BeginAccept(OnConnectHandler, _server);
-                _logger?.LogInformationAsync($"Socket服务已开启 => 监听地址:{_config.Listen}");
+                _logger?.LogInformationAsync($"Socket服务正在监听:{_config.Listen}");
             });
         }
 
@@ -120,7 +111,7 @@ namespace DwFramework.Socket
             var message = Encoding.UTF8.GetString(connection.Buffer, 0, len);
             var data = new byte[len];
             Array.Copy(connection.Buffer, data, len);
-            OnReceive?.Invoke(connection, new OnReceiveEventargs(data));
+            OnReceive?.Invoke(connection, new OnReceiveEventargs() { Data = data });
             connection.Socket.BeginReceive(connection.Buffer, 0, connection.Buffer.Length, SocketFlags.None, OnReceiveHandler, connection);
         }
 
@@ -153,14 +144,13 @@ namespace DwFramework.Socket
         /// 发送消息
         /// </summary>
         /// <param name="id"></param>
-        /// <param name="buffer"></param>
+        /// <param name="data"></param>
         /// <returns></returns>
-        public Task SendAsync(string id, byte[] buffer)
+        public Task SendAsync(string id, byte[] data)
         {
             RequireClient(id);
             var connection = _connections[id];
-            return connection.SendAsync(buffer)
-                .ContinueWith(a => OnSend?.Invoke(connection, new OnSendEventargs(buffer)));
+            return connection.SendAsync(data).ContinueWith(_ => OnSend?.Invoke(connection, new OnSendEventargs() { Data = data }));
         }
 
         /// <summary>
@@ -168,28 +158,37 @@ namespace DwFramework.Socket
         /// </summary>
         /// <param name="id"></param>
         /// <param name="msg"></param>
+        /// <param name="encoding"></param>
         /// <returns></returns>
-        public Task SendAsync(string id, string msg)
+        public Task SendAsync(string id, string msg, Encoding encoding = null)
         {
-            byte[] buffer = Encoding.UTF8.GetBytes(msg);
-            return SendAsync(id, buffer);
+            encoding ??= Encoding.UTF8;
+            return SendAsync(id, encoding.GetBytes(msg));
+        }
+
+        /// <summary>
+        /// 广播消息
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        public Task BroadCastAsync(byte[] data)
+        {
+            return TaskManager.CreateTask(() =>
+            {
+                _connections.Values.ForEach(item => SendAsync(item.ID, data), (_, _) => { });
+            });
         }
 
         /// <summary>
         /// 广播消息
         /// </summary>
         /// <param name="msg"></param>
+        /// <param name="encoding"></param>
         /// <returns></returns>
-        public Task BroadCastAsync(string msg)
+        public Task BroadCastAsync(string msg, Encoding encoding = null)
         {
-            return TaskManager.CreateTask(() =>
-            {
-                byte[] buffer = Encoding.UTF8.GetBytes(msg);
-                foreach (var item in _connections.Values)
-                {
-                    SendAsync(item.ID, buffer);
-                }
-            });
+            encoding ??= Encoding.UTF8;
+            return BroadCastAsync(encoding.GetBytes(msg));
         }
 
         /// <summary>
@@ -197,7 +196,7 @@ namespace DwFramework.Socket
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public Task SocketCloseAsync(string id)
+        public Task CloseAsync(string id)
         {
             RequireClient(id);
             var connection = _connections[id];
@@ -212,10 +211,7 @@ namespace DwFramework.Socket
         {
             return TaskManager.CreateTask(() =>
             {
-                foreach (var item in _connections.Values)
-                {
-                    item.CloseAsync();
-                }
+                _connections.Values.ForEach(item => item.CloseAsync(), (_, _) => { });
             });
         }
     }
