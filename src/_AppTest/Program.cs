@@ -26,12 +26,15 @@ namespace _AppTest
                     {
                         Console.WriteLine($"向{c.ID}消息：{System.Text.Encoding.UTF8.GetString(a.Data)}");
                     };
-                    service.OnReceive += (c, a) =>
+                    service.OnReceive += async (c, a) =>
                     {
+                        var s = System.Text.Encoding.UTF8.GetString(a.Data);
                         Console.WriteLine($"收到{c.ID}发来的消息：{System.Text.Encoding.UTF8.GetString(a.Data)}");
+                        if (!s.EndsWith("\r\n\r\n")) return;
                         var data = new { A = "a", B = 123 }.ToJson();
                         var msg = $"HTTP/1.1 200 OK\r\nContent-Type:application/json;charset=UTF-8\r\nContent-Length:{data.Length}\r\nConnection:close\r\n\r\n{data}";
-                        service.SendAsync(c.ID, msg);
+                        await service.SendAsync(c.ID, msg);
+                        await service.CloseAsync(c.ID);
                     };
                     service.OnClose += (c, a) =>
                     {

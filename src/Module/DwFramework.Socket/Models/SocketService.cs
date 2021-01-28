@@ -75,41 +75,59 @@ namespace DwFramework.Socket
             var ipAndPort = _config.Listen.Split(":");
             _server.Bind(new IPEndPoint(string.IsNullOrEmpty(ipAndPort[0]) ? IPAddress.Any : IPAddress.Parse(ipAndPort[0]), int.Parse(ipAndPort[1])));
             _server.Listen(_config.BackLog);
-            _server.BeginAccept(OnConnectHandler, _server);
+            var acceptArgs = new SocketAsyncEventArgs();
+            acceptArgs.Completed += OnConnectHandler;
+            _server.AcceptAsync(acceptArgs);
             await _logger?.LogInformationAsync($"Socket服务正在监听:{_config.Listen}");
         }
 
         /// <summary>
         /// 创建连接处理
         /// </summary>
-        /// <param name="ar"></param>
-        private void OnConnectHandler(IAsyncResult ar)
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
+        private void OnConnectHandler(object sender, SocketAsyncEventArgs args)
         {
-            var connection = new SocketConnection(_server.EndAccept(ar), _config.BufferSize);
-            _server.BeginAccept(OnConnectHandler, _server);
+            var connection = new SocketConnection(args.AcceptSocket);
+            args.AcceptSocket = null;
+            _server.AcceptAsync(args);
             _connections[connection.ID] = connection;
             OnConnect?.Invoke(connection, new OnConnectEventargs() { });
-            connection.Socket.BeginReceive(connection.Buffer, 0, connection.Buffer.Length, SocketFlags.None, OnReceiveHandler, connection);
+            //var receiveArgs = new SocketAsyncEventArgs();
+            //receiveArgs.Completed += (_, e) => Console.WriteLine("==============");
+            //receiveArgs.SetBuffer(new byte[_config.BufferSize], 0, _config.BufferSize);
+            //if (!connection.Socket.ReceiveAsync(receiveArgs)) OnReceiveHandler(connection, receiveArgs);
         }
 
         /// <summary>
         /// 接收消息处理
         /// </summary>
-        /// <param name="ar"></param>
-        private void OnReceiveHandler(IAsyncResult ar)
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
+        private void OnReceiveHandler(SocketConnection connection, SocketAsyncEventArgs args)
         {
-            var connection = ar.AsyncState as SocketConnection;
-            if (!connection.CheckConnection())
+            var isClose = false;
+            switch (args.SocketError)
             {
-                OnCloseHandler(connection);
-                return;
+                case SocketError.Success:
+                    if (args.BytesTransferred > 0)
+                    {
+                        var data = new byte[args.BytesTransferred];
+                        Array.Copy(args.Buffer, data, args.BytesTransferred);
+                        OnReceive?.Invoke(connection, new OnReceiveEventargs() { Data = data });
+                    }
+                    break;
+                default:
+                    OnCloseHandler(connection);
+                    isClose = true;
+                    break;
+            };
+            if (!isClose)
+            {
+                var receiveArgs = new SocketAsyncEventArgs();
+                receiveArgs.SetBuffer(new byte[_config.BufferSize], 0, _config.BufferSize);
+                if (!connection.Socket.ReceiveAsync(receiveArgs)) OnReceiveHandler(connection, receiveArgs);
             }
-            var len = connection.Socket.EndReceive(ar);
-            var message = Encoding.UTF8.GetString(connection.Buffer, 0, len);
-            var data = new byte[len];
-            Array.Copy(connection.Buffer, data, len);
-            OnReceive?.Invoke(connection, new OnReceiveEventargs() { Data = data });
-            connection.Socket.BeginReceive(connection.Buffer, 0, connection.Buffer.Length, SocketFlags.None, OnReceiveHandler, connection);
         }
 
         /// <summary>
@@ -133,8 +151,8 @@ namespace DwFramework.Socket
             if (!_connections.ContainsKey(id))
                 throw new Exception("该客户端不存在");
             var connection = _connections[id];
-            if (!connection.CheckConnection())
-                throw new Exception("该客户端状态错误");
+            //if (!connection.CheckConnection())
+            //    throw new Exception("该客户端状态错误");
         }
 
         /// <summary>

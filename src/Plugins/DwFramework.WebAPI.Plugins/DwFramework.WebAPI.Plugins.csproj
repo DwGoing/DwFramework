@@ -3,10 +3,8 @@
     <PropertyGroup>
         <TargetFramework>net5.0</TargetFramework>
         <ReleaseVersion>5</ReleaseVersion>
-        <BuildVersion>2.55.9222</BuildVersion>
-        <VersionSuffix>
-        </VersionSuffix>
-        <Version>$(ReleaseVersion).$(BuildVersion)$(VersionSuffix)</Version>
+        <BuildVersion>0.0.56-dev.713</BuildVersion>
+        <Version>$(ReleaseVersion).$(BuildVersion)</Version>
         <Authors>DwGoing</Authors>
         <Description>DwFramework WebAPI插件库</Description>
         <PackageProjectUrl>https://github.com/Dwgoing/DwFramework</PackageProjectUrl>

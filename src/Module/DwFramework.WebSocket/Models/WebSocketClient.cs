@@ -12,12 +12,12 @@ namespace DwFramework.WebSocket
 {
     public class WebSocketClient
     {
-        public class OnConnectEventargs : EventArgs
+        public class OnConnectEventArgs : EventArgs
         {
 
         }
 
-        public class OnSendEventargs : EventArgs
+        public class OnSendEventArgs : EventArgs
         {
             public byte[] Data { get; init; }
         }
@@ -27,21 +27,21 @@ namespace DwFramework.WebSocket
             public byte[] Data { get; init; }
         }
 
-        public class OnCloceEventargs : EventArgs
+        public class OnCloceEventArgs : EventArgs
         {
             public WebSocketCloseStatus? CloseStatus { get; init; }
         }
 
-        public class OnErrorEventargs : EventArgs
+        public class OnErrorEventArgs : EventArgs
         {
             public Exception Exception { get; init; }
         }
 
-        public event Action<OnConnectEventargs> OnConnect;
-        public event Action<OnCloceEventargs> OnClose;
-        public event Action<OnSendEventargs> OnSend;
+        public event Action<OnConnectEventArgs> OnConnect;
+        public event Action<OnCloceEventArgs> OnClose;
+        public event Action<OnSendEventArgs> OnSend;
         public event Action<OnReceiveEventargs> OnReceive;
-        public event Action<OnErrorEventargs> OnError;
+        public event Action<OnErrorEventArgs> OnError;
 
         private readonly ClientWebSocket _client;
         private int _bufferSize = 4096;
@@ -73,7 +73,7 @@ namespace DwFramework.WebSocket
             if (subProtocal != null) foreach (var item in subProtocal) _client.Options.AddSubProtocol(item);
             await _client.ConnectAsync(new Uri(uri), CancellationToken.None).ContinueWith(a =>
             {
-                OnConnect?.Invoke(new OnConnectEventargs() { });
+                OnConnect?.Invoke(new OnConnectEventArgs() { });
                 TaskManager.CreateTask(async () =>
                 {
                     var buffer = new byte[_bufferSize];
@@ -96,11 +96,11 @@ namespace DwFramework.WebSocket
                         }
                         catch (Exception ex)
                         {
-                            OnError?.Invoke(new OnErrorEventargs() { Exception = ex });
+                            OnError?.Invoke(new OnErrorEventArgs() { Exception = ex });
                             continue;
                         }
                     }
-                    OnClose?.Invoke(new OnCloceEventargs() { CloseStatus = closeStates });
+                    OnClose?.Invoke(new OnCloceEventArgs() { CloseStatus = closeStates });
                     ClearAllEvent();
                     if (_client.State == WebSocketState.CloseReceived) await CloseAsync();
                 });
@@ -116,8 +116,8 @@ namespace DwFramework.WebSocket
         {
             await _client.SendAsync(buffer, WebSocketMessageType.Text, true, CancellationToken.None).ContinueWith(task =>
             {
-                if (task.IsCompletedSuccessfully) OnSend?.Invoke(new OnSendEventargs() { Data = buffer });
-                else OnError?.Invoke(new OnErrorEventargs() { Exception = task.Exception.InnerException });
+                if (task.IsCompletedSuccessfully) OnSend?.Invoke(new OnSendEventArgs() { Data = buffer });
+                else OnError?.Invoke(new OnErrorEventArgs() { Exception = task.Exception.InnerException });
             });
         }
 
@@ -138,22 +138,22 @@ namespace DwFramework.WebSocket
             if (OnConnect != null)
             {
                 var actions = OnConnect.GetInvocationList();
-                actions.ForEach(item => OnConnect -= (Action<OnConnectEventargs>)item);
+                actions.ForEach(item => OnConnect -= (Action<OnConnectEventArgs>)item);
             }
             if (OnClose != null)
             {
                 var actions = OnClose.GetInvocationList();
-                actions.ForEach(item => OnClose -= (Action<OnCloceEventargs>)item);
+                actions.ForEach(item => OnClose -= (Action<OnCloceEventArgs>)item);
             }
             if (OnError != null)
             {
                 var actions = OnError.GetInvocationList();
-                actions.ForEach(item => OnError -= (Action<OnErrorEventargs>)item);
+                actions.ForEach(item => OnError -= (Action<OnErrorEventArgs>)item);
             }
             if (OnSend != null)
             {
                 var actions = OnSend.GetInvocationList();
-                actions.ForEach(item => OnSend -= (Action<OnSendEventargs>)item);
+                actions.ForEach(item => OnSend -= (Action<OnSendEventArgs>)item);
             }
             if (OnReceive != null)
             {

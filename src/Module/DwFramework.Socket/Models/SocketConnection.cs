@@ -7,22 +7,20 @@ using DwFramework.Core.Plugins;
 
 namespace DwFramework.Socket
 {
-    public class SocketConnection
+    public sealed class SocketConnection : IDisposable
     {
         public bool IsClose { get; private set; } = false;
-        public readonly string ID;
-        public readonly System.Net.Sockets.Socket Socket;
-        public byte[] Buffer { get; private set; }
+        public string ID { get; init; }
+        public System.Net.Sockets.Socket Socket { get; init; }
 
         /// <summary>
         /// 构造函数
         /// </summary>
         /// <param name="socket"></param>
-        public SocketConnection(System.Net.Sockets.Socket socket, int bufferSize)
+        public SocketConnection(System.Net.Sockets.Socket socket)
         {
             ID = MD5.Encode(Guid.NewGuid().ToString());
             Socket = socket;
-            Buffer = new byte[bufferSize];
         }
 
         /// <summary>
@@ -71,7 +69,6 @@ namespace DwFramework.Socket
         /// </summary>
         public void Dispose()
         {
-            Buffer = null;
             Socket.Dispose();
         }
     }

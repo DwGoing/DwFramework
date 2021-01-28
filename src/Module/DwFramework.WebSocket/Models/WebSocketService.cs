@@ -26,12 +26,12 @@ namespace DwFramework.WebSocket
             public int BufferSize { get; init; } = 1024 * 4;
         }
 
-        public class OnConnectEventargs : EventArgs
+        public class OnConnectEventArgs : EventArgs
         {
             public IHeaderDictionary Header { get; init; }
         }
 
-        public class OnSendEventargs : EventArgs
+        public class OnSendEventArgs : EventArgs
         {
             public byte[] Data { get; init; }
         }
@@ -41,12 +41,12 @@ namespace DwFramework.WebSocket
             public byte[] Data { get; init; }
         }
 
-        public class OnCloceEventargs : EventArgs
+        public class OnCloceEventArgs : EventArgs
         {
             public WebSocketCloseStatus? CloseStatus { get; init; }
         }
 
-        public class OnErrorEventargs : EventArgs
+        public class OnErrorEventArgs : EventArgs
         {
             public Exception Exception { get; init; }
         }
@@ -55,11 +55,11 @@ namespace DwFramework.WebSocket
         private readonly ILogger<WebSocketService> _logger;
         private readonly Dictionary<string, WebSocketConnection> _connections;
 
-        public event Action<WebSocketConnection, OnConnectEventargs> OnConnect;
-        public event Action<WebSocketConnection, OnCloceEventargs> OnClose;
-        public event Action<WebSocketConnection, OnSendEventargs> OnSend;
+        public event Action<WebSocketConnection, OnConnectEventArgs> OnConnect;
+        public event Action<WebSocketConnection, OnCloceEventArgs> OnClose;
+        public event Action<WebSocketConnection, OnSendEventArgs> OnSend;
         public event Action<WebSocketConnection, OnReceiveEventargs> OnReceive;
-        public event Action<WebSocketConnection, OnErrorEventargs> OnError;
+        public event Action<WebSocketConnection, OnErrorEventArgs> OnError;
 
         /// <summary>
         /// 构造函数
@@ -133,7 +133,7 @@ namespace DwFramework.WebSocket
                         var webSocket = await context.WebSockets.AcceptWebSocketAsync();
                         var connection = new WebSocketConnection(webSocket);
                         _connections[connection.ID] = connection;
-                        OnConnect?.Invoke(connection, new OnConnectEventargs() { Header = context.Request.Headers });
+                        OnConnect?.Invoke(connection, new OnConnectEventArgs() { Header = context.Request.Headers });
                         var buffer = new byte[_config.BufferSize];
                         var dataBytes = new List<byte>();
                         WebSocketCloseStatus? closeStates = null;
@@ -154,11 +154,11 @@ namespace DwFramework.WebSocket
                             }
                             catch (Exception ex)
                             {
-                                OnError?.Invoke(connection, new OnErrorEventargs() { Exception = ex });
+                                OnError?.Invoke(connection, new OnErrorEventArgs() { Exception = ex });
                                 continue;
                             }
                         }
-                        OnClose?.Invoke(connection, new OnCloceEventargs() { CloseStatus = closeStates });
+                        OnClose?.Invoke(connection, new OnCloceEventArgs() { CloseStatus = closeStates });
                         if (connection.WebSocket.State == WebSocketState.CloseReceived)
                             await connection.CloseAsync(WebSocketCloseStatus.NormalClosure);
                         connection.Dispose();
@@ -193,7 +193,7 @@ namespace DwFramework.WebSocket
             RequireClient(id);
             var connection = _connections[id];
             await connection.SendAsync(buffer);
-            OnSend?.Invoke(connection, new OnSendEventargs() { Data = buffer });
+            OnSend?.Invoke(connection, new OnSendEventArgs() { Data = buffer });
         }
 
         /// <summary>
