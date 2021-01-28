@@ -19,42 +19,22 @@ namespace DwFramework.WebSocket
 
         public class OnSendEventargs : EventArgs
         {
-            public byte[] Data { get; }
-
-            public OnSendEventargs(byte[] data)
-            {
-                Data = data;
-            }
+            public byte[] Data { get; init; }
         }
 
         public class OnReceiveEventargs : EventArgs
         {
-            public byte[] Data { get; }
-
-            public OnReceiveEventargs(byte[] data)
-            {
-                Data = data;
-            }
+            public byte[] Data { get; init; }
         }
 
         public class OnCloceEventargs : EventArgs
         {
-            public WebSocketCloseStatus? CloseStatus { get; }
-
-            public OnCloceEventargs(WebSocketCloseStatus? closeStatus)
-            {
-                CloseStatus = closeStatus;
-            }
+            public WebSocketCloseStatus? CloseStatus { get; init; }
         }
 
         public class OnErrorEventargs : EventArgs
         {
-            public Exception Exception { get; }
-
-            public OnErrorEventargs(Exception exception)
-            {
-                Exception = exception;
-            }
+            public Exception Exception { get; init; }
         }
 
         public event Action<OnConnectEventargs> OnConnect;
@@ -67,15 +47,8 @@ namespace DwFramework.WebSocket
         private int _bufferSize = 4096;
         public int BufferSize
         {
-            get
-            {
-                return _bufferSize;
-            }
-            set
-            {
-                if (value <= 0) _bufferSize = 4096;
-                else _bufferSize = value;
-            }
+            get => _bufferSize;
+            set => _bufferSize = value <= 0 ? 4096 : value;
         }
         public WebSocketState State => _client.State;
 
@@ -118,16 +91,16 @@ namespace DwFramework.WebSocket
                             }
                             dataBytes.AddRange(buffer.Take(result.Count));
                             if (!result.EndOfMessage) continue;
-                            OnReceive?.Invoke(new OnReceiveEventargs(dataBytes.ToArray()));
+                            OnReceive?.Invoke(new OnReceiveEventargs() { Data = dataBytes.ToArray() });
                             dataBytes.Clear();
                         }
                         catch (Exception ex)
                         {
-                            OnError?.Invoke(new OnErrorEventargs(ex));
+                            OnError?.Invoke(new OnErrorEventargs() { Exception = ex });
                             continue;
                         }
                     }
-                    OnClose?.Invoke(new OnCloceEventargs(closeStates));
+                    OnClose?.Invoke(new OnCloceEventargs() { CloseStatus = closeStates });
                     ClearAllEvent();
                     if (_client.State == WebSocketState.CloseReceived) await CloseAsync();
                 });
@@ -143,8 +116,8 @@ namespace DwFramework.WebSocket
         {
             await _client.SendAsync(buffer, WebSocketMessageType.Text, true, CancellationToken.None).ContinueWith(task =>
             {
-                if (task.IsCompletedSuccessfully) OnSend?.Invoke(new OnSendEventargs(buffer));
-                else OnError?.Invoke(new OnErrorEventargs(task.Exception.InnerException));
+                if (task.IsCompletedSuccessfully) OnSend?.Invoke(new OnSendEventargs() { Data = buffer });
+                else OnError?.Invoke(new OnErrorEventargs() { Exception = task.Exception.InnerException });
             });
         }
 

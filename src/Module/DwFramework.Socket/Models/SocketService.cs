@@ -68,18 +68,15 @@ namespace DwFramework.Socket
         /// 开启服务
         /// </summary>
         /// <returns></returns>
-        public Task OpenServiceAsync()
+        public async Task OpenServiceAsync()
         {
-            return TaskManager.CreateTask(() =>
-            {
-                _server = new System.Net.Sockets.Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-                if (_config.Listen == null) throw new Exception("缺少Listen配置");
-                string[] ipAndPort = _config.Listen.Split(":");
-                _server.Bind(new IPEndPoint(string.IsNullOrEmpty(ipAndPort[0]) ? IPAddress.Any : IPAddress.Parse(ipAndPort[0]), int.Parse(ipAndPort[1])));
-                _server.Listen(_config.BackLog);
-                _server.BeginAccept(OnConnectHandler, _server);
-                _logger?.LogInformationAsync($"Socket服务正在监听:{_config.Listen}");
-            });
+            _server = new System.Net.Sockets.Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            if (_config.Listen == null) throw new Exception("缺少Listen配置");
+            var ipAndPort = _config.Listen.Split(":");
+            _server.Bind(new IPEndPoint(string.IsNullOrEmpty(ipAndPort[0]) ? IPAddress.Any : IPAddress.Parse(ipAndPort[0]), int.Parse(ipAndPort[1])));
+            _server.Listen(_config.BackLog);
+            _server.BeginAccept(OnConnectHandler, _server);
+            await _logger?.LogInformationAsync($"Socket服务正在监听:{_config.Listen}");
         }
 
         /// <summary>
@@ -146,11 +143,12 @@ namespace DwFramework.Socket
         /// <param name="id"></param>
         /// <param name="data"></param>
         /// <returns></returns>
-        public Task SendAsync(string id, byte[] data)
+        public async Task SendAsync(string id, byte[] data)
         {
             RequireClient(id);
             var connection = _connections[id];
-            return connection.SendAsync(data).ContinueWith(_ => OnSend?.Invoke(connection, new OnSendEventargs() { Data = data }));
+            await connection.SendAsync(data);
+            OnSend?.Invoke(connection, new OnSendEventargs() { Data = data });
         }
 
         /// <summary>
@@ -160,10 +158,10 @@ namespace DwFramework.Socket
         /// <param name="msg"></param>
         /// <param name="encoding"></param>
         /// <returns></returns>
-        public Task SendAsync(string id, string msg, Encoding encoding = null)
+        public async Task SendAsync(string id, string msg, Encoding encoding = null)
         {
             encoding ??= Encoding.UTF8;
-            return SendAsync(id, encoding.GetBytes(msg));
+            await SendAsync(id, encoding.GetBytes(msg));
         }
 
         /// <summary>
@@ -171,12 +169,9 @@ namespace DwFramework.Socket
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
-        public Task BroadCastAsync(byte[] data)
+        public void BroadCast(byte[] data)
         {
-            return TaskManager.CreateTask(() =>
-            {
-                _connections.Values.ForEach(item => SendAsync(item.ID, data), (_, _) => { });
-            });
+            _connections.Values.ForEach(async item => await SendAsync(item.ID, data));
         }
 
         /// <summary>
@@ -185,10 +180,10 @@ namespace DwFramework.Socket
         /// <param name="msg"></param>
         /// <param name="encoding"></param>
         /// <returns></returns>
-        public Task BroadCastAsync(string msg, Encoding encoding = null)
+        public void BroadCast(string msg, Encoding encoding = null)
         {
             encoding ??= Encoding.UTF8;
-            return BroadCastAsync(encoding.GetBytes(msg));
+            BroadCast(encoding.GetBytes(msg));
         }
 
         /// <summary>
@@ -196,23 +191,20 @@ namespace DwFramework.Socket
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public Task CloseAsync(string id)
+        public async Task CloseAsync(string id)
         {
             RequireClient(id);
             var connection = _connections[id];
-            return connection.CloseAsync();
+            await connection.CloseAsync();
         }
 
         /// <summary>
         /// 断开所有连接
         /// </summary>
         /// <returns></returns>
-        public Task CloseAllAsync()
+        public void CloseAll()
         {
-            return TaskManager.CreateTask(() =>
-            {
-                _connections.Values.ForEach(item => item.CloseAsync(), (_, _) => { });
-            });
+            _connections.Values.ForEach(async item => await item.CloseAsync());
         }
     }
 }

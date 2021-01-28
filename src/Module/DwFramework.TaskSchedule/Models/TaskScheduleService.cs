@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
 using System.Collections.Generic;
-using System.Linq;
 using Quartz;
 using Quartz.Impl;
 using Quartz.Simpl;
@@ -9,6 +8,7 @@ using Quartz.Impl.Calendar;
 using Quartz.Impl.Matchers;
 using Quartz.Logging;
 
+using DwFramework.Core.Extensions;
 using DwFramework.Core.Plugins;
 
 namespace DwFramework.TaskSchedule
@@ -192,7 +192,7 @@ namespace DwFramework.TaskSchedule
         {
             if (!_schedulers.ContainsKey(schedulerKey)) throw new Exception("未知调度器");
             var calender = new WeeklyCalendar();
-            foreach (var item in excludeDays) calender.SetDayExcluded(item, true);
+            excludeDays.ForEach(item => calender.SetDayExcluded(item, true));
             return _schedulers[schedulerKey].AddCalendar(calName, calender, true, true);
         }
 
@@ -207,7 +207,7 @@ namespace DwFramework.TaskSchedule
         {
             if (!_schedulers.ContainsKey(schedulerKey)) throw new Exception("未知调度器");
             var calender = new MonthlyCalendar();
-            foreach (var item in excludeDays) calender.SetDayExcluded(item, true);
+            excludeDays.ForEach(item => calender.SetDayExcluded(item, true));
             return _schedulers[schedulerKey].AddCalendar(calName, calender, true, true);
         }
 
@@ -222,7 +222,7 @@ namespace DwFramework.TaskSchedule
         {
             if (!_schedulers.ContainsKey(schedulerKey)) throw new Exception("未知调度器");
             var calender = new AnnualCalendar();
-            foreach (var item in excludeMonthDays) calender.SetDayExcluded(DateBuilder.DateOf(0, 0, 0, item.Item2, item.Item1).DateTime, true);
+            excludeMonthDays.ForEach(item => calender.SetDayExcluded(DateBuilder.DateOf(0, 0, 0, item.Item2, item.Item1).DateTime, true));
             return _schedulers[schedulerKey].AddCalendar(calName, calender, true, true);
         }
 

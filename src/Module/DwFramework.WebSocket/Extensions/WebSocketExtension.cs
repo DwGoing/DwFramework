@@ -11,11 +11,11 @@ namespace DwFramework.WebSocket
         /// 注册服务
         /// </summary>
         /// <param name="host"></param>
-        /// <param name="configKey"></param>
-        /// <param name="configPath"></param>
-        public static void RegisterWebSocketService(this ServiceHost host, string configKey = null, string configPath = null)
+        /// <param name="path"></param>
+        /// <param name="key"></param>
+        public static void RegisterWebSocketService(this ServiceHost host, string path = null, string key = null)
         {
-            host.Register(c => new WebSocketService(configKey, configPath)).SingleInstance();
+            host.Register(_ => new WebSocketService(path, key)).SingleInstance();
             host.OnInitializing += async provider => await provider.InitWebSocketServiceAsync();
         }
 
@@ -24,12 +24,18 @@ namespace DwFramework.WebSocket
         /// </summary>
         /// <param name="provider"></param>
         /// <returns></returns>
-        public static WebSocketService GetWebSocketService(this IServiceProvider provider) => provider.GetService<WebSocketService>();
+        public static WebSocketService GetWebSocketService(this IServiceProvider provider)
+        {
+            return provider.GetService<WebSocketService>();
+        }
 
         /// <summary>
         /// 初始化服务
         /// </summary>
         /// <param name="provider"></param>
-        public static Task InitWebSocketServiceAsync(this IServiceProvider provider) => provider.GetWebSocketService().OpenServiceAsync();
+        public static Task InitWebSocketServiceAsync(this IServiceProvider provider)
+        {
+            return provider.GetWebSocketService().OpenServiceAsync();
+        }
     }
 }
