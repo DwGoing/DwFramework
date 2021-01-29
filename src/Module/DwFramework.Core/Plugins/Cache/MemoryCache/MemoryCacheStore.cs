@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Timers;
 
 using DwFramework.Core.Extensions;
 
@@ -11,8 +12,8 @@ namespace DwFramework.Core.Plugins
     public sealed class MemoryCacheStore
     {
         private readonly Hashtable _datas;
-        private readonly System.Timers.Timer _Timer;
-        private bool IsClean = false;
+        private readonly Timer _timer;
+        private bool _isCleaning = false;
 
         /// <summary>
         /// 构造函数
@@ -20,12 +21,12 @@ namespace DwFramework.Core.Plugins
         public MemoryCacheStore()
         {
             _datas = Hashtable.Synchronized(new Hashtable());
-            _Timer = new System.Timers.Timer(30 * 1000)
+            _timer = new Timer(30 * 1000)
             {
                 AutoReset = true
             };
-            _Timer.Elapsed += CleanExpireData;
-            _Timer.Start();
+            _timer.Elapsed += CleanExpireData;
+            _timer.Start();
         }
 
         /// <summary>
@@ -35,19 +36,16 @@ namespace DwFramework.Core.Plugins
         /// <param name="args"></param>
         private void CleanExpireData(object sender, EventArgs args)
         {
-            if (IsClean) return;
+            if (_isCleaning) return;
             var currentTime = DateTime.UtcNow;
-            TaskManager.CreateTask(() =>
+            _isCleaning = true;
+            var keys = _datas.Keys;
+            keys.ForEach(item =>
             {
-                IsClean = true;
-                var keys = _datas.Keys;
-                keys.ForEach(item =>
-                {
-                    var data = (MemoryCacheData)_datas[item];
-                    if (data.IsExpired) Del((string)item);
-                });
-                IsClean = false;
+                var data = (MemoryCacheData)_datas[item];
+                if (data.IsExpired) Del((string)item);
             });
+            _isCleaning = false;
         }
 
         /// <summary>

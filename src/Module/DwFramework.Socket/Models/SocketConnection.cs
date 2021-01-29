@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Net.Sockets;
-using System.Text;
 using System.Threading.Tasks;
 
 using DwFramework.Core.Plugins;
 
 namespace DwFramework.Socket
 {
-    public sealed class SocketConnection : IDisposable
+    public sealed class SocketConnection
     {
-        public bool IsClose { get; private set; } = false;
         public string ID { get; init; }
         public System.Net.Sockets.Socket Socket { get; init; }
 
@@ -20,6 +18,7 @@ namespace DwFramework.Socket
         public SocketConnection(System.Net.Sockets.Socket socket)
         {
             ID = MD5.Encode(Guid.NewGuid().ToString());
+            socket.SendTimeout = 1000;
             Socket = socket;
         }
 
@@ -27,10 +26,18 @@ namespace DwFramework.Socket
         /// 检查连接
         /// </summary>
         /// <returns></returns>
-        public bool CheckConnection()
+        public bool IsAvailable()
         {
-            if (IsClose) return false;
-            return !Socket.Poll(1000, SelectMode.SelectRead);
+            try
+            {
+                if (!Socket.Poll(-1, SelectMode.SelectRead) || !Socket.Poll(-1, SelectMode.SelectWrite)) return false;
+                Socket.Send(Array.Empty<byte>());
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         /// <summary>
@@ -44,32 +51,16 @@ namespace DwFramework.Socket
         }
 
         /// <summary>
-        /// 发送消息
-        /// </summary>
-        /// <param name="msg"></param>
-        /// <returns></returns>
-        public Task SendAsync(string msg)
-        {
-            byte[] buffer = Encoding.UTF8.GetBytes(msg);
-            return SendAsync(buffer);
-        }
-
-        /// <summary>
         /// 断开连接
         /// </summary>
         /// <returns></returns>
         public Task CloseAsync()
         {
-            IsClose = true;
-            return TaskManager.CreateTask(() => Socket.Close());
-        }
-
-        /// <summary>
-        /// 释放连接
-        /// </summary>
-        public void Dispose()
-        {
-            Socket.Dispose();
+            return TaskManager.CreateTask(() =>
+            {
+                Socket.Close();
+                Socket.Dispose();
+            });
         }
     }
 }

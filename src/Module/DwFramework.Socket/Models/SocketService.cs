@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading.Tasks;
+using System.Timers;
 using Microsoft.Extensions.Logging;
 
 using DwFramework.Core;
@@ -44,6 +45,8 @@ namespace DwFramework.Socket
         private readonly Config _config;
         private readonly ILogger<SocketService> _logger;
         private readonly Dictionary<string, SocketConnection> _connections;
+        private readonly Timer _timer;
+        private bool _isChecking = false;
         private System.Net.Sockets.Socket _server;
 
         public event Action<SocketConnection, OnConnectEventargs> OnConnect;
@@ -62,6 +65,13 @@ namespace DwFramework.Socket
             if (_config == null) throw new Exception("未读取到Socket配置");
             _logger = ServiceHost.Provider.GetLogger<SocketService>();
             _connections = new Dictionary<string, SocketConnection>();
+            _timer = new Timer(1000)
+            //_timer = new Timer(30 * 1000)
+            {
+                AutoReset = true
+            };
+            _timer.Elapsed += CheckConnection;
+            _timer.Start();
         }
 
         /// <summary>
@@ -70,89 +80,98 @@ namespace DwFramework.Socket
         /// <returns></returns>
         public async Task OpenServiceAsync()
         {
-            _server = new System.Net.Sockets.Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             if (_config.Listen == null) throw new Exception("缺少Listen配置");
+            _server = new System.Net.Sockets.Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             var ipAndPort = _config.Listen.Split(":");
             _server.Bind(new IPEndPoint(string.IsNullOrEmpty(ipAndPort[0]) ? IPAddress.Any : IPAddress.Parse(ipAndPort[0]), int.Parse(ipAndPort[1])));
             _server.Listen(_config.BackLog);
-            var acceptArgs = new SocketAsyncEventArgs();
-            acceptArgs.Completed += OnConnectHandler;
-            _server.AcceptAsync(acceptArgs);
+            _server.BeginAccept(OnConnectHandler, null);
             await _logger?.LogInformationAsync($"Socket服务正在监听:{_config.Listen}");
         }
 
         /// <summary>
         /// 创建连接处理
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="args"></param>
-        private void OnConnectHandler(object sender, SocketAsyncEventArgs args)
+        /// <param name="result"></param>
+        private void OnConnectHandler(IAsyncResult result)
         {
-            var connection = new SocketConnection(args.AcceptSocket);
-            args.AcceptSocket = null;
-            _server.AcceptAsync(args);
+            var socket = _server.EndAccept(result);
+            var connection = new SocketConnection(socket);
+            _server.BeginAccept(OnConnectHandler, null);
             _connections[connection.ID] = connection;
             OnConnect?.Invoke(connection, new OnConnectEventargs() { });
-            //var receiveArgs = new SocketAsyncEventArgs();
-            //receiveArgs.Completed += (_, e) => Console.WriteLine("==============");
-            //receiveArgs.SetBuffer(new byte[_config.BufferSize], 0, _config.BufferSize);
-            //if (!connection.Socket.ReceiveAsync(receiveArgs)) OnReceiveHandler(connection, receiveArgs);
+            var data = new byte[_config.BufferSize];
+            socket.BeginReceive(data, 0, _config.BufferSize, SocketFlags.None, OnReceiveHandler, (connection, data));
         }
 
         /// <summary>
         /// 接收消息处理
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="args"></param>
-        private void OnReceiveHandler(SocketConnection connection, SocketAsyncEventArgs args)
+        /// <param name="result"></param>
+        private void OnReceiveHandler(IAsyncResult result)
         {
-            var isClose = false;
-            switch (args.SocketError)
+            var (connection, data) = ((SocketConnection, byte[]))result.AsyncState;
+            SocketError code = SocketError.Success;
+            try
             {
-                case SocketError.Success:
-                    if (args.BytesTransferred > 0)
-                    {
-                        var data = new byte[args.BytesTransferred];
-                        Array.Copy(args.Buffer, data, args.BytesTransferred);
-                        OnReceive?.Invoke(connection, new OnReceiveEventargs() { Data = data });
-                    }
-                    break;
-                default:
-                    OnCloseHandler(connection);
-                    isClose = true;
-                    break;
-            };
-            if (!isClose)
+                var len = connection.Socket.EndReceive(result, out code);
+                if (len <= 0) return;
+                Array.Resize(ref data, len);
+                OnReceive?.Invoke(connection, new OnReceiveEventargs() { Data = data });
+                if (connection.IsAvailable())
+                {
+                    code = SocketError.Disconnecting;
+                    throw new Exception("连接不可用");
+                }
+                var newData = new byte[_config.BufferSize];
+                connection.Socket.BeginReceive(newData, 0, _config.BufferSize, SocketFlags.None, OnReceiveHandler, (connection, newData));
+            }
+            catch (Exception ex)
             {
-                var receiveArgs = new SocketAsyncEventArgs();
-                receiveArgs.SetBuffer(new byte[_config.BufferSize], 0, _config.BufferSize);
-                if (!connection.Socket.ReceiveAsync(receiveArgs)) OnReceiveHandler(connection, receiveArgs);
+                Console.WriteLine(ex);
+                switch (code)
+                {
+                    default:
+                        _ = CloseAsync(connection);
+                        return;
+                }
             }
         }
 
         /// <summary>
-        /// 关闭连接处理
+        /// 检查连接状态
         /// </summary>
-        /// <param name="connection"></param>
-        private void OnCloseHandler(SocketConnection connection)
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
+        private void CheckConnection(object sender, EventArgs args)
         {
-            OnClose?.Invoke(connection, new OnCloceEventargs() { });
-            connection.Dispose();
-            _connections.Remove(connection.ID);
+            if (_isChecking) return;
+            var currentTime = DateTime.UtcNow;
+            _isChecking = true;
+            _connections.Values.ForEach(item =>
+            {
+                Console.WriteLine(item.IsAvailable());
+                if (item.IsAvailable()) return;
+                _ = CloseAsync(item);
+            });
+            _isChecking = false;
         }
 
         /// <summary>
-        /// 检查客户端
+        /// 发送消息
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="connection"></param>
+        /// <param name="data"></param>
         /// <returns></returns>
-        private void RequireClient(string id)
+        public async Task SendAsync(SocketConnection connection, byte[] data)
         {
-            if (!_connections.ContainsKey(id))
-                throw new Exception("该客户端不存在");
-            var connection = _connections[id];
-            //if (!connection.CheckConnection())
-            //    throw new Exception("该客户端状态错误");
+            if (!connection.IsAvailable())
+            {
+                _ = CloseAsync(connection);
+                throw new Exception("该客户端状态异常");
+            }
+            await connection.SendAsync(data);
+            OnSend?.Invoke(connection, new OnSendEventargs() { Data = data });
         }
 
         /// <summary>
@@ -163,10 +182,8 @@ namespace DwFramework.Socket
         /// <returns></returns>
         public async Task SendAsync(string id, byte[] data)
         {
-            RequireClient(id);
-            var connection = _connections[id];
-            await connection.SendAsync(data);
-            OnSend?.Invoke(connection, new OnSendEventargs() { Data = data });
+            if (!_connections.ContainsKey(id)) throw new Exception("该客户端不存在");
+            await SendAsync(_connections[id], data);
         }
 
         /// <summary>
@@ -186,10 +203,12 @@ namespace DwFramework.Socket
         /// 广播消息
         /// </summary>
         /// <param name="data"></param>
+        /// <param name="onException"></param>
         /// <returns></returns>
-        public void BroadCast(byte[] data)
+        public Task BroadCastAsync(byte[] data, Action<string, Exception> onException = null)
         {
-            _connections.Values.ForEach(async item => await SendAsync(item.ID, data));
+            return TaskManager.CreateTask(() => _connections.Values.ForEach(async item => await SendAsync(item.ID, data),
+                onException == null ? null : (connection, ex) => onException?.Invoke(connection.ID, ex)));
         }
 
         /// <summary>
@@ -197,11 +216,24 @@ namespace DwFramework.Socket
         /// </summary>
         /// <param name="msg"></param>
         /// <param name="encoding"></param>
+        /// <param name="onException"></param>
         /// <returns></returns>
-        public void BroadCast(string msg, Encoding encoding = null)
+        public Task BroadCastAsync(string msg, Encoding encoding = null, Action<string, Exception> onException = null)
         {
             encoding ??= Encoding.UTF8;
-            BroadCast(encoding.GetBytes(msg));
+            return BroadCastAsync(encoding.GetBytes(msg), onException);
+        }
+
+        /// <summary>
+        /// 断开连接
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <returns></returns>
+        public async Task CloseAsync(SocketConnection connection)
+        {
+            if (_connections.ContainsKey(connection.ID)) _connections.Remove(connection.ID);
+            await connection.CloseAsync();
+            OnClose?.Invoke(connection, new OnCloceEventargs() { });
         }
 
         /// <summary>
@@ -211,9 +243,8 @@ namespace DwFramework.Socket
         /// <returns></returns>
         public async Task CloseAsync(string id)
         {
-            RequireClient(id);
-            var connection = _connections[id];
-            await connection.CloseAsync();
+            if (!_connections.ContainsKey(id)) return;
+            await CloseAsync(_connections[id]);
         }
 
         /// <summary>
