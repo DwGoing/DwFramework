@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Threading;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.WebSockets;
 using System.Threading.Tasks;
-using System.Linq;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Builder;
@@ -127,104 +125,58 @@ namespace DwFramework.WebSocket
                         }
                         await next();
                     });
-                    // 自定义处理
+                    // 开始接受连接
                     app.Run(async context =>
                     {
                         var webSocket = await context.WebSockets.AcceptWebSocketAsync();
-                        var connection = new WebSocketConnection(webSocket);
+                        var connection = new WebSocketConnection(webSocket, _config.BufferSize, out var resetEvent)
+                        {
+                            OnClose = OnClose,
+                            OnSend = OnSend,
+                            OnReceive = OnReceive,
+                            OnError = OnError
+                        };
                         _connections[connection.ID] = connection;
                         OnConnect?.Invoke(connection, new OnConnectEventArgs() { Header = context.Request.Headers });
-                        var buffer = new byte[_config.BufferSize];
-                        var dataBytes = new List<byte>();
-                        WebSocketCloseStatus? closeStates = null;
-                        while (true)
-                        {
-                            try
-                            {
-                                var result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
-                                if (result.CloseStatus.HasValue)
-                                {
-                                    closeStates = result.CloseStatus;
-                                    break;
-                                }
-                                dataBytes.AddRange(buffer.Take(result.Count));
-                                if (!result.EndOfMessage) continue;
-                                OnReceive?.Invoke(connection, new OnReceiveEventargs() { Data = dataBytes.ToArray() });
-                                dataBytes.Clear();
-                            }
-                            catch (Exception ex)
-                            {
-                                OnError?.Invoke(connection, new OnErrorEventArgs() { Exception = ex });
-                                continue;
-                            }
-                        }
-                        OnClose?.Invoke(connection, new OnCloceEventArgs() { CloseStatus = closeStates });
-                        if (connection.WebSocket.State == WebSocketState.CloseReceived)
-                            await connection.CloseAsync(WebSocketCloseStatus.NormalClosure);
-                        connection.Dispose();
-                        _connections.Remove(connection.ID);
+                        resetEvent.WaitOne();
                     });
                 });
             }).Build().RunAsync();
         }
 
         /// <summary>
-        /// 检查客户端
+        /// 获取连接
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        private void RequireClient(string id)
+        public WebSocketConnection GetSocketConnection(string id)
         {
-            if (!_connections.ContainsKey(id))
-                throw new Exception("该客户端不存在");
-            var client = _connections[id];
-            if (client.WebSocket.State != WebSocketState.Open)
-                throw new Exception("该客户端状态错误");
-        }
-
-        /// <summary>
-        /// 发送消息
-        /// </summary>
-        /// <param name="id"></param>
-        /// <param name="buffer"></param>
-        /// <returns></returns>
-        public async Task SendAsync(string id, byte[] buffer)
-        {
-            RequireClient(id);
-            var connection = _connections[id];
-            await connection.SendAsync(buffer);
-            OnSend?.Invoke(connection, new OnSendEventArgs() { Data = buffer });
+            if (!_connections.ContainsKey(id)) return null;
+            return _connections[id];
         }
 
         /// <summary>
         /// 广播消息
         /// </summary>
-        /// <param name="msg"></param>
+        /// <param name="data"></param>
         /// <returns></returns>
-        public void BroadCastAsync(byte[] buffer)
+        public void BroadCast(byte[] data)
         {
-            _connections.Values.ForEach(async item => await SendAsync(item.ID, buffer));
-        }
-
-        /// <summary>
-        /// 断开连接
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        public async Task CloseAsync(string id, WebSocketCloseStatus closeStatus)
-        {
-            RequireClient(id);
-            var connection = _connections[id];
-            await connection.CloseAsync(closeStatus);
+            _connections.Values.ForEach(async item => await item.SendAsync(data), (connection, ex) =>
+            {
+                OnError?.Invoke(connection, new OnErrorEventArgs() { Exception = ex });
+            });
         }
 
         /// <summary>
         /// 断开所有连接
         /// </summary>
-        /// <returns></returns>
-        public void CloseAllAsync(WebSocketCloseStatus closeStatus)
+        public void CloseAll()
         {
-            _connections.Values.ForEach(async item => await item.CloseAsync(closeStatus));
+            _connections.Values.ForEach(async item => await item.CloseAsync(WebSocketCloseStatus.NormalClosure), (connection, ex) =>
+            {
+                OnError?.Invoke(connection, new OnErrorEventArgs() { Exception = ex });
+            });
         }
     }
 }

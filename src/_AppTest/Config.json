@@ -1,5 +1,9 @@
 ﻿{
-  "Socket": {
-    "Listen": "0.0.0.0:10100"
+  "WebSocket": {
+    "ContentRoot": "",
+    "Listen": {
+      "ws": "0.0.0.0:10090"
+    },
+    "BufferSize": 100
   }
 }
