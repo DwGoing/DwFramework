@@ -58,13 +58,11 @@ namespace DwFramework.WebSocket
                     return;
                 }
                 _dataBytes.AddRange(_buffer.Take(result.Count));
-                if (!result.EndOfMessage)
+                if (result.EndOfMessage)
                 {
-                    await BeginReceiveAsync();
-                    return;
+                    OnReceive?.Invoke(this, new OnReceiveEventargs() { Data = _dataBytes.ToArray() });
+                    _dataBytes.Clear();
                 }
-                OnReceive?.Invoke(this, new OnReceiveEventargs() { Data = _dataBytes.ToArray() });
-                _dataBytes.Clear();
                 await BeginReceiveAsync();
             }
             catch (WebSocketException ex)
