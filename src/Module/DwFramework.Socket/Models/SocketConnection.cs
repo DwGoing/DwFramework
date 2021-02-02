@@ -25,24 +25,26 @@ namespace DwFramework.Socket
         /// 构造函数
         /// </summary>
         /// <param name="socket"></param>
+        /// <param name="bufferSize"></param>
         public SocketConnection(System.Net.Sockets.Socket socket, int bufferSize)
         {
             ID = MD5.Encode(Guid.NewGuid().ToString());
             _socket = socket;
             _socket.EnableKeepAlive(3000, 500);
             _buffer = new byte[bufferSize];
-            _ = BeginReceive();
+            _ = BeginReceiveAsync();
         }
 
         /// <summary>
         /// 开始接收数据
         /// </summary>
         /// <returns></returns>
-        private async Task BeginReceive()
+        private async Task BeginReceiveAsync()
         {
             try
             {
                 if (IsClose) return;
+                if (!_socket.Connected) throw new SocketException((int)SocketError.NotConnected);
                 var len = await _socket.ReceiveAsync(_buffer, SocketFlags.None);
                 if (len > 0)
                 {
@@ -52,15 +54,13 @@ namespace DwFramework.Socket
                 }
                 else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX)) throw new Exception("空数据");
                 else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) throw new Exception("空数据");
-                await BeginReceive();
+                await BeginReceiveAsync();
             }
             catch (SocketException ex)
             {
                 switch (ex.SocketErrorCode)
                 {
-                    case SocketError.TryAgain:
-                        await BeginReceive();
-                        break;
+                    // TODO
                     default:
                         OnError?.Invoke(this, new OnErrorEventArgs() { Exception = ex });
                         Close();
@@ -70,7 +70,7 @@ namespace DwFramework.Socket
             catch (Exception ex)
             {
                 OnError?.Invoke(this, new OnErrorEventArgs() { Exception = ex });
-                Close();
+                await BeginReceiveAsync();
             }
         }
 
@@ -85,9 +85,9 @@ namespace DwFramework.Socket
             {
                 return await _socket.SendAsync(buffer, SocketFlags.None);
             }
-            catch
+            catch (Exception ex)
             {
-                Close();
+                OnError?.Invoke(this, new OnErrorEventArgs() { Exception = ex });
                 return 0;
             }
         }
