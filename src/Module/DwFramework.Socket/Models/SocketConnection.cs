@@ -3,41 +3,56 @@ using System.Net.Sockets;
 using System.Threading.Tasks;
 
 using DwFramework.Core.Plugins;
+using static DwFramework.Socket.SocketService;
 
 namespace DwFramework.Socket
 {
     public sealed class SocketConnection
     {
         public string ID { get; init; }
-        public System.Net.Sockets.Socket Socket { get; init; }
-        public bool PreClose { get; private set; } = false;
+
+        private readonly System.Net.Sockets.Socket _socket;
+        private readonly byte[] _buffer;
+
+        public Action<SocketConnection, OnCloceEventargs> OnClose { get; init; }
+        public Action<SocketConnection, OnSendEventargs> OnSend { get; init; }
+        public Action<SocketConnection, OnReceiveEventargs> OnReceive { get; init; }
+        public Action<SocketConnection, OnErrorEventArgs> OnError { get; init; }
 
         /// <summary>
         /// 构造函数
         /// </summary>
         /// <param name="socket"></param>
-        public SocketConnection(System.Net.Sockets.Socket socket)
+        public SocketConnection(System.Net.Sockets.Socket socket, int bufferSize)
         {
             ID = MD5.Encode(Guid.NewGuid().ToString());
-            Socket = socket;
-            Socket.EnableKeepAlive(3000, 500);
-            Console.WriteLine(Socket.GetSocketOption(SocketOptionLevel.Socket, SocketOptionName.KeepAlive));
+            _socket = socket;
+            _socket.EnableKeepAlive(3000, 500);
+            _buffer = new byte[bufferSize];
+            _ = BeginReceive();
         }
 
         /// <summary>
-        /// 检查连接
+        /// 开始接收数据
         /// </summary>
         /// <returns></returns>
-        public bool IsAvailable()
+        private async Task BeginReceive()
         {
             try
             {
-                return Socket.Poll(5000, SelectMode.SelectRead) || Socket.Poll(5000, SelectMode.SelectWrite);
+                var len = await _socket.ReceiveAsync(_buffer, SocketFlags.None);
+                var a = _socket.LingerState;
+                if (len > 0)
+                {
+                    var data = new byte[len];
+                    Array.Copy(_buffer, data, len);
+                    OnReceive?.Invoke(this, new OnReceiveEventargs() { Data = data });
+                }
+                await BeginReceive();
             }
-            catch (Exception ex)
+            catch
             {
-                Console.WriteLine(ex.Message);
-                return false;
+                Close();
             }
         }
 
@@ -46,34 +61,32 @@ namespace DwFramework.Socket
         /// </summary>
         /// <param name="buffer"></param>
         /// <returns></returns>
-        public Task SendAsync(byte[] buffer)
+        public async Task<int> SendAsync(byte[] buffer)
         {
-            return TaskManager.CreateTask(() => Socket.Send(new ArraySegment<byte>(buffer)));
+            try
+            {
+                return await _socket.SendAsync(buffer, SocketFlags.None);
+            }
+            catch
+            {
+                Close();
+                return 0;
+            }
         }
 
         /// <summary>
         /// 断开连接
         /// </summary>
-        /// <param name="preClose"></param>
-        /// <returns></returns>
-        public Task CloseAsync(bool preClose = false)
+        public void Close()
         {
-            if (preClose && !PreClose)
+            try
             {
-                PreClose = true;
-                return Task.CompletedTask;
+                _socket.Shutdown(SocketShutdown.Both);
             }
-            return TaskManager.CreateTask(() =>
+            finally
             {
-                try
-                {
-                    Socket.Shutdown(SocketShutdown.Both);
-                }
-                finally
-                {
-                    Socket.Close();
-                }
-            });
+                _socket.Close();
+            }
         }
     }
 }
