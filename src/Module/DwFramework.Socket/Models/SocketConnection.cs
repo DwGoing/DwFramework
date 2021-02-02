@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net.Sockets;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
 using DwFramework.Core.Plugins;
@@ -10,6 +11,7 @@ namespace DwFramework.Socket
     public sealed class SocketConnection
     {
         public string ID { get; init; }
+        public bool IsClose { get; private set; } = false;
 
         private readonly System.Net.Sockets.Socket _socket;
         private readonly byte[] _buffer;
@@ -40,25 +42,29 @@ namespace DwFramework.Socket
         {
             try
             {
+                if (IsClose) return;
                 var len = await _socket.ReceiveAsync(_buffer, SocketFlags.None);
-                var a = _socket.LingerState;
                 if (len > 0)
                 {
                     var data = new byte[len];
                     Array.Copy(_buffer, data, len);
                     OnReceive?.Invoke(this, new OnReceiveEventargs() { Data = data });
                 }
+                else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX)) throw new Exception("空数据");
+                else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) throw new Exception("空数据");
                 await BeginReceive();
             }
-            catch (SocketException se)
+            catch (SocketException ex)
             {
-                switch (se.SocketErrorCode)
+                switch (ex.SocketErrorCode)
                 {
                     case SocketError.TryAgain:
                         await BeginReceive();
                         break;
                     default:
-                        throw;
+                        OnError?.Invoke(this, new OnErrorEventArgs() { Exception = ex });
+                        Close();
+                        break;
                 }
             }
             catch (Exception ex)
@@ -91,14 +97,10 @@ namespace DwFramework.Socket
         /// </summary>
         public void Close()
         {
-            try
-            {
-                _socket.Shutdown(SocketShutdown.Both);
-            }
-            finally
-            {
-                _socket.Close();
-            }
+            if (IsClose) return;
+            _socket.Close();
+            IsClose = true;
+            OnClose?.Invoke(this, new OnCloceEventargs() { });
         }
     }
 }

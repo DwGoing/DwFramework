@@ -135,172 +135,27 @@ namespace DwFramework.Socket
             return _connections[id];
         }
 
-        /*
         /// <summary>
-        /// 创建连接处理
+        /// 广播消息
         /// </summary>
-        /// <param name="result"></param>
-        private void OnConnectHandler(IAsyncResult result)
+        /// <param name="data"></param>
+        public void BroadCast(byte[] data)
         {
-            var socket = _server.EndAccept(result);
-            var connection = new SocketConnection(socket, _config.BufferSize);
-            _server.BeginAccept(OnConnectHandler, null);
-            _connections[connection.ID] = connection;
-            OnConnect?.Invoke(connection, new OnConnectEventargs() { });
-            var data = new byte[_config.BufferSize];
-            socket.BeginReceive(data, 0, _config.BufferSize, SocketFlags.None, OnReceiveHandler, (connection, data));
-        }
-
-        /// <summary>
-        /// 接收消息处理
-        /// </summary>
-        /// <param name="result"></param>
-        private void OnReceiveHandler(IAsyncResult result)
-        {
-            var (connection, data) = ((SocketConnection, byte[]))result.AsyncState;
-            SocketError code = SocketError.Success;
-            try
+            _connections.Values.ForEach(async item => await item.SendAsync(data), (connection, ex) =>
             {
-                var len = connection.Socket.EndReceive(result, out code);
-                var o = connection.Socket.GetSocketOption(SocketOptionLevel.Socket, SocketOptionName.Error);
-                if (len > 0)
-                {
-                    Array.Resize(ref data, len);
-                    OnReceive?.Invoke(connection, new OnReceiveEventargs() { Data = data });
-                }
-                if (!connection.IsAvailable()) throw new Exception("连接不可用");
-                var newData = new byte[_config.BufferSize];
-                connection.Socket.BeginReceive(newData, 0, _config.BufferSize, SocketFlags.None, OnReceiveHandler, (connection, newData));
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex);
-                switch (code)
-                {
-                    default:
-                        _ = CloseAsync(connection);
-                        return;
-                }
-            }
-        }
-
-        /// <summary>
-        /// 检查连接状态
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="args"></param>
-        private void CheckConnection(object sender, EventArgs args)
-        {
-            if (_isChecking) return;
-            var currentTime = DateTime.UtcNow;
-            _isChecking = true;
-            _connections.Values.ForEach(item =>
-            {
-                //Console.WriteLine(item.IsAvailable());
-                if (item.IsAvailable()) return;
-                _ = CloseAsync(item);
+                OnError?.Invoke(connection, new OnErrorEventArgs() { Exception = ex });
             });
-            _isChecking = false;
-        }
-
-        /// <summary>
-        /// 发送消息
-        /// </summary>
-        /// <param name="connection"></param>
-        /// <param name="data"></param>
-        /// <returns></returns>
-        public async Task SendAsync(SocketConnection connection, byte[] data)
-        {
-            if (!connection.IsAvailable())
-            {
-                _ = CloseAsync(connection);
-                throw new Exception("该客户端状态异常");
-            }
-            await connection.SendAsync(data);
-            OnSend?.Invoke(connection, new OnSendEventargs() { Data = data });
-        }
-
-        /// <summary>
-        /// 发送消息
-        /// </summary>
-        /// <param name="id"></param>
-        /// <param name="data"></param>
-        /// <returns></returns>
-        public async Task SendAsync(string id, byte[] data)
-        {
-            if (!_connections.ContainsKey(id)) throw new Exception("该客户端不存在");
-            await SendAsync(_connections[id], data);
-        }
-
-        /// <summary>
-        /// 发送消息
-        /// </summary>
-        /// <param name="id"></param>
-        /// <param name="msg"></param>
-        /// <param name="encoding"></param>
-        /// <returns></returns>
-        public async Task SendAsync(string id, string msg, Encoding encoding = null)
-        {
-            encoding ??= Encoding.UTF8;
-            await SendAsync(id, encoding.GetBytes(msg));
-        }
-
-        /// <summary>
-        /// 广播消息
-        /// </summary>
-        /// <param name="data"></param>
-        /// <param name="onException"></param>
-        /// <returns></returns>
-        public Task BroadCastAsync(byte[] data, Action<string, Exception> onException = null)
-        {
-            return TaskManager.CreateTask(() => _connections.Values.ForEach(async item => await SendAsync(item.ID, data),
-                onException == null ? null : (connection, ex) => onException?.Invoke(connection.ID, ex)));
-        }
-
-        /// <summary>
-        /// 广播消息
-        /// </summary>
-        /// <param name="msg"></param>
-        /// <param name="encoding"></param>
-        /// <param name="onException"></param>
-        /// <returns></returns>
-        public Task BroadCastAsync(string msg, Encoding encoding = null, Action<string, Exception> onException = null)
-        {
-            encoding ??= Encoding.UTF8;
-            return BroadCastAsync(encoding.GetBytes(msg), onException);
-        }
-
-        /// <summary>
-        /// 断开连接
-        /// </summary>
-        /// <param name="connection"></param>
-        /// <returns></returns>
-        public async Task CloseAsync(SocketConnection connection)
-        {
-            if (_connections.ContainsKey(connection.ID)) _connections.Remove(connection.ID);
-            await connection.CloseAsync();
-            OnClose?.Invoke(connection, new OnCloceEventargs() { });
-        }
-
-        /// <summary>
-        /// 断开连接
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        public async Task CloseAsync(string id)
-        {
-            if (!_connections.ContainsKey(id)) return;
-            await CloseAsync(_connections[id]);
         }
 
         /// <summary>
         /// 断开所有连接
         /// </summary>
-        /// <returns></returns>
         public void CloseAll()
         {
-            _connections.Values.ForEach(async item => await item.CloseAsync());
+            _connections.Values.ForEach(item => item.Close(), (connection, ex) =>
+            {
+                OnError?.Invoke(connection, new OnErrorEventArgs() { Exception = ex });
+            });
         }
-        */
     }
 }

@@ -50,6 +50,7 @@ namespace _AppTest
                     {
                         var s = System.Text.Encoding.UTF8.GetString(a.Data);
                         Console.WriteLine($"收到{c.ID}发来的消息：{s}");
+                        if (s == "c") service.CloseAll();
                         //if (!s.EndsWith("\r\n\r\n")) return;
                         //var data = new { A = "a", B = 123 }.ToJson();
                         //var msg = $"HTTP/1.1 200 OK\r\nContent-Type:application/json;charset=UTF-8\r\nContent-Length:{data.Length}\r\nConnection:close\r\n\r\n{data}";
@@ -58,6 +59,10 @@ namespace _AppTest
                     service.OnClose += (c, a) =>
                     {
                         Console.WriteLine($"{c.ID}已断开");
+                    };
+                    service.OnError += (c, a) =>
+                    {
+                        Console.WriteLine($"{c.ID} {a.Exception.Message}");
                     };
                 };
                 host.Run();
