@@ -27,6 +27,11 @@ namespace DwFramework.Socket
 
         }
 
+        public class OnCloceEventargs : EventArgs
+        {
+
+        }
+
         public class OnSendEventargs : EventArgs
         {
             public byte[] Data { get; init; }
@@ -37,9 +42,9 @@ namespace DwFramework.Socket
             public byte[] Data { get; init; }
         }
 
-        public class OnCloceEventargs : EventArgs
+        public class OnErrorEventArgs : EventArgs
         {
-
+            public Exception Exception { get; init; }
         }
 
         private readonly Config _config;
@@ -50,9 +55,10 @@ namespace DwFramework.Socket
         private System.Net.Sockets.Socket _server;
 
         public event Action<SocketConnection, OnConnectEventargs> OnConnect;
+        public event Action<SocketConnection, OnCloceEventargs> OnClose;
         public event Action<SocketConnection, OnSendEventargs> OnSend;
         public event Action<SocketConnection, OnReceiveEventargs> OnReceive;
-        public event Action<SocketConnection, OnCloceEventargs> OnClose;
+        public event Action<SocketConnection, OnErrorEventArgs> OnError;
 
         /// <summary>
         /// 构造函数
@@ -65,13 +71,13 @@ namespace DwFramework.Socket
             if (_config == null) throw new Exception("未读取到Socket配置");
             _logger = ServiceHost.Provider.GetLogger<SocketService>();
             _connections = new Dictionary<string, SocketConnection>();
-            _timer = new Timer(1000)
-            //_timer = new Timer(30 * 1000)
-            {
-                AutoReset = true
-            };
-            _timer.Elapsed += CheckConnection;
-            _timer.Start();
+            //_timer = new Timer(1000)
+            ////_timer = new Timer(30 * 1000)
+            //{
+            //    AutoReset = true
+            //};
+            //_timer.Elapsed += CheckConnection;
+            //_timer.Start();
         }
 
         /// <summary>
@@ -115,14 +121,13 @@ namespace DwFramework.Socket
             try
             {
                 var len = connection.Socket.EndReceive(result, out code);
-                if (len <= 0) return;
-                Array.Resize(ref data, len);
-                OnReceive?.Invoke(connection, new OnReceiveEventargs() { Data = data });
-                if (connection.IsAvailable())
+                if (len > 0)
                 {
-                    code = SocketError.Disconnecting;
-                    throw new Exception("连接不可用");
+                    Array.Resize(ref data, len);
+                    OnReceive?.Invoke(connection, new OnReceiveEventargs() { Data = data });
                 }
+                else throw new Exception("接收到空数据");
+                if (!connection.IsAvailable()) throw new Exception("连接不可用");
                 var newData = new byte[_config.BufferSize];
                 connection.Socket.BeginReceive(newData, 0, _config.BufferSize, SocketFlags.None, OnReceiveHandler, (connection, newData));
             }
@@ -150,7 +155,7 @@ namespace DwFramework.Socket
             _isChecking = true;
             _connections.Values.ForEach(item =>
             {
-                Console.WriteLine(item.IsAvailable());
+                //Console.WriteLine(item.IsAvailable());
                 if (item.IsAvailable()) return;
                 _ = CloseAsync(item);
             });

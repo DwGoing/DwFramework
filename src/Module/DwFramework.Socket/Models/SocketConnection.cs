@@ -10,6 +10,7 @@ namespace DwFramework.Socket
     {
         public string ID { get; init; }
         public System.Net.Sockets.Socket Socket { get; init; }
+        public bool PreClose { get; private set; } = false;
 
         /// <summary>
         /// 构造函数
@@ -18,8 +19,9 @@ namespace DwFramework.Socket
         public SocketConnection(System.Net.Sockets.Socket socket)
         {
             ID = MD5.Encode(Guid.NewGuid().ToString());
-            socket.SendTimeout = 1000;
             Socket = socket;
+            Socket.EnableKeepAlive(3000, 500);
+            Console.WriteLine(Socket.GetSocketOption(SocketOptionLevel.Socket, SocketOptionName.KeepAlive));
         }
 
         /// <summary>
@@ -30,12 +32,11 @@ namespace DwFramework.Socket
         {
             try
             {
-                if (!Socket.Poll(-1, SelectMode.SelectRead) || !Socket.Poll(-1, SelectMode.SelectWrite)) return false;
-                Socket.Send(Array.Empty<byte>());
-                return true;
+                return Socket.Poll(5000, SelectMode.SelectRead) || Socket.Poll(5000, SelectMode.SelectWrite);
             }
-            catch
+            catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 return false;
             }
         }
@@ -53,13 +54,25 @@ namespace DwFramework.Socket
         /// <summary>
         /// 断开连接
         /// </summary>
+        /// <param name="preClose"></param>
         /// <returns></returns>
-        public Task CloseAsync()
+        public Task CloseAsync(bool preClose = false)
         {
+            if (preClose && !PreClose)
+            {
+                PreClose = true;
+                return Task.CompletedTask;
+            }
             return TaskManager.CreateTask(() =>
             {
-                Socket.Close();
-                Socket.Dispose();
+                try
+                {
+                    Socket.Shutdown(SocketShutdown.Both);
+                }
+                finally
+                {
+                    Socket.Close();
+                }
             });
         }
     }

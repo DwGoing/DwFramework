@@ -31,6 +31,11 @@ namespace DwFramework.WebSocket
             public IHeaderDictionary Header { get; init; }
         }
 
+        public class OnCloceEventArgs : EventArgs
+        {
+            public WebSocketCloseStatus? CloseStatus { get; init; }
+        }
+
         public class OnSendEventArgs : EventArgs
         {
             public byte[] Data { get; init; }
@@ -39,11 +44,6 @@ namespace DwFramework.WebSocket
         public class OnReceiveEventargs : EventArgs
         {
             public byte[] Data { get; init; }
-        }
-
-        public class OnCloceEventArgs : EventArgs
-        {
-            public WebSocketCloseStatus? CloseStatus { get; init; }
         }
 
         public class OnErrorEventArgs : EventArgs
