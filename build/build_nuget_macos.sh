@@ -1,13 +1,13 @@
 #!/bin/bash
-usage="Usage:\n-c|--configuration <CONFIGURATION>\n-o|--output <OUTPUT_DIRECTORY>\n-mv|--main-version <MAIN_VERSION>\n-sv|--sub-version <SUB_VERSION>\n|-t|--start-year <START_YEAR>\n-s|--suffix <SUFFIX>"
+usage="Usage:\n-c|--configuration <CONFIGURATION>\n-o|--output <OUTPUT_DIRECTORY>\n-mv|--main-version <MAIN_VERSION>\n-sv|--sub-version <SUB_VERSION>\n-t|--start-year <START_YEAR>\n-s|--suffix <SUFFIX>"
 # 参数校验
 if [[ $# -eq 0 ]]; then
     echo -e $usage
     exit 1
 fi
-args=$(getopt cosv $*)
+args=$(getopt -o "c:o:mv:sv:t:s:" $*)
 if [ $? -ne 0 ]; then
-    echo -e usage
+    echo -e $usage
     exit 2
 fi
 
