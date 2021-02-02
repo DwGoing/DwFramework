@@ -109,7 +109,8 @@ namespace DwFramework.Socket
             }
             catch (Exception ex)
             {
-                await _logger?.LogErrorAsync($"Socket服务终止:{ex.Message}");
+                await _logger?.LogErrorAsync($"Socket服务异常:{ex.Message}");
+                OnError?.Invoke(null, new OnErrorEventArgs() { Exception = ex });
             }
         }
 

@@ -50,8 +50,20 @@ namespace DwFramework.Socket
                 }
                 await BeginReceive();
             }
-            catch
+            catch (SocketException se)
             {
+                switch (se.SocketErrorCode)
+                {
+                    case SocketError.TryAgain:
+                        await BeginReceive();
+                        break;
+                    default:
+                        throw;
+                }
+            }
+            catch (Exception ex)
+            {
+                OnError?.Invoke(this, new OnErrorEventArgs() { Exception = ex });
                 Close();
             }
         }
