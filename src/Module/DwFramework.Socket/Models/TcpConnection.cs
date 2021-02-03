@@ -77,13 +77,15 @@ namespace DwFramework.Socket
         /// <summary>
         /// 发送消息
         /// </summary>
-        /// <param name="buffer"></param>
+        /// <param name="data"></param>
         /// <returns></returns>
-        public async Task<int> SendAsync(byte[] buffer)
+        public async Task<int> SendAsync(byte[] data)
         {
             try
             {
-                return await _socket.SendAsync(buffer, SocketFlags.None);
+                var len = await _socket.SendAsync(data, SocketFlags.None);
+                OnSend?.Invoke(this, new OnSendEventargs() { Data = data });
+                return len;
             }
             catch (Exception ex)
             {

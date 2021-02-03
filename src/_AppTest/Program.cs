@@ -4,6 +4,10 @@ using DwFramework.Core.Plugins;
 using DwFramework.Core.Extensions;
 using DwFramework.Socket;
 
+using System.Text;
+using System.Net;
+using System.Net.Sockets;
+
 namespace _AppTest
 {
     class Program
@@ -14,35 +18,36 @@ namespace _AppTest
             {
                 var host = new ServiceHost(EnvironmentType.Develop, "Config.json");
                 host.RegisterLog();
-                host.RegisterTcpService("Socket:Tcp");
+                host.RegisterUdpService("Socket:Udp");
                 host.OnInitializing += p =>
                 {
-                    var service = p.GetTcpService();
-                    service.OnConnect += (c, a) =>
+                    var service = p.GetUdpService();
+                    service.OnSend += a =>
                     {
-                        Console.WriteLine($"{c.ID}已连接");
+                        Console.WriteLine($"发送消息:{Encoding.UTF8.GetString(a.Data)}");
                     };
-                    service.OnSend += (c, a) =>
-                    {
-                        Console.WriteLine($"向{c.ID}消息：{System.Text.Encoding.UTF8.GetString(a.Data)}");
-                    };
-                    service.OnReceive += (c, a) =>
+                    service.OnReceive += a =>
                    {
-                       var s = System.Text.Encoding.UTF8.GetString(a.Data);
-                       Console.WriteLine($"收到{c.ID}发来的消息：{s}");
-                       //if (!s.EndsWith("\r\n\r\n")) return;
-                       //var data = new { A = "a", B = 123 }.ToJson();
-                       //var msg = $"HTTP/1.1 200 OK\r\nContent-Type:application/json;charset=UTF-8\r\nContent-Length:{data.Length}\r\nConnection:close\r\n\r\n{data}";
-                       //await service.SendAsync(c.ID, msg);
+                       var s = Encoding.UTF8.GetString(a.Data);
+                       Console.WriteLine($"收{a.Remote}到消息：{s}");
+                       _ = service.SendAsync(a.Remote, a.Data);
                    };
-                    service.OnClose += (c, a) =>
+                    service.OnError += a =>
                     {
-                        Console.WriteLine($"{c.ID}已断开");
+                        Console.WriteLine($"Erro:{a.Exception.Message}");
                     };
-                    service.OnError += (c, a) =>
+                };
+                host.OnInitialized += p =>
+                {
+                    var c = new UdpClient(9999);
+                    TaskManager.CreateTask(async () =>
                     {
-                        Console.WriteLine($"{c.ID} {a.Exception.Message}");
-                    };
+                        var data = new byte[1024];
+                        var a = await c.ReceiveAsync();
+                        Console.WriteLine(Encoding.UTF8.GetString(a.Buffer));
+                    });
+                    var data = Encoding.UTF8.GetBytes("Hello World!");
+                    c.SendAsync(data, data.Length, new IPEndPoint(IPAddress.Parse("127.0.0.1"), 10200));
                 };
                 host.Run();
             }

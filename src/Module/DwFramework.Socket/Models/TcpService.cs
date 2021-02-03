@@ -81,7 +81,7 @@ namespace DwFramework.Socket
             _server.Bind(new IPEndPoint(string.IsNullOrEmpty(ipAndPort[0]) ? IPAddress.Any : IPAddress.Parse(ipAndPort[0]), int.Parse(ipAndPort[1])));
             _server.Listen(_config.BackLog);
             OnClose += OnCloseHandler;
-            _ = BeginAccept();
+            _ = BeginAcceptAsync();
             await _logger?.LogInformationAsync($"Tcp服务正在监听:{_config.Listen}");
         }
 
@@ -89,7 +89,7 @@ namespace DwFramework.Socket
         /// 开始接受连接
         /// </summary>
         /// <returns></returns>
-        private async Task BeginAccept()
+        private async Task BeginAcceptAsync()
         {
             try
             {
@@ -103,7 +103,7 @@ namespace DwFramework.Socket
                 };
                 _connections[connection.ID] = connection;
                 OnConnect?.Invoke(connection, new OnConnectEventargs() { });
-                await BeginAccept();
+                await BeginAcceptAsync();
             }
             catch (Exception ex)
             {

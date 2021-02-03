@@ -3,6 +3,10 @@
     "Tcp": {
       "Listen": "0.0.0.0:10100",
       "BufferSize": 100
+    },
+    "Udp": {
+      "Listen": "0.0.0.0:10200",
+      "BufferSize": 100
     }
   }
 }
