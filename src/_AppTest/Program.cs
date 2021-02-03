@@ -2,7 +2,7 @@
 using DwFramework.Core;
 using DwFramework.Core.Plugins;
 using DwFramework.Core.Extensions;
-using DwFramework.WebSocket;
+using DwFramework.Socket;
 
 namespace _AppTest
 {
@@ -14,10 +14,10 @@ namespace _AppTest
             {
                 var host = new ServiceHost(EnvironmentType.Develop, "Config.json");
                 host.RegisterLog();
-                host.RegisterWebSocketService("WebSocket");
+                host.RegisterTcpService("Socket:Tcp");
                 host.OnInitializing += p =>
                 {
-                    var service = p.GetWebSocketService();
+                    var service = p.GetTcpService();
                     service.OnConnect += (c, a) =>
                     {
                         Console.WriteLine($"{c.ID}已连接");
@@ -30,7 +30,6 @@ namespace _AppTest
                    {
                        var s = System.Text.Encoding.UTF8.GetString(a.Data);
                        Console.WriteLine($"收到{c.ID}发来的消息：{s}");
-                       if (s == "c") _ = c.CloseAsync(System.Net.WebSockets.WebSocketCloseStatus.Empty);
                        //if (!s.EndsWith("\r\n\r\n")) return;
                        //var data = new { A = "a", B = 123 }.ToJson();
                        //var msg = $"HTTP/1.1 200 OK\r\nContent-Type:application/json;charset=UTF-8\r\nContent-Length:{data.Length}\r\nConnection:close\r\n\r\n{data}";
