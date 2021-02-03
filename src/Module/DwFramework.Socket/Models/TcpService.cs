@@ -1,17 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Net;
 using System.Net.Sockets;
-using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 
 using DwFramework.Core;
-using DwFramework.Core.Extensions;
 using DwFramework.Core.Plugins;
+using DwFramework.Core.Extensions;
 
 namespace DwFramework.Socket
 {
-    public sealed class SocketService
+    public sealed class TcpService
     {
         public class Config
         {
@@ -46,27 +46,27 @@ namespace DwFramework.Socket
         }
 
         private readonly Config _config;
-        private readonly ILogger<SocketService> _logger;
-        private readonly Dictionary<string, SocketConnection> _connections;
+        private readonly ILogger<TcpService> _logger;
+        private readonly Dictionary<string, TcpConnection> _connections;
         private System.Net.Sockets.Socket _server;
 
-        public event Action<SocketConnection, OnConnectEventargs> OnConnect;
-        public event Action<SocketConnection, OnCloceEventargs> OnClose;
-        public event Action<SocketConnection, OnSendEventargs> OnSend;
-        public event Action<SocketConnection, OnReceiveEventargs> OnReceive;
-        public event Action<SocketConnection, OnErrorEventArgs> OnError;
+        public event Action<TcpConnection, OnConnectEventargs> OnConnect;
+        public event Action<TcpConnection, OnCloceEventargs> OnClose;
+        public event Action<TcpConnection, OnSendEventargs> OnSend;
+        public event Action<TcpConnection, OnReceiveEventargs> OnReceive;
+        public event Action<TcpConnection, OnErrorEventArgs> OnError;
 
         /// <summary>
         /// 构造函数
         /// </summary>
         /// <param name="path"></param>
         /// <param name="key"></param>
-        public SocketService(string path = null, string key = null)
+        public TcpService(string path = null, string key = null)
         {
             _config = ServiceHost.Environment.GetConfiguration<Config>(path, key);
-            if (_config == null) throw new Exception("未读取到Socket配置");
-            _logger = ServiceHost.Provider.GetLogger<SocketService>();
-            _connections = new Dictionary<string, SocketConnection>();
+            if (_config == null) throw new Exception("未读取到Tcp配置");
+            _logger = ServiceHost.Provider.GetLogger<TcpService>();
+            _connections = new Dictionary<string, TcpConnection>();
         }
 
         /// <summary>
@@ -82,7 +82,7 @@ namespace DwFramework.Socket
             _server.Listen(_config.BackLog);
             OnClose += OnCloseHandler;
             _ = BeginAccept();
-            await _logger?.LogInformationAsync($"Socket服务正在监听:{_config.Listen}");
+            await _logger?.LogInformationAsync($"Tcp服务正在监听:{_config.Listen}");
         }
 
         /// <summary>
@@ -94,7 +94,7 @@ namespace DwFramework.Socket
             try
             {
                 var socket = await _server.AcceptAsync();
-                var connection = new SocketConnection(socket, _config.BufferSize)
+                var connection = new TcpConnection(socket, _config.BufferSize)
                 {
                     OnClose = OnClose,
                     OnSend = OnSend,
@@ -107,7 +107,7 @@ namespace DwFramework.Socket
             }
             catch (Exception ex)
             {
-                await _logger?.LogErrorAsync($"Socket服务异常:{ex.Message}");
+                await _logger?.LogErrorAsync($"Tcp服务异常:{ex.Message}");
                 OnError?.Invoke(null, new OnErrorEventArgs() { Exception = ex });
             }
         }
@@ -117,7 +117,7 @@ namespace DwFramework.Socket
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="args"></param>
-        private void OnCloseHandler(SocketConnection connection, OnCloceEventargs args)
+        private void OnCloseHandler(TcpConnection connection, OnCloceEventargs args)
         {
             if (_connections.ContainsKey(connection.ID)) _connections.Remove(connection.ID);
         }
@@ -127,7 +127,7 @@ namespace DwFramework.Socket
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public SocketConnection GetSocketConnection(string id)
+        public TcpConnection GetSocketConnection(string id)
         {
             if (!_connections.ContainsKey(id)) return null;
             return _connections[id];

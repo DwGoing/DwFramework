@@ -4,11 +4,11 @@ using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
 using DwFramework.Core.Plugins;
-using static DwFramework.Socket.SocketService;
+using static DwFramework.Socket.TcpService;
 
 namespace DwFramework.Socket
 {
-    public sealed class SocketConnection
+    public sealed class TcpConnection
     {
         public string ID { get; init; }
         public bool IsClose { get; private set; } = false;
@@ -16,17 +16,17 @@ namespace DwFramework.Socket
         private readonly System.Net.Sockets.Socket _socket;
         private readonly byte[] _buffer;
 
-        public Action<SocketConnection, OnCloceEventargs> OnClose { get; init; }
-        public Action<SocketConnection, OnSendEventargs> OnSend { get; init; }
-        public Action<SocketConnection, OnReceiveEventargs> OnReceive { get; init; }
-        public Action<SocketConnection, OnErrorEventArgs> OnError { get; init; }
+        public Action<TcpConnection, OnCloceEventargs> OnClose { get; init; }
+        public Action<TcpConnection, OnSendEventargs> OnSend { get; init; }
+        public Action<TcpConnection, OnReceiveEventargs> OnReceive { get; init; }
+        public Action<TcpConnection, OnErrorEventArgs> OnError { get; init; }
 
         /// <summary>
         /// 构造函数
         /// </summary>
         /// <param name="socket"></param>
         /// <param name="bufferSize"></param>
-        public SocketConnection(System.Net.Sockets.Socket socket, int bufferSize)
+        public TcpConnection(System.Net.Sockets.Socket socket, int bufferSize)
         {
             ID = MD5.Encode(Guid.NewGuid().ToString());
             _socket = socket;
@@ -52,8 +52,8 @@ namespace DwFramework.Socket
                     Array.Copy(_buffer, data, len);
                     OnReceive?.Invoke(this, new OnReceiveEventargs() { Data = data });
                 }
-                else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX)) throw new Exception("空数据");
-                else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) throw new Exception("空数据");
+                else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX)) throw new SocketException((int)SocketError.Disconnecting);
+                else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) throw new SocketException((int)SocketError.Disconnecting);
                 await BeginReceiveAsync();
             }
             catch (SocketException ex)

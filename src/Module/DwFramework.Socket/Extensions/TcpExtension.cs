@@ -6,7 +6,7 @@ using DwFramework.Core;
 
 namespace DwFramework.Socket
 {
-    public static class SocketExtension
+    public static class TcpExtension
     {
         /// <summary>
         /// 注册服务
@@ -14,10 +14,10 @@ namespace DwFramework.Socket
         /// <param name="host"></param>
         /// <param name="path"></param>
         /// <param name="key"></param>
-        public static void RegisterSocketService(this ServiceHost host, string path = null, string key = null)
+        public static void RegisterTcpService(this ServiceHost host, string path = null, string key = null)
         {
-            host.Register(_ => new SocketService(path, path)).SingleInstance();
-            host.OnInitializing += provider => provider.InitSocketServiceAsync().Wait();
+            host.Register(_ => new TcpService(path, key)).SingleInstance();
+            host.OnInitializing += provider => provider.InitTcpServiceAsync().Wait();
         }
 
         /// <summary>
@@ -25,9 +25,9 @@ namespace DwFramework.Socket
         /// </summary>
         /// <param name="provider"></param>
         /// <returns></returns>
-        public static SocketService GetSocketService(this IServiceProvider provider)
+        public static TcpService GetTcpService(this IServiceProvider provider)
         {
-            return provider.GetService<SocketService>();
+            return provider.GetService<TcpService>();
         }
 
         /// <summary>
@@ -35,9 +35,9 @@ namespace DwFramework.Socket
         /// </summary>
         /// <param name="provider"></param>
         /// <returns></returns>
-        public static Task InitSocketServiceAsync(this IServiceProvider provider)
+        public static Task InitTcpServiceAsync(this IServiceProvider provider)
         {
-            return provider.GetSocketService().OpenServiceAsync();
+            return provider.GetTcpService().OpenServiceAsync();
         }
 
         /// <summary>
