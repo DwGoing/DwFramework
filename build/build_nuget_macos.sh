@@ -16,7 +16,7 @@ configuration=Debug
 output=.
 mainVersion=""
 subVersion=""
-startYear=2020
+startYear=$(date +%Y)
 suffix=rc
 
 file=${@: -1}
