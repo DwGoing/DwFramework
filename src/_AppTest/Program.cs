@@ -4,13 +4,7 @@ using DwFramework.Core.Plugins;
 using DwFramework.Core.Extensions;
 
 using System.IO;
-using System.Net;
-using System.Net.Sockets;
-using Microsoft.Extensions.Hosting;
 using System.Threading.Tasks;
-using System.Threading;
-using Autofac;
-using DwFramework.RabbitMQ;
 
 namespace _AppTest
 {
@@ -24,7 +18,6 @@ namespace _AppTest
                 var s = new FileStream("Config.json", FileMode.Open, FileAccess.Read);
                 host.AddJsonConfig(s);
                 host.RegisterLog();
-                host.RegisterRabbitMQService("RabbitMQ");
                 host.OnInitialized += p =>
                 {
                     var env = p.GetService<DwFramework.Core.Environment>();

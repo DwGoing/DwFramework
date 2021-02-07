@@ -10,10 +10,10 @@ using Autofac.Core.Registration;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Configuration;
 
 using DwFramework.Core.Extensions;
 using DwFramework.Core.Plugins;
-using Microsoft.Extensions.Configuration;
 
 namespace DwFramework.Core
 {
