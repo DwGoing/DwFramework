@@ -2,7 +2,7 @@
 using DwFramework.Core;
 using DwFramework.Core.Plugins;
 using DwFramework.Core.Extensions;
-using DwFramework.WebSocket;
+using DwFramework.Socket;
 
 using System.Text;
 using System.Net;
@@ -16,32 +16,33 @@ namespace _AppTest
 {
     class Program
     {
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
             try
             {
                 var host = new ServiceHost(EnvironmentType.Develop, "Config.json");
                 host.RegisterLog();
-                host.RegisterWebSocketService("WebSocket");
+                host.RegisterTcpService("Tcp");
+                host.RegisterUdpService("Udp");
                 host.OnInitialized += p =>
                 {
-                    Task.Run(async () =>
+                    var s = p.GetUdpService();
+                    s.OnReceive += a =>
                     {
-                        await Task.Delay(5000);
-                        p.StopWebSocketService();
-                        Console.WriteLine(1);
-                        await Task.Delay(5000);
-                        _ = p.RunWebSocketServiceAsync("WebSocket1");
-                        Console.WriteLine(2);
-                    });
+                        var msg = Encoding.UTF8.GetString(a.Data);
+                        Console.WriteLine(msg);
+                        //var data = new { A = "a", B = 123 }.ToJson();
+                        //var msg = $"HTTP/1.1 200 OK\r\nContent-Type:application/json;charset=UTF-8\r\nContent-Length:{data.Length}\r\nConnection:close\r\n\r\n{data}";
+                        //_ = c.SendAsync(Encoding.UTF8.GetBytes(msg));
+                    };
                 };
-                host.Run();
+                await host.RunAsync();
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
+                Console.Read();
             }
-            Console.Read();
         }
     }
 }

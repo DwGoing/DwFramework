@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Reflection;
 using System.Threading;
+using System.Threading.Tasks;
 using Autofac;
 using Autofac.Builder;
 using Autofac.Core;
@@ -54,9 +55,10 @@ namespace DwFramework.Core
         }
 
         /// <summary>
-        /// 开启服务
+        /// 运行服务
         /// </summary>
-        public void Run()
+        /// <returns></returns>
+        public async Task RunAsync()
         {
             // 注册环境变量
             Environment.Build();
@@ -65,24 +67,25 @@ namespace DwFramework.Core
             _containerBuilder.Populate(_services);
             Provider = new AutofacServiceProvider(_containerBuilder.Build());
             _logger = Provider.GetLogger<ServiceHost>();
-            _logger?.LogInformationAsync("Service is initializing!");
+            await _logger?.LogInformationAsync("Service is initializing!");
             OnInitializing?.Invoke(Provider);
             OnInitialized?.Invoke(Provider);
-            _logger?.LogInformationAsync("Service is initialized!");
-            Console.CancelKeyPress += (sender, args) => Stop();
-            _logger?.LogInformationAsync("Service is running,Please enter \"Ctrl + C\" to stop!");
+            await _logger?.LogInformationAsync("Service is initialized!");
+            Console.CancelKeyPress += async (sender, args) => await StopAsync();
+            await _logger?.LogInformationAsync("Service is running,Please enter \"Ctrl + C\" to stop!");
             _autoResetEvent.WaitOne();
         }
 
         /// <summary>
         /// 停止服务
         /// </summary>
-        public void Stop()
+        /// <returns></returns>
+        public async Task StopAsync()
         {
-            _logger?.LogInformationAsync("Service is stopping!");
+            await _logger?.LogInformationAsync("Service is stopping!");
             OnStoping?.Invoke(Provider);
             OnStopped?.Invoke(Provider);
-            _logger?.LogInformationAsync("Service is stopped!");
+            await _logger?.LogInformationAsync("Service is stopped!");
             _autoResetEvent.Set();
         }
 

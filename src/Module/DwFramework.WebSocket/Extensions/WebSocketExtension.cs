@@ -16,7 +16,7 @@ namespace DwFramework.WebSocket
         public static void RegisterWebSocketService(this ServiceHost host, string path = null, string key = null)
         {
             host.RegisterType<WebSocketService>().SingleInstance();
-            host.OnInitializing += async provider => await provider.RunWebSocketServiceAsync(path, key);
+            host.OnInitialized += async provider => await provider.RunWebSocketServiceAsync(path, key);
         }
 
         /// <summary>

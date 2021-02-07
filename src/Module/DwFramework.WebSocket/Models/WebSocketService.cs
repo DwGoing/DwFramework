@@ -67,7 +67,7 @@ namespace DwFramework.WebSocket
         /// <param name="logger"></param>
         public WebSocketService(ILogger<WebSocketService> logger)
         {
-            _logger = ServiceHost.Provider.GetLogger<WebSocketService>();
+            _logger = logger;
         }
 
         /// <summary>
@@ -108,8 +108,8 @@ namespace DwFramework.WebSocket
                      {
                          if (_config.Listen == null || _config.Listen.Count <= 0) throw new Exception("缺少Listen配置");
                          var listen = "";
-                     // 监听地址及端口
-                     if (_config.Listen.ContainsKey("ws"))
+                         // 监听地址及端口
+                         if (_config.Listen.ContainsKey("ws"))
                          {
                              var ipAndPort = _config.Listen["ws"].Split(":");
                              var ip = string.IsNullOrEmpty(ipAndPort[0]) ? IPAddress.Any : IPAddress.Parse(ipAndPort[0]);
@@ -136,31 +136,31 @@ namespace DwFramework.WebSocket
                      .Configure(app =>
                      {
                          app.UseWebSockets();
-                     // 请求预处理
-                     app.Use(async (context, next) =>
-                          {
-                              if (!context.WebSockets.IsWebSocketRequest)
+                         // 请求预处理
+                         app.Use(async (context, next) =>
                               {
-                                  await context.Response.WriteAsync(ResultInfo.Create(ResultInfo.ERROR, message: "非WebSocket请求").ToJson());
-                                  return;
-                              }
-                              await next();
-                          });
-                     // 开始接受连接
-                     app.Run(async context =>
-                          {
-                              var webSocket = await context.WebSockets.AcceptWebSocketAsync();
-                              var connection = new WebSocketConnection(webSocket, _config.BufferSize, out var resetEvent)
+                                  if (!context.WebSockets.IsWebSocketRequest)
+                                  {
+                                      await context.Response.WriteAsync(ResultInfo.Create(ResultInfo.ERROR, message: "非WebSocket请求").ToJson());
+                                      return;
+                                  }
+                                  await next();
+                              });
+                         // 开始接受连接
+                         app.Run(async context =>
                               {
-                                  OnClose = OnClose,
-                                  OnSend = OnSend,
-                                  OnReceive = OnReceive,
-                                  OnError = OnError
-                              };
-                              _connections[connection.ID] = connection;
-                              OnConnect?.Invoke(connection, new OnConnectEventArgs() { Header = context.Request.Headers });
-                              resetEvent.WaitOne();
-                          });
+                                  var webSocket = await context.WebSockets.AcceptWebSocketAsync();
+                                  var connection = new WebSocketConnection(webSocket, _config.BufferSize, out var resetEvent)
+                                  {
+                                      OnClose = OnClose,
+                                      OnSend = OnSend,
+                                      OnReceive = OnReceive,
+                                      OnError = OnError
+                                  };
+                                  _connections[connection.ID] = connection;
+                                  OnConnect?.Invoke(connection, new OnConnectEventArgs() { Header = context.Request.Headers });
+                                  resetEvent.WaitOne();
+                              });
                      });
                  });
                 await builder.Build().RunAsync(_cancellationTokenSource.Token);
@@ -178,6 +178,7 @@ namespace DwFramework.WebSocket
         public void Stop()
         {
             _cancellationTokenSource.Cancel();
+            _connections.Clear();
         }
 
         /// <summary>

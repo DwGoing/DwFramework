@@ -9,7 +9,7 @@ using DwFramework.Core.Plugins;
 
 namespace DwFramework.Socket
 {
-    public sealed class UdpService
+    public sealed class UdpService : ConfigableService
     {
         public class Config
         {
@@ -36,8 +36,8 @@ namespace DwFramework.Socket
             public Exception Exception { get; init; }
         }
 
-        private readonly Config _config;
         private readonly ILogger<UdpService> _logger;
+        private Config _config;
         private System.Net.Sockets.Socket _server;
         private byte[] _buffer;
 
@@ -48,20 +48,36 @@ namespace DwFramework.Socket
         /// <summary>
         /// 构造函数
         /// </summary>
+        /// <param name="logger"></param>
+        public UdpService(ILogger<UdpService> logger)
+        {
+            _logger = logger;
+        }
+
+        /// <summary>
+        /// 读取配置
+        /// </summary>
         /// <param name="path"></param>
         /// <param name="key"></param>
-        public UdpService(string path = null, string key = null)
+        public void ReadConfig(string path = null, string key = null)
         {
-            _config = ServiceHost.Environment.GetConfiguration<Config>(path, key);
-            if (_config == null) throw new Exception("未读取到Udp配置");
-            _logger = ServiceHost.Provider.GetLogger<UdpService>();
+            try
+            {
+                _config = ReadConfig<Config>(path, key);
+                if (_config == null) throw new Exception("未读取到UDP配置");
+            }
+            catch (Exception ex)
+            {
+                _ = _logger.LogErrorAsync(ex.Message);
+                throw;
+            }
         }
 
         /// <summary>
         /// 开启服务
         /// </summary>
         /// <returns></returns>
-        public async Task OpenServiceAsync()
+        public async Task RunAsync()
         {
             if (_config.Listen == null) throw new Exception("缺少Listen配置");
             _server = new System.Net.Sockets.Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
@@ -70,6 +86,14 @@ namespace DwFramework.Socket
             _buffer = new byte[_config.BufferSize];
             _ = BeginReceiveAsync();
             await _logger?.LogInformationAsync($"Udp服务正在监听:{_config.Listen}");
+        }
+
+        /// <summary>
+        /// 停止服务
+        /// </summary>
+        public void Stop()
+        {
+            _server.Dispose();
         }
 
         /// <summary>

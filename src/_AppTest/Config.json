@@ -1,14 +1,8 @@
 ﻿{
-  "WebSocket": {
-    "ContentRoot": "",
-    "Listen": {
-      "ws": ":5020"
-    }
+  "Tcp": {
+    "Listen": ":5022"
   },
-  "WebSocket1": {
-    "ContentRoot": "",
-    "Listen": {
-      "ws": ":15020"
-    }
+  "Udp": {
+    "Listen": ":15022"
   }
 }

@@ -16,8 +16,8 @@ namespace DwFramework.Socket
         /// <param name="key"></param>
         public static void RegisterTcpService(this ServiceHost host, string path = null, string key = null)
         {
-            host.Register(_ => new TcpService(path, key)).SingleInstance();
-            host.OnInitializing += provider => provider.InitTcpServiceAsync().Wait();
+            host.RegisterType<TcpService>().SingleInstance();
+            host.OnInitialized += async provider => await provider.RunTcpServiceAsync(path, key);
         }
 
         /// <summary>
@@ -31,13 +31,28 @@ namespace DwFramework.Socket
         }
 
         /// <summary>
-        /// 初始化服务
+        /// 运行服务
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="provider"></param>
+        /// <param name="path"></param>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public static async Task RunTcpServiceAsync(this IServiceProvider provider, string path = null, string key = null)
+        {
+            var service = provider.GetTcpService();
+            service.ReadConfig(path, key);
+            await service.RunAsync();
+        }
+
+        /// <summary>
+        /// 停止服务
         /// </summary>
         /// <param name="provider"></param>
-        /// <returns></returns>
-        public static Task InitTcpServiceAsync(this IServiceProvider provider)
+        public static void StopTcpService(this IServiceProvider provider)
         {
-            return provider.GetTcpService().OpenServiceAsync();
+            var service = provider.GetTcpService();
+            service.Stop();
         }
 
         /// <summary>
@@ -64,8 +79,8 @@ namespace DwFramework.Socket
         /// <param name="key"></param>
         public static void RegisterUdpService(this ServiceHost host, string path = null, string key = null)
         {
-            host.Register(_ => new UdpService(path, key)).SingleInstance();
-            host.OnInitializing += provider => provider.InitUdpServiceAsync().Wait();
+            host.RegisterType<UdpService>().SingleInstance();
+            host.OnInitialized += async provider => await provider.RunUdpServiceAsync(path, key);
         }
 
         /// <summary>
@@ -79,13 +94,25 @@ namespace DwFramework.Socket
         }
 
         /// <summary>
-        /// 初始化服务
+        /// 运行服务
         /// </summary>
         /// <param name="provider"></param>
         /// <returns></returns>
-        public static Task InitUdpServiceAsync(this IServiceProvider provider)
+        public static async Task RunUdpServiceAsync(this IServiceProvider provider, string path = null, string key = null)
         {
-            return provider.GetUdpService().OpenServiceAsync();
+            var service = provider.GetUdpService();
+            service.ReadConfig(path, key);
+            await service.RunAsync();
+        }
+
+        /// <summary>
+        /// 停止服务
+        /// </summary>
+        /// <param name="provider"></param>
+        public static void StopUdpService(this IServiceProvider provider)
+        {
+            var service = provider.GetUdpService();
+            service.Stop();
         }
     }
 }

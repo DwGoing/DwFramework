@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Net;
 using System.Net.Sockets;
@@ -11,7 +12,7 @@ using DwFramework.Core.Extensions;
 
 namespace DwFramework.Socket
 {
-    public sealed class TcpService
+    public sealed class TcpService : ConfigableService
     {
         public class Config
         {
@@ -45,9 +46,9 @@ namespace DwFramework.Socket
             public Exception Exception { get; init; }
         }
 
-        private readonly Config _config;
         private readonly ILogger<TcpService> _logger;
-        private readonly Dictionary<string, TcpConnection> _connections;
+        private Config _config;
+        private readonly Dictionary<string, TcpConnection> _connections = new Dictionary<string, TcpConnection>();
         private System.Net.Sockets.Socket _server;
 
         public event Action<TcpConnection, OnConnectEventargs> OnConnect;
@@ -59,30 +60,62 @@ namespace DwFramework.Socket
         /// <summary>
         /// 构造函数
         /// </summary>
-        /// <param name="path"></param>
-        /// <param name="key"></param>
-        public TcpService(string path = null, string key = null)
+        /// <param name="logger"></param>
+        public TcpService(ILogger<TcpService> logger)
         {
-            _config = ServiceHost.Environment.GetConfiguration<Config>(path, key);
-            if (_config == null) throw new Exception("未读取到Tcp配置");
-            _logger = ServiceHost.Provider.GetLogger<TcpService>();
-            _connections = new Dictionary<string, TcpConnection>();
+            _logger = logger;
         }
 
         /// <summary>
-        /// 开启服务
+        /// 读取配置
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="key"></param>
+        public void ReadConfig(string path = null, string key = null)
+        {
+            try
+            {
+                _config = ReadConfig<Config>(path, key);
+                if (_config == null) throw new Exception("未读取到TCP配置");
+            }
+            catch (Exception ex)
+            {
+                _ = _logger.LogErrorAsync(ex.Message);
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// 运行服务
         /// </summary>
         /// <returns></returns>
-        public async Task OpenServiceAsync()
+        public async Task RunAsync()
         {
-            if (_config.Listen == null) throw new Exception("缺少Listen配置");
-            _server = new System.Net.Sockets.Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            var ipAndPort = _config.Listen.Split(":");
-            _server.Bind(new IPEndPoint(string.IsNullOrEmpty(ipAndPort[0]) ? IPAddress.Any : IPAddress.Parse(ipAndPort[0]), int.Parse(ipAndPort[1])));
-            _server.Listen(_config.BackLog);
-            OnClose += OnCloseHandler;
-            _ = BeginAcceptAsync();
-            await _logger?.LogInformationAsync($"Tcp服务正在监听:{_config.Listen}");
+            try
+            {
+                if (_config.Listen == null) throw new Exception("缺少Listen配置");
+                _server = new System.Net.Sockets.Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                var ipAndPort = _config.Listen.Split(":");
+                _server.Bind(new IPEndPoint(string.IsNullOrEmpty(ipAndPort[0]) ? IPAddress.Any : IPAddress.Parse(ipAndPort[0]), int.Parse(ipAndPort[1])));
+                _server.Listen(_config.BackLog);
+                OnClose += OnCloseHandler;
+                _ = _logger?.LogInformationAsync($"Tcp服务正在监听:{_config.Listen}");
+                await BeginAcceptAsync();
+            }
+            catch (Exception ex)
+            {
+                _ = _logger.LogErrorAsync(ex.Message);
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// 停止服务
+        /// </summary>
+        public void Stop()
+        {
+            _server.Dispose();
+            _connections.Clear();
         }
 
         /// <summary>
@@ -91,10 +124,11 @@ namespace DwFramework.Socket
         /// <returns></returns>
         private async Task BeginAcceptAsync()
         {
+            TcpConnection connection = null;
             try
             {
                 var socket = await _server.AcceptAsync();
-                var connection = new TcpConnection(socket, _config.BufferSize)
+                connection = new TcpConnection(socket, _config.BufferSize)
                 {
                     OnClose = OnClose,
                     OnSend = OnSend,
@@ -108,7 +142,7 @@ namespace DwFramework.Socket
             catch (Exception ex)
             {
                 await _logger?.LogErrorAsync($"Tcp服务异常:{ex.Message}");
-                OnError?.Invoke(null, new OnErrorEventArgs() { Exception = ex });
+                OnError?.Invoke(connection, new OnErrorEventArgs() { Exception = ex });
             }
         }
 
