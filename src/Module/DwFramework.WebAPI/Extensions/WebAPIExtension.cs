@@ -35,6 +35,9 @@ namespace DwFramework.WebAPI
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="provider"></param>
+        /// <param name="path"></param>
+        /// <param name="key"></param>
+        /// <returns></returns>
         public static async Task RunWebAPIServiceAsync<T>(this IServiceProvider provider, string path = null, string key = null) where T : class
         {
             var service = provider.GetWebAPIService();

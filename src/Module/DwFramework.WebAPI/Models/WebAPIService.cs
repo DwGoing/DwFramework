@@ -61,6 +61,7 @@ namespace DwFramework.WebAPI
         {
             try
             {
+                _cancellationTokenSource?.Dispose();
                 _cancellationTokenSource = new CancellationTokenSource();
                 var builder = Host.CreateDefaultBuilder()
                     .ConfigureWebHostDefaults(builder =>

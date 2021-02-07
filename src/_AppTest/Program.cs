@@ -2,7 +2,7 @@
 using DwFramework.Core;
 using DwFramework.Core.Plugins;
 using DwFramework.Core.Extensions;
-using DwFramework.WebAPI;
+using DwFramework.WebSocket;
 
 using System.Text;
 using System.Net;
@@ -22,16 +22,16 @@ namespace _AppTest
             {
                 var host = new ServiceHost(EnvironmentType.Develop, "Config.json");
                 host.RegisterLog();
-                host.RegisterWebAPIService<Startup>("WebAPI");
+                host.RegisterWebSocketService("WebSocket");
                 host.OnInitialized += p =>
                 {
                     Task.Run(async () =>
                     {
                         await Task.Delay(5000);
-                        p.StopWebAPIService();
+                        p.StopWebSocketService();
                         Console.WriteLine(1);
-                        await Task.Delay(10000);
-                        _ = p.RunWebAPIServiceAsync<Startup>("WebAPI1");
+                        await Task.Delay(5000);
+                        _ = p.RunWebSocketServiceAsync("WebSocket1");
                         Console.WriteLine(2);
                     });
                 };

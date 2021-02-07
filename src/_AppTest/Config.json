@@ -1,14 +1,14 @@
 ﻿{
-  "WebAPI": {
+  "WebSocket": {
     "ContentRoot": "",
     "Listen": {
-      "http": ":5020"
+      "ws": ":5020"
     }
   },
-  "WebAPI1": {
+  "WebSocket1": {
     "ContentRoot": "",
     "Listen": {
-      "http": ":15020"
+      "ws": ":15020"
     }
   }
 }
