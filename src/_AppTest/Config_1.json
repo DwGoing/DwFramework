@@ -1,0 +1,8 @@
+﻿{
+  "Rpc": {
+    "ContentRoot": "",
+    "Listen": {
+      "http": "localhost:5000"
+    }
+  }
+}

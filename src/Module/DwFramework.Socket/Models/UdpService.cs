@@ -68,7 +68,7 @@ namespace DwFramework.Socket
             }
             catch (Exception ex)
             {
-                _ = _logger.LogErrorAsync(ex.Message);
+                _ = _logger?.LogErrorAsync(ex.Message);
                 throw;
             }
         }

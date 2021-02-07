@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
@@ -12,6 +13,7 @@ using Microsoft.Extensions.Logging;
 
 using DwFramework.Core.Extensions;
 using DwFramework.Core.Plugins;
+using Microsoft.Extensions.Configuration;
 
 namespace DwFramework.Core
 {
@@ -33,14 +35,36 @@ namespace DwFramework.Core
         /// 构造函数
         /// </summary>
         /// <param name="environmentType"></param>
-        /// <param name="configFilePath"></param>
-        public ServiceHost(EnvironmentType environmentType = EnvironmentType.Develop, string configFilePath = null)
+        public ServiceHost(EnvironmentType environmentType)
         {
             _autoResetEvent = new AutoResetEvent(false);
             _containerBuilder = new ContainerBuilder();
             _services = new ServiceCollection();
             // 环境变量
-            Environment = new Environment(environmentType, configFilePath);
+            Environment = new Environment(environmentType);
+        }
+
+        /// <summary>
+        /// 构造函数
+        /// </summary>
+        /// <param name="environment"></param>
+        public ServiceHost(Environment environment = null)
+        {
+            _autoResetEvent = new AutoResetEvent(false);
+            _containerBuilder = new ContainerBuilder();
+            _services = new ServiceCollection();
+            // 环境变量
+            Environment = environment ?? new Environment();
+        }
+
+        /// <summary>
+        /// 添加配置
+        /// </summary>
+        /// <param name="configHandler"></param>
+        /// <param name="key"></param>
+        public void AddConfig(Action<IConfigurationBuilder> configHandler, string key = null)
+        {
+            Environment.AddConfig(configHandler, key);
         }
 
         /// <summary>
@@ -48,10 +72,19 @@ namespace DwFramework.Core
         /// </summary>
         /// <param name="filePath"></param>
         /// <param name="key"></param>
-        /// <param name="onChange"></param>
-        public void AddJsonConfig(string filePath, string key = null, Action onChange = null)
+        public void AddJsonConfig(string filePath, string key = null)
         {
-            Environment?.AddJsonConfig(filePath, key, onChange);
+            Environment.AddJsonConfig(filePath, key);
+        }
+
+        /// <summary>
+        /// 添加配置
+        /// </summary>
+        /// <param name="stream"></param>
+        /// <param name="key"></param>
+        public void AddJsonConfig(Stream stream, string key = null)
+        {
+            Environment.AddJsonConfig(stream, key);
         }
 
         /// <summary>

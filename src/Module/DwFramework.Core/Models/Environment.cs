@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Collections.Generic;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Primitives;
@@ -12,14 +13,13 @@ namespace DwFramework.Core
         private readonly Dictionary<string, ConfigurationBuilder> _configurationBuilders;
         private readonly Dictionary<string, IConfiguration> _configurations;
 
-        public EnvironmentType EnvironmentType { get; }
+        public EnvironmentType EnvironmentType { get; init; }
 
         /// <summary>
         /// 构造函数
         /// </summary>
         /// <param name="environmentType"></param>
-        /// <param name="configFilePath"></param>
-        public Environment(EnvironmentType environmentType = EnvironmentType.Develop, string configFilePath = null)
+        public Environment(EnvironmentType environmentType = EnvironmentType.Develop)
         {
             EnvironmentType = environmentType;
             _configurationBuilders = new Dictionary<string, ConfigurationBuilder>
@@ -27,7 +27,18 @@ namespace DwFramework.Core
                 ["Global"] = new ConfigurationBuilder()
             };
             _configurations = new Dictionary<string, IConfiguration>();
-            if (configFilePath != null) AddJsonConfig(configFilePath);
+        }
+
+        /// <summary>
+        /// 添加配置
+        /// </summary>
+        /// <param name="configHandler"></param>
+        /// <param name="key"></param>
+        public void AddConfig(Action<IConfigurationBuilder> configHandler, string key = null)
+        {
+            key ??= "Global";
+            if (!_configurationBuilders.ContainsKey(key)) _configurationBuilders[key] = new ConfigurationBuilder();
+            configHandler?.Invoke(_configurationBuilders[key]);
         }
 
         /// <summary>
@@ -35,14 +46,19 @@ namespace DwFramework.Core
         /// </summary>
         /// <param name="configFilePath"></param>
         /// <param name="key"></param>
-        /// <param name="onChange"></param>
-        public void AddJsonConfig(string configFilePath, string key = null, Action onChange = null)
+        public void AddJsonConfig(string configFilePath, string key = null)
         {
-            key ??= "Global";
-            if (!_configurationBuilders.ContainsKey(key)) _configurationBuilders[key] = new ConfigurationBuilder();
-            var builder = _configurationBuilders[key];
-            builder.AddJsonFile(configFilePath);
-            if (onChange != null) ChangeToken.OnChange(() => builder.GetFileProvider().Watch(configFilePath), () => onChange());
+            AddConfig(builder => builder.AddJsonFile(configFilePath), key);
+        }
+
+        /// <summary>
+        /// 添加配置
+        /// </summary>
+        /// <param name="configStream"></param>
+        /// <param name="key"></param>
+        public void AddJsonConfig(Stream configStream, string key = null)
+        {
+            AddConfig(builder => builder.AddJsonStream(configStream), key);
         }
 
         /// <summary>
@@ -50,7 +66,9 @@ namespace DwFramework.Core
         /// </summary>
         public void Build()
         {
+            _configurations.Clear();
             _configurationBuilders.ForEach(item => _configurations[item.Key] = item.Value.Build());
+            _configurationBuilders.Clear();
         }
 
         /// <summary>

@@ -68,7 +68,7 @@ namespace DwFramework.ORM
             }
             catch (Exception ex)
             {
-                _ = _logger.LogErrorAsync(ex.Message);
+                _ = _logger?.LogErrorAsync(ex.Message);
                 throw;
             }
         }
@@ -128,7 +128,7 @@ namespace DwFramework.ORM
             }
             catch (Exception ex)
             {
-                _ = _logger.LogErrorAsync(ex.Message);
+                _ = _logger?.LogErrorAsync(ex.Message);
                 throw;
             }
         }
