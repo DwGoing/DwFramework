@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace DwFramework.Core
+﻿namespace DwFramework.Core
 {
     public abstract class ConfigableService
     {

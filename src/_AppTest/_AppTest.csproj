@@ -14,7 +14,7 @@
     </PropertyGroup>
     <ItemGroup>
         <ProjectReference Include="..\Module\DwFramework.Core\DwFramework.Core.csproj" />
-        <ProjectReference Include="..\Module\DwFramework.RPC\DwFramework.RPC.csproj" />
+        <ProjectReference Include="..\Module\DwFramework.RabbitMQ\DwFramework.RabbitMQ.csproj" />
     </ItemGroup>
     <ItemGroup>
         <None Update="NLog.config">

@@ -16,8 +16,8 @@ namespace DwFramework.WebAPI
     {
         public sealed class Config
         {
-            public string ContentRoot { get; set; }
-            public Dictionary<string, string> Listen { get; set; }
+            public string ContentRoot { get; init; }
+            public Dictionary<string, string> Listen { get; init; }
         }
 
         private readonly ILogger<WebAPIService> _logger;

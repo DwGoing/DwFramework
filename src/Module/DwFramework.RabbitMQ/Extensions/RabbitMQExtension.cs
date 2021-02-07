@@ -14,7 +14,8 @@ namespace DwFramework.RabbitMQ
         /// <param name="key"></param>
         public static void RegisterRabbitMQService(this ServiceHost host, string path = null, string key = null)
         {
-            host.Register(_ => new RabbitMQService(path, key)).SingleInstance();
+            host.RegisterType<RabbitMQService>().SingleInstance();
+            host.OnInitialized += provider => provider.ReconfigRabbitMQService(path, key);
         }
 
         /// <summary>
@@ -25,6 +26,18 @@ namespace DwFramework.RabbitMQ
         public static RabbitMQService GetRabbitMQService(this IServiceProvider provider)
         {
             return provider.GetService<RabbitMQService>();
+        }
+
+        /// <summary>
+        /// 重新加载配置
+        /// </summary>
+        /// <param name="provider"></param>
+        /// <param name="path"></param>
+        /// <param name="key"></param>
+        public static void ReconfigRabbitMQService(this IServiceProvider provider, string path = null, string key = null)
+        {
+            var service = provider.GetRabbitMQService();
+            service.ReadConfig(path, key);
         }
     }
 }

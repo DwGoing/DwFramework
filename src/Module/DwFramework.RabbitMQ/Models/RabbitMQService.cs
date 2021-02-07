@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
+using Microsoft.Extensions.Logging;
 
 using DwFramework.Core;
 using DwFramework.Core.Plugins;
@@ -19,43 +20,63 @@ namespace DwFramework.RabbitMQ
         public const string Topic = "topic";
     }
 
-    public sealed class Config
+    public sealed class RabbitMQService : ConfigableService
     {
-        public string Host { get; init; } = "localhost";
-        public int Port { get; init; } = 5672;
-        public string UserName { get; init; }
-        public string Password { get; init; }
-        public string VirtualHost { get; init; } = "/";
-    }
+        public sealed class Config
+        {
+            public string Host { get; init; } = "localhost";
+            public int Port { get; init; } = 5672;
+            public string UserName { get; init; }
+            public string Password { get; init; }
+            public string VirtualHost { get; init; } = "/";
+        }
 
-    public sealed class RabbitMQService
-    {
-        private readonly Config _config;
-        private readonly ConnectionFactory _connectionFactory;
+        private readonly ILogger<RabbitMQService> _logger;
+        private Config _config;
+        private ConnectionFactory _connectionFactory;
         private IConnection _publishConnection;
         private IConnection _subscribeConnection;
-        private readonly Dictionary<string, EventingBasicConsumer[]> _subscribers;
+        private readonly Dictionary<string, EventingBasicConsumer[]> _subscribers = new Dictionary<string, EventingBasicConsumer[]>();
 
         /// <summary>
         /// 构造函数
         /// </summary>
-        /// <param name="configKey"></param>
-        /// <param name="configPath"></param>
-        public RabbitMQService(string path = null, string key = null)
+        /// <param name="logger"></param>
+        public RabbitMQService(ILogger<RabbitMQService> logger)
         {
-            _config = ServiceHost.Environment.GetConfiguration<Config>(path, key);
-            if (_config == null) throw new Exception("未读取到RabbitMQ配置");
-            _connectionFactory = new ConnectionFactory()
+            _logger = logger;
+        }
+
+        /// <summary>
+        /// 读取配置
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="key"></param>
+        public void ReadConfig(string path = null, string key = null)
+        {
+            try
             {
-                HostName = _config.Host,
-                Port = _config.Port,
-                UserName = _config.UserName,
-                Password = _config.Password,
-                VirtualHost = _config.VirtualHost
-            };
-            _publishConnection = _connectionFactory.CreateConnection();
-            _subscribeConnection = _connectionFactory.CreateConnection();
-            _subscribers = new Dictionary<string, EventingBasicConsumer[]>();
+                _config = ReadConfig<Config>(path, key);
+                if (_config == null) throw new Exception("未读取到RabbitMQ配置");
+                _connectionFactory = new ConnectionFactory()
+                {
+                    HostName = _config.Host,
+                    Port = _config.Port,
+                    UserName = _config.UserName,
+                    Password = _config.Password,
+                    VirtualHost = _config.VirtualHost
+                };
+                _publishConnection?.Dispose();
+                _publishConnection = _connectionFactory.CreateConnection();
+                _subscribeConnection?.Dispose();
+                _subscribeConnection = _connectionFactory.CreateConnection();
+                _subscribers.Clear();
+            }
+            catch (Exception ex)
+            {
+                _ = _logger.LogErrorAsync(ex.Message);
+                throw;
+            }
         }
 
         /// <summary>

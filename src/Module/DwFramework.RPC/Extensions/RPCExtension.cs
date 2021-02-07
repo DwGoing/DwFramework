@@ -47,11 +47,11 @@ namespace DwFramework.RPC
         /// <param name="path"></param>
         /// <param name="key"></param>
         /// <returns></returns>
-        public static Task RunRPCServiceAsync(this IServiceProvider provider, string path = null, string key = null)
+        public static async Task RunRPCServiceAsync(this IServiceProvider provider, string path = null, string key = null)
         {
             var service = provider.GetRPCService();
             service.ReadConfig(path, key);
-            return service.RunAsync();
+            await service.RunAsync();
         }
 
         /// <summary>
