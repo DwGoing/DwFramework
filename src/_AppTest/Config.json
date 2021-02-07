@@ -1,12 +1,14 @@
 ﻿{
-  "Socket": {
-    "Tcp": {
-      "Listen": "0.0.0.0:10100",
-      "BufferSize": 100
-    },
-    "Udp": {
-      "Listen": "0.0.0.0:10200",
-      "BufferSize": 100
+  "WebAPI": {
+    "ContentRoot": "",
+    "Listen": {
+      "http": ":5020"
+    }
+  },
+  "WebAPI1": {
+    "ContentRoot": "",
+    "Listen": {
+      "http": ":15020"
     }
   }
 }

@@ -28,13 +28,7 @@ namespace DwFramework.WebAPI
         {
             // 请求ID
             Trace.CorrelationManager.ActivityId = Guid.NewGuid();
-            // POST操作
-            if (context.Request.Method == HttpMethods.Post)
-            {
-                context.Request.EnableBuffering();
-                await new StreamReader(context.Request.Body).ReadToEndAsync();
-                context.Request.Body.Seek(0, SeekOrigin.Begin);
-            }
+            Console.WriteLine(1);
             await _next(context);
         }
     }

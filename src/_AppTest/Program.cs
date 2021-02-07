@@ -2,11 +2,15 @@
 using DwFramework.Core;
 using DwFramework.Core.Plugins;
 using DwFramework.Core.Extensions;
-using DwFramework.Socket;
+using DwFramework.WebAPI;
 
 using System.Text;
 using System.Net;
 using System.Net.Sockets;
+using Microsoft.Extensions.Hosting;
+using System.Threading.Tasks;
+using System.Threading;
+using Autofac;
 
 namespace _AppTest
 {
@@ -18,36 +22,18 @@ namespace _AppTest
             {
                 var host = new ServiceHost(EnvironmentType.Develop, "Config.json");
                 host.RegisterLog();
-                host.RegisterUdpService("Socket:Udp");
-                host.OnInitializing += p =>
-                {
-                    var service = p.GetUdpService();
-                    service.OnSend += a =>
-                    {
-                        Console.WriteLine($"发送消息:{Encoding.UTF8.GetString(a.Data)}");
-                    };
-                    service.OnReceive += a =>
-                   {
-                       var s = Encoding.UTF8.GetString(a.Data);
-                       Console.WriteLine($"收{a.Remote}到消息：{s}");
-                       _ = service.SendAsync(a.Remote, a.Data);
-                   };
-                    service.OnError += a =>
-                    {
-                        Console.WriteLine($"Erro:{a.Exception.Message}");
-                    };
-                };
+                host.RegisterWebAPIService<Startup>("WebAPI");
                 host.OnInitialized += p =>
                 {
-                    var c = new UdpClient(9999);
-                    TaskManager.CreateTask(async () =>
+                    Task.Run(async () =>
                     {
-                        var data = new byte[1024];
-                        var a = await c.ReceiveAsync();
-                        Console.WriteLine(Encoding.UTF8.GetString(a.Buffer));
+                        await Task.Delay(5000);
+                        p.StopWebAPIService();
+                        Console.WriteLine(1);
+                        await Task.Delay(10000);
+                        _ = p.RunWebAPIServiceAsync<Startup>("WebAPI1");
+                        Console.WriteLine(2);
                     });
-                    var data = Encoding.UTF8.GetBytes("Hello World!");
-                    c.SendAsync(data, data.Length, new IPEndPoint(IPAddress.Parse("127.0.0.1"), 10200));
                 };
                 host.Run();
             }

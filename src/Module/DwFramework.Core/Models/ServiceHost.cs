@@ -65,10 +65,12 @@ namespace DwFramework.Core
             _containerBuilder.Populate(_services);
             Provider = new AutofacServiceProvider(_containerBuilder.Build());
             _logger = Provider.GetLogger<ServiceHost>();
+            _logger?.LogInformationAsync("Service is initializing!");
             OnInitializing?.Invoke(Provider);
-            _logger?.LogInformationAsync("Service is running,Please enter \"Ctrl + C\" to stop!");
             OnInitialized?.Invoke(Provider);
+            _logger?.LogInformationAsync("Service is initialized!");
             Console.CancelKeyPress += (sender, args) => Stop();
+            _logger?.LogInformationAsync("Service is running,Please enter \"Ctrl + C\" to stop!");
             _autoResetEvent.WaitOne();
         }
 
@@ -77,10 +79,10 @@ namespace DwFramework.Core
         /// </summary>
         public void Stop()
         {
-            _logger?.LogInformationAsync("Service is Stopping!");
+            _logger?.LogInformationAsync("Service is stopping!");
             OnStoping?.Invoke(Provider);
-            _logger?.LogInformationAsync("Service is stopped!");
             OnStopped?.Invoke(Provider);
+            _logger?.LogInformationAsync("Service is stopped!");
             _autoResetEvent.Set();
         }
 
