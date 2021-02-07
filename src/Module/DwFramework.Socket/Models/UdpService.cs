@@ -11,7 +11,7 @@ namespace DwFramework.Socket
 {
     public sealed class UdpService : ConfigableService
     {
-        public class Config
+        public sealed class Config
         {
             public string Listen { get; init; }
             public string Limit { get; init; }

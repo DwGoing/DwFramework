@@ -14,7 +14,7 @@ namespace DwFramework.Socket
 {
     public sealed class TcpService : ConfigableService
     {
-        public class Config
+        public sealed class Config
         {
             public string Listen { get; init; }
             public int BackLog { get; init; } = 100;

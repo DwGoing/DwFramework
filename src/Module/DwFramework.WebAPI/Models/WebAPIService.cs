@@ -14,7 +14,7 @@ namespace DwFramework.WebAPI
 {
     public sealed class WebAPIService : ConfigableService
     {
-        public class Config
+        public sealed class Config
         {
             public string ContentRoot { get; set; }
             public Dictionary<string, string> Listen { get; set; }

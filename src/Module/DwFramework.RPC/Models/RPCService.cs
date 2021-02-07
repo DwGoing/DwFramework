@@ -12,17 +12,26 @@ using DwFramework.Core.Plugins;
 
 namespace DwFramework.RPC
 {
-    public sealed class Config
+    public sealed class RPCService : ConfigableService
     {
-        public string ContentRoot { get; init; }
-        public Dictionary<string, string> Listen { get; init; }
-    }
+        public sealed class Config
+        {
+            public string ContentRoot { get; init; }
+            public Dictionary<string, string> Listen { get; init; }
+        }
 
-    public sealed class RPCService
-    {
-        private readonly Config _config;
         private readonly ILogger<RPCService> _logger;
+        private Config _config;
         private readonly Server _server;
+
+        /// <summary>
+        /// 构造函数
+        /// </summary>
+        /// <param name="logger"></param>
+        public RPCService(ILogger<RPCService> logger)
+        {
+            _logger = logger;
+        }
 
         /// <summary>
         /// 构造函数

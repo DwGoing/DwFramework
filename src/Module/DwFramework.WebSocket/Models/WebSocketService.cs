@@ -18,7 +18,7 @@ namespace DwFramework.WebSocket
 {
     public sealed class WebSocketService : ConfigableService
     {
-        public class Config
+        public sealed class Config
         {
             public string ContentRoot { get; init; }
             public Dictionary<string, string> Listen { get; init; }
