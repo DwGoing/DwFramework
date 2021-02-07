@@ -14,7 +14,8 @@ namespace DwFramework.ORM
         /// <param name="key"></param>
         public static void RegisterORMService(this ServiceHost host, string path = null, string key = null)
         {
-            host.Register(_ => new ORMService(path, key)).SingleInstance();
+            host.RegisterType<ORMService>().SingleInstance();
+            host.OnInitialized += provider => provider.ReconfigORMService(path, key);
         }
 
         /// <summary>
@@ -25,6 +26,18 @@ namespace DwFramework.ORM
         public static ORMService GetORMService(this IServiceProvider provider)
         {
             return provider.GetService<ORMService>();
+        }
+
+        /// <summary>
+        /// 重新加载配置
+        /// </summary>
+        /// <param name="provider"></param>
+        /// <param name="path"></param>
+        /// <param name="key"></param>
+        public static void ReconfigORMService(this IServiceProvider provider, string path = null, string key = null)
+        {
+            var service = provider.GetORMService();
+            service.ReadConfig(path, key);
         }
     }
 }

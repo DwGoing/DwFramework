@@ -3,55 +3,74 @@ using System.Reflection;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using SqlSugar;
+using Microsoft.Extensions.Logging;
 
 using DwFramework.Core;
 using DwFramework.Core.Plugins;
 
 namespace DwFramework.ORM
 {
-    public sealed class Config
+    public sealed class ORMService : ConfigableService
     {
-        public Dictionary<string, DbConnectionConfig> ConnectionConfigs { get; init; }
-    }
-
-    public sealed class DbConnectionConfig
-    {
-        public string ConnectionString { get; init; }
-        public string DbType { get; init; }
-        public SlaveDbConnectionConfig[] SlaveConnections { get; init; }
-        public bool UseMemoryCache { get; init; } = false;
-
-        public DbType ParseDbType()
+        public sealed class Config
         {
-            if (string.IsNullOrEmpty(DbType)) throw new Exception("缺少DbType配置");
-            foreach (var item in Enum.GetValues(typeof(DbType)))
-            {
-                if (string.Compare(item.ToString().ToLower(), DbType.ToLower(), true) == 0)
-                    return (DbType)item;
-            }
-            throw new Exception("无法找到匹配的DbType");
+            public Dictionary<string, DbConnectionConfig> ConnectionConfigs { get; init; }
         }
-    }
 
-    public sealed class SlaveDbConnectionConfig
-    {
-        public string ConnectionString { get; init; }
-        public int HitRate { get; init; }
-    }
+        public sealed class DbConnectionConfig
+        {
+            public string ConnectionString { get; init; }
+            public string DbType { get; init; }
+            public SlaveDbConnectionConfig[] SlaveConnections { get; init; }
+            public bool UseMemoryCache { get; init; } = false;
 
-    public sealed class ORMService
-    {
-        private readonly Config _config;
+            public DbType ParseDbType()
+            {
+                if (string.IsNullOrEmpty(DbType)) throw new Exception("缺少DbType配置");
+                foreach (var item in Enum.GetValues(typeof(DbType)))
+                {
+                    if (string.Compare(item.ToString().ToLower(), DbType.ToLower(), true) == 0)
+                        return (DbType)item;
+                }
+                throw new Exception("无法找到匹配的DbType");
+            }
+        }
+
+        public sealed class SlaveDbConnectionConfig
+        {
+            public string ConnectionString { get; init; }
+            public int HitRate { get; init; }
+        }
+
+        private readonly ILogger<ORMService> _logger;
+        private Config _config;
 
         /// <summary>
         /// 构造函数
         /// </summary>
+        /// <param name="logger"></param>
+        public ORMService(ILogger<ORMService> logger)
+        {
+            _logger = logger;
+        }
+
+        /// <summary>
+        /// 读取配置
+        /// </summary>
         /// <param name="path"></param>
         /// <param name="key"></param>
-        public ORMService(string path = null, string key = null)
+        public void ReadConfig(string path = null, string key = null)
         {
-            _config = ServiceHost.Environment.GetConfiguration<Config>(path, key);
-            if (_config == null) throw new Exception("未读取到ORM配置");
+            try
+            {
+                _config = ReadConfig<Config>(path, key);
+                if (_config == null) throw new Exception("未读取到ORM配置");
+            }
+            catch (Exception ex)
+            {
+                _ = _logger.LogErrorAsync(ex.Message);
+                throw;
+            }
         }
 
         /// <summary>
@@ -75,35 +94,43 @@ namespace DwFramework.ORM
         /// <returns></returns>
         public SqlSugarClient CreateConnection(string connName, InitKeyType initKeyType = InitKeyType.Attribute, Action<Type, EntityInfo> entityNameService = null, Action<PropertyInfo, EntityColumnInfo> entityService = null)
         {
-            if (!_config.ConnectionConfigs.ContainsKey(connName)) return null;
-            var connConfig = _config.ConnectionConfigs[connName];
-            var config = new ConnectionConfig()
+            try
             {
-                ConnectionString = connConfig.ConnectionString,//必填, 数据库连接字符串
-                DbType = connConfig.ParseDbType(),         //必填, 数据库类型
-                IsAutoCloseConnection = true,       //默认false, 自动关闭数据库连接, 设置为true无需使用using或者Close操作
-                InitKeyType = initKeyType,    //默认SystemTable, 字段信息读取, 如：该属性是不是主键，是不是标识列等等信息
-                ConfigureExternalServices = new ConfigureExternalServices() // 配置扩展服务
-            };
-            if (connConfig.UseMemoryCache) config.ConfigureExternalServices.DataInfoCacheService = new DataMemoryCache(); // Memory缓存
-            // 主从模式
-            if (connConfig.SlaveConnections != null && connConfig.SlaveConnections.Length > 0)
-            {
-                config.SlaveConnectionConfigs = new List<SlaveConnectionConfig>();
-                foreach (var item in connConfig.SlaveConnections)
+                if (!_config.ConnectionConfigs.ContainsKey(connName)) return null;
+                var connConfig = _config.ConnectionConfigs[connName];
+                var config = new ConnectionConfig()
                 {
-                    config.SlaveConnectionConfigs.Add(new SlaveConnectionConfig()
+                    ConnectionString = connConfig.ConnectionString,//必填, 数据库连接字符串
+                    DbType = connConfig.ParseDbType(),         //必填, 数据库类型
+                    IsAutoCloseConnection = true,       //默认false, 自动关闭数据库连接, 设置为true无需使用using或者Close操作
+                    InitKeyType = initKeyType,    //默认SystemTable, 字段信息读取, 如：该属性是不是主键，是不是标识列等等信息
+                    ConfigureExternalServices = new ConfigureExternalServices() // 配置扩展服务
+                };
+                if (connConfig.UseMemoryCache) config.ConfigureExternalServices.DataInfoCacheService = new DataMemoryCache(); // Memory缓存
+                                                                                                                              // 主从模式
+                if (connConfig.SlaveConnections != null && connConfig.SlaveConnections.Length > 0)
+                {
+                    config.SlaveConnectionConfigs = new List<SlaveConnectionConfig>();
+                    foreach (var item in connConfig.SlaveConnections)
                     {
-                        ConnectionString = item.ConnectionString,
-                        HitRate = item.HitRate
-                    });
+                        config.SlaveConnectionConfigs.Add(new SlaveConnectionConfig()
+                        {
+                            ConnectionString = item.ConnectionString,
+                            HitRate = item.HitRate
+                        });
+                    }
                 }
+                if (entityNameService != null) config.ConfigureExternalServices.EntityNameService = entityNameService;
+                if (entityService != null) config.ConfigureExternalServices.EntityService = entityService;
+                var db = new SqlSugarClient(config);
+                if (db == null) throw new Exception("数据库连接创建异常");
+                return db;
             }
-            if (entityNameService != null) config.ConfigureExternalServices.EntityNameService = entityNameService;
-            if (entityService != null) config.ConfigureExternalServices.EntityService = entityService;
-            var db = new SqlSugarClient(config);
-            if (db == null) throw new Exception("数据库连接创建异常");
-            return db;
+            catch (Exception ex)
+            {
+                _ = _logger.LogErrorAsync(ex.Message);
+                throw;
+            }
         }
 
         /// <summary>
