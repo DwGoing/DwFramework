@@ -1,8 +1,14 @@
 ﻿{
-  "Tcp": {
-    "Listen": ":5022"
+  "Rpc": {
+    "ContentRoot": "",
+    "Listen": {
+      "http": ":5000"
+    }
   },
-  "Udp": {
-    "Listen": ":15022"
+  "Rpc1": {
+    "ContentRoot": "",
+    "Listen": {
+      "http": ":15000"
+    }
   }
 }

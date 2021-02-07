@@ -17,7 +17,7 @@ namespace DwFramework.RPC
         /// <param name="services"></param>
         public static void RegisterRPCService(this ServiceHost host, string path = null, string key = null, params Type[] services)
         {
-            host.Register(_ => new RPCService(path, key)).SingleInstance();
+            host.RegisterType<RPCService>().SingleInstance();
             services.ForEach(item =>
             {
                 host.OnInitializing += provider =>
@@ -27,7 +27,7 @@ namespace DwFramework.RPC
                     provider.GetRPCService().AddService(service);
                 };
             });
-            host.OnInitializing += provider => provider.InitRPCServiceAsync().Wait();
+            host.OnInitialized += async provider => await provider.RunRPCServiceAsync(path, key);
         }
 
         /// <summary>
@@ -41,13 +41,27 @@ namespace DwFramework.RPC
         }
 
         /// <summary>
-        /// 初始化服务
+        /// 运行服务
         /// </summary>
         /// <param name="provider"></param>
+        /// <param name="path"></param>
+        /// <param name="key"></param>
         /// <returns></returns>
-        public static Task InitRPCServiceAsync(this IServiceProvider provider)
+        public static Task RunRPCServiceAsync(this IServiceProvider provider, string path = null, string key = null)
         {
-            return provider.GetRPCService().OpenServiceAsync();
+            var service = provider.GetRPCService();
+            service.ReadConfig(path, key);
+            return service.RunAsync();
+        }
+
+        /// <summary>
+        /// 停止服务
+        /// </summary>
+        /// <param name="provider"></param>
+        public static async Task StopRpcServiceAsync(this IServiceProvider provider)
+        {
+            var service = provider.GetRPCService();
+            await service.StopAsync();
         }
     }
 }

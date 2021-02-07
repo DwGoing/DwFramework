@@ -2,7 +2,7 @@
 using DwFramework.Core;
 using DwFramework.Core.Plugins;
 using DwFramework.Core.Extensions;
-using DwFramework.Socket;
+using DwFramework.RPC;
 
 using System.Text;
 using System.Net;
@@ -22,20 +22,15 @@ namespace _AppTest
             {
                 var host = new ServiceHost(EnvironmentType.Develop, "Config.json");
                 host.RegisterLog();
-                host.RegisterTcpService("Tcp");
-                host.RegisterUdpService("Udp");
-                host.OnInitialized += p =>
-                {
-                    var s = p.GetUdpService();
-                    s.OnReceive += a =>
-                    {
-                        var msg = Encoding.UTF8.GetString(a.Data);
-                        Console.WriteLine(msg);
-                        //var data = new { A = "a", B = 123 }.ToJson();
-                        //var msg = $"HTTP/1.1 200 OK\r\nContent-Type:application/json;charset=UTF-8\r\nContent-Length:{data.Length}\r\nConnection:close\r\n\r\n{data}";
-                        //_ = c.SendAsync(Encoding.UTF8.GetBytes(msg));
-                    };
-                };
+                host.RegisterRPCService("Rpc");
+                host.OnInitialized += async p =>
+                 {
+                     await Task.Delay(5000);
+                     await p.StopRpcServiceAsync();
+                     Console.WriteLine(1);
+                     await p.RunRPCServiceAsync("Rpc1");
+                     Console.WriteLine(2);
+                 };
                 await host.RunAsync();
             }
             catch (Exception ex)

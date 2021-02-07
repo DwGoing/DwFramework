@@ -22,7 +22,7 @@ namespace DwFramework.RPC
 
         private readonly ILogger<RPCService> _logger;
         private Config _config;
-        private readonly Server _server;
+        private Server _server;
 
         /// <summary>
         /// 构造函数
@@ -34,37 +34,33 @@ namespace DwFramework.RPC
         }
 
         /// <summary>
-        /// 构造函数
+        /// 读取配置
         /// </summary>
         /// <param name="path"></param>
         /// <param name="key"></param>
-        public RPCService(string path = null, string key = null)
+        public void ReadConfig(string path = null, string key = null)
         {
-            _config = ServiceHost.Environment.GetConfiguration<Config>(path, key);
-            if (_config == null) throw new Exception("未读取到Rpc配置");
-            _logger = ServiceHost.Provider.GetLogger<RPCService>();
-            _server = new Server();
-        }
-
-        /// <summary>
-        /// 添加RPC服务
-        /// </summary>
-        /// <param name="service"></param>
-        /// <returns></returns>
-        public RPCService AddService(object service)
-        {
-            _server.Services.Add(GetServerServiceDefinition(service));
-            return this;
-        }
-
-        /// <summary>
-        /// 开启服务
-        /// </summary>
-        /// <returns></returns>
-        public Task OpenServiceAsync()
-        {
-            return TaskManager.CreateTask(() =>
+            try
             {
+                _config = ReadConfig<Config>(path, key);
+                if (_config == null) throw new Exception("未读取到Rpc配置");
+            }
+            catch (Exception ex)
+            {
+                _ = _logger.LogErrorAsync(ex.Message);
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// 运行服务
+        /// </summary>
+        /// <returns></returns>
+        public async Task RunAsync()
+        {
+            try
+            {
+                _server = new Server();
                 if (_config.Listen == null || _config.Listen.Count <= 0) throw new Exception("缺少Listen配置");
                 string listen = "";
                 // 监听地址及端口
@@ -94,8 +90,33 @@ namespace DwFramework.RPC
                 }
                 RegisterFuncFromAssemblies();
                 _server.Start();
-                _logger?.LogInformationAsync($"RPC服务正在监听:{listen}");
-            });
+                await _logger?.LogInformationAsync($"RPC服务正在监听:{listen}");
+            }
+            catch (Exception ex)
+            {
+                _ = _logger.LogErrorAsync(ex.Message);
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// 停止服务
+        /// </summary>
+        /// <returns></returns>
+        public async Task StopAsync()
+        {
+            await _server.KillAsync();
+        }
+
+        /// <summary>
+        /// 添加RPC服务
+        /// </summary>
+        /// <param name="service"></param>
+        /// <returns></returns>
+        public RPCService AddService(object service)
+        {
+            _server.Services.Add(GetServerServiceDefinition(service));
+            return this;
         }
 
         /// <summary>
