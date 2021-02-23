@@ -145,7 +145,7 @@ namespace DwFramework.RabbitMQ
                 basicProperties = channel.CreateBasicProperties();
                 basicPropertiesSetting(basicProperties);
             }
-            var body = data.ToBytes(encoding);
+            var body = data.ToJsonBytes(encoding);
             if (returnAction != null) channel.BasicReturn += (sender, args) => returnAction?.Invoke(args);
             channel.BasicPublish(exchange, routingKey, basicProperties, body);
         }
@@ -186,7 +186,7 @@ namespace DwFramework.RabbitMQ
                 basicProperties = channel.CreateBasicProperties();
                 basicPropertiesSetting(basicProperties);
             }
-            var body = data.ToBytes(encoding);
+            var body = data.ToJsonBytes(encoding);
             if (returnAction != null) channel.BasicReturn += (sender, args) => returnAction?.Invoke(args);
             channel.BasicPublish(exchange, routingKey, basicProperties, body);
             if (timeoutSeconds >= 0) return channel.WaitForConfirms(TimeSpan.FromSeconds(timeoutSeconds));

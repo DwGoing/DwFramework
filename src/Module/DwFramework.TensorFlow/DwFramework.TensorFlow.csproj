@@ -18,8 +18,8 @@
         </None>
     </ItemGroup>
     <ItemGroup>
-      <PackageReference Include="TensorFlow.NET" Version="0.32.0" />
-      <PackageReference Include="SciSharp.TensorFlow.Redist" Version="2.4.0" />
+      <PackageReference Include="TensorFlow.NET" Version="0.33.0" />
+      <PackageReference Include="SciSharp.TensorFlow.Redist" Version="2.4.1" />
     </ItemGroup>
     <ItemGroup>
       <Folder Include="Models\" />
