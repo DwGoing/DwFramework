@@ -28,7 +28,7 @@ namespace DwFramework.WebAPI
         /// 构造函数
         /// </summary>
         /// <param name="logger"></param>
-        public WebAPIService(ILogger<WebAPIService> logger)
+        public WebAPIService(ILogger<WebAPIService> logger = null)
         {
             _logger = logger;
         }
@@ -69,7 +69,7 @@ namespace DwFramework.WebAPI
                         builder.ConfigureLogging(builder => builder.AddFilter("Microsoft", LogLevel.Warning))
                         // https证书路径
                         .UseContentRoot($"{AppDomain.CurrentDomain.BaseDirectory}{_config.ContentRoot}")
-                        .UseKestrel(options =>
+                        .UseKestrel(async options =>
                         {
                             if (_config.Listen == null || _config.Listen.Count <= 0) throw new Exception("缺少Listen配置");
                             var listen = "";
@@ -96,7 +96,7 @@ namespace DwFramework.WebAPI
                                 if (!string.IsNullOrEmpty(listen)) listen += ",";
                                 listen += $"https://{ip}:{port}";
                             }
-                            _logger?.LogInformationAsync($"WebAPI服务开始监听:{listen}");
+                            if (_logger != null) await _logger?.LogInformationAsync($"WebAPI服务开始监听:{listen}");
                         })
                         .UseStartup<T>();
                     });
@@ -104,7 +104,7 @@ namespace DwFramework.WebAPI
             }
             catch (Exception ex)
             {
-                _ = _logger?.LogErrorAsync(ex.Message);
+                if (_logger != null) await _logger?.LogErrorAsync(ex.Message);
                 throw;
             }
         }

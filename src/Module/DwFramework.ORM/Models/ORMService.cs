@@ -49,7 +49,7 @@ namespace DwFramework.ORM
         /// 构造函数
         /// </summary>
         /// <param name="logger"></param>
-        public ORMService(ILogger<ORMService> logger)
+        public ORMService(ILogger<ORMService> logger = null)
         {
             _logger = logger;
         }

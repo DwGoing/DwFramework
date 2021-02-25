@@ -42,7 +42,7 @@ namespace DwFramework.RabbitMQ
         /// 构造函数
         /// </summary>
         /// <param name="logger"></param>
-        public RabbitMQService(ILogger<RabbitMQService> logger)
+        public RabbitMQService(ILogger<RabbitMQService> logger = null)
         {
             _logger = logger;
         }

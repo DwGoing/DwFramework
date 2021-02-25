@@ -65,7 +65,7 @@ namespace DwFramework.WebSocket
         /// 构造函数
         /// </summary>
         /// <param name="logger"></param>
-        public WebSocketService(ILogger<WebSocketService> logger)
+        public WebSocketService(ILogger<WebSocketService> logger = null)
         {
             _logger = logger;
         }

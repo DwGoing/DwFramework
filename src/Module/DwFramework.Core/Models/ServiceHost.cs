@@ -100,12 +100,12 @@ namespace DwFramework.Core
             _containerBuilder.Populate(_services);
             Provider = new AutofacServiceProvider(_containerBuilder.Build());
             _logger = Provider.GetLogger<ServiceHost>();
-            await _logger?.LogInformationAsync("Service is initializing!");
+            if (_logger != null) await _logger?.LogInformationAsync("Service is initializing!");
             OnInitializing?.Invoke(Provider);
             OnInitialized?.Invoke(Provider);
-            await _logger?.LogInformationAsync("Service is initialized!");
+            if (_logger != null) await _logger?.LogInformationAsync("Service is initialized!");
             Console.CancelKeyPress += async (sender, args) => await StopAsync();
-            await _logger?.LogInformationAsync("Service is running,Please enter \"Ctrl + C\" to stop!");
+            if (_logger != null) await _logger?.LogInformationAsync("Service is running,Please enter \"Ctrl + C\" to stop!");
             _autoResetEvent.WaitOne();
         }
 
@@ -115,10 +115,10 @@ namespace DwFramework.Core
         /// <returns></returns>
         public async Task StopAsync()
         {
-            await _logger?.LogInformationAsync("Service is stopping!");
+            if (_logger != null) await _logger?.LogInformationAsync("Service is stopping!");
             OnStoping?.Invoke(Provider);
             OnStopped?.Invoke(Provider);
-            await _logger?.LogInformationAsync("Service is stopped!");
+            if (_logger != null) await _logger?.LogInformationAsync("Service is stopped!");
             _autoResetEvent.Set();
         }
 

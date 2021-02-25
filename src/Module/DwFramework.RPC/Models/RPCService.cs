@@ -28,7 +28,7 @@ namespace DwFramework.RPC
         /// 构造函数
         /// </summary>
         /// <param name="logger"></param>
-        public RPCService(ILogger<RPCService> logger)
+        public RPCService(ILogger<RPCService> logger = null)
         {
             _logger = logger;
         }
@@ -90,7 +90,7 @@ namespace DwFramework.RPC
                 }
                 RegisterFuncFromAssemblies();
                 _server.Start();
-                await _logger?.LogInformationAsync($"RPC服务正在监听:{listen}");
+                if (_logger != null) await _logger?.LogInformationAsync($"RPC服务正在监听:{listen}");
             }
             catch (Exception ex)
             {

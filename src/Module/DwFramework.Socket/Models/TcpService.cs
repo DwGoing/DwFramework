@@ -61,7 +61,7 @@ namespace DwFramework.Socket
         /// 构造函数
         /// </summary>
         /// <param name="logger"></param>
-        public TcpService(ILogger<TcpService> logger)
+        public TcpService(ILogger<TcpService> logger = null)
         {
             _logger = logger;
         }
@@ -99,12 +99,12 @@ namespace DwFramework.Socket
                 _server.Bind(new IPEndPoint(string.IsNullOrEmpty(ipAndPort[0]) ? IPAddress.Any : IPAddress.Parse(ipAndPort[0]), int.Parse(ipAndPort[1])));
                 _server.Listen(_config.BackLog);
                 OnClose += OnCloseHandler;
-                _ = _logger?.LogInformationAsync($"Tcp服务正在监听:{_config.Listen}");
+                if (_logger != null) await _logger?.LogInformationAsync($"Tcp服务正在监听:{_config.Listen}");
                 await BeginAcceptAsync();
             }
             catch (Exception ex)
             {
-                _ = _logger?.LogErrorAsync(ex.Message);
+                if (_logger != null) await _logger?.LogErrorAsync(ex.Message);
                 throw;
             }
         }
@@ -141,7 +141,7 @@ namespace DwFramework.Socket
             }
             catch (Exception ex)
             {
-                await _logger?.LogErrorAsync($"Tcp服务异常:{ex.Message}");
+                if (_logger != null) await _logger?.LogErrorAsync($"Tcp服务异常:{ex.Message}");
                 OnError?.Invoke(connection, new OnErrorEventArgs() { Exception = ex });
             }
         }

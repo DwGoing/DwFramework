@@ -49,7 +49,7 @@ namespace DwFramework.Socket
         /// 构造函数
         /// </summary>
         /// <param name="logger"></param>
-        public UdpService(ILogger<UdpService> logger)
+        public UdpService(ILogger<UdpService> logger = null)
         {
             _logger = logger;
         }
@@ -85,7 +85,7 @@ namespace DwFramework.Socket
             _server.Bind(new IPEndPoint(string.IsNullOrEmpty(ipAndPort[0]) ? IPAddress.Any : IPAddress.Parse(ipAndPort[0]), int.Parse(ipAndPort[1])));
             _buffer = new byte[_config.BufferSize];
             _ = BeginReceiveAsync();
-            await _logger?.LogInformationAsync($"Udp服务正在监听:{_config.Listen}");
+            if (_logger != null) await _logger?.LogInformationAsync($"Udp服务正在监听:{_config.Listen}");
         }
 
         /// <summary>

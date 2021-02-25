@@ -2,31 +2,35 @@
 using DwFramework.Core;
 using DwFramework.Core.Plugins;
 using DwFramework.Core.Extensions;
+using DwFramework.Socket;
 
 using System.IO;
 using System.Threading.Tasks;
 
 namespace _AppTest
 {
+    public class A
+    {
+        public int a { get; set; }
+        public string b { get; set; }
+    }
+
     class Program
     {
         static async Task Main(string[] args)
         {
             try
             {
-                var host = new ServiceHost(EnvironmentType.Develop);
-                var s = new FileStream("Config.json", FileMode.Open, FileAccess.Read);
-                host.AddJsonConfig(s);
-                host.RegisterLog();
-                host.OnInitialized += p =>
-                {
-                    var env = p.GetService<DwFramework.Core.Environment>();
-                };
+                var host = new ServiceHost();
+                host.AddJsonConfig("Config.json");
+                // host.RegisterLog();
+                host.RegisterTcpService("Tcp");
+
                 await host.RunAsync();
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                Console.WriteLine(ex);
                 Console.Read();
             }
         }

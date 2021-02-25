@@ -44,8 +44,8 @@ namespace _UnitTest
         public void Json()
         {
             var a = new TestClass() { A = "x", B = 5, C = 5.5 };
-            var json = a.ToBytes().ToBase64String();
-            var obj = json.FromBase64String().ToObject<TestClass>();
+            var json = a.ToJsonBytes().ToBase64String();
+            var obj = json.FromBase64String().FromJsonBytes<TestClass>();
         }
 
         [Fact]
@@ -53,7 +53,7 @@ namespace _UnitTest
         {
             var a = new TestClass() { A = "x", B = 5, C = 5.5 };
             var json = a.ToJson();
-            Assert.Equal(a, json.ToObject<TestClass>());
+            Assert.Equal(a, json.FromJson<TestClass>());
         }
 
         [Fact]
