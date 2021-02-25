@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Text;
 using System.IO;
+using System.Net.Sockets;
+using System.Threading;
 using System.Threading.Tasks;
 using DwFramework.Core;
 using DwFramework.Core.Plugins;
@@ -32,9 +34,9 @@ namespace _AppTest
                     s.OnReceive += (c, e) =>
                     {
                         Console.WriteLine(Encoding.UTF8.GetString(e.Data));
-                        // var data = new { A = "a", B = 123 }.ToJson();
-                        // var msg = $"HTTP/1.1 200 OK\r\nContent-Type:application/json;charset=UTF-8\r\nContent-Length:{data.Length}\r\nConnection:close\r\n\r\n{data}";
-                        // _ = c.SendAsync(Encoding.UTF8.GetBytes(msg));
+                        var data = new { A = "a", B = 123 }.ToJson();
+                        var msg = $"HTTP/1.1 200 OK\r\nContent-Type:application/json;charset=UTF-8\r\nContent-Length:{data.Length}\r\nConnection:close\r\n\r\n{data}";
+                        _ = c.SendAsync(Encoding.UTF8.GetBytes(msg));
                     };
                     s.OnClose += (c, e) => Console.WriteLine($"{c.ID}已断开");
                 };

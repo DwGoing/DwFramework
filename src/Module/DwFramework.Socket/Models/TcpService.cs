@@ -137,6 +137,7 @@ namespace DwFramework.Socket
                 };
                 _connections[connection.ID] = connection;
                 OnConnect?.Invoke(connection, new OnConnectEventargs() { });
+                _ = connection.BeginReceiveAsync();
                 await BeginAcceptAsync();
             }
             catch (Exception ex)

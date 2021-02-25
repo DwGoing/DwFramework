@@ -32,14 +32,13 @@ namespace DwFramework.Socket
             _socket = socket;
             _socket.EnableKeepAlive(3000, 500);
             _buffer = new byte[bufferSize];
-            _ = BeginReceiveAsync();
         }
 
         /// <summary>
         /// 开始接收数据
         /// </summary>
         /// <returns></returns>
-        private async Task BeginReceiveAsync()
+        public async Task BeginReceiveAsync()
         {
             try
             {
@@ -52,6 +51,7 @@ namespace DwFramework.Socket
                     Array.Copy(_buffer, data, len);
                     OnReceive?.Invoke(this, new OnReceiveEventargs() { Data = data });
                 }
+                else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) throw new SocketException((int)SocketError.Disconnecting);
                 else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX)) throw new SocketException((int)SocketError.Disconnecting);
                 else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) throw new SocketException((int)SocketError.Disconnecting);
                 await BeginReceiveAsync();

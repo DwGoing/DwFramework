@@ -20,10 +20,10 @@ namespace DwFramework.WebSocket
         private readonly List<byte> _dataBytes = new List<byte>();
         private readonly AutoResetEvent _resetEvent;
 
-        public Action<WebSocketConnection, OnCloceEventArgs> OnClose;
-        public Action<WebSocketConnection, OnSendEventArgs> OnSend;
-        public Action<WebSocketConnection, OnReceiveEventargs> OnReceive;
-        public Action<WebSocketConnection, OnErrorEventArgs> OnError;
+        public Action<WebSocketConnection, OnCloceEventArgs> OnClose { get; init; }
+        public Action<WebSocketConnection, OnSendEventArgs> OnSend { get; init; }
+        public Action<WebSocketConnection, OnReceiveEventargs> OnReceive { get; init; }
+        public Action<WebSocketConnection, OnErrorEventArgs> OnError { get; init; }
 
         /// <summary>
         /// 构造函数
@@ -35,7 +35,6 @@ namespace DwFramework.WebSocket
             ID = MD5.Encode(Guid.NewGuid().ToString());
             _webSocket = webSocket;
             _buffer = new byte[bufferSize];
-            _ = BeginReceiveAsync();
             _resetEvent = new AutoResetEvent(false);
             resetEvent = _resetEvent;
         }
@@ -44,7 +43,7 @@ namespace DwFramework.WebSocket
         /// 开始接收数据
         /// </summary>
         /// <returns></returns>
-        private async Task BeginReceiveAsync()
+        public async Task BeginReceiveAsync()
         {
             try
             {
