@@ -133,7 +133,7 @@ namespace DwFramework.Core.Extensions
         /// <param name="encoding"></param>
         /// <param name="options"></param>
         /// <returns></returns>
-        public static object FromJsonBytes<T>(this byte[] bytes, Encoding encoding = null, JsonSerializerOptions options = null)
+        public static T FromJsonBytes<T>(this byte[] bytes, Encoding encoding = null, JsonSerializerOptions options = null)
         {
             encoding ??= Encoding.UTF8;
             var json = encoding.GetString(bytes);
