@@ -3,10 +3,8 @@
     <PropertyGroup>
         <TargetFramework>netcoreapp3.1</TargetFramework>
         <ReleaseVersion>2</ReleaseVersion>
-        <BuildVersion>2.55.9216</BuildVersion>
-        <VersionSuffix>
-        </VersionSuffix>
-        <Version>$(ReleaseVersion).$(BuildVersion)$(VersionSuffix)</Version>
+        <BuildVersion>0.0.56-dev.713</BuildVersion>
+        <Version>$(ReleaseVersion).$(BuildVersion)</Version>
         <Authors>DwGoing</Authors>
         <Description>DwFramework RabbitMQ库</Description>
         <PackageProjectUrl>https://github.com/Dwgoing/DwFramework</PackageProjectUrl>

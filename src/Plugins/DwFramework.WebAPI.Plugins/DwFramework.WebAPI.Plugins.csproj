@@ -3,10 +3,8 @@
     <PropertyGroup>
         <TargetFramework>netcoreapp3.1</TargetFramework>
         <ReleaseVersion>2</ReleaseVersion>
-        <BuildVersion>2.55.9222</BuildVersion>
-        <VersionSuffix>
-        </VersionSuffix>
-        <Version>$(ReleaseVersion).$(BuildVersion)$(VersionSuffix)</Version>
+        <BuildVersion>2.56.8-rc.8174</BuildVersion>
+        <Version>$(ReleaseVersion).$(BuildVersion)</Version>
         <Authors>DwGoing</Authors>
         <Description>DwFramework WebAPI插件库</Description>
         <PackageProjectUrl>https://github.com/Dwgoing/DwFramework</PackageProjectUrl>

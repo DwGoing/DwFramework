@@ -3,10 +3,8 @@
     <PropertyGroup>
         <TargetFramework>netcoreapp3.1</TargetFramework>
         <ReleaseVersion>2</ReleaseVersion>
-        <BuildVersion>2.55.9217</BuildVersion>
-        <VersionSuffix>
-        </VersionSuffix>
-        <Version>$(ReleaseVersion).$(BuildVersion)$(VersionSuffix)</Version>
+        <BuildVersion>2.56.8-rc.8173</BuildVersion>
+        <Version>$(ReleaseVersion).$(BuildVersion)</Version>
         <Authors>DwGoing</Authors>
         <Description>DwFramework RPC库</Description>
         <PackageProjectUrl>https://github.com/Dwgoing/DwFramework</PackageProjectUrl>
@@ -17,12 +15,7 @@
         <ProjectReference Include="..\DwFramework.Core\DwFramework.Core.csproj" />
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="Google.Protobuf" Version="3.14.0" />
         <PackageReference Include="Grpc.Core" Version="2.35.0" />
-        <PackageReference Include="Grpc.Tools" Version="2.35.0">
-            <PrivateAssets>all</PrivateAssets>
-            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
     </ItemGroup>
     <ItemGroup>
         <None Include="README.md">

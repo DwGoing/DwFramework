@@ -3,10 +3,8 @@
     <PropertyGroup>
         <TargetFramework>netcoreapp3.1</TargetFramework>
         <ReleaseVersion>2</ReleaseVersion>
-        <BuildVersion>1.101.591</BuildVersion>
-        <VersionSuffix>
-        </VersionSuffix>
-        <Version>$(ReleaseVersion).$(BuildVersion)$(VersionSuffix)</Version>
+        <BuildVersion>0.0.56-dev.713</BuildVersion>
+        <Version>$(ReleaseVersion).$(BuildVersion)</Version>
         <Authors>DwGoing</Authors>
         <Description>DwFramework 媒体库</Description>
         <PackageProjectUrl>https://github.com/Dwgoing/DwFramework</PackageProjectUrl>
