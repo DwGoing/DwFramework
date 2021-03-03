@@ -9,7 +9,7 @@
         public string Message { get; init; }
         public dynamic Data { get; init; }
 
-        private ResultInfo() { }
+        public ResultInfo() { }
 
         /// <summary>
         /// 创建结果信息
