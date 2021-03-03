@@ -13,6 +13,7 @@ using Autofac;
 
 namespace _AppTest
 {
+    [Registerable(lifetime:Lifetime.Singleton,isAutoActivate:true)]
     public class A
     {
         public A(WebSocketService s)
@@ -35,7 +36,7 @@ namespace _AppTest
                 host.RegisterLog();
                 host.RegisterTcpService("Tcp");
                 host.RegisterWebSocketService("WebSocket");
-                host.RegisterType<A>().SingleInstance().AutoActivate();
+                host.RegisterFromAssemblies();
                 host.OnInitialized += p =>
                 {
 
