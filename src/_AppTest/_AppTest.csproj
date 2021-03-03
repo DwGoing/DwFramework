@@ -14,6 +14,7 @@
     </PropertyGroup>
     <ItemGroup>
         <ProjectReference Include="..\Module\DwFramework.Core\DwFramework.Core.csproj" />
+        <ProjectReference Include="..\Module\DwFramework.WebSocket\DwFramework.WebSocket.csproj" />
         <ProjectReference Include="..\Module\DwFramework.Socket\DwFramework.Socket.csproj" />
     </ItemGroup>
     <ItemGroup>
@@ -22,9 +23,6 @@
         </None>
         <None Update="Config.json">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <None Update="Config_1.json">
-          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
     </ItemGroup>
 </Project>

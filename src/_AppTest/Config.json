@@ -1,5 +1,11 @@
 ﻿{
   "Tcp": {
     "Listen": "0.0.0.0:10100"
+  },
+  "WebSocket": {
+    "Listen": {
+      "ws": ":6002"
+    },
+    "BufferSize": 1024
   }
 }
