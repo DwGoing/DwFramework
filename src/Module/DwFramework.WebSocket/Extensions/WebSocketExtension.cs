@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
-
+using Microsoft.Extensions.Logging;
+using Autofac;
 using DwFramework.Core;
 
 namespace DwFramework.WebSocket
@@ -15,7 +16,7 @@ namespace DwFramework.WebSocket
         /// <param name="configPath"></param>
         public static void RegisterWebSocketService(this ServiceHost host, string configKey = null, string configPath = null)
         {
-            host.Register(c => new WebSocketService(configKey, configPath)).SingleInstance();
+            host.Register(c => new WebSocketService(configKey, configPath, c.Resolve<ILogger<WebSocketService>>())).SingleInstance();
             host.OnInitializing += async provider => await provider.InitWebSocketServiceAsync();
         }
 

@@ -28,11 +28,11 @@ namespace DwFramework.WebAPI
         /// </summary>
         /// <param name="configKey"></param>
         /// <param name="configPath"></param>
-        public WebAPIService(string configKey = null, string configPath = null)
+        public WebAPIService(string configKey = null, string configPath = null, ILogger<WebAPIService> logger = null)
         {
             _config = ServiceHost.Environment.GetConfiguration<Config>(configKey, configPath);
             if (_config == null) throw new Exception("未读取到WebAPI配置");
-            _logger = ServiceHost.Provider.GetLogger<WebAPIService>();
+            _logger = logger;
         }
 
         /// <summary>

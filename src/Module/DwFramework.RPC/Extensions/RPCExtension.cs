@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
-
+using Microsoft.Extensions.Logging;
+using Autofac;
 using DwFramework.Core;
 using DwFramework.Core.Extensions;
 
@@ -17,7 +18,7 @@ namespace DwFramework.RPC
         /// <param name="services"></param>
         public static void RegisterRPCService(this ServiceHost host, string configKey = null, string configPath = null, params Type[] services)
         {
-            host.Register(c => new RPCService(configKey, configPath)).SingleInstance();
+            host.Register(c => new RPCService(configKey, configPath, c.Resolve<ILogger<RPCService>>())).SingleInstance();
             services.ForEach(item =>
             {
                 host.OnInitializing += provider =>

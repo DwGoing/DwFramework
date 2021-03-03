@@ -28,11 +28,11 @@ namespace DwFramework.RPC
         /// </summary>
         /// <param name="configKey"></param>
         /// <param name="configPath"></param>
-        public RPCService(string configKey = null, string configPath = null)
+        public RPCService(string configKey = null, string configPath = null, ILogger<RPCService> logger = null)
         {
             _config = ServiceHost.Environment.GetConfiguration<Config>(configKey, configPath);
             if (_config == null) throw new Exception("RPC初始化异常 => 未读取到Rpc配置");
-            _logger = ServiceHost.Provider.GetLogger<RPCService>();
+            _logger = logger;
             _server = new Server();
         }
 

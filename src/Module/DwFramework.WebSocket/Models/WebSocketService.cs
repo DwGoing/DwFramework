@@ -91,11 +91,11 @@ namespace DwFramework.WebSocket
         /// </summary>
         /// <param name="configKey"></param>
         /// <param name="configPath"></param>
-        public WebSocketService(string configKey = null, string configPath = null)
+        public WebSocketService(string configKey = null, string configPath = null, ILogger<WebSocketService> logger = null)
         {
             _config = ServiceHost.Environment.GetConfiguration<Config>(configKey, configPath);
             if (_config == null) throw new Exception("未读取到WebSocket配置");
-            _logger = ServiceHost.Provider.GetLogger<WebSocketService>();
+            _logger = logger;
             _connections = new Dictionary<string, WebSocketConnection>();
         }
 

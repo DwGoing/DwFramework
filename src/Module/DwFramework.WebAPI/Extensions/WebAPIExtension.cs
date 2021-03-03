@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
-
+using Microsoft.Extensions.Logging;
+using Autofac;
 using DwFramework.Core;
 
 namespace DwFramework.WebAPI
@@ -16,7 +17,7 @@ namespace DwFramework.WebAPI
         /// <param name="configPath"></param>
         public static void RegisterWebAPIService<T>(this ServiceHost host, string configKey = null, string configPath = null) where T : class
         {
-            host.Register(c => new WebAPIService(configKey, configPath)).SingleInstance();
+            host.Register(c => new WebAPIService(configKey, configPath,c.Resolve<ILogger<WebAPIService>>())).SingleInstance();
             host.OnInitializing += async provider => await provider.InitWebAPIServiceAsync<T>();
         }
 
