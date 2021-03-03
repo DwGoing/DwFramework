@@ -62,11 +62,7 @@ namespace _AppTest
                 host.RegisterFromAssemblies();
                 host.OnInitialized += p =>
                 {
-                    var ts = p.GetServices<ITestInterface>();
-                    foreach (var item in ts)
-                    {
-                        item.TestMethod("Hello!");
-                    }
+                    var x =  p.GetService<X>();
                 };
                 host.Run();
             }
