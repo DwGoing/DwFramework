@@ -1,6 +1,8 @@
 ﻿using System;
+using Autofac;
 using DwFramework.Core;
 using DwFramework.Core.Plugins;
+using DwFramework.WebSocket;
 
 namespace _AppTest
 {
@@ -36,6 +38,16 @@ namespace _AppTest
             Console.WriteLine($"TestClass2:{str}");
         }
     }
+
+    [Registerable(lifetime: Lifetime.Singleton, isAutoActivate: true)]
+    public class X
+    {
+        public X(WebSocketService s)
+        {
+
+        }
+    }
+
     class Program
     {
         static void Main(string[] args)
@@ -44,6 +56,9 @@ namespace _AppTest
             {
                 var host = new ServiceHost(EnvironmentType.Develop, "Config.json");
                 host.RegisterLog();
+                host.AddJsonConfig("WebSocket.json");
+                host.RegisterWebSocketService();
+                // host.RegisterType<X>().SingleInstance().AutoActivate();
                 host.RegisterFromAssemblies();
                 host.OnInitialized += p =>
                 {
