@@ -1,50 +1,40 @@
 ﻿using System;
-using Autofac;
+using System.Threading.Tasks;
 using DwFramework.Core;
 using DwFramework.Core.Plugins;
-using DwFramework.WebSocket;
+using DwFramework.RPC;
+using System.ServiceModel;
+using System.Runtime.Serialization;
+using Grpc.Net.Client;
+using ProtoBuf.Grpc.Client;
 
 namespace _AppTest
 {
-    public interface ITestInterface
+    [ServiceContract]
+    public interface IRpcInterface
     {
-        void TestMethod(string str);
+        ValueTask<Response> AuthLoginAsync(Request dto);
     }
 
-    [Registerable(typeof(ITestInterface), Lifetime.Singleton)]
-    public class TestClass1 : ITestInterface
+    [DataContract]
+    public class Request
     {
-        public TestClass1()
-        {
-            Console.WriteLine("TestClass1已注入");
-        }
-
-        public void TestMethod(string str)
-        {
-            Console.WriteLine($"TestClass1:{str}");
-        }
+        [DataMember(Order = 1)]
+        public string Message { get; set; }
     }
 
-    [Registerable(typeof(ITestInterface), Lifetime.Singleton)]
-    public class TestClass2 : ITestInterface
+    [DataContract]
+    public class Response
     {
-        public TestClass2()
-        {
-            Console.WriteLine("TestClass2已注入");
-        }
-
-        public void TestMethod(string str)
-        {
-            Console.WriteLine($"TestClass2:{str}");
-        }
+        [DataMember(Order = 1)]
+        public string Message { get; set; }
     }
 
-    [Registerable(lifetime: Lifetime.Singleton, isAutoActivate: true)]
-    public class X
+    public class RpcInterface : IRpcInterface
     {
-        public X(WebSocketService s)
+        public ValueTask<Response> AuthLoginAsync(Request dto)
         {
-
+            return new ValueTask<Response>(new Response() { Message = dto.Message });
         }
     }
 
@@ -56,19 +46,26 @@ namespace _AppTest
             {
                 var host = new ServiceHost(EnvironmentType.Develop, "Config.json");
                 host.RegisterLog();
-                host.AddJsonConfig("WebSocket.json");
-                host.RegisterWebSocketService();
-                // host.RegisterType<X>().SingleInstance().AutoActivate();
-                host.RegisterFromAssemblies();
+                host.AddJsonConfig("RPC.json");
+                host.RegisterType<RpcInterface>();
+                host.OnInitializing += p =>
+                {
+                    var s = p.GetRPCService();
+                    s.AddService<RpcInterface, IRpcInterface>();
+                };
+                host.RegisterRPCService();
                 host.OnInitialized += p =>
                 {
-                    var x =  p.GetService<X>();
+                    GrpcClientFactory.AllowUnencryptedHttp2 = true;
+                    using var http = GrpcChannel.ForAddress("http://localhost:5020");
+                    var i = http.CreateGrpcService<IRpcInterface>();
+                    var r = i.AuthLoginAsync(new Request() { Message = "Hello" }).Result;
                 };
                 host.Run();
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                Console.WriteLine(ex);
             }
             Console.Read();
         }

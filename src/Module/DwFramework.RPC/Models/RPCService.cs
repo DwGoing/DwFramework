@@ -2,9 +2,17 @@
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Collections.Generic;
-using System.IO;
-using Grpc.Core;
+using System.Net;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Routing;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
+using ProtoBuf.Grpc.Configuration;
+using ProtoBuf.Grpc.Server;
 
 using DwFramework.Core;
 using DwFramework.Core.Plugins;
@@ -21,7 +29,8 @@ namespace DwFramework.RPC
     {
         private readonly Config _config;
         private readonly ILogger<RPCService> _logger;
-        private readonly Server _server;
+        private event Action<IServiceCollection> _onConfigureServices;
+        private event Action<IEndpointRouteBuilder> _onEndpointsBuild;
 
         /// <summary>
         /// 构造函数
@@ -33,75 +42,32 @@ namespace DwFramework.RPC
             _config = ServiceHost.Environment.GetConfiguration<Config>(configKey, configPath);
             if (_config == null) throw new Exception("RPC初始化异常 => 未读取到Rpc配置");
             _logger = logger;
-            _server = new Server();
         }
 
         /// <summary>
         /// 添加RPC服务
         /// </summary>
-        /// <param name="service"></param>
+        /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public RPCService AddService(object service)
+        public RPCService AddService<T, I>() where T : class
         {
-            _server.Services.Add(GetServerServiceDefinition(service));
+            _onConfigureServices += services => services.AddSingleton(typeof(I), _ => ServiceHost.Provider.GetService(typeof(T)));
+            _onEndpointsBuild += endpoint => endpoint.MapGrpcService<T>();
             return this;
         }
 
         /// <summary>
-        /// 开启服务
+        /// 添加RPC服务
         /// </summary>
+        /// <param name="type"></param>
         /// <returns></returns>
-        public Task OpenServiceAsync()
+        public RPCService AddService(Type type)
         {
-            return TaskManager.CreateTask(() =>
-            {
-                if (_config.Listen == null || _config.Listen.Count <= 0) throw new Exception("RPC初始化异常 => 缺少Listen配置");
-                string listen = "";
-                // 监听地址及端口
-                if (_config.Listen.ContainsKey("http"))
-                {
-                    string[] ipAndPort = _config.Listen["http"].Split(":");
-                    var ip = string.IsNullOrEmpty(ipAndPort[0]) ? "0.0.0.0" : ipAndPort[0];
-                    var port = int.Parse(ipAndPort[1]);
-                    _server.Ports.Add(new ServerPort(ip, port, ServerCredentials.Insecure));
-                    listen += $"http://{ip}:{port}";
-                }
-                if (_config.Listen.ContainsKey("https"))
-                {
-                    string[] addrAndCert = _config.Listen["https"].Split(";");
-                    string[] ipAndPort = addrAndCert[0].Split(":");
-                    var ip = string.IsNullOrEmpty(ipAndPort[0]) ? "0.0.0.0" : ipAndPort[0];
-                    var port = int.Parse(ipAndPort[1]);
-                    string[] certPaths = addrAndCert[1].Split(",");
-                    var rootPath = $"{AppDomain.CurrentDomain.BaseDirectory}{_config.ContentRoot}";
-                    var rootCert = File.ReadAllText($"{rootPath}{certPaths[0]}");
-                    var certChain = File.ReadAllText($"{rootPath}{certPaths[1]}");
-                    var privateKey = File.ReadAllText($"{rootPath}{certPaths[2]}");
-                    var serverCredentials = new SslServerCredentials(new[] { new KeyCertificatePair(certChain, privateKey) }, rootCert, false);
-                    _server.Ports.Add(new ServerPort(ip, port, serverCredentials));
-                    if (!string.IsNullOrEmpty(listen)) listen += ",";
-                    listen += $"https://{ip}:{port}";
-                }
-                RegisterFuncFromAssemblies();
-                _server.Start();
-                _logger?.LogInformationAsync($"RPC服务已开启 => 监听地址:{listen}");
-            });
-        }
-
-        /// <summary>
-        /// 获取gRPC服务
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="serviceImpl"></param>
-        /// <returns></returns>
-        private ServerServiceDefinition GetServerServiceDefinition(object serviceImpl)
-        {
-            var type = serviceImpl.GetType();
-            var baseType = type.BaseType;
-            if (baseType.ReflectedType == null) throw new Exception("RPC注册异常 => 非gRPC实现");
-            var method = baseType.ReflectedType.GetMethod("BindService", new Type[] { baseType });
-            if (method == null) throw new Exception("RPC注册异常 => 非gRPC实现");
-            return (ServerServiceDefinition)method.Invoke(null, new[] { serviceImpl });
+            var method = typeof(GrpcEndpointRouteBuilderExtensions).GetMethod("MapGrpcService");
+            var genericMethod = method.MakeGenericMethod(type);
+            _onConfigureServices += services => services.AddSingleton(_ => ServiceHost.Provider.GetService(type));
+            _onEndpointsBuild += endpoint => genericMethod.Invoke(null, new object[] { endpoint });
+            return this;
         }
 
         /// <summary>
@@ -117,11 +83,79 @@ namespace DwFramework.RPC
                 {
                     var attr = item.GetCustomAttribute<RPCAttribute>();
                     if (attr == null) continue;
-                    var service = ServiceHost.Provider.GetService(item);
-                    if (service == null) continue;
-                    _server.Services.Add(GetServerServiceDefinition(service));
+                    if (!ServiceHost.Provider.IsRegistered(item)) continue;
+                    AddService(item);
                 }
             }
+        }
+
+        /// <summary>
+        /// 开启服务
+        /// </summary>
+        /// <returns></returns>
+        public async Task OpenServiceAsync()
+        {
+            RegisterFuncFromAssemblies();
+            var builder = Host.CreateDefaultBuilder()
+                .ConfigureWebHostDefaults(builder =>
+                {
+                    builder.ConfigureLogging(builder => builder.AddFilter("Microsoft", LogLevel.Warning))
+                    // https证书路径
+                    .UseContentRoot($"{AppDomain.CurrentDomain.BaseDirectory}{_config.ContentRoot}")
+                    .UseKestrel(options =>
+                    {
+                        if (_config.Listen == null || _config.Listen.Count <= 0) throw new Exception("缺少Listen配置");
+                        string listen = "";
+                        // 监听地址及端口
+                        if (_config.Listen.ContainsKey("http"))
+                        {
+                            string[] ipAndPort = _config.Listen["http"].Split(":");
+                            var ip = string.IsNullOrEmpty(ipAndPort[0]) ? IPAddress.Any : IPAddress.Parse(ipAndPort[0]);
+                            var port = int.Parse(ipAndPort[1]);
+                            options.Listen(ip, port, listenOptions =>
+                            {
+                                listenOptions.Protocols = HttpProtocols.Http2;
+                            });
+                            listen += $"http://{ip}:{port}";
+                        }
+                        if (_config.Listen.ContainsKey("https"))
+                        {
+                            string[] addrAndCert = _config.Listen["https"].Split(";");
+                            string[] ipAndPort = addrAndCert[0].Split(":");
+                            var ip = string.IsNullOrEmpty(ipAndPort[0]) ? IPAddress.Any : IPAddress.Parse(ipAndPort[0]);
+                            var port = int.Parse(ipAndPort[1]);
+                            options.Listen(ip, port, listenOptions =>
+                            {
+                                string[] certAndPassword = addrAndCert[1].Split(",");
+                                listenOptions.UseHttps(certAndPassword[0], certAndPassword[1]);
+                                listenOptions.Protocols = HttpProtocols.Http2;
+                            });
+                            if (!string.IsNullOrEmpty(listen)) listen += ",";
+                            listen += $"https://{ip}:{port}";
+                        }
+                        _logger?.LogInformationAsync($"RPC服务已开启 => 监听地址:{listen}");
+                    })
+                    .ConfigureServices(services =>
+                    {
+                        services.AddCodeFirstGrpc(config =>
+                        {
+                            config.ResponseCompressionLevel = System.IO.Compression.CompressionLevel.Optimal;
+                        });
+                        services.TryAddSingleton(BinderConfiguration.Create(binder: new ServiceBinderWithServiceResolutionFromServiceCollection(services)));
+                        services.AddCodeFirstGrpcReflection();
+                        _onConfigureServices?.Invoke(services);
+                    })
+                    .Configure(app =>
+                    {
+                        app.UseRouting();
+                        app.UseEndpoints(endpoints =>
+                        {
+                            _onEndpointsBuild?.Invoke(endpoints);
+                            endpoints.MapCodeFirstGrpcReflectionService();
+                        });
+                    });
+                });
+            await builder.Build().RunAsync();
         }
     }
 }

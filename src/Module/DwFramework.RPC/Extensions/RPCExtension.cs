@@ -19,16 +19,12 @@ namespace DwFramework.RPC
         public static void RegisterRPCService(this ServiceHost host, string configKey = null, string configPath = null, params Type[] services)
         {
             host.Register(c => new RPCService(configKey, configPath, c.Resolve<ILogger<RPCService>>())).SingleInstance();
-            services.ForEach(item =>
+            host.OnInitializing += provider =>
             {
-                host.OnInitializing += provider =>
-                {
-                    var service = provider.GetService(item);
-                    if (service == null) return;
-                    provider.GetRPCService().AddService(service);
-                };
-            });
-            host.OnInitializing += provider => provider.InitRPCServiceAsync().Wait();
+                var service = provider.GetRPCService();
+                services.ForEach(item => service.AddService(item));
+            };
+            host.OnInitializing += async provider => await provider.InitRPCServiceAsync();
         }
 
         /// <summary>

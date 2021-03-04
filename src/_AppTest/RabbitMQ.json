@@ -1,7 +1,0 @@
-﻿{
-  "Host": "192.168.10.224",
-  "VirtualHost": "/",
-  "Port": 5672,
-  "UserName": "admin",
-  "Password": "admin"
-}
