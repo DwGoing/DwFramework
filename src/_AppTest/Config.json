@@ -1,5 +1,11 @@
 ﻿{
-  "Listen": {
-    "http": ":5020"
+  "RPC": {
+    "Listen": {
+      "http": ":5021"
+    }
+  },
+  "Test": {
+    "LinkUrl": "http://127.0.0.1:5021",
+    //"BootPeer": "http://127.0.0.1:5020"
   }
 }

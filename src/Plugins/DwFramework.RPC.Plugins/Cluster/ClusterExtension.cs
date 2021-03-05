@@ -1,5 +1,6 @@
 ﻿using System;
 using Autofac;
+using Microsoft.Extensions.Logging;
 
 using DwFramework.Core;
 
@@ -14,28 +15,11 @@ namespace DwFramework.RPC.Plugins
         /// <param name="configKey"></param>
         /// <param name="configPath"></param>
         /// <returns></returns>
-        public static ServiceHost RegisterClusterImpl(this ServiceHost host, string configKey = null, string configPath = null)
+        public static ServiceHost RegisterCluster(this ServiceHost host, string configKey = null, string configPath = null)
         {
-            host.Register(c => new ClusterImpl(configKey, configPath)).SingleInstance();
-            host.OnInitializing += provider => provider.GetRPCService().AddService(provider.GetClusterImpl());
-            host.OnInitialized += provider => provider.GetClusterImpl().Init();
-            return host;
-        }
-
-        /// <summary>
-        /// 注册集群服务
-        /// </summary>
-        /// <param name="host"></param>
-        /// <param name="linkUrl"></param>
-        /// <param name="healthCheckPerMs"></param>
-        /// <param name="bootPeer"></param>
-        /// <returns></returns>
-        public static ServiceHost RegisterClusterImpl(this ServiceHost host, string linkUrl, int healthCheckPerMs, string bootPeer = null)
-        {
-            var clusterImpl = new ClusterImpl(linkUrl, healthCheckPerMs, bootPeer);
-            host.Register(context => clusterImpl).AsSelf().SingleInstance();
-            host.OnInitializing += provider => provider.GetRPCService().AddService(clusterImpl);
-            host.OnInitialized += _ => clusterImpl.Init();
+            host.Register(c => new Cluster(configKey, configPath, c.Resolve<ILogger<Cluster>>())).SingleInstance();
+            host.OnInitializing += provider => provider.GetRPCService().AddService<Cluster>();
+            host.OnInitialized += async provider => await provider.GetCluster().InitAsync(configKey, configPath);
             return host;
         }
 
@@ -44,6 +28,6 @@ namespace DwFramework.RPC.Plugins
         /// </summary>
         /// <param name="provider"></param>
         /// <returns></returns>
-        public static ClusterImpl GetClusterImpl(this IServiceProvider provider) => provider.GetService<ClusterImpl>();
+        public static Cluster GetCluster(this IServiceProvider provider) => provider.GetService<Cluster>();
     }
 }

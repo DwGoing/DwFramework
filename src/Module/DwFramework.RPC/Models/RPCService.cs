@@ -45,13 +45,34 @@ namespace DwFramework.RPC
         }
 
         /// <summary>
+        /// 添加依赖服务
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public RPCService AddDependentService(Type type)
+        {
+            _onConfigureServices += services => services.AddSingleton(type, _ => ServiceHost.Provider.GetService(type));
+            return this;
+        }
+
+        /// <summary>
+        /// 添加依赖服务
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public RPCService AddDependentService<T>() where T : class
+        {
+            AddDependentService(typeof(T));
+            return this;
+        }
+
+        /// <summary>
         /// 添加RPC服务
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public RPCService AddService<T, I>() where T : class
+        public RPCService AddRpcImplement<T>() where T : class
         {
-            _onConfigureServices += services => services.AddSingleton(typeof(I), _ => ServiceHost.Provider.GetService(typeof(T)));
             _onEndpointsBuild += endpoint => endpoint.MapGrpcService<T>();
             return this;
         }
@@ -65,7 +86,6 @@ namespace DwFramework.RPC
         {
             var method = typeof(GrpcEndpointRouteBuilderExtensions).GetMethod("MapGrpcService");
             var genericMethod = method.MakeGenericMethod(type);
-            _onConfigureServices += services => services.AddSingleton(_ => ServiceHost.Provider.GetService(type));
             _onEndpointsBuild += endpoint => genericMethod.Invoke(null, new object[] { endpoint });
             return this;
         }
