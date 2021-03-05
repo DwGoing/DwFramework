@@ -15,11 +15,16 @@ namespace DwFramework.RPC.Plugins
         /// <param name="configKey"></param>
         /// <param name="configPath"></param>
         /// <returns></returns>
-        public static ServiceHost RegisterCluster(this ServiceHost host, string configKey = null, string configPath = null)
+        public static ServiceHost RegisterClusterService(this ServiceHost host, string configKey = null, string configPath = null)
         {
-            host.Register(c => new Cluster(configKey, configPath, c.Resolve<ILogger<Cluster>>())).SingleInstance();
-            host.OnInitializing += provider => provider.GetRPCService().AddService<Cluster>();
-            host.OnInitialized += async provider => await provider.GetCluster().InitAsync(configKey, configPath);
+            host.Register(c => new ClusterService(configKey, configPath, c.Resolve<ILogger<ClusterService>>())).SingleInstance();
+            host.OnInitializing += provider =>
+            {
+                var service = provider.GetRPCService();
+                service.AddExternalService<ClusterService>();
+                service.AddRpcImplement<Cluster>();
+            };
+            host.OnInitialized += provider => provider.GetClusterService().Init();
             return host;
         }
 
@@ -28,6 +33,6 @@ namespace DwFramework.RPC.Plugins
         /// </summary>
         /// <param name="provider"></param>
         /// <returns></returns>
-        public static Cluster GetCluster(this IServiceProvider provider) => provider.GetService<Cluster>();
+        public static ClusterService GetClusterService(this IServiceProvider provider) => provider.GetService<ClusterService>();
     }
 }

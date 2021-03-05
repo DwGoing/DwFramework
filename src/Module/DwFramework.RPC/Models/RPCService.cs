@@ -45,24 +45,35 @@ namespace DwFramework.RPC
         }
 
         /// <summary>
-        /// 添加依赖服务
+        /// 添加内部服务
+        /// </summary>
+        /// <param name="action"></param>
+        /// <returns></returns>
+        public RPCService AddInternalService(Action<IServiceCollection> action)
+        {
+            _onConfigureServices += action;
+            return this;
+        }
+
+        /// <summary>
+        /// 添加外部服务
         /// </summary>
         /// <param name="type"></param>
         /// <returns></returns>
-        public RPCService AddDependentService(Type type)
+        public RPCService AddExternalService(Type type)
         {
             _onConfigureServices += services => services.AddSingleton(type, _ => ServiceHost.Provider.GetService(type));
             return this;
         }
 
         /// <summary>
-        /// 添加依赖服务
+        /// 添加外部服务
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public RPCService AddDependentService<T>() where T : class
+        public RPCService AddExternalService<T>() where T : class
         {
-            AddDependentService(typeof(T));
+            AddExternalService(typeof(T));
             return this;
         }
 

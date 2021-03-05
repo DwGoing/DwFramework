@@ -13,6 +13,7 @@
     <ItemGroup>
         <ProjectReference Include="..\Module\DwFramework.Core\DwFramework.Core.csproj" />
         <ProjectReference Include="..\Module\DwFramework.RPC\DwFramework.RPC.csproj" />
+        <ProjectReference Include="..\Plugins\DwFramework.RPC.Plugins\DwFramework.RPC.Plugins.csproj" />
     </ItemGroup>
     <ItemGroup>
         <None Update="NLog.config">
@@ -22,4 +23,5 @@
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
     </ItemGroup>
+    <ProjectExtensions><VisualStudio><UserProperties config_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
 </Project>

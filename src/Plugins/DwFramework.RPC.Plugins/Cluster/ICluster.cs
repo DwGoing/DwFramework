@@ -13,10 +13,10 @@ namespace DwFramework.RPC.Plugins
         [OperationContract]
         Task<JoinResponse> JoinAsync(CallContext context = default);
         [OperationContract]
-        void HealthCheck(CallContext context = default);
+        Task HealthCheckAsync(CallContext context = default);
         [OperationContract]
-        ValueTask SyncRouteTableAsync(Dictionary<string, string> request, CallContext context = default);
+        Task SyncRouteTableAsync(Dictionary<string, string> request, CallContext context = default);
         [OperationContract]
-        ValueTask SyncDataAsync(SyncDataRequest request, CallContext context = default);
+        Task SyncDataAsync(SyncDataRequest request, CallContext context = default);
     }
 }
