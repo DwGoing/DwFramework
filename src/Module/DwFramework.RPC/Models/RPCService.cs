@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Net;
+using System.Reflection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Routing;
@@ -10,12 +11,13 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using ProtoBuf.Grpc.Server;
+using ProtoBuf.Grpc.Configuration;
 
 using DwFramework.Core;
 using DwFramework.Core.Plugins;
-using ProtoBuf.Grpc.Server;
-using Microsoft.Extensions.DependencyInjection.Extensions;
-using ProtoBuf.Grpc.Configuration;
+using DwFramework.Core.Extensions;
 
 namespace DwFramework.RPC
 {
@@ -79,7 +81,7 @@ namespace DwFramework.RPC
         /// <returns></returns>
         public RPCService AddExternalService(Type type)
         {
-            _onConfigureServices += services => services.AddSingleton(type, _ => ServiceHost.Provider.GetService(type));
+            _onConfigureServices += services => services.AddTransient(type, _ => ServiceHost.Provider.GetService(type));
             return this;
         }
 
@@ -119,24 +121,24 @@ namespace DwFramework.RPC
         }
 
         /// <summary>
-        /// 从程序集中注册Rpc函数
+        /// 从程序集中注册Rpc服务
         /// </summary>
-        //private void RegisterFuncFromAssemblies()
-        //{
-        //    var assemblies = AppDomain.CurrentDomain.GetAssemblies();
-        //    assemblies.ForEach(assembly =>
-        //    {
-        //        var types = assembly.GetTypes();
-        //        types.ForEach(type =>
-        //        {
-        //            var attr = type.GetCustomAttribute<RPCAttribute>();
-        //            if (attr == null) return;
-        //            var service = ServiceHost.Provider.GetService(type);
-        //            if (service == null) return;
-        //            _server.Services.Add(GetServerServiceDefinition(service));
-        //        });
-        //    });
-        //}
+        private void AddRpcImplementFromAssemblies()
+        {
+            var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+            assemblies.ForEach(assembly =>
+            {
+                var types = assembly.GetTypes();
+                types.ForEach(type =>
+                {
+                    var attribute = type.GetCustomAttribute<RPCAttribute>();
+                    if (attribute == null) return;
+                    AddInternalService(services => services.AddTransient(type));
+                    AddRpcImplement(type);
+                    attribute.ExternalServices.ForEach(item => AddExternalService(item));
+                });
+            });
+        }
 
         /// <summary>
         /// 运行服务
@@ -148,6 +150,7 @@ namespace DwFramework.RPC
             {
                 _cancellationTokenSource?.Dispose();
                 _cancellationTokenSource = new CancellationTokenSource();
+                AddRpcImplementFromAssemblies();
                 var builder = Host.CreateDefaultBuilder()
                     .ConfigureWebHostDefaults(builder =>
                     {
