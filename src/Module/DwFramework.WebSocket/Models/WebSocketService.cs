@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.DependencyInjection;
 
 using DwFramework.Core;
 using DwFramework.Core.Plugins;
@@ -54,6 +55,7 @@ namespace DwFramework.WebSocket
         private Config _config;
         private readonly Dictionary<string, WebSocketConnection> _connections = new Dictionary<string, WebSocketConnection>();
         private CancellationTokenSource _cancellationTokenSource;
+        private event Action<IServiceCollection> _onConfigureServices;
 
         public event Action<WebSocketConnection, OnConnectEventArgs> OnConnect;
         public event Action<WebSocketConnection, OnCloceEventArgs> OnClose;
@@ -87,6 +89,39 @@ namespace DwFramework.WebSocket
                 _ = _logger?.LogErrorAsync(ex.Message);
                 throw;
             }
+        }
+
+        /// <summary>
+        /// 添加内部服务
+        /// </summary>
+        /// <param name="action"></param>
+        /// <returns></returns>
+        public WebSocketService AddInternalService(Action<IServiceCollection> action)
+        {
+            _onConfigureServices += action;
+            return this;
+        }
+
+        /// <summary>
+        /// 添加外部服务
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public WebSocketService AddExternalService(Type type)
+        {
+            _onConfigureServices += services => services.AddSingleton(type, _ => ServiceHost.Provider.GetService(type));
+            return this;
+        }
+
+        /// <summary>
+        /// 添加外部服务
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public WebSocketService AddExternalService<T>() where T : class
+        {
+            AddExternalService(typeof(T));
+            return this;
         }
 
         /// <summary>
@@ -133,6 +168,7 @@ namespace DwFramework.WebSocket
                          }
                          _logger?.LogInformationAsync($"WebSocket服务正在监听:{listen}");
                      })
+                     .ConfigureServices(services => _onConfigureServices?.Invoke(services))
                      .Configure(app =>
                      {
                          app.UseWebSockets();
