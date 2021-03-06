@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.DependencyInjection;
 
 using DwFramework.Core;
 using DwFramework.Core.Plugins;
@@ -23,6 +24,7 @@ namespace DwFramework.WebAPI
         private readonly ILogger<WebAPIService> _logger;
         private Config _config;
         private CancellationTokenSource _cancellationTokenSource;
+        private event Action<IServiceCollection> _onConfigureServices;
 
         /// <summary>
         /// 构造函数
@@ -50,6 +52,39 @@ namespace DwFramework.WebAPI
                 _ = _logger?.LogErrorAsync(ex.Message);
                 throw;
             }
+        }
+
+        /// <summary>
+        /// 添加内部服务
+        /// </summary>
+        /// <param name="action"></param>
+        /// <returns></returns>
+        public WebAPIService AddInternalService(Action<IServiceCollection> action)
+        {
+            _onConfigureServices += action;
+            return this;
+        }
+
+        /// <summary>
+        /// 添加外部服务
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public WebAPIService AddExternalService(Type type)
+        {
+            _onConfigureServices += services => services.AddSingleton(type, _ => ServiceHost.Provider.GetService(type));
+            return this;
+        }
+
+        /// <summary>
+        /// 添加外部服务
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public WebAPIService AddExternalService<T>() where T : class
+        {
+            AddExternalService(typeof(T));
+            return this;
         }
 
         /// <summary>
@@ -96,8 +131,9 @@ namespace DwFramework.WebAPI
                                 if (!string.IsNullOrEmpty(listen)) listen += ",";
                                 listen += $"https://{ip}:{port}";
                             }
-                            if (_logger != null) await _logger?.LogInformationAsync($"WebAPI服务开始监听:{listen}");
+                            if (_logger != null) await _logger?.LogInformationAsync($"WebAPI服务正在监听:{listen}");
                         })
+                        .ConfigureServices(services => _onConfigureServices?.Invoke(services))
                         .UseStartup<T>();
                     });
                 await builder.Build().RunAsync(_cancellationTokenSource.Token);
