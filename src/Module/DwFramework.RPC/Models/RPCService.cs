@@ -62,7 +62,7 @@ namespace DwFramework.RPC
         /// <returns></returns>
         public RPCService AddExternalService(Type type)
         {
-            _onConfigureServices += services => services.AddSingleton(type, _ => ServiceHost.Provider.GetService(type));
+            _onConfigureServices += services => services.AddTransient(type, _ => ServiceHost.Provider.GetService(type));
             return this;
         }
 
