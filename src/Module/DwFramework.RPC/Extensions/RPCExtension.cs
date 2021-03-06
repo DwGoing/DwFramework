@@ -18,15 +18,15 @@ namespace DwFramework.RPC
         public static void RegisterRPCService(this ServiceHost host, string path = null, string key = null, params Type[] services)
         {
             host.RegisterType<RPCService>().SingleInstance();
-            services.ForEach(item =>
-            {
-                host.OnInitializing += provider =>
-                {
-                    var service = provider.GetService(item);
-                    if (service == null) return;
-                    provider.GetRPCService().AddService(service);
-                };
-            });
+            //services.ForEach(item =>
+            //{
+            //    host.OnInitializing += provider =>
+            //    {
+            //        var service = provider.GetService(item);
+            //        if (service == null) return;
+            //        provider.GetRPCService().AddService(service);
+            //    };
+            //});
             host.OnInitialized += async provider => await provider.RunRPCServiceAsync(path, key);
         }
 
@@ -58,10 +58,10 @@ namespace DwFramework.RPC
         /// 停止服务
         /// </summary>
         /// <param name="provider"></param>
-        public static async Task StopRpcServiceAsync(this IServiceProvider provider)
+        public static void StopRpcService(this IServiceProvider provider)
         {
             var service = provider.GetRPCService();
-            await service.StopAsync();
+            service.Stop();
         }
     }
 }

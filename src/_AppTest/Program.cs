@@ -7,27 +7,45 @@ using System.Threading.Tasks;
 using DwFramework.Core;
 using DwFramework.Core.Plugins;
 using DwFramework.Core.Extensions;
-using DwFramework.WebSocket;
-using DwFramework.Socket;
-using Autofac;
+using DwFramework.RPC;
+
+using System.ServiceModel;
+using ProtoBuf;
+using ProtoBuf.Grpc.Configuration;
+using ProtoBuf.Grpc;
+using Microsoft.Extensions.DependencyInjection;
+using ProtoBuf.Grpc.Client;
+using Grpc.Net.Client;
 
 namespace _AppTest
 {
-    public sealed class WebSocketMessage
+    [Service]
+    public interface IA
     {
-        public string Method { get; set; }
-        public object[] Params { get; set; }
+        [OperationContract]
+        Task<Response> Do(Request request, CallContext context = default);
     }
 
-    public sealed class LoginInfo
+    [ProtoContract]
+    public class Request
     {
-        public string Type { get; set; }
-        public string Token { get; set; }
-        public string Username { get; set; }
-        public string Passowrd { get; set; }
-        public string Uid { get; set; }
-        public string OriginCode { get; set; }
-        public string AccountType { get; set; }
+        [ProtoMember(1)]
+        public string Message { get; set; }
+    }
+
+    [ProtoContract]
+    public class Response
+    {
+        [ProtoMember(1)]
+        public string Message { get; set; }
+    }
+
+    public class A : IA
+    {
+        public Task<Response> Do(Request request, CallContext context = default)
+        {
+            return Task.FromResult(new Response() { Message = request.Message });
+        }
     }
 
     class Program
@@ -36,36 +54,24 @@ namespace _AppTest
         {
             try
             {
-                var c = new WebSocketClient();
-                c.OnReceive += args =>
+                var host = new ServiceHost();
+                host.AddJsonConfig("Config.json");
+                host.RegisterLog();
+                host.RegisterRPCService("RPC");
+                host.OnInitializing += p =>
                 {
-                    var res = args.Data.FromJsonBytes<ResultInfo>();
+                    var rpc = p.GetRPCService();
+                    rpc.AddInternalService(s => s.AddTransient<A>());
+                    rpc.AddRpcImplement<A>();
                 };
-                await c.ConnectAsync("ws://localhost:6002");
-                await c.SendAsync(new WebSocketMessage()
+                host.OnInitialized += p =>
                 {
-                    Method = "Auth.Login",
-                    Params = new object[] { new LoginInfo(){
-                        Type="t",
-                        Username = "commkit",
-                        Passowrd = "123456",
-                        Uid="330624197207315918",
-                        OriginCode="3306240011",
-                        AccountType="2"
-                    }}
-                }.ToJsonBytes());
-                Console.Read();
-                // var host = new ServiceHost();
-                // host.AddJsonConfig("Config.json");
-                // host.RegisterLog();
-                // host.RegisterTcpService("Tcp");
-                // host.RegisterWebSocketService("WebSocket");
-                // host.RegisterFromAssemblies();
-                // host.OnInitialized += p =>
-                // {
-
-                // };
-                // await host.RunAsync();
+                    GrpcClientFactory.AllowUnencryptedHttp2 = true;
+                    var channel = GrpcChannel.ForAddress("http://localhost:6002");
+                    var client = channel.CreateGrpcService<IA>();
+                    var res = client.Do(new Request() { Message = "Hello" }).Result;
+                };
+                await host.RunAsync();
             }
             catch (Exception ex)
             {

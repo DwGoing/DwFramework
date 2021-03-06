@@ -1,11 +1,7 @@
 ﻿{
-  "Tcp": {
-    "Listen": "0.0.0.0:10100"
-  },
-  "WebSocket": {
+  "RPC": {
     "Listen": {
-      "ws": ":6002"
-    },
-    "BufferSize": 1024
+      "http": ":6002"
+    }
   }
 }

@@ -15,14 +15,20 @@
         <ProjectReference Include="..\DwFramework.Core\DwFramework.Core.csproj" />
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="Grpc.Core" Version="2.35.0" />
-    </ItemGroup>
-    <ItemGroup>
         <None Include="README.md">
             <IncludeInPackage>true</IncludeInPackage>
         </None>
         <None Include="..\..\..\LICENSE" Link="LICENSE">
             <IncludeInPackage>true</IncludeInPackage>
         </None>
+    </ItemGroup>
+    <ItemGroup>
+      <PackageReference Include="Grpc.Net.Client" Version="2.35.0" />
+      <PackageReference Include="Microsoft.AspNetCore.Hosting" Version="2.2.7" />
+      <PackageReference Include="Microsoft.AspNetCore.Server.Kestrel" Version="2.2.0" />
+      <PackageReference Include="protobuf-net.Grpc" Version="1.0.147" />
+      <PackageReference Include="protobuf-net.Grpc.AspNetCore" Version="1.0.147" />
+      <PackageReference Include="protobuf-net.Grpc.AspNetCore.Reflection" Version="1.0.147" />
+      <PackageReference Include="System.ServiceModel.Primitives" Version="4.8.1" />
     </ItemGroup>
 </Project>
