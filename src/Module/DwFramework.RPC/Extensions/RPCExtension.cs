@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 
 using DwFramework.Core;
 using DwFramework.Core.Extensions;
@@ -18,15 +19,15 @@ namespace DwFramework.RPC
         public static void RegisterRPCService(this ServiceHost host, string path = null, string key = null, params Type[] services)
         {
             host.RegisterType<RPCService>().SingleInstance();
-            //services.ForEach(item =>
-            //{
-            //    host.OnInitializing += provider =>
-            //    {
-            //        var service = provider.GetService(item);
-            //        if (service == null) return;
-            //        provider.GetRPCService().AddService(service);
-            //    };
-            //});
+            services.ForEach(item =>
+            {
+                host.OnInitializing += provider =>
+                {
+                    var service = provider.GetRPCService();
+                    service.AddInternalService(services => services.AddTransient(item));
+                    service.AddRpcImplement(item);
+                };
+            });
             host.OnInitialized += async provider => await provider.RunRPCServiceAsync(path, key);
         }
 
@@ -37,7 +38,7 @@ namespace DwFramework.RPC
         /// <returns></returns>
         public static RPCService GetRPCService(this IServiceProvider provider)
         {
-            return provider.GetService<RPCService>();
+            return (RPCService)provider.GetService(typeof(RPCService));
         }
 
         /// <summary>

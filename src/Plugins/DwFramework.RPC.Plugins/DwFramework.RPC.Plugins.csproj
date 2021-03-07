@@ -1,41 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
-    <PropertyGroup>
-        <TargetFramework>net5.0</TargetFramework>
-        <ReleaseVersion>5</ReleaseVersion>
-        <BuildVersion>0.0.56-dev.713</BuildVersion>
-        <Version>$(ReleaseVersion).$(BuildVersion)</Version>
-        <Authors>DwGoing</Authors>
-        <Description>DwFramework RPC插件库</Description>
-        <PackageProjectUrl>https://github.com/Dwgoing/DwFramework</PackageProjectUrl>
-    </PropertyGroup>
-    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-        <OutputPath>..\DwFramework.RPC.Plugins\bin\Debug</OutputPath>
-    </PropertyGroup>
-    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-        <OutputPath>..\DwFramework.RPC.Plugins\bin\Release</OutputPath>
-    </PropertyGroup>
-    <ItemGroup>
-        <ProjectReference Include="..\..\Module\DwFramework.RPC\DwFramework.RPC.csproj" />
-    </ItemGroup>
-    <ItemGroup>
-        <PackageReference Include="Google.Protobuf" Version="3.15.1" />
-        <PackageReference Include="Grpc.Core" Version="2.35.0" />
-        <PackageReference Include="Grpc.Tools" Version="2.35.0">
-            <PrivateAssets>all</PrivateAssets>
-            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
-    </ItemGroup>
-    <ItemGroup>
-        <Protobuf Include="*.proto" AdditionalImportDirs="..\..\Module\DwFramework.Rpc\Protobufs" />
-        <Protobuf Include="Cluster\Cluster.proto" />
-    </ItemGroup>
-    <ItemGroup>
-        <None Include="README.md">
-            <IncludeInPackage>true</IncludeInPackage>
-        </None>
-        <None Include="..\..\..\LICENSE" Link="LICENSE">
-            <IncludeInPackage>true</IncludeInPackage>
-        </None>
-    </ItemGroup>
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <ReleaseVersion>5</ReleaseVersion>
+    <BuildVersion>0.0.56-dev.713</BuildVersion>
+    <Version>$(ReleaseVersion).$(BuildVersion)</Version>
+    <Authors>DwGoing</Authors>
+    <Description>DwFramework RPC插件库</Description>
+    <PackageProjectUrl>https://github.com/Dwgoing/DwFramework</PackageProjectUrl>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <OutputPath>..\DwFramework.RPC.Plugins\bin\Debug</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <OutputPath>..\DwFramework.RPC.Plugins\bin\Release</OutputPath>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Module\DwFramework.RPC\DwFramework.RPC.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="README.md">
+      <IncludeInPackage>true</IncludeInPackage>
+    </None>
+    <None Include="..\..\..\LICENSE" Link="LICENSE">
+      <IncludeInPackage>true</IncludeInPackage>
+    </None>
+  </ItemGroup>
 </Project>
