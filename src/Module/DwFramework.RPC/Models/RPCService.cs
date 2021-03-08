@@ -111,14 +111,14 @@ namespace DwFramework.RPC
             foreach (var assembly in assemblies)
             {
                 var types = assembly.GetTypes();
-                foreach (var type in types)
+                types.ForEach(type =>
                 {
                     var attribute = type.GetCustomAttribute<RPCAttribute>();
-                    if (attribute == null) continue;
+                    if (attribute == null) return;
                     AddInternalService(services => services.AddTransient(type));
                     AddRpcImplement(type);
                     attribute.ExternalServices.ForEach(item => AddExternalService(item));
-                }
+                });
             }
         }
 
