@@ -16,6 +16,7 @@ using ProtoBuf.Grpc.Server;
 
 using DwFramework.Core;
 using DwFramework.Core.Plugins;
+using DwFramework.Core.Extensions;
 
 namespace DwFramework.RPC
 {
@@ -93,7 +94,7 @@ namespace DwFramework.RPC
         /// </summary>
         /// <param name="type"></param>
         /// <returns></returns>
-        public RPCService AddService(Type type)
+        public RPCService AddRpcImplement(Type type)
         {
             var method = typeof(GrpcEndpointRouteBuilderExtensions).GetMethod("MapGrpcService");
             var genericMethod = method.MakeGenericMethod(type);
@@ -110,12 +111,13 @@ namespace DwFramework.RPC
             foreach (var assembly in assemblies)
             {
                 var types = assembly.GetTypes();
-                foreach (var item in types)
+                foreach (var type in types)
                 {
-                    var attr = item.GetCustomAttribute<RPCAttribute>();
-                    if (attr == null) continue;
-                    if (!ServiceHost.Provider.IsRegistered(item)) continue;
-                    AddService(item);
+                    var attribute = type.GetCustomAttribute<RPCAttribute>();
+                    if (attribute == null) continue;
+                    AddInternalService(services => services.AddTransient(type));
+                    AddRpcImplement(type);
+                    attribute.ExternalServices.ForEach(item => AddExternalService(item));
                 }
             }
         }
