@@ -1,11 +1,7 @@
 ﻿{
-  "RPC": {
+  "WebAPI": {
     "Listen": {
-      "http": ":6002"
+      "http": ":10000"
     }
-  },
-  "Test": {
-    "LinkUrl": "http://127.0.0.1:6002",
-    "BootPeer": "http://127.0.0.1:6000"
   }
 }

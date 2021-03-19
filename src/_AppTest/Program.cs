@@ -5,8 +5,7 @@ using System.Threading.Tasks;
 using DwFramework.Core;
 using DwFramework.Core.Plugins;
 using DwFramework.Core.Extensions;
-using DwFramework.RPC;
-using DwFramework.RPC.Plugins;
+using DwFramework.WebAPI;
 
 namespace _AppTest
 {
@@ -19,14 +18,9 @@ namespace _AppTest
                 var host = new ServiceHost();
                 host.AddJsonConfig("Config.json");
                 host.RegisterLog();
-                host.RegisterRPCService("RPC");
-                host.RegisterClusterService("Test");
+                host.RegisterWebAPIService<Startup>("WebAPI");
                 host.OnInitializing += p =>
                 {
-                    var s = p.GetClusterService();
-                    s.OnJoin += id => s.SyncData(DataType.Text, Encoding.UTF8.GetBytes($"Hello {id}"));
-                    s.OnReceiveData += (id, type, data) => Console.WriteLine(Encoding.UTF8.GetString(data));
-                    s.OnExit += id => Console.WriteLine($"{id} Exit");
                 };
                 host.OnInitialized += p =>
                 {

@@ -14,8 +14,7 @@
     </PropertyGroup>
     <ItemGroup>
         <ProjectReference Include="..\Module\DwFramework.Core\DwFramework.Core.csproj" />
-        <ProjectReference Include="..\Module\DwFramework.RPC\DwFramework.RPC.csproj" />
-        <ProjectReference Include="..\Plugins\DwFramework.RPC.Plugins\DwFramework.RPC.Plugins.csproj" />
+        <ProjectReference Include="..\Module\DwFramework.WebAPI\DwFramework.WebAPI.csproj" />
     </ItemGroup>
     <ItemGroup>
         <None Update="NLog.config">
