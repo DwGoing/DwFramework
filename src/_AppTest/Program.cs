@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Text;
-using System.Threading;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using DwFramework.Core;
 using DwFramework.Core.Plugins;
@@ -16,9 +16,13 @@ namespace _AppTest
             try
             {
                 var host = new ServiceHost();
-                host.AddJsonConfig("Config.json");
                 host.RegisterLog();
-                host.RegisterWebAPIService<Startup>("WebAPI");
+                host.RegisterWebAPIService<Startup>(new WebAPIService.Config()
+                {
+                    Listen = new Dictionary<string, string>() {
+                        { "http" , ":5000"}
+                    }
+                });
                 host.OnInitializing += p =>
                 {
                 };

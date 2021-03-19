@@ -47,13 +47,12 @@ namespace DwFramework.RPC
         /// <summary>
         /// 读取配置
         /// </summary>
-        /// <param name="path"></param>
-        /// <param name="key"></param>
-        public void ReadConfig(string path = null, string key = null)
+        /// <param name="config"></param>
+        public void ReadConfig(Config config)
         {
             try
             {
-                _config = ReadConfig<Config>(path, key);
+                _config = config;
                 if (_config == null) throw new Exception("未读取到Rpc配置");
             }
             catch (Exception ex)
@@ -61,6 +60,16 @@ namespace DwFramework.RPC
                 _ = _logger?.LogErrorAsync(ex.Message);
                 throw;
             }
+        }
+
+        /// <summary>
+        /// 读取配置
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="key"></param>
+        public void ReadConfig(string path = null, string key = null)
+        {
+            ReadConfig(ReadConfig<Config>(path, key));
         }
 
         /// <summary>

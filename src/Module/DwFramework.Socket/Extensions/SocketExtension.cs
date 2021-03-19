@@ -12,6 +12,17 @@ namespace DwFramework.Socket
         /// 注册服务
         /// </summary>
         /// <param name="host"></param>
+        /// <param name="config"></param>
+        public static void RegisterTcpService(this ServiceHost host, TcpService.Config config)
+        {
+            host.RegisterType<TcpService>().SingleInstance();
+            host.OnInitialized += async provider => await provider.RunTcpServiceAsync(config);
+        }
+
+        /// <summary>
+        /// 注册服务
+        /// </summary>
+        /// <param name="host"></param>
         /// <param name="path"></param>
         /// <param name="key"></param>
         public static void RegisterTcpService(this ServiceHost host, string path = null, string key = null)
@@ -28,6 +39,19 @@ namespace DwFramework.Socket
         public static TcpService GetTcpService(this IServiceProvider provider)
         {
             return provider.GetService<TcpService>();
+        }
+
+        /// <summary>
+        /// 运行服务
+        /// </summary>
+        /// <param name="provider"></param>
+        /// <param name="config"></param>
+        /// <returns></returns>
+        public static async Task RunTcpServiceAsync(this IServiceProvider provider, TcpService.Config config)
+        {
+            var service = provider.GetTcpService();
+            service.ReadConfig(config);
+            await service.RunAsync();
         }
 
         /// <summary>
@@ -75,6 +99,17 @@ namespace DwFramework.Socket
         /// 注册服务
         /// </summary>
         /// <param name="host"></param>
+        /// <param name="config"></param>
+        public static void RegisterUdpService(this ServiceHost host, UdpService.Config config)
+        {
+            host.RegisterType<UdpService>().SingleInstance();
+            host.OnInitialized += async provider => await provider.RunUdpServiceAsync(config);
+        }
+
+        /// <summary>
+        /// 注册服务
+        /// </summary>
+        /// <param name="host"></param>
         /// <param name="path"></param>
         /// <param name="key"></param>
         public static void RegisterUdpService(this ServiceHost host, string path = null, string key = null)
@@ -91,6 +126,19 @@ namespace DwFramework.Socket
         public static UdpService GetUdpService(this IServiceProvider provider)
         {
             return provider.GetService<UdpService>();
+        }
+
+        /// <summary>
+        /// 运行服务
+        /// </summary>
+        /// <param name="provider"></param>
+        /// <param name="config"></param>
+        /// <returns></returns>
+        public static async Task RunUdpServiceAsync(this IServiceProvider provider, UdpService.Config config)
+        {
+            var service = provider.GetUdpService();
+            service.ReadConfig(config);
+            await service.RunAsync();
         }
 
         /// <summary>

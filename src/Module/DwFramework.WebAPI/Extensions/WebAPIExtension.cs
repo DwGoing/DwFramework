@@ -12,6 +12,18 @@ namespace DwFramework.WebAPI
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="host"></param>
+        /// <param name="config"></param>
+        public static void RegisterWebAPIService<T>(this ServiceHost host, WebAPIService.Config config) where T : class
+        {
+            host.RegisterType<WebAPIService>().SingleInstance();
+            host.OnInitialized += async provider => await provider.RunWebAPIServiceAsync<T>(config);
+        }
+
+        /// <summary>
+        /// 注册服务
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="host"></param>
         /// <param name="path"></param>
         /// <param name="key"></param>
         public static void RegisterWebAPIService<T>(this ServiceHost host, string path = null, string key = null) where T : class
@@ -28,6 +40,20 @@ namespace DwFramework.WebAPI
         public static WebAPIService GetWebAPIService(this IServiceProvider provider)
         {
             return provider.GetService<WebAPIService>();
+        }
+
+        /// <summary>
+        /// 运行服务
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="provider"></param>
+        /// <param name="config"></param>
+        /// <returns></returns>
+        public static async Task RunWebAPIServiceAsync<T>(this IServiceProvider provider, WebAPIService.Config config) where T : class
+        {
+            var service = provider.GetWebAPIService();
+            service.ReadConfig(config);
+            await service.RunAsync<T>();
         }
 
         /// <summary>
