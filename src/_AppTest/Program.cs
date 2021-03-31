@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using DwFramework.Core;
 using DwFramework.Core.Plugins;
 using DwFramework.Core.Extensions;
-using DwFramework.WebAPI;
 
 namespace _AppTest
 {
@@ -17,12 +16,6 @@ namespace _AppTest
             {
                 var host = new ServiceHost();
                 host.RegisterLog();
-                host.RegisterWebAPIService<Startup>(new WebAPIService.Config()
-                {
-                    Listen = new Dictionary<string, string>() {
-                        { "http" , ":5000"}
-                    }
-                });
                 host.OnInitializing += p =>
                 {
                 };
