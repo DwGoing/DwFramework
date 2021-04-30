@@ -3,7 +3,7 @@
     <PropertyGroup>
         <TargetFramework>net5.0</TargetFramework>
         <ReleaseVersion>5</ReleaseVersion>
-        <BuildVersion>0.0.56-dev.713</BuildVersion>
+        <BuildVersion>0.0.17-20210430.974</BuildVersion>
         <Version>$(ReleaseVersion).$(BuildVersion)</Version>
         <Authors>DwGoing</Authors>
         <Description>DwFramework WebSocket库</Description>
