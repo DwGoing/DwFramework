@@ -3,7 +3,7 @@
     <PropertyGroup>
         <TargetFramework>net5.0</TargetFramework>
         <ReleaseVersion>5</ReleaseVersion>
-        <BuildVersion>0.0.56-dev.713</BuildVersion>
+        <BuildVersion>0.1.17-20200506.9652</BuildVersion>
         <Version>$(ReleaseVersion).$(BuildVersion)</Version>
         <Authors>DwGoing</Authors>
         <Description>DwFramework ORM插件库</Description>

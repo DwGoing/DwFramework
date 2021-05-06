@@ -3,7 +3,7 @@
     <PropertyGroup>
         <TargetFramework>net5.0</TargetFramework>
         <ReleaseVersion>5</ReleaseVersion>
-        <BuildVersion>0.1.16-20210425.3694</BuildVersion>
+        <BuildVersion>0.1.17-20200506.9657</BuildVersion>
         <Version>$(ReleaseVersion).$(BuildVersion)</Version>
         <Authors>DwGoing</Authors>
         <Description>DwFramework WebAPI库</Description>
