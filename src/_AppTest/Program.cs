@@ -6,17 +6,29 @@ using System.Threading.Tasks;
 using DwFramework.Core;
 using DwFramework.Core.Plugins;
 using DwFramework.Core.Extensions;
-using DwFramework.RPC;
-using System.ServiceModel;
-using ProtoBuf;
-using ProtoBuf.Grpc.Configuration;
-using ProtoBuf.Grpc;
-using Microsoft.Extensions.DependencyInjection;
-using ProtoBuf.Grpc.Client;
-using Grpc.Net.Client;
+using DwFramework.ORM;
+using DwFramework.ORM.Plugins;
+using SqlSugar;
 
 namespace _AppTest
 {
+    [SugarTable("user")]
+    public sealed class User
+    {
+        [SugarColumn(ColumnName = "id", IsIdentity = true, IsPrimaryKey = true)]
+        public long ID { get; set; }
+        [SugarColumn(ColumnName = "tag")]
+        public string Tag { get; set; }
+        [SugarColumn(ColumnName = "address")]
+        public string Address { get; set; }
+    }
+
+    [Registerable(lifetime: Lifetime.Singleton, isAutoActivate: true)]
+    public sealed class R : BaseRepository<User>
+    {
+        public R(ORMService ormService) : base(ormService, "MySql") { }
+    }
+
     class Program
     {
         static async Task Main(string[] args)
@@ -26,20 +38,17 @@ namespace _AppTest
                 var host = new ServiceHost();
                 host.AddJsonConfig("Config.json");
                 host.RegisterLog();
-                host.RegisterType<B>();
-                host.RegisterRPCService("Rpc");
+                host.RegisterORMService("ORM");
+                host.RegisterFromAssemblies();
                 host.OnInitializing += p =>
                 {
-                    var rpc = p.GetRPCService();
-                    rpc.AddExternalService<B>();
                 };
                 host.OnInitialized += p =>
                 {
-                    HttpClient.DefaultProxy = new WebProxy();
-                    GrpcClientFactory.AllowUnencryptedHttp2 = true;
-                    var channel = GrpcChannel.ForAddress("http://localhost:10000");
-                    var client = channel.CreateGrpcService<IA>();
-                    var res = client.Do(new Request() { Message = "Hello" }).Result;
+                    var s = p.GetService<R>();
+                    var res = s.InsertOrUpdateAsync(new List<User>(){
+                        new User(){ Tag = "TEST1" , Address = "0xf22Cc2f4Ba4fE5Ab7e23973FfA9dA816cff0E13D"}
+                    }, item => item.Address).Result;
                 };
                 await host.RunAsync();
             }
@@ -50,45 +59,5 @@ namespace _AppTest
             }
         }
     }
-}
-
-[Service]
-public interface IA
-{
-    [OperationContract]
-    Task<Response> Do(Request request, CallContext context = default);
-}
-
-[ProtoContract]
-public class Request
-{
-    [ProtoMember(1)]
-    public string Message { get; set; }
-}
-
-[ProtoContract]
-public class Response
-{
-    [ProtoMember(1)]
-    public string Message { get; set; }
-}
-
-[RPC]
-public class A : IA
-{
-    public A(B b)
-    {
-        Console.WriteLine(b.ID);
-    }
-
-    public Task<Response> Do(Request request, CallContext context = default)
-    {
-        return Task.FromResult(new Response() { Message = request.Message });
-    }
-}
-
-public class B
-{
-    public string ID = Guid.NewGuid().ToString();
 }
 

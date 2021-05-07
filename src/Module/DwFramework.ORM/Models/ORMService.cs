@@ -105,7 +105,7 @@ namespace DwFramework.ORM
         {
             try
             {
-                if (!_config.ConnectionConfigs.ContainsKey(connName)) return null;
+                if (!_config.ConnectionConfigs.ContainsKey(connName)) throw new Exception("找不到该连接的配置");
                 var connConfig = _config.ConnectionConfigs[connName];
                 var config = new ConnectionConfig()
                 {
@@ -132,7 +132,7 @@ namespace DwFramework.ORM
                 if (entityNameService != null) config.ConfigureExternalServices.EntityNameService = entityNameService;
                 if (entityService != null) config.ConfigureExternalServices.EntityService = entityService;
                 var db = new SqlSugarClient(config);
-                if (db == null) throw new Exception("数据库连接创建异常");
+                if (db == null) throw new Exception("无法创建连接");
                 return db;
             }
             catch (Exception ex)

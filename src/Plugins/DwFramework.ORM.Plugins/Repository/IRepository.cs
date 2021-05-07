@@ -1,20 +1,15 @@
 ﻿using System;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using System.Collections.Generic;
+using SqlSugar;
 
 namespace DwFramework.ORM.Plugins
 {
     public interface IRepository<T> where T : class, new()
     {
-        Task<T[]> FindAllAsync(int cacheExpireSeconds = 0);
-        Task<T[]> FindAllAsync(int pageIndex, int pageSize, int cacheExpireSeconds = 0);
-        Task<T[]> FindAsync(Expression<Func<T, bool>> expression, int cacheExpireSeconds = 0);
-        Task<T[]> FindAsync(Expression<Func<T, bool>> expression, int pageIndex, int pageSize, int cacheExpireSeconds = 0);
-        Task<T> FindSingleAsync(Expression<Func<T, bool>> expression, int cacheExpireSeconds = 0);
-        Task<T> InsertAsync(T newRecord);
-        Task<int> InsertAsync(T[] newRecords);
-        Task<int> DeleteAsync(Expression<Func<T, bool>> expression);
-        Task<bool> UpdateAsync(T newRecord);
-        Task<int> UpdateAsync(T[] newRecords);
+        public ISugarQueryable<T> Select(Expression<Func<T, bool>> expression = null, SqlSugarClient conn = null);
+        public Task<List<T>> InsertOrUpdateAsync(List<T> objs, Expression<Func<T, object>> identity = null, SqlSugarClient con = null);
+        public Task<bool> DeleteAsync(Expression<Func<T, bool>> expression = null, SqlSugarClient con = null);
     }
 }
