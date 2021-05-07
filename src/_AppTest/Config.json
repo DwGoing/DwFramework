@@ -1,5 +1,5 @@
 ﻿{
-  "WebAPI": {
+  "Rpc": {
     "Listen": {
       "http": ":10000"
     }
