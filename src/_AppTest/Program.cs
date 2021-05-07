@@ -1,5 +1,6 @@
 ﻿using System;
-using System.Text;
+using System.Net;
+using System.Net.Http;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using DwFramework.Core;
@@ -34,6 +35,7 @@ namespace _AppTest
                 };
                 host.OnInitialized += p =>
                 {
+                    HttpClient.DefaultProxy = new WebProxy();
                     GrpcClientFactory.AllowUnencryptedHttp2 = true;
                     var channel = GrpcChannel.ForAddress("http://localhost:10000");
                     var client = channel.CreateGrpcService<IA>();
