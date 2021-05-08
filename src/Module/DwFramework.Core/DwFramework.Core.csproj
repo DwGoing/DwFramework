@@ -26,7 +26,6 @@
         <PackageReference Include="RSAExtensions" Version="1.0.3" />
         <PackageReference Include="CHSPinYinConv" Version="1.0.0" />
         <PackageReference Include="K4os.Compression.LZ4.Streams" Version="1.2.6" />
-        <PackageReference Include="Mapster" Version="7.1.5" />
     </ItemGroup>
     <ItemGroup>
         <None Update="README.md">

@@ -10,7 +10,7 @@ namespace DwFramework.Core.Plugins
         public void Set(string key, object value, DateTime expireAt);
         public void Set(string key, object value, TimeSpan expireTime);
         public object Get(string key);
-        public T Get<T>(string key);
+        public T Get<T>(string key) where T : class;
         public void Del(string key);
         public string[] AllKeys();
         public string[] KeysWhere(string pattern);

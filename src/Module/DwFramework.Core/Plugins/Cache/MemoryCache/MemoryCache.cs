@@ -79,7 +79,7 @@ namespace DwFramework.Core.Plugins
         /// <typeparam name="T"></typeparam>
         /// <param name="key"></param>
         /// <returns></returns>
-        public T Get<T>(string key)
+        public T Get<T>(string key) where T : class
         {
             return GetMemoryCacheStore(key).Get<T>(key);
         }
