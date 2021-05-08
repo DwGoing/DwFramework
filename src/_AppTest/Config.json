@@ -1,11 +1,4 @@
 ﻿{
-  "ORM": {
-    "ConnectionConfigs": {
-      "MySql": {
-        "ConnectionString": "server=bancode.net;port=13306;uid=dwgoing;pwd=ayou1209;database=eth_listener;CharSet=utf8mb4;Allow User Variables=True;Allow Zero Datetime=True;SslMode = none;",
-        "DbType": "MySql",
-        "UseMemoryCache": true
-      }
-    }
-  }
+  "ID": 1,
+  "Name": "XXX"
 }
