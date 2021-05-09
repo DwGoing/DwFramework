@@ -1,7 +1,4 @@
 ﻿{
-  "WebAPI": {
-    "Listen": {
-      "http": ":10000"
-    }
-  }
+  "ID": 1,
+  "Name": "XXX"
 }

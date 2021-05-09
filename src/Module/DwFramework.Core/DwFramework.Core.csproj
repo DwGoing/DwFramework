@@ -3,14 +3,14 @@
     <PropertyGroup>
         <TargetFramework>net5.0</TargetFramework>
         <ReleaseVersion>5</ReleaseVersion>
-        <BuildVersion>0.0.56-dev.713</BuildVersion>
+        <BuildVersion>0.1.12-20210331.8031</BuildVersion>
         <Version>$(ReleaseVersion).$(BuildVersion)</Version>
         <Authors>DwGoing</Authors>
         <Description>DwFramework 核心库</Description>
         <PackageProjectUrl>https://github.com/Dwgoing/DwFramework</PackageProjectUrl>
     </PropertyGroup>
     <ItemGroup>
-        <PackageReference Include="Autofac" Version="6.1.0" />
+        <PackageReference Include="Autofac" Version="6.2.0" />
         <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="7.1.0" />
         <PackageReference Include="Autofac.Extras.DynamicProxy" Version="6.0.0" />
         <PackageReference Include="Microsoft.AspNetCore.Hosting" Version="2.2.7" />
@@ -18,15 +18,14 @@
         <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="5.0.0" />
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.1" />
         <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="5.0.0" />
-        <PackageReference Include="NLog" Version="4.7.7" />
-        <PackageReference Include="NLog.Extensions.Logging" Version="1.7.0" />
+        <PackageReference Include="NLog" Version="4.7.9" />
+        <PackageReference Include="NLog.Extensions.Logging" Version="1.7.2" />
         <PackageReference Include="NLog.MailKit" Version="3.3.0" />
         <PackageReference Include="NLog.Targets.ElasticSearch" Version="7.5.0" />
-        <PackageReference Include="Polly" Version="7.2.1" />
+        <PackageReference Include="Polly" Version="7.2.2" />
         <PackageReference Include="RSAExtensions" Version="1.0.3" />
         <PackageReference Include="CHSPinYinConv" Version="1.0.0" />
         <PackageReference Include="K4os.Compression.LZ4.Streams" Version="1.2.6" />
-        <PackageReference Include="Mapster" Version="7.1.3" />
     </ItemGroup>
     <ItemGroup>
         <None Update="README.md">

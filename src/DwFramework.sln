@@ -28,8 +28,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DwFramework.RPC.Plugins", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DwFramework.WebAPI.Plugins", "Plugins\DwFramework.WebAPI.Plugins\DwFramework.WebAPI.Plugins.csproj", "{0408FAE2-435C-49A8-9649-1A3280AEE3E4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DwFramework.Media", "Module\DwFramework.Media\DwFramework.Media.csproj", "{7FDEE232-4A5E-4D9A-9AAA-437777DAF536}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DwFramework.TensorFlow", "Module\DwFramework.TensorFlow\DwFramework.TensorFlow.csproj", "{5F1E2949-75B0-487E-A2E0-744D9CEDA5AB}"
 EndProject
 Global

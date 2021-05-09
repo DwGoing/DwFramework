@@ -11,52 +11,67 @@ PM> Install-Package DwFramework.Core
 ### 0x1 快速开始
 
 ```c#
-var host = new ServiceHost(); // 初始化服务主机
-host.Register(context => new S1()); // 注册服务
-host.RegisterType<S2>(); // 注册服务
-host.RegisterFromAssemblies(); // 注册服务
-host.OnInitialized += provider => provider.GetService<S1>().Do();
-host.OnInitialized += provider => provider.GetService<S2>().Do();
-host.OnInitialized += provider => provider.GetService<S3>().Do();
-host.Run();
-
-class S1
+// 定义接口
+public interface ITestInterface
 {
-    public void Do() => Console.WriteLine("s1");
+    void TestMethod(string str);
 }
 
-class S2
-{
-    public void Do() => Console.WriteLine("s2");
-}
-
+// 定义实现
 [Registerable]
-class S3
+public class TestClass : ITestInterface
 {
-    public void Do() => Console.WriteLine("s3");
+    public void TestMethod(string str)
+    {
+        Console.WriteLine($"TestClass:{str}");
+    }
+}
+
+class Program
+{
+    static async Task Main(string[] args)
+    {
+        var host = new ServiceHost();
+        host.RegisterFromAssemblies();
+        host.OnInitialized += p =>
+        {
+            p.GetService<TestClass>().TestMethod("Hi");
+        };
+        await host.RunAsync();
+    }
 }
 ```
 
 ### 0x2 使用配置文件
 
-提供两种配置方式，你可以将配置都写进全局配置文件中，或者单独对某个模块提供一个配置文件。后者是我们推荐的，每个模块我们会注明全局配置中的Key。
+提供多种配置方式，你可以将配置都写进同一个配置文件中，使用时通过指定路径获取对应配置；或者单独对某个模块创建一个配置文件。后者是我们推荐的。
 
 ```json
-//  全局配置
 {
-  "WebAPI": {
-    "ContentRoot": "",
-    "Listen": {
-      "http": "0.0.0.0:10080"
-    }
-  }
+  "ID": 1,
+  "Name": "XXX"
 }
-// 模块配置
+```
+
+```c#
+class Config
 {
-  "ContentRoot": "",
-  "Listen": {
-    "http": "0.0.0.0:10080"
-  }
+    public int ID { get; set; }
+    public string Name { get; set; }
+}
+
+class Program
+{
+    static async Task Main(string[] args)
+    {
+        var host = new ServiceHost();
+        host.AddJsonConfig("Config.json");
+        host.OnInitialized += p =>
+        {
+            var config = ServiceHost.Environment.GetConfiguration<Config>();
+        };
+        await host.RunAsync();
+    }
 }
 ```
 
@@ -64,89 +79,10 @@ class S3
 
 ServiceHost提供了多种方式的服务注册，尽可能地使注入方式更容易让人理解其内部实现。为了方便后面的案例说明，我们先定义示例中使用到的接口和类型。
 
-##### 0x1 RegisterType<[实现类型]>
-
 ```c#
-var host = new ServiceHost(); // 初始化服务主机
-host.RegisterType<S>(); // 注册服务
-host.OnInitialized += provider => provider.GetService<S>().Do(); // 获取服务
-host.Run();
-class S
-{
-    public void Do() => Console.WriteLine("s");
-}
-```
-
-##### 0x2 RegisterType<[接口实现类型],[接口类型]>
-
-```c#
-var host = new ServiceHost(); // 初始化服务主机
-host.RegisterType<S1, IS>(); // 注册服务
-host.RegisterType<S2, IS>(); // 注册服务
-host.OnInitialized += provider => provider.GetService<IS>().Do(); // 默认获取到的是最后注册的IS实现
-host.Run();
-
-interface IS
-{
-    void Do();
-}
-
-class S1 : IS
-{
-    public void Do() => Console.WriteLine("s1");
-}
-
-class S2 : IS
-{
-    public void Do() => Console.WriteLine("s2");
-}
-```
-
-##### 0x3 Register([注册函数])
-
-```c#
-var host = new ServiceHost(); // 初始化服务主机
-host.Register(context => new S("hello")); // 注册服务
-host.OnInitialized += provider => provider.GetService<S>().Do();
-host.Run();
-
-class S
-{
-    readonly string _tag;
-
-    public S(string tag)
-    {
-        _tag = tag;
-    }
-
-    public void Do() => Console.WriteLine($"s_{_tag}");
-}
-```
-
-##### 0x4 RegisterFromAssemblies
-
-```c#
-var host = new ServiceHost(); // 初始化服务主机
-host.RegisterFromAssemblies(); // 注册服务
-host.OnInitialized += provider => provider.GetService<IS>().Do(); // 默认获取到的是最后注册的IS实现
-host.Run();
-
-interface IS
-{
-    void Do();
-}
-
-[Registerable(typeof(IS))]
-class S1 : IS
-{
-    public void Do() => Console.WriteLine("s1");
-}
-
-[Registerable(typeof(IS))]
-class S2 : IS
-{
-    public void Do() => Console.WriteLine("s2");
-}
+host.RegisterType<TestClass, ITestInterface>(); // 手动注入无参构造函数
+host.Register<ITestInterface>(_ => new TestClass()); // 手动注入有依赖的构造函数
+host.RegisterFromAssemblies(); // 从程序集注入（配合Registerable特性）
 ```
 
 ### 0x4 使用插件
@@ -154,18 +90,14 @@ class S2 : IS
 ##### 0x1 Aop
 
 ```c#
-var host = new ServiceHost(); // 初始化服务主机
-host.RegisterInterceptors(typeof(MyInterceptor)); // 注册拦截器
-host.RegisterType<S>().AddClassInterceptors(typeof(MyInterceptor)); // 注册服务并添加拦截器
-host.OnInitialized += provider => provider.GetService<S>().Do();
-host.Run();
-
-public class S
+// 定义实现
+[Registerable]
+public class TestClass : ITestInterface
 {
-    // 要拦截的函数必须是虚函数或者重写函数
-    public virtual void Do()
+    // 要拦截的函数必须是virtual或override
+    public virtual void TestMethod(string str)
     {
-        Console.WriteLine("s");
+        Console.WriteLine($"TestClass:{str}");
     }
 }
 
@@ -187,20 +119,24 @@ public class MyInterceptor : BaseInterceptor
         Console.WriteLine("OnCalled");
     }
 }
+
+class Program
+{
+    static async Task Main(string[] args)
+    {
+        var host = new ServiceHost();
+        host.RegisterInterceptors(typeof(MyInterceptor));
+        host.RegisterType<TestClass>().AddClassInterceptors(typeof(MyInterceptor));
+        host.OnInitialized += p =>
+        {
+            p.GetService<TestClass>().TestMethod("Hi");
+        };
+        await host.RunAsync();
+    }
+}
 ```
 
 ##### 0x2 NLog
-
-```c#
-var host = new ServiceHost(); // 初始化服务主机
-host.RegisterLog(); // 注册服务
-host.OnInitialized += provider =>
-{
-  var logger = provider.GetLogger<Example6>();
-  logger.LogInformation("Example6"); // 添加日志
-};
-host.Run();
-```
 
 ```xml
 <!-- NLog.config示例 -->
@@ -238,10 +174,19 @@ host.Run();
 </nlog>
 ```
 
+```c#
+host.RegisterLog(); // 注册服务
+host.OnInitialized += provider =>
+{
+  var logger = provider.GetLogger<Example6>();
+  logger.LogInformation("Example6"); // 添加日志
+};
+host.Run();
+```
+
 ##### 0x3 MemoryCache
 
 ```c#
-var host = new ServiceHost(); // 初始化服务主机
 host.RegisterMemoryCache(); // 注册服务
 host.OnInitialized += provider =>
 {

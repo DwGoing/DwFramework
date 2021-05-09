@@ -108,11 +108,11 @@ namespace DwFramework.Core.Plugins
         /// <typeparam name="T"></typeparam>
         /// <param name="key"></param>
         /// <returns></returns>
-        public T Get<T>(string key)
+        public T Get<T>(string key) where T : class
         {
             var value = Get(key);
             if (value == null) return default;
-            return value.ConvertTo<T>();
+            return value as T;
         }
 
         /// <summary>

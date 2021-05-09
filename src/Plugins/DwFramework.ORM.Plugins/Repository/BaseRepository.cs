@@ -1,9 +1,9 @@
 ﻿using System;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-
-using DwFramework.Core;
-using DwFramework.Core.Plugins;
+using System.Collections.Generic;
+using SqlSugar;
 
 namespace DwFramework.ORM.Plugins
 {
@@ -12,142 +12,90 @@ namespace DwFramework.ORM.Plugins
         private readonly ORMService _ormService;
         private readonly string _connName;
 
-        ///构造函数
-        public BaseRepository(string connName)
+        /// <summary>
+        /// 构造函数
+        /// </summary>
+        /// <param name="ormService"></param>
+        /// <param name="connName"></param>
+        public BaseRepository(ORMService ormService, string connName)
         {
-            _ormService = ServiceHost.Provider.GetORMService();
+            _ormService = ormService;
             _connName = connName;
             if (_ormService == null) throw new Exception("未找到ORM服务");
         }
 
         /// <summary>
-        /// 查找所有记录
+        /// 创建连接
         /// </summary>
-        /// <param name="cacheExpireSeconds"></param>
         /// <returns></returns>
-        public Task<T[]> FindAllAsync(int cacheExpireSeconds = 0)
+        protected SqlSugarClient CreateConnection()
         {
-            return TaskManager.CreateTask(() => _ormService.CreateConnection(_connName).Queryable<T>()
-                    .WithCacheIF(cacheExpireSeconds > 0, cacheExpireSeconds)
-                    .ToArray());
+            return _ormService.CreateConnection(_connName);
         }
 
         /// <summary>
-        /// 查找所有记录
-        /// </summary>
-        /// <param name="pageIndex"></param>
-        /// <param name="pageSize"></param>
-        /// <param name="cacheExpireSeconds"></param>
-        /// <returns></returns>
-        public Task<T[]> FindAllAsync(int pageIndex, int pageSize, int cacheExpireSeconds = 0)
-        {
-            return TaskManager.CreateTask(() => _ormService.CreateConnection(_connName).Queryable<T>()
-                    .WithCacheIF(cacheExpireSeconds > 0, cacheExpireSeconds)
-                    .ToPageList(pageIndex, pageSize)
-                    .ToArray());
-        }
-
-        /// <summary>
-        /// 条件查找
+        /// 查询
         /// </summary>
         /// <param name="expression"></param>
-        /// <param name="cacheExpireSeconds"></param>
+        /// <param name="conn"></param>
         /// <returns></returns>
-        public Task<T[]> FindAsync(Expression<Func<T, bool>> expression, int cacheExpireSeconds = 0)
+        public ISugarQueryable<T> Select(Expression<Func<T, bool>> expression = null, SqlSugarClient conn = null)
         {
-            return TaskManager.CreateTask(() => _ormService.CreateConnection(_connName).Queryable<T>()
-                    .Where(expression)
-                    .WithCacheIF(cacheExpireSeconds > 0, cacheExpireSeconds)
-                    .ToArray());
+            conn ??= CreateConnection();
+            var queryable = conn.Queryable<T>();
+            if (expression != null) queryable = queryable.Where(expression);
+            return queryable;
         }
 
         /// <summary>
-        /// 条件查找
+        /// 插入或更新
         /// </summary>
-        /// <param name="expression"></param>
-        /// <param name="pageIndex"></param>
-        /// <param name="pageSize"></param>
-        /// <param name="cacheExpireSeconds"></param>
+        /// <param name="objs"></param>
+        /// <param name="identity"></param>
+        /// <param name="con"></param>
         /// <returns></returns>
-        public Task<T[]> FindAsync(Expression<Func<T, bool>> expression, int pageIndex, int pageSize, int cacheExpireSeconds = 0)
+        public async Task<List<T>> InsertOrUpdateAsync(List<T> objs, Expression<Func<T, object>> identityColumn = null, SqlSugarClient con = null)
         {
-            return TaskManager.CreateTask(() => _ormService.CreateConnection(_connName).Queryable<T>()
-                    .Where(expression)
-                    .ToPageList(pageIndex, pageSize)
-                    .ToArray());
+            con ??= CreateConnection();
+            var tran = await con.UseTranAsync(async () =>
+            {
+                var storageable = con.Storageable<T>(objs).Saveable();
+                if (identityColumn != null) storageable.WhereColumns(identityColumn);
+                var storage = storageable.ToStorage();
+                if (storage.InsertList.Count > 0) await storage.AsInsertable.ExecuteCommandAsync();
+                if (storage.UpdateList.Count > 0) await storage.AsUpdateable.ExecuteCommandAsync();
+                string identity = null;
+                object[] identities = null;
+                if (identityColumn == null)
+                {
+                    var entityInfo = CreateConnection().EntityMaintenance.GetEntityInfo<T>();
+                    var columnInfo = entityInfo.Columns.Where(item => item.IsIdentity).FirstOrDefault();
+                    if (columnInfo != null)
+                    {
+                        identity = columnInfo.PropertyName;
+                        identities = objs.Select(item => columnInfo.PropertyInfo.GetValue(item)).ToArray();
+                    }
+                }
+                else
+                {
+                    identity = ((MemberExpression)identityColumn.Body).Member.Name;
+                    identities = objs.Select(identityColumn.Compile()).ToArray();
+                }
+                if (identity == null || identities == null) return null;
+                return await con.Queryable<T>().In(identity, identities).ToListAsync();
+            }, ex => throw ex);
+            return await tran.Data;
         }
 
         /// <summary>
-        /// 查找一条记录
-        /// </summary>
-        /// <param name="expression"></param>
-        /// <param name="cacheExpireSeconds"></param>
-        /// <returns></returns>
-        public Task<T> FindSingleAsync(Expression<Func<T, bool>> expression, int cacheExpireSeconds = 0)
-        {
-            return _ormService.CreateConnection(_connName).Queryable<T>()
-                    .WithCacheIF(cacheExpireSeconds > 0, cacheExpireSeconds)
-                    .FirstAsync(expression);
-        }
-
-        /// <summary>
-        /// 新增记录
-        /// </summary>
-        /// <param name="newRecord"></param>
-        /// <returns></returns>
-        public Task<T> InsertAsync(T newRecord)
-        {
-            return _ormService.CreateConnection(_connName).Insertable(newRecord)
-                    .RemoveDataCache()
-                    .ExecuteReturnEntityAsync();
-        }
-
-        /// <summary>
-        /// 新增记录
-        /// </summary>
-        /// <param name="newRecords"></param>
-        /// <returns></returns>
-        public Task<int> InsertAsync(T[] newRecords)
-        {
-            return _ormService.CreateConnection(_connName).Insertable(newRecords)
-                    .RemoveDataCache()
-                    .ExecuteCommandAsync();
-        }
-
-        /// <summary>
-        /// 删除记录
+        /// 删除
         /// </summary>
         /// <param name="expression"></param>
         /// <returns></returns>
-        public Task<int> DeleteAsync(Expression<Func<T, bool>> expression)
+        public async Task<bool> DeleteAsync(Expression<Func<T, bool>> expression = null, SqlSugarClient con = null)
         {
-            return _ormService.CreateConnection(_connName).Deleteable(expression)
-                    .RemoveDataCache()
-                    .ExecuteCommandAsync();
-        }
-
-        /// <summary>
-        /// 更新记录
-        /// </summary>
-        /// <param name="updatedRecord"></param>
-        /// <returns></returns>
-        public Task<bool> UpdateAsync(T updatedRecord)
-        {
-            return _ormService.CreateConnection(_connName).Updateable(updatedRecord)
-                    .RemoveDataCache()
-                    .ExecuteCommandHasChangeAsync();
-        }
-
-        /// <summary>
-        /// 更新记录
-        /// </summary>
-        /// <param name="updatedRecords"></param>
-        /// <returns></returns>
-        public Task<int> UpdateAsync(T[] updatedRecords)
-        {
-            return _ormService.CreateConnection(_connName).Updateable(updatedRecords)
-                    .RemoveDataCache()
-                    .ExecuteCommandAsync();
+            con ??= CreateConnection();
+            return await con.Deleteable<T>(expression).ExecuteCommandHasChangeAsync();
         }
     }
 }
