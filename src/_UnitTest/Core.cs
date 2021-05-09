@@ -5,7 +5,7 @@ using System.Linq.Expressions;
 using Xunit;
 using Xunit.Abstractions;
 
-using DwFramework.Core;
+using DwFramework.Core.Entities;
 using DwFramework.Core.Extensions;
 using DwFramework.Core.Plugins;
 

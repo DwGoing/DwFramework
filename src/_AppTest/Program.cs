@@ -2,7 +2,7 @@
 using System.Text;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using DwFramework.Core;
+using DwFramework.Core.Entities;
 using DwFramework.Core.Plugins;
 using DwFramework.Core.Extensions;
 using DwFramework.WebAPI;
