@@ -3,9 +3,10 @@ using System.IO;
 using System.Collections.Generic;
 using Microsoft.Extensions.Configuration;
 
+using DwFramework.Core.Enums;
 using DwFramework.Core.Extensions;
 
-namespace DwFramework.Core
+namespace DwFramework.Core.Entities
 {
     public sealed class Environment
     {

@@ -1,6 +1,6 @@
 ﻿using System;
 
-using DwFramework.Core;
+using DwFramework.Core.Entities;
 
 namespace DwFramework.Core.Plugins
 {

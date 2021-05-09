@@ -2,6 +2,7 @@
 using Autofac.Builder;
 using Autofac.Extras.DynamicProxy;
 
+using DwFramework.Core.Entities;
 using DwFramework.Core.Extensions;
 
 namespace DwFramework.Core.Plugins

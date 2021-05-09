@@ -8,7 +8,7 @@ using Mapster;
 
 namespace DwFramework.Core.Extensions
 {
-    public static class ObjectExtension
+    public static class ObjectExtensions
     {
         /// <summary>
         /// 类型转换

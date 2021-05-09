@@ -4,6 +4,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NLog.Extensions.Logging;
 
+using DwFramework.Core.Entities;
+
 namespace DwFramework.Core.Plugins
 {
     public static class LogExtension

@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using Autofac;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace DwFramework.Core
+namespace DwFramework.Core.Extensions
 {
-    public static class AutofacExtension
+    public static class AutofacExtensions
     {
         /// <summary>
         /// 服务是否注册

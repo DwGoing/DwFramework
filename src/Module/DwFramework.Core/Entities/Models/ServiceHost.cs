@@ -12,10 +12,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Configuration;
 
+using DwFramework.Core.Enums;
 using DwFramework.Core.Extensions;
 using DwFramework.Core.Plugins;
 
-namespace DwFramework.Core
+namespace DwFramework.Core.Entities
 {
     public sealed class ServiceHost
     {

@@ -8,9 +8,11 @@ using System.Threading.Tasks;
 using Microsoft.International.Converters.PinYinConverter;
 using K4os.Compression.LZ4.Streams;
 
+using DwFramework.Core.Enums;
+
 namespace DwFramework.Core.Extensions
 {
-    public static class StringExtension
+    public static class StringExtensions
     {
         private static readonly string _characters = "0123456789abcdef";
 

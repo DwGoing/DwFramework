@@ -1,8 +1,8 @@
 ﻿using Microsoft.Extensions.Configuration;
 
-namespace DwFramework.Core
+namespace DwFramework.Core.Extensions
 {
-    public static class ConfigurationExtension
+    public static class ConfigurationExtensions
     {
         /// <summary>
         /// 获取配置

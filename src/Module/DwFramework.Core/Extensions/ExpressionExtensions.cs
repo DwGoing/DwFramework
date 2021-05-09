@@ -3,7 +3,7 @@ using System.Linq.Expressions;
 
 namespace DwFramework.Core.Extensions
 {
-    public static class ExpressionExtension
+    public static class ExpressionExtensions
     {
         private class SetParamExpressionVisitor : ExpressionVisitor
         {

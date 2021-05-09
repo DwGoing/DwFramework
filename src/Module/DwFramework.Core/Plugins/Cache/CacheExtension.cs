@@ -1,5 +1,7 @@
 ﻿using System;
 
+using DwFramework.Core.Extensions;
+
 namespace DwFramework.Core.Plugins
 {
     public static class CacheExtension

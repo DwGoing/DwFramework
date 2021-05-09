@@ -1,6 +1,6 @@
-﻿namespace DwFramework.Core
+﻿namespace DwFramework.Core.Entities
 {
-    public abstract class ConfigableService
+    public abstract class ConfigableServiceBase
     {
         /// <summary>
         /// 读取配置

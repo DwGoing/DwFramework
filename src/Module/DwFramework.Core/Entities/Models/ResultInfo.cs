@@ -1,4 +1,4 @@
-﻿namespace DwFramework.Core
+﻿namespace DwFramework.Core.Entities
 {
     public partial class ResultInfo
     {

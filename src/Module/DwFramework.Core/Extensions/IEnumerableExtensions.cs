@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DwFramework.Core.Extensions
 {
-    public static class IEnumerableExtension
+    public static class IEnumerableExtensions
     {
         /// <summary>
         /// 遍历
