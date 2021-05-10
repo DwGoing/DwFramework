@@ -1,4 +1,4 @@
-﻿namespace DwFramework.Core.Enums
+﻿namespace DwFramework.Core.Entities
 {
     /// <summary>
     /// 压缩类型

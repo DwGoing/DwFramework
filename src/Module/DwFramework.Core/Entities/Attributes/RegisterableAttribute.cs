@@ -1,7 +1,5 @@
 ﻿using System;
 
-using DwFramework.Core.Enums;
-
 namespace DwFramework.Core.Entities
 {
     /// <summary>
