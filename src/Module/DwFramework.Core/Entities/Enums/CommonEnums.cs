@@ -1,5 +1,18 @@
-﻿namespace DwFramework.Core.Entities
+﻿using System.ComponentModel;
+
+namespace DwFramework.Core.Entities
 {
+    /// <summary>
+    /// 状态码
+    /// </summary>
+    public enum StatusCode
+    {
+        [Description("Ok")]
+        OK = 200,
+        [Description("Unknow Error")]
+        ERROR = 400
+    }
+
     /// <summary>
     /// 压缩类型
     /// </summary>
