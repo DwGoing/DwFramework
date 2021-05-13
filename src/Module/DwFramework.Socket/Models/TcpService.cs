@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Net;
 using System.Net.Sockets;
@@ -12,7 +11,7 @@ using DwFramework.Core.Extensions;
 
 namespace DwFramework.Socket
 {
-    public sealed class TcpService : ConfigableService
+    public sealed class TcpService : ConfigableServiceBase
     {
         public sealed class Config
         {

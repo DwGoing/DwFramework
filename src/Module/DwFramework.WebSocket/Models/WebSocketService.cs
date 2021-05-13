@@ -12,12 +12,13 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.DependencyInjection;
 
 using DwFramework.Core;
+using DwFramework.Core.Entities;
 using DwFramework.Core.Plugins;
 using DwFramework.Core.Extensions;
 
 namespace DwFramework.WebSocket
 {
-    public sealed class WebSocketService : ConfigableService
+    public sealed class WebSocketService : ConfigableServiceBase
     {
         public sealed class Config
         {
@@ -186,7 +187,7 @@ namespace DwFramework.WebSocket
                               {
                                   if (!context.WebSockets.IsWebSocketRequest)
                                   {
-                                      await context.Response.WriteAsync(ResultInfo.Create(ResultInfo.ERROR, message: "非WebSocket请求").ToJson());
+                                      await context.Response.WriteAsync(ResultInfo.Create(StatusCode.ERROR, message: "非WebSocket请求").ToJson());
                                       return;
                                   }
                                   await next();

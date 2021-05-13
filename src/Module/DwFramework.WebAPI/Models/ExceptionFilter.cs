@@ -1,8 +1,8 @@
-using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using DwFramework.Core;
+
+using DwFramework.Core.Entities;
 
 namespace EthListener
 {
@@ -13,7 +13,7 @@ namespace EthListener
     {
         public Task OnExceptionAsync(ExceptionContext context)
         {
-            if (context.ExceptionHandled == false) context.Result = new ObjectResult(ResultInfo.Create(500, context.Exception.Message));
+            if (context.ExceptionHandled == false) context.Result = new ObjectResult(ResultInfo.Create(StatusCode.ERROR, context.Exception.Message));
             context.ExceptionHandled = true;
             return Task.CompletedTask;
         }

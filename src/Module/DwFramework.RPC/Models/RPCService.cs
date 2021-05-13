@@ -21,7 +21,7 @@ using DwFramework.Core.Extensions;
 
 namespace DwFramework.RPC
 {
-    public sealed class RPCService : ConfigableService
+    public sealed class RPCService : ConfigableServiceBase
     {
         public sealed class Config
         {

@@ -10,12 +10,13 @@ using ProtoBuf.Grpc;
 using ProtoBuf.Grpc.Client;
 
 using DwFramework.Core;
+using DwFramework.Core.Entities;
 using DwFramework.Core.Plugins;
 using DwFramework.Core.Extensions;
 
 namespace DwFramework.RPC.Plugins
 {
-    public sealed class ClusterService : ConfigableService, ICluster
+    public sealed class ClusterService : ConfigableServiceBase, ICluster
     {
         public sealed class Config
         {

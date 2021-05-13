@@ -20,7 +20,7 @@ namespace DwFramework.RabbitMQ
         public const string Topic = "topic";
     }
 
-    public sealed class RabbitMQService : ConfigableService
+    public sealed class RabbitMQService : ConfigableServiceBase
     {
         public sealed class Config
         {

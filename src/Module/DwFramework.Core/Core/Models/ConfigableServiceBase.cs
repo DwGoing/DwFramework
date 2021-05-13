@@ -1,4 +1,4 @@
-﻿namespace DwFramework.Core.Entities
+﻿namespace DwFramework.Core
 {
     public abstract class ConfigableServiceBase
     {

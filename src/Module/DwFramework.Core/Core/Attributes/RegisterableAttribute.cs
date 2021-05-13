@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DwFramework.Core.Entities
+namespace DwFramework.Core
 {
     /// <summary>
     /// 可注册的对象

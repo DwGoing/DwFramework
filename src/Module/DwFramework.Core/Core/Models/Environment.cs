@@ -5,7 +5,7 @@ using Microsoft.Extensions.Configuration;
 
 using DwFramework.Core.Extensions;
 
-namespace DwFramework.Core.Entities
+namespace DwFramework.Core
 {
     public sealed class Environment
     {

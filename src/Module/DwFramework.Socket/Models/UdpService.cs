@@ -9,7 +9,7 @@ using DwFramework.Core.Plugins;
 
 namespace DwFramework.Socket
 {
-    public sealed class UdpService : ConfigableService
+    public sealed class UdpService : ConfigableServiceBase
     {
         public sealed class Config
         {

@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 
-namespace DwFramework.Core.Extensions
+namespace DwFramework.Core
 {
     public static class ConfigurationExtensions
     {

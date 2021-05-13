@@ -10,7 +10,7 @@ using DwFramework.Core.Plugins;
 
 namespace DwFramework.ORM
 {
-    public sealed class ORMService : ConfigableService
+    public sealed class ORMService : ConfigableServiceBase
     {
         public sealed class Config
         {

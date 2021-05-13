@@ -1,4 +1,4 @@
-﻿namespace DwFramework.Core.Entities
+﻿namespace DwFramework.Core
 {
     /// <summary>
     /// 环境类型

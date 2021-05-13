@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using Autofac;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace DwFramework.Core.Extensions
+namespace DwFramework.Core
 {
     public static class AutofacExtensions
     {

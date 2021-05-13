@@ -15,7 +15,7 @@ using Microsoft.Extensions.Configuration;
 using DwFramework.Core.Extensions;
 using DwFramework.Core.Plugins;
 
-namespace DwFramework.Core.Entities
+namespace DwFramework.Core
 {
     public sealed class ServiceHost
     {

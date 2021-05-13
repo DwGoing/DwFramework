@@ -13,7 +13,7 @@ using DwFramework.Core.Plugins;
 
 namespace DwFramework.WebAPI
 {
-    public sealed class WebAPIService : ConfigableService
+    public sealed class WebAPIService : ConfigableServiceBase
     {
         public sealed class Config
         {

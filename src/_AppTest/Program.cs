@@ -3,7 +3,7 @@ using System.Net;
 using System.Net.Http;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using DwFramework.Core.Entities;
+using DwFramework.Core;
 using DwFramework.Core.Plugins;
 using DwFramework.Core.Extensions;
 
