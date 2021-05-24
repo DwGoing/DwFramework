@@ -51,7 +51,7 @@ namespace DwFramework.Core.Plugins
         }
 
         /// <summary>
-        /// 特定后结果重试
+        /// 特定结果后重试
         /// </summary>
         /// <typeparam name="TResult"></typeparam>
         /// <param name="expression"></param>
