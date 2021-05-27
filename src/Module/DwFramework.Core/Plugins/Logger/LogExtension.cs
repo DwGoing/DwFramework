@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NLog.Extensions.Logging;
-
-using DwFramework.Core.Entities;
 
 namespace DwFramework.Core.Plugins
 {
@@ -13,17 +12,46 @@ namespace DwFramework.Core.Plugins
         /// <summary>
         /// 注册Log服务
         /// </summary>
-        /// <param name="builder"></param>
+        /// <param name="host"></param>
+        /// <param name="configure"></param>
         /// <returns></returns>
-        public static ServiceHost RegisterLog(this ServiceHost host)
+        public static ServiceHost RegisterLog(this ServiceHost host, Action<ILoggingBuilder> configure)
         {
-            host.RegisterService(services => services.AddLogging(builder =>
+            host.RegisterService(services => services.AddLogging(configure));
+            return host;
+        }
+
+        /// <summary>
+        /// 注册Log服务
+        /// </summary>
+        /// <param name="host"></param>
+        /// <param name="configure"></param>
+        /// <returns></returns>
+        public static ServiceHost RegisterLog(this ServiceHost host, IConfiguration configure)
+        {
+            return host.RegisterLog(builder =>
             {
                 builder.ClearProviders();
                 builder.SetMinimumLevel(LogLevel.Trace);
-                builder.AddNLog();
-            }));
-            return host;
+                builder.AddNLog(configure);
+            });
+        }
+
+        /// <summary>
+        /// 注册Log服务
+        /// </summary>
+        /// <param name="host"></param>
+        /// <param name="configFile"></param>
+        /// <returns></returns>
+        public static ServiceHost RegisterLog(this ServiceHost host, string configFile = null)
+        {
+            return host.RegisterLog(builder =>
+            {
+                builder.ClearProviders();
+                builder.SetMinimumLevel(LogLevel.Trace);
+                if (string.IsNullOrEmpty(configFile)) builder.AddNLog();
+                else builder.AddNLog(configFile);
+            });
         }
 
         /// <summary>
