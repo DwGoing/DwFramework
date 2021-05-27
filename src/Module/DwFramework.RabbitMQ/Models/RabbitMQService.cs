@@ -136,6 +136,18 @@ namespace DwFramework.RabbitMQ
         }
 
         /// <summary>
+        /// 获取队列中消息数量
+        /// </summary>
+        /// <param name="queue"></param>
+        /// <returns></returns>
+        public uint GetMessageCount(string queue)
+        {
+            using var conn = _connectionFactory.CreateConnection();
+            using var channel = conn.CreateModel();
+            return channel.MessageCount(queue);
+        }
+
+        /// <summary>
         /// 发布消息
         /// </summary>
         /// <param name="data"></param>
