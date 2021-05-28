@@ -89,6 +89,15 @@ namespace DwFramework.RabbitMQ
         }
 
         /// <summary>
+        /// 创建连接
+        /// </summary>
+        /// <returns></returns>
+        public IConnection CreateConnection()
+        {
+            return _connectionFactory.CreateConnection(); ;
+        }
+
+        /// <summary>
         /// 创建交换机
         /// </summary>
         /// <param name="exchange"></param>
