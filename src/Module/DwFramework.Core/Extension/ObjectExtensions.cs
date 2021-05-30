@@ -5,7 +5,7 @@ using System.Text.Json;
 using System.Xml;
 using System.Xml.Serialization;
 
-namespace DwFramework.Core.Extensions
+namespace DwFramework.Core
 {
     public static class ObjectExtensions
     {

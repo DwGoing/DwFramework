@@ -8,9 +8,7 @@ using System.Threading.Tasks;
 using Microsoft.International.Converters.PinYinConverter;
 using K4os.Compression.LZ4.Streams;
 
-using DwFramework.Core.Entities;
-
-namespace DwFramework.Core.Extensions
+namespace DwFramework.Core
 {
     public static class StringExtensions
     {

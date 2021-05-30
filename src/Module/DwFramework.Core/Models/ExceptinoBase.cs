@@ -1,6 +1,6 @@
 using System;
 
-namespace DwFramework.Core.Entities
+namespace DwFramework.Core
 {
     public abstract class ExceptionBase : Exception
     {

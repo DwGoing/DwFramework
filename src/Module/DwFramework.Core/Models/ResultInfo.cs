@@ -1,6 +1,6 @@
-﻿using DwFramework.Core.Extensions;
+﻿using System;
 
-namespace DwFramework.Core.Entities
+namespace DwFramework.Core
 {
     public partial class ResultInfo
     {

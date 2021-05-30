@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace DwFramework.Core.Extensions
+namespace DwFramework.Core
 {
     public static class IEnumerableExtensions
     {

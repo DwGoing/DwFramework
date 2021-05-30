@@ -8,15 +8,14 @@
     </PropertyGroup>
     <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <EnvironmentName>Development</EnvironmentName>
     </PropertyGroup>
     <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <EnvironmentName>Production</EnvironmentName>
     </PropertyGroup>
     <ItemGroup>
         <None Update="NLog.config">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <None Update="Config.json">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
     </ItemGroup>

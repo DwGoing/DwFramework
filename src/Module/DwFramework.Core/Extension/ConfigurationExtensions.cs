@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using System;
+using Microsoft.Extensions.Configuration;
 
 namespace DwFramework.Core
 {
@@ -12,10 +13,6 @@ namespace DwFramework.Core
         /// <param name="path"></param>
         /// <returns></returns>
         public static T GetConfig<T>(this IConfiguration configuration, string path = null)
-        {
-            var section = configuration;
-            if (!string.IsNullOrEmpty(path)) section = section.GetSection(path);
-            return section.Get<T>();
-        }
+            => string.IsNullOrEmpty(path) ? configuration.Get<T>() : configuration.GetSection(path).Get<T>();
     }
 }

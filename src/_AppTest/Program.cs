@@ -3,58 +3,75 @@ using System.Net;
 using System.Net.Http;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Configuration;
 using DwFramework.Core;
-using DwFramework.Core.Plugins;
-using DwFramework.Core.Extensions;
-
-// 定义接口
-public interface ITestInterface
-{
-    void TestMethod(string str);
-}
-
-// 定义实现
-[Registerable]
-public class TestClass : ITestInterface
-{
-    // 要拦截的函数必须是virtual或override
-    public virtual void TestMethod(string str)
-    {
-        Console.WriteLine($"TestClass:{str}");
-    }
-}
-
-/// <summary>
-/// 构造拦截器
-/// 1.继承BaseInterceptor
-/// 2.重写OnCalling(CallInfo info)函数
-/// 3.重写OnCalled(CallInfo info)函数
-/// </summary>
-public class MyInterceptor : BaseInterceptor
-{
-    public override void OnCalling(CallInfo info)
-    {
-        Console.WriteLine("OnCalling");
-    }
-
-    public override void OnCalled(CallInfo info)
-    {
-        Console.WriteLine("OnCalled");
-    }
-}
+using Autofac;
+using NLog.Extensions.Logging;
 
 class Program
 {
     static async Task Main(string[] args)
     {
         var host = new ServiceHost();
-        host.RegisterInterceptors(typeof(MyInterceptor));
-        host.RegisterType<TestClass>().AddClassInterceptors(typeof(MyInterceptor));
-        host.OnInitialized += p =>
+        host.RegisterNLog();
+        host.ConfigureContainer((_, b) =>
         {
-            p.GetService<TestClass>().TestMethod("Hi");
+            b.RegisterType<A>().As<I>();
+        });
+        host.ConfigureServices((_, b) =>
+        {
+            b.AddTransient<B>();
+        });
+        host.OnHostStarted += p =>
+        {
+            p.GetService<B>().Do();
+            p.GetService<B>().Do();
+            p.GetService<B>().Do();
         };
         await host.RunAsync();
+    }
+
+    class C
+    {
+        public int X { get; set; }
+    }
+
+    interface I
+    {
+        void Do();
+    }
+
+    [Registerable(typeof(I))]
+    class A : I
+    {
+        private Guid ID;
+
+        public A(IServiceProvider provider)
+        {
+            ID = Guid.NewGuid();
+        }
+
+        public void Do()
+        {
+            Console.WriteLine($"I'm A,{ID}");
+        }
+    }
+
+    [Registerable(typeof(I), Lifetime.Singleton)]
+    class B : I
+    {
+        public Guid ID;
+
+        public B()
+        {
+            ID = Guid.NewGuid();
+        }
+
+        public void Do()
+        {
+            Console.WriteLine($"I'm B,{ID}");
+        }
     }
 }
 

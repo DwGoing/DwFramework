@@ -1,6 +1,7 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 
-namespace DwFramework.Core.Entities
+namespace DwFramework.Core
 {
     /// <summary>
     /// 状态码

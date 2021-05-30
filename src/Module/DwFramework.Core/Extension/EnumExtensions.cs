@@ -1,7 +1,7 @@
 using System;
 using System.ComponentModel;
 
-namespace DwFramework.Core.Extensions
+namespace DwFramework.Core
 {
     public static class EnumExtensions
     {
