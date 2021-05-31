@@ -1,16 +1,14 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
-
   <ItemGroup>
     <None Update="NLog.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="DwFramework.Core" Version="2.2.55.9213" />
+    <ProjectReference Include="..\..\src\DwFramework.Core\DwFramework.Core.csproj" />
   </ItemGroup>
 </Project>
