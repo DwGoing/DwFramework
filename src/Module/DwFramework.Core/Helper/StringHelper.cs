@@ -1,9 +1,9 @@
-﻿using System;
+using System;
 using System.Text;
 
-namespace DwFramework.Core.Plugins
+namespace DwFramework.Core
 {
-    public static class Logger
+    public static class StringHelper
     {
         /// <summary>
         /// 创建表

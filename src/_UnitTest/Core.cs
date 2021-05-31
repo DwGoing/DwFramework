@@ -6,7 +6,6 @@ using Xunit;
 using Xunit.Abstractions;
 
 using DwFramework.Core;
-using DwFramework.Core.Extensions;
 using DwFramework.Core.Plugins;
 
 namespace _UnitTest

@@ -10,51 +10,42 @@ namespace DwFramework.Core
         /// <summary>
         /// 注册NLog服务
         /// </summary>
-        /// <param name="host"></param>
+        /// <param name="builder"></param>
         /// <returns></returns>
-        public static ServiceHost RegisterNLog(this ServiceHost host)
+        public static ILoggingBuilder UserNLog(this ILoggingBuilder builder)
         {
-            host.ConfigureLogging((context, builder) =>
-            {
-                builder.ClearProviders();
-                builder.SetMinimumLevel(LogLevel.Trace);
-                builder.AddNLog();
-            });
-            return host;
+            builder.ClearProviders();
+            builder.SetMinimumLevel(LogLevel.Trace);
+            builder.AddNLog();
+            return builder;
         }
 
         /// <summary>
         /// 注册NLog服务
         /// </summary>
-        /// <param name="host"></param>
+        /// <param name="builder"></param>
         /// <param name="configuration"></param>
         /// <returns></returns>
-        public static ServiceHost RegisterNLog(this ServiceHost host, IConfiguration configuration)
+        public static ILoggingBuilder UserNLog(this ILoggingBuilder builder, IConfiguration configuration)
         {
-            host.ConfigureLogging((context, builder) =>
-            {
-                builder.ClearProviders();
-                builder.SetMinimumLevel(LogLevel.Trace);
-                builder.AddNLog(configuration);
-            });
-            return host;
+            builder.ClearProviders();
+            builder.SetMinimumLevel(LogLevel.Trace);
+            builder.AddNLog(configuration);
+            return builder;
         }
 
         /// <summary>
         /// 注册NLog服务
         /// </summary>
-        /// <param name="host"></param>
+        /// <param name="builder"></param>
         /// <param name="configPath"></param>
         /// <returns></returns>
-        public static ServiceHost RegisterNLog(this ServiceHost host, string configPath)
+        public static ILoggingBuilder UserNLog(this ILoggingBuilder builder, string configPath)
         {
-            host.ConfigureLogging((context, builder) =>
-            {
-                builder.ClearProviders();
-                builder.SetMinimumLevel(LogLevel.Trace);
-                builder.AddNLog(configPath);
-            });
-            return host;
+            builder.ClearProviders();
+            builder.SetMinimumLevel(LogLevel.Trace);
+            builder.AddNLog(configPath);
+            return builder;
         }
     }
 }

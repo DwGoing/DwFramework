@@ -2,8 +2,6 @@
 using System.Text;
 using System.Threading;
 
-using DwFramework.Core.Extensions;
-
 namespace DwFramework.Core.Plugins
 {
     /// <summary>

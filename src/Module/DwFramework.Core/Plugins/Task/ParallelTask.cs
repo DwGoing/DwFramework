@@ -2,8 +2,6 @@
 using System.Threading.Tasks;
 using System.Collections.Generic;
 
-using DwFramework.Core.Extensions;
-
 namespace DwFramework.Core.Plugins
 {
     public sealed class ParallelTask

@@ -2,7 +2,7 @@
 
 namespace DwFramework.Core.Plugins
 {
-    public abstract class BaseInterceptor : IInterceptor
+    public abstract class InterceptorBase : IInterceptor
     {
         public abstract void OnCalling(CallInfo info);
         public abstract void OnCalled(CallInfo info);

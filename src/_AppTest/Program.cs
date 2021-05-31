@@ -7,14 +7,13 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
 using DwFramework.Core;
 using Autofac;
-using NLog.Extensions.Logging;
 
 class Program
 {
     static async Task Main(string[] args)
     {
         var host = new ServiceHost();
-        host.RegisterNLog();
+        host.ConfigureLogging((_, builder) => builder.UserNLog());
         host.ConfigureContainer((_, b) =>
         {
             b.RegisterType<A>().As<I>();

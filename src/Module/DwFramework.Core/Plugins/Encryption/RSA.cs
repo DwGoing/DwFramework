@@ -4,8 +4,6 @@ using System.Security.Cryptography;
 using System.Text;
 using RSAExtensions;
 
-using DwFramework.Core.Extensions;
-
 namespace DwFramework.Core.Plugins
 {
     public sealed class RSA

@@ -1,8 +1,6 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
 
-using DwFramework.Core.Extensions;
-
 namespace DwFramework.Core.Plugins
 {
     public sealed class AES

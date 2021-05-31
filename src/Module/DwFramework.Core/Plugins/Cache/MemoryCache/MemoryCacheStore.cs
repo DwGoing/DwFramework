@@ -5,8 +5,6 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Timers;
 
-using DwFramework.Core.Extensions;
-
 namespace DwFramework.Core.Plugins
 {
     public sealed class MemoryCacheStore
