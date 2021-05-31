@@ -9,6 +9,11 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <None Update="NLog.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\..\src\DwFramework.Core\DwFramework.Core.csproj" />
   </ItemGroup>
 </Project>

@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.6.30114.105
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "_AppTest", "_AppTest\_AppTest.csproj", "{994AA6D7-6847-4FA6-9ACB-F509C6A7A272}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{FBDEBD3F-B0B7-4DFC-9352-5C1F3A1318F0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DwFramework.Core", "src\DwFramework.Core\DwFramework.Core.csproj", "{824126C6-A849-405A-9DD4-44A94C03505E}"
@@ -48,18 +46,6 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{994AA6D7-6847-4FA6-9ACB-F509C6A7A272}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{994AA6D7-6847-4FA6-9ACB-F509C6A7A272}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{994AA6D7-6847-4FA6-9ACB-F509C6A7A272}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{994AA6D7-6847-4FA6-9ACB-F509C6A7A272}.Debug|x64.Build.0 = Debug|Any CPU
-		{994AA6D7-6847-4FA6-9ACB-F509C6A7A272}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{994AA6D7-6847-4FA6-9ACB-F509C6A7A272}.Debug|x86.Build.0 = Debug|Any CPU
-		{994AA6D7-6847-4FA6-9ACB-F509C6A7A272}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{994AA6D7-6847-4FA6-9ACB-F509C6A7A272}.Release|Any CPU.Build.0 = Release|Any CPU
-		{994AA6D7-6847-4FA6-9ACB-F509C6A7A272}.Release|x64.ActiveCfg = Release|Any CPU
-		{994AA6D7-6847-4FA6-9ACB-F509C6A7A272}.Release|x64.Build.0 = Release|Any CPU
-		{994AA6D7-6847-4FA6-9ACB-F509C6A7A272}.Release|x86.ActiveCfg = Release|Any CPU
-		{994AA6D7-6847-4FA6-9ACB-F509C6A7A272}.Release|x86.Build.0 = Release|Any CPU
 		{824126C6-A849-405A-9DD4-44A94C03505E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{824126C6-A849-405A-9DD4-44A94C03505E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{824126C6-A849-405A-9DD4-44A94C03505E}.Debug|x64.ActiveCfg = Debug|Any CPU
