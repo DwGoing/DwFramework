@@ -16,7 +16,7 @@
     <OutputPath>..\DwFramework.RPC.Plugins\bin\Release</OutputPath>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Module\DwFramework.RPC\DwFramework.RPC.csproj" />
+    <ProjectReference Include="..\\DwFramework.RPC\DwFramework.RPC.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Include="README.md">

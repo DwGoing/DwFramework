@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Text;
 using System.Threading;
 
 namespace DwFramework.Core.Plugins
@@ -91,49 +90,5 @@ namespace DwFramework.Core.Plugins
         /// <param name="startTime"></param>
         /// <returns></returns>
         public static SnowflakeIdInfo DecodeId(long id, DateTime? startTime = null) => new SnowflakeIdInfo(id, startTime);
-    }
-
-    /// <summary>
-    /// UUID生成器
-    /// </summary>
-    public static class UUIDGenerater
-    {
-        private static readonly object _lock = new object();
-        private static int _nonce = 0;
-        private static long _currentTimestamp = 0;
-
-        /// <summary>
-        /// UUID
-        /// [自定义标识 n位][日期 8位][时间 4位][随机数 8位][Nonce 4位]
-        /// </summary>
-        /// <param name="customTag"></param>
-        /// <returns></returns>
-        public static string GenerateUUID(string customTag = null)
-        {
-            lock (_lock)
-            {
-                var builder = new StringBuilder();
-                // 自定义标识
-                if (customTag != null) builder.Append(customTag);
-                var nowTime = DateTime.Now;
-                // 日期+时间
-                builder.Append(nowTime.ToString("yyyyMMddHHmm"));
-                var random = RandomGenerater.GetRandom();
-                // 随机数
-                builder.Append(random.Next(100000000).ToString().PadLeft(8, '0'));
-                // Nonce
-                _nonce++;
-                if (_nonce > 2L << 4) Thread.Sleep(1);
-                var timestamp = DateTime.UnixEpoch.GetTimeDiff(DateTime.UtcNow);
-                if (timestamp < _currentTimestamp) throw new Exception("时间获取异常,请检查服务器时间");
-                else if (timestamp > _currentTimestamp)
-                {
-                    _currentTimestamp = timestamp;
-                    _nonce = 0;
-                }
-                builder.Append(_nonce.ToString().PadLeft(4, '0'));
-                return builder.ToString();
-            }
-        }
     }
 }

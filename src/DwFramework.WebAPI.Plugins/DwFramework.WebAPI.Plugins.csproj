@@ -3,14 +3,21 @@
     <PropertyGroup>
         <TargetFramework>net5.0</TargetFramework>
         <ReleaseVersion>5</ReleaseVersion>
-        <BuildVersion>0.1.18-20100507.1004</BuildVersion>
+        <BuildVersion>0.1.16-20210425.3696</BuildVersion>
         <Version>$(ReleaseVersion).$(BuildVersion)</Version>
         <Authors>DwGoing</Authors>
-        <Description>DwFramework ORM插件库</Description>
+        <Description>DwFramework WebAPI插件库</Description>
         <PackageProjectUrl>https://github.com/Dwgoing/DwFramework</PackageProjectUrl>
     </PropertyGroup>
     <ItemGroup>
-        <ProjectReference Include="..\..\Module\DwFramework.ORM\DwFramework.ORM.csproj" />
+        <ProjectReference Include="..\DwFramework.WebAPI\DwFramework.WebAPI.csproj" />
+    </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.11.0" />
+        <PackageReference Include="Consul" Version="1.6.1.1" />
+        <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.11.0" />
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.1.4" />
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.5" />
     </ItemGroup>
     <ItemGroup>
         <None Include="README.md">

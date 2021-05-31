@@ -82,9 +82,9 @@ namespace _UnitTest
         [Fact]
         public void StopWatch()
         {
-            Stopwatch.Static.SetStartTime();
+            var tag = StopwatchManager.Create();
             System.Threading.Thread.Sleep(3000);
-            Assert.Equal(3000, Stopwatch.Static.GetTotalMilliseconds());
+            Assert.Equal(3000, StopwatchManager.GetTotalMilliseconds(tag));
         }
 
         [Fact]
@@ -99,26 +99,10 @@ namespace _UnitTest
         [Fact]
         public void RSAEncryptAndDecrypt()
         {
-            var keys = KeyGenerater.RsaKeyPair(RSAExtensions.RSAKeyType.Pkcs8, isPem: true);
+            var keys = EncryptionTool.RSA.GenerateKeyPair(RSAExtensions.RSAKeyType.Pkcs8, isPem: true);
             var str = "DwFramework";
-            var rsa = RSA.EncryptWithPublicKey(str, RSAExtensions.RSAKeyType.Pkcs8, keys.PublicKey, true);
-            Assert.Equal(str, RSA.Decrypt(rsa, RSAExtensions.RSAKeyType.Pkcs8, keys.PrivateKey, true));
-        }
-
-        [Fact]
-        public void CreateTask()
-        {
-            TaskManager.CreateTask(token =>
-            {
-                var i = 0;
-                while (!token.IsCancellationRequested)
-                {
-                    i++;
-                    _output.WriteLine(i.ToString());
-                    Thread.Sleep(1000);
-                }
-            }, 10000);
-            Console.ReadLine();
+            var rsa = EncryptionTool.RSA.EncryptWithPublicKey(str, RSAExtensions.RSAKeyType.Pkcs8, keys.PublicKey, true);
+            Assert.Equal(str, EncryptionTool.RSA.Decrypt(rsa, RSAExtensions.RSAKeyType.Pkcs8, keys.PrivateKey, true));
         }
 
         [Fact]

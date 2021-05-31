@@ -3,7 +3,7 @@ using System.Text;
 
 namespace DwFramework.Core
 {
-    public static class StringHelper
+    public static class StringGenerator
     {
         /// <summary>
         /// 创建表
