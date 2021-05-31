@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Net;
-using System.Net.Http;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using DwFramework.Core;
 using Autofac;
 
@@ -14,11 +12,11 @@ class Program
     {
         var host = new ServiceHost();
         host.ConfigureLogging((_, builder) => builder.UserNLog());
-        host.ConfigureContainer((_, b) =>
+        host.ConfigureContainer(b =>
         {
             b.RegisterType<A>().As<I>();
         });
-        host.ConfigureServices((_, b) =>
+        host.ConfigureServices(b =>
         {
             b.AddTransient<B>();
         });
@@ -44,32 +42,36 @@ class Program
     [Registerable(typeof(I))]
     class A : I
     {
+        private ILogger _logger;
         private Guid ID;
 
-        public A(IServiceProvider provider)
+        public A(ILogger<A> logger)
         {
+            _logger = logger;
             ID = Guid.NewGuid();
         }
 
         public void Do()
         {
-            Console.WriteLine($"I'm A,{ID}");
+            _logger.LogDebug($"I'm A,{ID}");
         }
     }
 
     [Registerable(typeof(I), Lifetime.Singleton)]
     class B : I
     {
-        public Guid ID;
+        private ILogger _logger;
+        private Guid ID;
 
-        public B()
+        public B(ILogger<B> logger)
         {
+            _logger = logger;
             ID = Guid.NewGuid();
         }
 
         public void Do()
         {
-            Console.WriteLine($"I'm B,{ID}");
+            _logger.LogDebug($"I'm B,{ID}");
         }
     }
 }

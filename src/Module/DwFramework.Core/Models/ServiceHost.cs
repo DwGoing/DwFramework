@@ -35,6 +35,18 @@ namespace DwFramework.Core
         /// <summary>
         /// 配置应用
         /// </summary>
+        /// <param name="configureDelegate"></param>
+        /// <returns></returns>
+        public ServiceHost ConfigureAppConfiguration(Action<IConfigurationBuilder> configureDelegate)
+        {
+            _hostBuilder.ConfigureAppConfiguration(configureDelegate);
+            return this;
+        }
+
+        /// <summary>
+        /// 配置应用
+        /// </summary>
+        /// <param name="configureDelegate"></param>
         /// <returns></returns>
         public ServiceHost ConfigureAppConfiguration(Action<HostBuilderContext, IConfigurationBuilder> configureDelegate)
         {
@@ -45,6 +57,18 @@ namespace DwFramework.Core
         /// <summary>
         /// 配置容器
         /// </summary>
+        /// <param name="configureDelegate"></param>
+        /// <returns></returns>
+        public ServiceHost ConfigureContainer(Action<ContainerBuilder> configureDelegate)
+        {
+            _hostBuilder.ConfigureContainer(configureDelegate);
+            return this;
+        }
+
+        /// <summary>
+        /// 配置容器
+        /// </summary>
+        /// <param name="configureDelegate"></param>
         /// <returns></returns>
         public ServiceHost ConfigureContainer(Action<HostBuilderContext, ContainerBuilder> configureDelegate)
         {
@@ -55,6 +79,7 @@ namespace DwFramework.Core
         /// <summary>
         /// 配置主机
         /// </summary>
+        /// <param name="configureDelegate"></param>
         /// <returns></returns>
         public ServiceHost ConfigureHostConfiguration(Action<IConfigurationBuilder> configureDelegate)
         {
@@ -65,6 +90,18 @@ namespace DwFramework.Core
         /// <summary>
         /// 配置日志
         /// </summary>
+        /// <param name="configureDelegate"></param>
+        /// <returns></returns>
+        public ServiceHost ConfigureLogging(Action<ILoggingBuilder> configureDelegate)
+        {
+            _hostBuilder.ConfigureLogging(configureDelegate);
+            return this;
+        }
+
+        /// <summary>
+        /// 配置日志
+        /// </summary>
+        /// <param name="configureDelegate"></param>
         /// <returns></returns>
         public ServiceHost ConfigureLogging(Action<HostBuilderContext, ILoggingBuilder> configureDelegate)
         {
@@ -75,6 +112,18 @@ namespace DwFramework.Core
         /// <summary>
         /// 配置服务
         /// </summary>
+        /// <param name="configureDelegate"></param>
+        /// <returns></returns>
+        public ServiceHost ConfigureServices(Action<IServiceCollection> configureDelegate)
+        {
+            _hostBuilder.ConfigureServices(configureDelegate);
+            return this;
+        }
+
+        /// <summary>
+        /// 配置服务
+        /// </summary>
+        /// <param name="configureDelegate"></param>
         /// <returns></returns>
         public ServiceHost ConfigureServices(Action<HostBuilderContext, IServiceCollection> configureDelegate)
         {
@@ -85,6 +134,7 @@ namespace DwFramework.Core
         /// <summary>
         /// 添加Json配置
         /// </summary>
+        /// <param name="path"></param>
         /// <returns></returns>
         public ServiceHost AddJsonConfig(string path)
         {
@@ -95,6 +145,7 @@ namespace DwFramework.Core
         /// <summary>
         /// 添加Json配置
         /// </summary>
+        /// <param name="stream"></param>
         /// <returns></returns>
         public ServiceHost AddJsonConfig(Stream stream)
         {
@@ -105,6 +156,7 @@ namespace DwFramework.Core
         /// <summary>
         /// 添加Xml配置
         /// </summary>
+        /// <param name="path"></param>
         /// <returns></returns>         
         public ServiceHost AddXmlConfig(string path)
         {
@@ -115,6 +167,7 @@ namespace DwFramework.Core
         /// <summary>
         /// 添加Xml配置
         /// </summary>
+        /// <param name="stream"></param>
         /// <returns></returns>    
         public ServiceHost AddXmlConfig(Stream stream)
         {
@@ -168,7 +221,6 @@ namespace DwFramework.Core
         /// <summary>
         /// 注册服务
         /// </summary>
-        /// <returns></returns>
         public void RegisterFromAssemblies()
         {
             foreach (var item in AppDomain.CurrentDomain.GetAssemblies()) RegisterFromAssembly(item);
