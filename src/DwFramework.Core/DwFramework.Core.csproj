@@ -13,14 +13,9 @@
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="5.0.0"/>
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="5.0.0"/>
     <PackageReference Include="Microsoft.Extensions.Configuration.Xml" Version="5.0.0"/>
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.1"/>
-    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="5.0.0"/>
     <PackageReference Include="Autofac" Version="6.2.0"/>
     <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="7.1.0"/>
-    <PackageReference Include="Autofac.Extras.DynamicProxy" Version="6.0.0"/>
-    <PackageReference Include="NLog" Version="4.7.9"/>
     <PackageReference Include="NLog.Extensions.Logging" Version="1.7.2"/>
-    <PackageReference Include="Polly" Version="7.2.2"/>
     <PackageReference Include="RSAExtensions" Version="1.0.3"/>
     <PackageReference Include="CHSPinYinConv" Version="1.0.0"/>
     <PackageReference Include="K4os.Compression.LZ4.Streams" Version="1.2.6"/>

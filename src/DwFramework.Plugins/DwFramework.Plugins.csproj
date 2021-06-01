@@ -9,6 +9,9 @@
     <Description>DwFramework 插件库</Description>
     <PackageProjectUrl>https://github.com/Dwgoing/DwFramework</PackageProjectUrl>
   </PropertyGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\DwFramework.Core\DwFramework.Core.csproj" />
+    </ItemGroup>
   <ItemGroup>
     <None Update="README.md">
       <IncludeInPackage>true</IncludeInPackage>
