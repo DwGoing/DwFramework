@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Autofac;
 using Autofac.Extras.DynamicProxy;
+using Castle.DynamicProxy;
 using NLog;
 using DwFramework.Core;
 using DwFramework.Plugins.AOP;
@@ -14,34 +15,53 @@ namespace CoreExample
         static async Task Main(string[] args)
         {
             var host = new ServiceHost();
+            // 配置Logger
             host.ConfigureLogging((_, builder) => builder.UserNLog());
             host.ConfigureContainer(b =>
             {
-                b.Register(c => new LogInterceptor(LogLevel.Info));
-                b.RegisterType<TestClass>().EnableClassInterceptors();
+                // 使用日志拦截器
+                b.Register(c => new LoggerInterceptor(invocation => (
+                    $"{invocation.TargetType.Name}InvokeLog",
+                    LogLevel.Debug,
+                    "\n========================================\n"
+                    + $"Method:\t{invocation.Method}\n"
+                    + $"Args:\t{string.Join('|', invocation.Arguments)}\n"
+                    + $"Return:\t{invocation.ReturnValue}\n"
+                    + "========================================"
+                )));
+                b.RegisterType<A>().As<I>().EnableInterfaceInterceptors();
+                b.RegisterType<B>().As<I>().EnableInterfaceInterceptors();
             });
             host.OnHostStarted += p =>
             {
-                p.GetService<TestClass>().TestMethod("Hello");
+                foreach (var item in p.GetServices<I>()) item.Do(5, 6);
             };
             await host.RunAsync();
         }
     }
 
     // 定义接口
-    public interface ITestInterface
+    [Intercept(typeof(LoggerInterceptor))]
+    public interface I
     {
-        void TestMethod(string str);
+        int Do(int a, int b);
     }
 
     // 定义实现
-    [Intercept(typeof(LogInterceptor))]
-    public class TestClass : ITestInterface
+    public class A : I
     {
-        // 要拦截的函数必须是virtual或override
-        public virtual void TestMethod(string str)
+        public int Do(int a, int b)
         {
-            Console.WriteLine($"TestClass:{str}");
+            return a + b;
+        }
+    }
+
+    // 定义实现
+    public class B : I
+    {
+        public int Do(int a, int b)
+        {
+            return a * b;
         }
     }
 }
