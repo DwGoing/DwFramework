@@ -1,16 +1,16 @@
 using System;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.DependencyInjection;
 using Autofac;
 using Autofac.Extras.DynamicProxy;
 using Castle.DynamicProxy;
+using NLog;
 using DwFramework.Core;
 
 namespace DwFramework.Plugins.AOP
 {
     public sealed class LogInterceptor : IInterceptor
     {
-        private readonly LogLevel _logLevel = LogLevel.None;
+        private readonly LogLevel _logLevel = LogLevel.Off;
 
         public LogInterceptor(LogLevel logLevel)
         {
@@ -19,9 +19,15 @@ namespace DwFramework.Plugins.AOP
 
         public void Intercept(IInvocation invocation)
         {
-            var logger = ServiceHost.ServiceProvider.GetService<ILogger<>>();
+            var logger = LogManager.GetLogger($"{invocation.TargetType.Name}InvokeLog");
             invocation.Proceed();
-            Console.WriteLine("OnCalled");
+            logger?.Log(_logLevel,
+                "\n========================================\n"
+                + $"Method:\t{invocation.Method}\n"
+                + $"Args:\t{string.Join('|', invocation.Arguments)}\n"
+                + $"Return:\t{invocation.ReturnValue}\n"
+                + "========================================"
+            );
         }
     }
 }

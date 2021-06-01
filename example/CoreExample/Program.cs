@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using Autofac;
 using Autofac.Extras.DynamicProxy;
-using Castle.DynamicProxy;
+using NLog;
 using DwFramework.Core;
 using DwFramework.Plugins.AOP;
 
@@ -18,8 +17,8 @@ namespace CoreExample
             host.ConfigureLogging((_, builder) => builder.UserNLog());
             host.ConfigureContainer(b =>
             {
-                b.Register(c => new LogInterceptor(LogLevel.Debug));
-                b.RegisterType<TestClass>().InterceptedBy(typeof(LogInterceptor)).EnableClassInterceptors();
+                b.Register(c => new LogInterceptor(LogLevel.Info));
+                b.RegisterType<TestClass>().EnableClassInterceptors();
             });
             host.OnHostStarted += p =>
             {
@@ -36,6 +35,7 @@ namespace CoreExample
     }
 
     // 定义实现
+    [Intercept(typeof(LogInterceptor))]
     public class TestClass : ITestInterface
     {
         // 要拦截的函数必须是virtual或override
