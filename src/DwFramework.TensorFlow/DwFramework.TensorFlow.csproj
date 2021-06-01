@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
-    <PropertyGroup>
-        <TargetFramework>net5.0</TargetFramework>
-        <ReleaseVersion>5</ReleaseVersion>
-        <BuildVersion>0.0.56-dev.713</BuildVersion>
-        <Version>$(ReleaseVersion).$(BuildVersion)</Version>
-        <Authors>DwGoing</Authors>
-        <Description>DwFramework TensorFlow库</Description>
-        <PackageProjectUrl>https://github.com/Dwgoing/DwFramework</PackageProjectUrl>
-    </PropertyGroup>
-    <ItemGroup>
-      <PackageReference Include="TensorFlow.NET" Version="0.40.1" />
-      <PackageReference Include="SciSharp.TensorFlow.Redist" Version="2.4.1" />
-    </ItemGroup>
-    <ItemGroup>
-        <None Update="README.md">
-            <IncludeInPackage>true</IncludeInPackage>
-        </None>
-        <None Include="..\..\LICENSE" Link="LICENSE">
-            <IncludeInPackage>true</IncludeInPackage>
-        </None>
-    </ItemGroup>
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <ReleaseVersion>5</ReleaseVersion>
+    <BuildVersion>0.0.56-dev.713</BuildVersion>
+    <Version>$(ReleaseVersion).$(BuildVersion)</Version>
+    <Authors>DwGoing</Authors>
+    <Description>DwFramework TensorFlow库</Description>
+    <PackageProjectUrl>https://github.com/Dwgoing/DwFramework</PackageProjectUrl>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="TensorFlow.NET" Version="0.40.1"/>
+    <PackageReference Include="SciSharp.TensorFlow.Redist" Version="2.5.0"/>
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="README.md">
+      <IncludeInPackage>true</IncludeInPackage>
+    </None>
+    <None Include="..\..\LICENSE" Link="LICENSE">
+      <IncludeInPackage>true</IncludeInPackage>
+    </None>
+  </ItemGroup>
 </Project>
