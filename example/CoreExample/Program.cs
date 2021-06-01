@@ -1,10 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using DwFramework.Core;
 using Autofac;
+using Autofac.Extras.DynamicProxy;
+using Castle.DynamicProxy;
+using DwFramework.Core;
+using DwFramework.Plugins.AOP;
 
 namespace CoreExample
 {
@@ -16,65 +18,30 @@ namespace CoreExample
             host.ConfigureLogging((_, builder) => builder.UserNLog());
             host.ConfigureContainer(b =>
             {
-                b.RegisterType<A>().As<I>();
-            });
-            host.ConfigureServices(b =>
-            {
-                b.AddTransient<I, B>();
+                b.Register(c => new LogInterceptor(LogLevel.Debug));
+                b.RegisterType<TestClass>().InterceptedBy(typeof(LogInterceptor)).EnableClassInterceptors();
             });
             host.OnHostStarted += p =>
             {
-                p.GetService<I>().Do();
-                p.GetService<I>().Do();
-                p.GetService<I>().Do();
+                p.GetService<TestClass>().TestMethod("Hello");
             };
             await host.RunAsync();
         }
+    }
 
-        class C
+    // 定义接口
+    public interface ITestInterface
+    {
+        void TestMethod(string str);
+    }
+
+    // 定义实现
+    public class TestClass : ITestInterface
+    {
+        // 要拦截的函数必须是virtual或override
+        public virtual void TestMethod(string str)
         {
-            public int X { get; set; }
-        }
-
-        interface I
-        {
-            void Do();
-        }
-
-        [Registerable(typeof(I))]
-        class A : I
-        {
-            private ILogger _logger;
-            private Guid ID;
-
-            public A(ILogger<A> logger)
-            {
-                _logger = logger;
-                ID = Guid.NewGuid();
-            }
-
-            public void Do()
-            {
-                _logger.LogDebug($"I'm A,{ID}");
-            }
-        }
-
-        [Registerable(typeof(I), Lifetime.Singleton)]
-        class B : I
-        {
-            private ILogger _logger;
-            private Guid ID;
-
-            public B(ILogger<B> logger)
-            {
-                _logger = logger;
-                ID = Guid.NewGuid();
-            }
-
-            public void Do()
-            {
-                _logger.LogDebug($"I'm B,{ID}");
-            }
+            Console.WriteLine($"TestClass:{str}");
         }
     }
 }

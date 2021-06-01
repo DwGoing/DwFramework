@@ -10,5 +10,6 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\DwFramework.Core\DwFramework.Core.csproj" />
+    <ProjectReference Include="..\..\src\DwFramework.Plugins\DwFramework.Plugins.csproj" />
   </ItemGroup>
 </Project>

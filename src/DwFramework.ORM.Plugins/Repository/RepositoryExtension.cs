@@ -2,7 +2,6 @@
 using System.Reflection;
 
 using DwFramework.Core;
-using DwFramework.Core.Extensions;
 
 namespace DwFramework.ORM.Plugins
 {
