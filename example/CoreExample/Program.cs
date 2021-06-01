@@ -15,12 +15,10 @@ namespace CoreExample
         static async Task Main(string[] args)
         {
             var host = new ServiceHost();
-            // 配置Logger
-            host.ConfigureLogging((_, builder) => builder.UserNLog());
-            host.ConfigureContainer(b =>
+            host.ConfigureLogging(builder => builder.UserNLog());
+            host.ConfigureContainer(builder =>
             {
-                // 使用日志拦截器
-                b.Register(c => new LoggerInterceptor(invocation => (
+                builder.Register(c => new LoggerInterceptor(invocation => (
                     $"{invocation.TargetType.Name}InvokeLog",
                     LogLevel.Debug,
                     "\n========================================\n"
@@ -29,12 +27,12 @@ namespace CoreExample
                     + $"Return:\t{invocation.ReturnValue}\n"
                     + "========================================"
                 )));
-                b.RegisterType<A>().As<I>().EnableInterfaceInterceptors();
-                b.RegisterType<B>().As<I>().EnableInterfaceInterceptors();
+                builder.RegisterType<A>().As<I>().EnableInterfaceInterceptors();
+                builder.RegisterType<B>().As<I>().EnableInterfaceInterceptors();
             });
-            host.OnHostStarted += p =>
+            host.OnHostStarted += provider =>
             {
-                foreach (var item in p.GetServices<I>()) item.Do(5, 6);
+                foreach (var item in provider.GetServices<I>()) item.Do(5, 6);
             };
             await host.RunAsync();
         }
