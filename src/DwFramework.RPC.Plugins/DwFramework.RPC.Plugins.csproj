@@ -9,12 +9,6 @@
     <Description>DwFramework RPC插件库</Description>
     <PackageProjectUrl>https://github.com/Dwgoing/DwFramework</PackageProjectUrl>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <OutputPath>..\DwFramework.RPC.Plugins\bin\Debug</OutputPath>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <OutputPath>..\DwFramework.RPC.Plugins\bin\Release</OutputPath>
-  </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\\DwFramework.RPC\DwFramework.RPC.csproj" />
   </ItemGroup>
@@ -22,7 +16,7 @@
     <None Include="README.md">
       <IncludeInPackage>true</IncludeInPackage>
     </None>
-    <None Include="..\..\..\LICENSE" Link="LICENSE">
+    <None Include="..\..\LICENSE" Link="LICENSE">
       <IncludeInPackage>true</IncludeInPackage>
     </None>
   </ItemGroup>

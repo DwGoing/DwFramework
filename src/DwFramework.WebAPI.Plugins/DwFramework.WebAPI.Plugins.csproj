@@ -23,7 +23,7 @@
         <None Include="README.md">
             <IncludeInPackage>true</IncludeInPackage>
         </None>
-        <None Include="..\..\..\LICENSE" Link="LICENSE">
+        <None Include="..\..\LICENSE" Link="LICENSE">
             <IncludeInPackage>true</IncludeInPackage>
         </None>
     </ItemGroup>

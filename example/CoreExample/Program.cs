@@ -20,13 +20,13 @@ namespace CoreExample
             });
             host.ConfigureServices(b =>
             {
-                b.AddTransient<B>();
+                b.AddTransient<I, B>();
             });
             host.OnHostStarted += p =>
             {
-                p.GetService<B>().Do();
-                p.GetService<B>().Do();
-                p.GetService<B>().Do();
+                p.GetService<I>().Do();
+                p.GetService<I>().Do();
+                p.GetService<I>().Do();
             };
             await host.RunAsync();
         }

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <ReleaseVersion>5</ReleaseVersion>
+    <BuildVersion>0.1.12-20210331.8031</BuildVersion>
+    <Version>$(ReleaseVersion).$(BuildVersion)</Version>
+    <Authors>DwGoing</Authors>
+    <Description>DwFramework 插件库</Description>
+    <PackageProjectUrl>https://github.com/Dwgoing/DwFramework</PackageProjectUrl>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Update="README.md">
+      <IncludeInPackage>true</IncludeInPackage>
+    </None>
+    <None Include="..\..\LICENSE" Link="LICENSE">
+      <IncludeInPackage>true</IncludeInPackage>
+    </None>
+  </ItemGroup>
+</Project>

@@ -10,18 +10,15 @@
         <PackageProjectUrl>https://github.com/Dwgoing/DwFramework</PackageProjectUrl>
     </PropertyGroup>
     <ItemGroup>
-        <None Update="README.md">
-            <IncludeInPackage>true</IncludeInPackage>
-        </None>
-        <None Include="..\..\..\LICENSE" Link="LICENSE">
-            <IncludeInPackage>true</IncludeInPackage>
-        </None>
-    </ItemGroup>
-    <ItemGroup>
       <PackageReference Include="TensorFlow.NET" Version="0.40.1" />
       <PackageReference Include="SciSharp.TensorFlow.Redist" Version="2.4.1" />
     </ItemGroup>
     <ItemGroup>
-      <Folder Include="Models\" />
+        <None Update="README.md">
+            <IncludeInPackage>true</IncludeInPackage>
+        </None>
+        <None Include="..\..\LICENSE" Link="LICENSE">
+            <IncludeInPackage>true</IncludeInPackage>
+        </None>
     </ItemGroup>
 </Project>
