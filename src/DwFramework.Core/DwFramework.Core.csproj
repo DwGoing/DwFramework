@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
     <ReleaseVersion>5</ReleaseVersion>
-    <BuildVersion>1.0.21-rc.6741</BuildVersion>
+    <BuildVersion>1.0.21</BuildVersion>
     <Version>$(ReleaseVersion).$(BuildVersion)</Version>
     <Authors>DwGoing</Authors>
     <Description>DwFramework 核心库</Description>
