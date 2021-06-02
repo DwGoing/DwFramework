@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Threading;
+using DwFramework.Core;
 
-namespace DwFramework.Core.Plugins
+namespace DwFramework.Plugins
 {
     /// <summary>
     /// 雪花算法

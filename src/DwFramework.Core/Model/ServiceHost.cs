@@ -13,12 +13,12 @@ namespace DwFramework.Core
 {
     public sealed class ServiceHost
     {
-        private readonly IHostBuilder _hostBuilder;
-        private readonly AutofacServiceProviderFactory _serviceProviderFactory = new();
         private static IHost _host;
 
-        public static IServiceProvider ServiceProvider => _host.Services;
+        public readonly IHostBuilder HostBuilder;
+        public event Action<IServiceProvider> OnHostStarting;
         public event Action<IServiceProvider> OnHostStarted;
+        public static IServiceProvider ServiceProvider => _host.Services;
 
         /// <summary>
         /// 构造函数
@@ -27,107 +27,107 @@ namespace DwFramework.Core
         /// <param name="args"></param>
         public ServiceHost(EnvironmentType environmentType = EnvironmentType.Development, params string[] args)
         {
-            _hostBuilder = Host.CreateDefaultBuilder(args).UseServiceProviderFactory(_serviceProviderFactory);
+            HostBuilder = Host.CreateDefaultBuilder(args).UseServiceProviderFactory(new AutofacServiceProviderFactory());
             if (!Enum.IsDefined<EnvironmentType>(environmentType)) environmentType = EnvironmentType.Development;
-            _hostBuilder.UseEnvironment(environmentType.ToString());
+            HostBuilder.UseEnvironment(environmentType.ToString());
         }
 
         /// <summary>
         /// 配置应用
         /// </summary>
-        /// <param name="configureDelegate"></param>
+        /// <param name="configure"></param>
         /// <returns></returns>
-        public ServiceHost ConfigureAppConfiguration(Action<IConfigurationBuilder> configureDelegate)
+        public ServiceHost ConfigureAppConfiguration(Action<IConfigurationBuilder> configure)
         {
-            _hostBuilder.ConfigureAppConfiguration(configureDelegate);
+            HostBuilder.ConfigureAppConfiguration(configure);
             return this;
         }
 
         /// <summary>
         /// 配置应用
         /// </summary>
-        /// <param name="configureDelegate"></param>
+        /// <param name="configure"></param>
         /// <returns></returns>
-        public ServiceHost ConfigureAppConfiguration(Action<HostBuilderContext, IConfigurationBuilder> configureDelegate)
+        public ServiceHost ConfigureAppConfiguration(Action<HostBuilderContext, IConfigurationBuilder> configure)
         {
-            _hostBuilder.ConfigureAppConfiguration(configureDelegate);
+            HostBuilder.ConfigureAppConfiguration(configure);
             return this;
         }
 
         /// <summary>
         /// 配置容器
         /// </summary>
-        /// <param name="configureDelegate"></param>
+        /// <param name="configure"></param>
         /// <returns></returns>
-        public ServiceHost ConfigureContainer(Action<ContainerBuilder> configureDelegate)
+        public ServiceHost ConfigureContainer(Action<ContainerBuilder> configure)
         {
-            _hostBuilder.ConfigureContainer(configureDelegate);
+            HostBuilder.ConfigureContainer(configure);
             return this;
         }
 
         /// <summary>
         /// 配置容器
         /// </summary>
-        /// <param name="configureDelegate"></param>
+        /// <param name="configure"></param>
         /// <returns></returns>
-        public ServiceHost ConfigureContainer(Action<HostBuilderContext, ContainerBuilder> configureDelegate)
+        public ServiceHost ConfigureContainer(Action<HostBuilderContext, ContainerBuilder> configure)
         {
-            _hostBuilder.ConfigureContainer(configureDelegate);
+            HostBuilder.ConfigureContainer(configure);
             return this;
         }
 
         /// <summary>
         /// 配置主机
         /// </summary>
-        /// <param name="configureDelegate"></param>
+        /// <param name="configure"></param>
         /// <returns></returns>
-        public ServiceHost ConfigureHostConfiguration(Action<IConfigurationBuilder> configureDelegate)
+        public ServiceHost ConfigureHostConfiguration(Action<IConfigurationBuilder> configure)
         {
-            _hostBuilder.ConfigureHostConfiguration(configureDelegate);
+            HostBuilder.ConfigureHostConfiguration(configure);
             return this;
         }
 
         /// <summary>
         /// 配置日志
         /// </summary>
-        /// <param name="configureDelegate"></param>
+        /// <param name="configure"></param>
         /// <returns></returns>
-        public ServiceHost ConfigureLogging(Action<ILoggingBuilder> configureDelegate)
+        public ServiceHost ConfigureLogging(Action<ILoggingBuilder> configure)
         {
-            _hostBuilder.ConfigureLogging(configureDelegate);
+            HostBuilder.ConfigureLogging(configure);
             return this;
         }
 
         /// <summary>
         /// 配置日志
         /// </summary>
-        /// <param name="configureDelegate"></param>
+        /// <param name="configure"></param>
         /// <returns></returns>
-        public ServiceHost ConfigureLogging(Action<HostBuilderContext, ILoggingBuilder> configureDelegate)
+        public ServiceHost ConfigureLogging(Action<HostBuilderContext, ILoggingBuilder> configure)
         {
-            _hostBuilder.ConfigureLogging(configureDelegate);
+            HostBuilder.ConfigureLogging(configure);
             return this;
         }
 
         /// <summary>
         /// 配置服务
         /// </summary>
-        /// <param name="configureDelegate"></param>
+        /// <param name="configure"></param>
         /// <returns></returns>
-        public ServiceHost ConfigureServices(Action<IServiceCollection> configureDelegate)
+        public ServiceHost ConfigureServices(Action<IServiceCollection> configure)
         {
-            _hostBuilder.ConfigureServices(configureDelegate);
+            HostBuilder.ConfigureServices(configure);
             return this;
         }
 
         /// <summary>
         /// 配置服务
         /// </summary>
-        /// <param name="configureDelegate"></param>
+        /// <param name="configure"></param>
         /// <returns></returns>
-        public ServiceHost ConfigureServices(Action<HostBuilderContext, IServiceCollection> configureDelegate)
+        public ServiceHost ConfigureServices(Action<HostBuilderContext, IServiceCollection> configure)
         {
-            _hostBuilder.ConfigureServices(configureDelegate);
+            HostBuilder.ConfigureServices(configure);
             return this;
         }
 
@@ -135,10 +135,12 @@ namespace DwFramework.Core
         /// 添加Json配置
         /// </summary>
         /// <param name="path"></param>
+        /// <param name="optional"></param>
+        /// <param name="reloadOnChange"></param>
         /// <returns></returns>
-        public ServiceHost AddJsonConfig(string path)
+        public ServiceHost AddJsonConfig(string path, bool optional = false, bool reloadOnChange = false)
         {
-            _hostBuilder.ConfigureAppConfiguration((context, builder) => builder.AddJsonFile(path));
+            HostBuilder.ConfigureHostConfiguration(builder => builder.AddJsonFile(path, optional, reloadOnChange));
             return this;
         }
 
@@ -149,7 +151,7 @@ namespace DwFramework.Core
         /// <returns></returns>
         public ServiceHost AddJsonConfig(Stream stream)
         {
-            _hostBuilder.ConfigureAppConfiguration((context, builder) => builder.AddJsonStream(stream));
+            HostBuilder.ConfigureHostConfiguration(builder => builder.AddJsonStream(stream));
             return this;
         }
 
@@ -157,10 +159,12 @@ namespace DwFramework.Core
         /// 添加Xml配置
         /// </summary>
         /// <param name="path"></param>
+        /// <param name="optional"></param>
+        /// <param name="reloadOnChange"></param>
         /// <returns></returns>         
-        public ServiceHost AddXmlConfig(string path)
+        public ServiceHost AddXmlConfig(string path, bool optional = false, bool reloadOnChange = false)
         {
-            _hostBuilder.ConfigureAppConfiguration((context, builder) => builder.AddXmlFile(path));
+            HostBuilder.ConfigureHostConfiguration(builder => builder.AddXmlFile(path, optional, reloadOnChange));
             return this;
         }
 
@@ -171,7 +175,7 @@ namespace DwFramework.Core
         /// <returns></returns>    
         public ServiceHost AddXmlConfig(Stream stream)
         {
-            _hostBuilder.ConfigureAppConfiguration((context, builder) => builder.AddXmlStream(stream));
+            HostBuilder.ConfigureHostConfiguration(builder => builder.AddXmlStream(stream));
             return this;
         }
 
@@ -181,8 +185,9 @@ namespace DwFramework.Core
         /// <returns></returns>
         public async Task RunAsync()
         {
-            _hostBuilder.UseConsoleLifetime();
-            _host = _hostBuilder.Build();
+            HostBuilder.UseConsoleLifetime();
+            OnHostStarting?.Invoke(ServiceProvider);
+            _host = HostBuilder.Build();
             OnHostStarted?.Invoke(ServiceProvider);
             await _host.RunAsync();
         }
@@ -203,7 +208,7 @@ namespace DwFramework.Core
             {
                 var attr = item.GetCustomAttribute<RegisterableAttribute>();
                 if (attr == null) return;
-                _hostBuilder.ConfigureContainer<ContainerBuilder>(builder =>
+                HostBuilder.ConfigureContainer<ContainerBuilder>(builder =>
                 {
                     var registration = builder.RegisterType(item);
                     registration = attr.InterfaceType != null ? registration.As(attr.InterfaceType) : registration.AsSelf();

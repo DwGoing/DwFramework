@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <ReleaseVersion>5</ReleaseVersion>
+    <BuildVersion>0.1.17-20200506.9657</BuildVersion>
+    <Version>$(ReleaseVersion).$(BuildVersion)</Version>
+    <Authors>DwGoing</Authors>
+    <Description>DwFramework WEB库</Description>
+    <PackageProjectUrl>https://github.com/Dwgoing/DwFramework</PackageProjectUrl>
+  </PropertyGroup>
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DwFramework.Core\DwFramework.Core.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Hosting" Version="2.2.7" />
+    <PackageReference Include="Microsoft.AspNetCore.Server.Kestrel" Version="2.2.0" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="5.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="README.md">
+      <IncludeInPackage>true</IncludeInPackage>
+    </None>
+    <None Include="..\..\LICENSE" Link="LICENSE">
+      <IncludeInPackage>true</IncludeInPackage>
+    </None>
+  </ItemGroup>
+</Project>

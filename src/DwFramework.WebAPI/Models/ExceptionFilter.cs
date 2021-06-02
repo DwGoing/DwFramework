@@ -1,10 +1,9 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using DwFramework.Core;
 
-using DwFramework.Core.Entities;
-
-namespace EthListener
+namespace DwFramework.WebAPI
 {
     /// <summary>
     /// 异常过滤器
