@@ -13,12 +13,4 @@
     <PackageReference Include="TensorFlow.NET" Version="0.40.1"/>
     <PackageReference Include="SciSharp.TensorFlow.Redist" Version="2.5.0"/>
   </ItemGroup>
-  <ItemGroup>
-    <None Update="README.md">
-      <IncludeInPackage>true</IncludeInPackage>
-    </None>
-    <None Include="..\..\LICENSE" Link="LICENSE">
-      <IncludeInPackage>true</IncludeInPackage>
-    </None>
-  </ItemGroup>
 </Project>

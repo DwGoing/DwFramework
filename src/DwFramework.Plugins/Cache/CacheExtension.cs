@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace DwFramework.Core.Plugins
+namespace DwFramework.Core.Cache
 {
     public static class CacheExtension
     {

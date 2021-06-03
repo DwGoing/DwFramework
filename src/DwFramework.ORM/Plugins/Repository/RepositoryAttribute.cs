@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DwFramework.ORM.Plugins
+namespace DwFramework.ORM.Repository
 {
     [AttributeUsage(AttributeTargets.Class)]
     public class RepositoryAttribute : Attribute { }

@@ -5,10 +5,7 @@
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\DwFramework.Core\DwFramework.Core.csproj" />
-    <ProjectReference Include="..\..\src\DwFramework.WEB\DwFramework.WEB.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.1.4"/>
+    <ProjectReference Include="..\..\src\DwFramework.ORM\DwFramework.ORM.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Update="NLog.config">

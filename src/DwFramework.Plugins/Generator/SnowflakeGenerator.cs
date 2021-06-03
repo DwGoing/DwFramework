@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Threading;
-using DwFramework.Core;
 
-namespace DwFramework.Plugins
+namespace DwFramework.Core.Generator
 {
     /// <summary>
     /// 雪花算法
     /// </summary>
-    public sealed class SnowflakeGenerater
+    public sealed class SnowflakeGenerator
     {
         public sealed class SnowflakeIdInfo
         {
@@ -52,7 +51,7 @@ namespace DwFramework.Plugins
         /// </summary>
         /// <param name="workerId"></param>
         /// <param name="startTime"></param>
-        public SnowflakeGenerater(long workerId = 0, DateTime? startTime = null)
+        public SnowflakeGenerator(long workerId = 0, DateTime? startTime = null)
         {
             MaxTimestamp = 2L << TimestampBits;
             MaxWorkerId = (2L << WorkerIdBits) - 1;

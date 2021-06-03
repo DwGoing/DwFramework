@@ -5,22 +5,11 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
-using DwFramework.Core;
 
-namespace DwFramework.WEB.Plugins
+namespace DwFramework.WEB.JWT
 {
     public static class JwtManager
     {
-        public static string Tag { get; private set; }
-
-        /// <summary>
-        /// 构造函数
-        /// </summary>
-        static JwtManager()
-        {
-            Tag = RandomGenerater.RandomString(16);
-        }
-
         /// <summary>
         /// 生成Token
         /// </summary>
@@ -31,7 +20,7 @@ namespace DwFramework.WEB.Plugins
         /// <param name="expires"></param>
         /// <param name="customFields"></param>
         /// <returns></returns>
-        public static string GenerateToken(string issuer, string securityKey, string[] audiences = null, DateTime? notBefore = null, DateTime? expires = null, Dictionary<string, object> customFields = null)
+        public static string Generate(string issuer, string securityKey, string[] audiences = null, DateTime? notBefore = null, DateTime? expires = null, Dictionary<string, object> customFields = null)
         {
             if (securityKey.Length < 16) throw new Exception("SecuriyKey长度不足");
             JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
@@ -44,48 +33,23 @@ namespace DwFramework.WEB.Plugins
                 notBefore: notBefore,
                 expires: expires,
                 signingCredentials: creds
-                );
+            );
             // 自定义内容
-            jwtSecurityToken.Header["tag"] = Tag;
             if (customFields != null) foreach (var keyValuePair in customFields) jwtSecurityToken.Payload[keyValuePair.Key] = keyValuePair.Value;
             var token = tokenHandler.WriteToken(jwtSecurityToken);
             return token;
         }
 
         /// <summary>
-        /// 刷新Token
+        /// 验证Token
         /// </summary>
         /// <param name="token"></param>
-        /// <param name="securityKey"></param>
-        /// <param name="notBefore"></param>
-        /// <param name="expires"></param>
+        /// <param name="validationParameters"></param>
         /// <returns></returns>
-        public static string RefreshToken(string token, string securityKey, DateTime? notBefore = null, DateTime? expires = null)
+        public static SecurityToken Verify(string token, TokenValidationParameters validationParameters)
         {
-            // 验证
-            ValidateSecurityKey(token, securityKey);
-            var sourceToken = DecodeToken(token);
-            // 生成新Token
-            return GenerateToken(sourceToken.Issuer, securityKey, sourceToken.Audiences.ToArray(), notBefore, expires, ReadClaims(token));
-        }
-
-        /// <summary>
-        /// 验证SecurityKey及Lifetime
-        /// </summary>
-        /// <param name="token"></param>
-        /// <param name="securityKey"></param>
-        /// <param name="validateLifetime"></param>
-        private static void ValidateSecurityKey(string token, string securityKey, bool validateLifetime = false)
-        {
-            var parameters = new TokenValidationParameters()
-            {
-                ValidateIssuer = false,
-                ValidateAudience = false,
-                ValidateLifetime = validateLifetime,
-                ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(securityKey))
-            };
-            new JwtSecurityTokenHandler().ValidateToken(token, parameters, out _);
+            new JwtSecurityTokenHandler().ValidateToken(token, validationParameters, out var securityToken);
+            return securityToken;
         }
 
         /// <summary>
@@ -93,11 +57,10 @@ namespace DwFramework.WEB.Plugins
         /// </summary>
         /// <param name="token"></param>
         /// <returns></returns>
-        public static JwtSecurityToken DecodeToken(string token)
+        public static JwtSecurityToken Decode(string token)
         {
-            JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
-            if (string.IsNullOrEmpty(token) || !tokenHandler.CanReadToken(token))
-                throw new Exception("无效的Token");
+            var tokenHandler = new JwtSecurityTokenHandler();
+            if (string.IsNullOrEmpty(token) || !tokenHandler.CanReadToken(token)) throw new Exception("无效的Token");
             return tokenHandler.ReadJwtToken(token);
         }
 
@@ -106,11 +69,7 @@ namespace DwFramework.WEB.Plugins
         /// </summary>
         /// <param name="token"></param>
         /// <returns></returns>
-        public static Dictionary<string, object> ReadClaims(string token)
-        {
-            var jwt = DecodeToken(token);
-            return jwt.Payload.ToDictionary(item => item.Key, item => item.Value);
-        }
+        public static Dictionary<string, object> ReadClaims(string token) => Decode(token).Payload.ToDictionary(item => item.Key, item => item.Value);
 
         /// <summary>
         /// 读取Claims信息
@@ -118,10 +77,6 @@ namespace DwFramework.WEB.Plugins
         /// <param name="token"></param>
         /// <param name="key"></param>
         /// <returns></returns>
-        public static object ReadClaim(string token, string key)
-        {
-            var jwt = DecodeToken(token);
-            return jwt.Payload[key];
-        }
+        public static object ReadClaim(string token, string key) => Decode(token).Payload[key];
     }
 }

@@ -2,7 +2,7 @@ using System;
 using Castle.DynamicProxy;
 using NLog;
 
-namespace DwFramework.Plugins.AOP
+namespace DwFramework.Core.AOP
 {
     public sealed class LoggerInterceptor : IInterceptor
     {

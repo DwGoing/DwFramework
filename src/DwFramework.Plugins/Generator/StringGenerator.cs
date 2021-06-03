@@ -1,7 +1,7 @@
 using System;
 using System.Text;
 
-namespace DwFramework.Core
+namespace DwFramework.Core.Generator
 {
     public static class StringGenerator
     {

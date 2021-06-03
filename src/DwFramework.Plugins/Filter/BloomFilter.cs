@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DwFramework.Plugins
+namespace DwFramework.Core.Filter
 {
     public sealed class BloomFilter
     {

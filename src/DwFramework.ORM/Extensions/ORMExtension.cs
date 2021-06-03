@@ -1,5 +1,8 @@
 ﻿using System;
-
+using System.IO;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Autofac;
 using DwFramework.Core;
 
 namespace DwFramework.ORM
@@ -7,59 +10,65 @@ namespace DwFramework.ORM
     public static class ORMExtension
     {
         /// <summary>
-        /// 注册服务
+        /// 配置ORM
         /// </summary>
         /// <param name="host"></param>
-        /// <param name="config"></param>
-        public static void RegisterORMService(this ServiceHost host, ORMService.Config config)
-        {
-            host.RegisterType<ORMService>().SingleInstance();
-            host.OnInitialized += provider => provider.ConfigORMService(config);
-        }
-
-        /// <summary>
-        /// 注册服务
-        /// </summary>
-        /// <param name="host"></param>
+        /// <param name="configuration"></param>
         /// <param name="path"></param>
-        /// <param name="key"></param>
-        public static void RegisterORMService(this ServiceHost host, string path = null, string key = null)
+        /// <returns></returns>
+        public static ServiceHost ConfigureORM(this ServiceHost host, IConfiguration configuration, string path = null)
         {
-            host.RegisterType<ORMService>().SingleInstance();
-            host.OnInitialized += provider => provider.ConfigORMService(path, key);
+            var config = configuration.GetConfig<Config>(path);
+            if (config == null) throw new Exception("未读取到ORM配置");
+            host.ConfigureContainer(builder => builder.Register(_ => new ORMService(config)).SingleInstance());
+            return host;
         }
 
         /// <summary>
-        /// 获取服务
+        /// 配置ORM
+        /// </summary>
+        /// <param name="host"></param>
+        /// <param name="file"></param>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        public static ServiceHost ConfigureORMWithJson(this ServiceHost host, string file, string path = null)
+            => host.ConfigureORM(new ConfigurationBuilder().AddJsonFile(file).Build(), path);
+
+        /// <summary>
+        /// 配置ORM
+        /// </summary>
+        /// <param name="host"></param>
+        /// <param name="stream"></param>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        public static ServiceHost ConfigureORMWithJson(this ServiceHost host, Stream stream, string path = null)
+            => host.ConfigureORM(new ConfigurationBuilder().AddJsonStream(stream).Build(), path);
+
+        /// <summary>
+        /// 配置ORM
+        /// </summary>
+        /// <param name="host"></param>
+        /// <param name="file"></param>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        public static ServiceHost ConfigureORMWithXml(this ServiceHost host, string file, string path = null)
+            => host.ConfigureORM(new ConfigurationBuilder().AddXmlFile(file).Build(), path);
+
+        /// <summary>
+        /// 配置ORM
+        /// </summary>
+        /// <param name="host"></param>
+        /// <param name="stream"></param>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        public static ServiceHost ConfigureORMWithXml(this ServiceHost host, Stream stream, string path = null)
+            => host.ConfigureORM(new ConfigurationBuilder().AddXmlStream(stream).Build(), path);
+
+        /// <summary>
+        /// 获取ORM服务
         /// </summary>
         /// <param name="provider"></param>
         /// <returns></returns>
-        public static ORMService GetORMService(this IServiceProvider provider)
-        {
-            return provider.GetService<ORMService>();
-        }
-
-        /// <summary>
-        /// 加载配置
-        /// </summary>
-        /// <param name="provider"></param>
-        /// <param name="config"></param>
-        public static void ConfigORMService(this IServiceProvider provider, ORMService.Config config)
-        {
-            var service = provider.GetORMService();
-            service.ReadConfig(config);
-        }
-
-        /// <summary>
-        /// 加载配置
-        /// </summary>
-        /// <param name="provider"></param>
-        /// <param name="path"></param>
-        /// <param name="key"></param>
-        public static void ConfigORMService(this IServiceProvider provider, string path = null, string key = null)
-        {
-            var service = provider.GetORMService();
-            service.ReadConfig(path, key);
-        }
+        public static ORMService GetORMService(this IServiceProvider provider) => provider.GetService<ORMService>();
     }
 }

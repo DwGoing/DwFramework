@@ -2,7 +2,7 @@
 using System.Security.Cryptography;
 using System.Text;
 
-namespace DwFramework.Core
+namespace DwFramework.Core.Encrypt
 {
     public static class GoogleAuthenticator
     {

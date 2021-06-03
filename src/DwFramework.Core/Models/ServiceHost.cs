@@ -16,7 +16,6 @@ namespace DwFramework.Core
         private readonly IHostBuilder _hostBuilder;
         private static IHost _host;
 
-        public event Action<IServiceProvider> OnHostStarting;
         public event Action<IServiceProvider> OnHostStarted;
         public static IServiceProvider ServiceProvider => _host.Services;
 
@@ -197,7 +196,6 @@ namespace DwFramework.Core
         public async Task RunAsync()
         {
             _hostBuilder.UseConsoleLifetime();
-            OnHostStarting?.Invoke(ServiceProvider);
             _host = _hostBuilder.Build();
             OnHostStarted?.Invoke(ServiceProvider);
             await _host.RunAsync();

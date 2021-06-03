@@ -1,6 +1,6 @@
 using System;
 
-namespace DwFramework.Plugins.AOP
+namespace DwFramework.Core.AOP
 {
     public static class InterceptorExtension
     {

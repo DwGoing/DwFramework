@@ -19,7 +19,7 @@ namespace CoreExample
             });
             host.OnHostStarted += provider =>
             {
-                foreach (var item in provider.GetServices<I>()) item.Do(5, 6);
+                foreach (var item in provider.GetServices<I>()) Console.WriteLine(item.Do(5, 6));
             };
             await host.RunAsync();
         }

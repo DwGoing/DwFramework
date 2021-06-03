@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using SqlSugar;
 
-namespace DwFramework.ORM.Plugins
+namespace DwFramework.ORM.Repository
 {
-    public abstract class BaseRepository<T> : IRepository<T> where T : class, new()
+    public abstract class RepositoryBase<T> : IRepository<T> where T : class, new()
     {
         private readonly ORMService _ormService;
         private readonly string _connName;
@@ -17,20 +17,11 @@ namespace DwFramework.ORM.Plugins
         /// </summary>
         /// <param name="ormService"></param>
         /// <param name="connName"></param>
-        public BaseRepository(ORMService ormService, string connName)
+        public RepositoryBase(ORMService ormService, string connName)
         {
             _ormService = ormService;
             _connName = connName;
-            if (_ormService == null) throw new Exception("未找到ORM服务");
-        }
-
-        /// <summary>
-        /// 创建连接
-        /// </summary>
-        /// <returns></returns>
-        protected SqlSugarClient CreateConnection()
-        {
-            return _ormService.CreateConnection(_connName);
+            if (_ormService == null) throw new Exception("ORM服务不能为空");
         }
 
         /// <summary>
@@ -41,7 +32,7 @@ namespace DwFramework.ORM.Plugins
         /// <returns></returns>
         public ISugarQueryable<T> Select(Expression<Func<T, bool>> expression = null, SqlSugarClient conn = null)
         {
-            conn ??= CreateConnection();
+            conn ??= _ormService.CreateConnection(_connName);
             var queryable = conn.Queryable<T>();
             if (expression != null) queryable = queryable.Where(expression);
             return queryable;
@@ -54,12 +45,12 @@ namespace DwFramework.ORM.Plugins
         /// <param name="identity"></param>
         /// <param name="con"></param>
         /// <returns></returns>
-        public async Task<List<T>> InsertOrUpdateAsync(List<T> objs, Expression<Func<T, object>> identityColumn = null, SqlSugarClient con = null)
+        public async Task<List<T>> InsertOrUpdateAsync(List<T> objs, Expression<Func<T, object>> identityColumn = null, SqlSugarClient conn = null)
         {
-            con ??= CreateConnection();
-            var tran = await con.UseTranAsync(async () =>
+            conn ??= _ormService.CreateConnection(_connName);
+            var tran = await conn.UseTranAsync(async () =>
             {
-                var storageable = con.Storageable<T>(objs).Saveable();
+                var storageable = conn.Storageable<T>(objs).Saveable();
                 if (identityColumn != null) storageable.WhereColumns(identityColumn);
                 var storage = storageable.ToStorage();
                 if (storage.InsertList.Count > 0) await storage.AsInsertable.ExecuteCommandAsync();
@@ -68,7 +59,7 @@ namespace DwFramework.ORM.Plugins
                 object[] identities = null;
                 if (identityColumn == null)
                 {
-                    var entityInfo = CreateConnection().EntityMaintenance.GetEntityInfo<T>();
+                    var entityInfo = _ormService.CreateConnection(_connName).EntityMaintenance.GetEntityInfo<T>();
                     var columnInfo = entityInfo.Columns.Where(item => item.IsIdentity).FirstOrDefault();
                     if (columnInfo != null)
                     {
@@ -82,7 +73,7 @@ namespace DwFramework.ORM.Plugins
                     identities = objs.Select(identityColumn.Compile()).ToArray();
                 }
                 if (identity == null || identities == null) return null;
-                return await con.Queryable<T>().In(identity, identities).ToListAsync();
+                return await conn.Queryable<T>().In(identity, identities).ToListAsync();
             }, ex => throw ex);
             return await tran.Data;
         }
@@ -92,10 +83,10 @@ namespace DwFramework.ORM.Plugins
         /// </summary>
         /// <param name="expression"></param>
         /// <returns></returns>
-        public async Task<bool> DeleteAsync(Expression<Func<T, bool>> expression = null, SqlSugarClient con = null)
+        public async Task<bool> DeleteAsync(Expression<Func<T, bool>> expression = null, SqlSugarClient conn = null)
         {
-            con ??= CreateConnection();
-            return await con.Deleteable<T>(expression).ExecuteCommandHasChangeAsync();
+            conn ??= _ormService.CreateConnection(_connName);
+            return await conn.Deleteable<T>(expression).ExecuteCommandHasChangeAsync();
         }
     }
 }

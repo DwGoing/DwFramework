@@ -15,12 +15,4 @@
     <ItemGroup>
         <PackageReference Include="Quartz" Version="3.3.2" />
     </ItemGroup>
-    <ItemGroup>
-        <None Include="README.md">
-            <IncludeInPackage>true</IncludeInPackage>
-        </None>
-        <None Include="..\..\LICENSE" Link="LICENSE">
-            <IncludeInPackage>true</IncludeInPackage>
-        </None>
-    </ItemGroup>
 </Project>

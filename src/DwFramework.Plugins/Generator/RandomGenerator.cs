@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Text;
 
-namespace DwFramework.Core
+namespace DwFramework.Core.Generator
 {
-    public static class RandomGenerater
+    public static class RandomGenerator
     {
         /// <summary>
         /// 随机数生成器

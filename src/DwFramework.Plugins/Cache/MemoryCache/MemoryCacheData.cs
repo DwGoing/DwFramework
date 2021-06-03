@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DwFramework.Core.Plugins
+namespace DwFramework.Core.Cache
 {
     public sealed class MemoryCacheData
     {

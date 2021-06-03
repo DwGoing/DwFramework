@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using DwFramework.Core;
 
-namespace DwFramework.WebAPI
+namespace DwFramework.WEB
 {
     /// <summary>
     /// 异常过滤器

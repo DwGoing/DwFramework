@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
     <ReleaseVersion>5</ReleaseVersion>
-    <BuildVersion>0.1.17-20200506.9657</BuildVersion>
+    <BuildVersion>1.0.21-preview.9614</BuildVersion>
     <Version>$(ReleaseVersion).$(BuildVersion)</Version>
     <Authors>DwGoing</Authors>
     <Description>DwFramework WEB库</Description>
@@ -16,22 +16,7 @@
     <ProjectReference Include="..\DwFramework.Core\DwFramework.Core.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Hosting" Version="2.2.7" />
-    <PackageReference Include="Microsoft.AspNetCore.Server.Kestrel" Version="2.2.0" />
-    <PackageReference Include="Microsoft.Extensions.Hosting" Version="5.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />
-    <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.11.1"/>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.6"/>
-    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.11.1"/>
     <PackageReference Include="Consul" Version="1.6.10.1"/>
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.1.4"/>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="README.md">
-      <IncludeInPackage>true</IncludeInPackage>
-    </None>
-    <None Include="..\..\LICENSE" Link="LICENSE">
-      <IncludeInPackage>true</IncludeInPackage>
-    </None>
   </ItemGroup>
 </Project>

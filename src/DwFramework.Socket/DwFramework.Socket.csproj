@@ -12,12 +12,4 @@
     <ItemGroup>
         <ProjectReference Include="..\DwFramework.Core\DwFramework.Core.csproj" />
     </ItemGroup>
-    <ItemGroup>
-        <None Include="README.md">
-            <IncludeInPackage>true</IncludeInPackage>
-        </None>
-        <None Include="..\..\LICENSE" Link="LICENSE">
-            <IncludeInPackage>true</IncludeInPackage>
-        </None>
-    </ItemGroup>
 </Project>

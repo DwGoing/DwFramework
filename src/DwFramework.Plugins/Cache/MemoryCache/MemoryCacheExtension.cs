@@ -1,7 +1,7 @@
 ﻿using System;
 using Autofac;
 
-namespace DwFramework.Core.Plugins
+namespace DwFramework.Core.Cache
 {
     public static class MemoryCacheExtension
     {

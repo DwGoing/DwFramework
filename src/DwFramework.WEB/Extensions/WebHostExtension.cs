@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Collections.Generic;
 using System.Net;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
@@ -21,12 +20,6 @@ namespace DwFramework.WEB
         {
             host.ConfigureHostBuilder(builder => builder.ConfigureWebHost(configure));
             return host;
-        }
-
-        private sealed class WebApiConfig
-        {
-            public string ContentRoot { get; set; }
-            public Dictionary<string, string> Listens { get; set; }
         }
 
         /// <summary>

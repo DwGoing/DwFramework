@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Reflection;
-
+using Autofac;
 using DwFramework.Core;
 
-namespace DwFramework.ORM.Plugins
+namespace DwFramework.ORM.Repository
 {
     public static class RepositoryExtension
     {
@@ -14,16 +14,16 @@ namespace DwFramework.ORM.Plugins
         public static void RegisterRepositories(this ServiceHost host)
         {
             var assemblies = AppDomain.CurrentDomain.GetAssemblies();
-            assemblies.ForEach(assembly =>
+            foreach (var assembly in assemblies)
             {
                 var types = assembly.GetTypes();
-                types.ForEach(type =>
+                foreach (var type in types)
                 {
                     var attr = type.GetCustomAttribute<RepositoryAttribute>();
                     if (attr == null) return;
-                    host.RegisterType(type);
-                });
-            });
+                    host.ConfigureContainer(builder => builder.RegisterType(type));
+                };
+            };
         }
     }
 }

@@ -3,9 +3,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.OpenApi.Models;
 using DwFramework.Core;
 using DwFramework.WEB;
-using DwFramework.WEB.Plugins;
 
 namespace WEBExample
 {
@@ -14,7 +14,7 @@ namespace WEBExample
         static async Task Main(string[] args)
         {
             var host = new ServiceHost();
-            host.ConfigureWebApiWithJson<Startup>("Config.json", "WebApi");
+            host.ConfigureWebApiWithJson<Startup>("Config.json");
             host.ConfigureLogging(builder => builder.UserNLog());
             await host.RunAsync();
         }
@@ -28,9 +28,18 @@ namespace WEBExample
             {
                 options.AddPolicy("any", builder => { builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader(); });
             });
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("name", new OpenApiInfo()
+                {
+                    Title = "title",
+                    Version = "version",
+                    Description = "description"
+                });
+            });
             services.AddControllers(options =>
             {
-                // options.Filters.Add<ExceptionFilter>();
+                options.Filters.Add<ExceptionFilter>();
             }).AddJsonOptions(options =>
             {
                 //不使用驼峰样式的key
@@ -44,6 +53,8 @@ namespace WEBExample
         {
             app.UseCors("any");
             app.UseRouting();
+            app.UseSwagger(c => c.RouteTemplate = "{documentName}/swagger.json");
+            app.UseSwaggerUI(c => c.SwaggerEndpoint($"/{"name"}/swagger.json", "desc"));
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
