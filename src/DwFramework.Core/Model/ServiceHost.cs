@@ -13,9 +13,9 @@ namespace DwFramework.Core
 {
     public sealed class ServiceHost
     {
+        private readonly IHostBuilder _hostBuilder;
         private static IHost _host;
 
-        public readonly IHostBuilder HostBuilder;
         public event Action<IServiceProvider> OnHostStarting;
         public event Action<IServiceProvider> OnHostStarted;
         public static IServiceProvider ServiceProvider => _host.Services;
@@ -27,52 +27,19 @@ namespace DwFramework.Core
         /// <param name="args"></param>
         public ServiceHost(EnvironmentType environmentType = EnvironmentType.Development, params string[] args)
         {
-            HostBuilder = Host.CreateDefaultBuilder(args).UseServiceProviderFactory(new AutofacServiceProviderFactory());
+            _hostBuilder = Host.CreateDefaultBuilder(args).UseServiceProviderFactory(new AutofacServiceProviderFactory());
             if (!Enum.IsDefined<EnvironmentType>(environmentType)) environmentType = EnvironmentType.Development;
-            HostBuilder.UseEnvironment(environmentType.ToString());
+            _hostBuilder.UseEnvironment(environmentType.ToString());
         }
 
         /// <summary>
-        /// 配置应用
+        /// 配置主机构造器
         /// </summary>
         /// <param name="configure"></param>
         /// <returns></returns>
-        public ServiceHost ConfigureAppConfiguration(Action<IConfigurationBuilder> configure)
+        public ServiceHost ConfigureHostBuilder(Action<IHostBuilder> configure)
         {
-            HostBuilder.ConfigureAppConfiguration(configure);
-            return this;
-        }
-
-        /// <summary>
-        /// 配置应用
-        /// </summary>
-        /// <param name="configure"></param>
-        /// <returns></returns>
-        public ServiceHost ConfigureAppConfiguration(Action<HostBuilderContext, IConfigurationBuilder> configure)
-        {
-            HostBuilder.ConfigureAppConfiguration(configure);
-            return this;
-        }
-
-        /// <summary>
-        /// 配置容器
-        /// </summary>
-        /// <param name="configure"></param>
-        /// <returns></returns>
-        public ServiceHost ConfigureContainer(Action<ContainerBuilder> configure)
-        {
-            HostBuilder.ConfigureContainer(configure);
-            return this;
-        }
-
-        /// <summary>
-        /// 配置容器
-        /// </summary>
-        /// <param name="configure"></param>
-        /// <returns></returns>
-        public ServiceHost ConfigureContainer(Action<HostBuilderContext, ContainerBuilder> configure)
-        {
-            HostBuilder.ConfigureContainer(configure);
+            configure(_hostBuilder);
             return this;
         }
 
@@ -83,7 +50,29 @@ namespace DwFramework.Core
         /// <returns></returns>
         public ServiceHost ConfigureHostConfiguration(Action<IConfigurationBuilder> configure)
         {
-            HostBuilder.ConfigureHostConfiguration(configure);
+            _hostBuilder.ConfigureHostConfiguration(configure);
+            return this;
+        }
+
+        /// <summary>
+        /// 配置应用
+        /// </summary>
+        /// <param name="configure"></param>
+        /// <returns></returns>
+        public ServiceHost ConfigureAppConfiguration(Action<IConfigurationBuilder> configure)
+        {
+            _hostBuilder.ConfigureAppConfiguration(configure);
+            return this;
+        }
+
+        /// <summary>
+        /// 配置应用
+        /// </summary>
+        /// <param name="configure"></param>
+        /// <returns></returns>
+        public ServiceHost ConfigureAppConfiguration(Action<HostBuilderContext, IConfigurationBuilder> configure)
+        {
+            _hostBuilder.ConfigureAppConfiguration(configure);
             return this;
         }
 
@@ -94,7 +83,7 @@ namespace DwFramework.Core
         /// <returns></returns>
         public ServiceHost ConfigureLogging(Action<ILoggingBuilder> configure)
         {
-            HostBuilder.ConfigureLogging(configure);
+            _hostBuilder.ConfigureLogging(configure);
             return this;
         }
 
@@ -105,7 +94,7 @@ namespace DwFramework.Core
         /// <returns></returns>
         public ServiceHost ConfigureLogging(Action<HostBuilderContext, ILoggingBuilder> configure)
         {
-            HostBuilder.ConfigureLogging(configure);
+            _hostBuilder.ConfigureLogging(configure);
             return this;
         }
 
@@ -116,7 +105,7 @@ namespace DwFramework.Core
         /// <returns></returns>
         public ServiceHost ConfigureServices(Action<IServiceCollection> configure)
         {
-            HostBuilder.ConfigureServices(configure);
+            _hostBuilder.ConfigureServices(configure);
             return this;
         }
 
@@ -127,7 +116,29 @@ namespace DwFramework.Core
         /// <returns></returns>
         public ServiceHost ConfigureServices(Action<HostBuilderContext, IServiceCollection> configure)
         {
-            HostBuilder.ConfigureServices(configure);
+            _hostBuilder.ConfigureServices(configure);
+            return this;
+        }
+
+        /// <summary>
+        /// 配置容器
+        /// </summary>
+        /// <param name="configure"></param>
+        /// <returns></returns>
+        public ServiceHost ConfigureContainer(Action<ContainerBuilder> configure)
+        {
+            _hostBuilder.ConfigureContainer(configure);
+            return this;
+        }
+
+        /// <summary>
+        /// 配置容器
+        /// </summary>
+        /// <param name="configure"></param>
+        /// <returns></returns>
+        public ServiceHost ConfigureContainer(Action<HostBuilderContext, ContainerBuilder> configure)
+        {
+            _hostBuilder.ConfigureContainer(configure);
             return this;
         }
 
@@ -140,7 +151,7 @@ namespace DwFramework.Core
         /// <returns></returns>
         public ServiceHost AddJsonConfig(string path, bool optional = false, bool reloadOnChange = false)
         {
-            HostBuilder.ConfigureHostConfiguration(builder => builder.AddJsonFile(path, optional, reloadOnChange));
+            _hostBuilder.ConfigureHostConfiguration(builder => builder.AddJsonFile(path, optional, reloadOnChange));
             return this;
         }
 
@@ -151,7 +162,7 @@ namespace DwFramework.Core
         /// <returns></returns>
         public ServiceHost AddJsonConfig(Stream stream)
         {
-            HostBuilder.ConfigureHostConfiguration(builder => builder.AddJsonStream(stream));
+            _hostBuilder.ConfigureHostConfiguration(builder => builder.AddJsonStream(stream));
             return this;
         }
 
@@ -164,7 +175,7 @@ namespace DwFramework.Core
         /// <returns></returns>         
         public ServiceHost AddXmlConfig(string path, bool optional = false, bool reloadOnChange = false)
         {
-            HostBuilder.ConfigureHostConfiguration(builder => builder.AddXmlFile(path, optional, reloadOnChange));
+            _hostBuilder.ConfigureHostConfiguration(builder => builder.AddXmlFile(path, optional, reloadOnChange));
             return this;
         }
 
@@ -175,7 +186,7 @@ namespace DwFramework.Core
         /// <returns></returns>    
         public ServiceHost AddXmlConfig(Stream stream)
         {
-            HostBuilder.ConfigureHostConfiguration(builder => builder.AddXmlStream(stream));
+            _hostBuilder.ConfigureHostConfiguration(builder => builder.AddXmlStream(stream));
             return this;
         }
 
@@ -185,9 +196,9 @@ namespace DwFramework.Core
         /// <returns></returns>
         public async Task RunAsync()
         {
-            HostBuilder.UseConsoleLifetime();
+            _hostBuilder.UseConsoleLifetime();
             OnHostStarting?.Invoke(ServiceProvider);
-            _host = HostBuilder.Build();
+            _host = _hostBuilder.Build();
             OnHostStarted?.Invoke(ServiceProvider);
             await _host.RunAsync();
         }
@@ -208,7 +219,7 @@ namespace DwFramework.Core
             {
                 var attr = item.GetCustomAttribute<RegisterableAttribute>();
                 if (attr == null) return;
-                HostBuilder.ConfigureContainer<ContainerBuilder>(builder =>
+                _hostBuilder.ConfigureContainer<ContainerBuilder>(builder =>
                 {
                     var registration = builder.RegisterType(item);
                     registration = attr.InterfaceType != null ? registration.As(attr.InterfaceType) : registration.AsSelf();

@@ -1,10 +1,10 @@
 ﻿using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Net;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using DwFramework.Core;
 
 namespace DwFramework.WEB
@@ -19,45 +19,45 @@ namespace DwFramework.WEB
         /// <returns></returns>
         public static ServiceHost ConfigureWebHost(this ServiceHost host, Action<IWebHostBuilder> configure)
         {
-            host.HostBuilder.ConfigureWebHost(configure);
+            host.ConfigureHostBuilder(builder => builder.ConfigureWebHost(configure));
             return host;
         }
 
-        private sealed class WebAPIConfig
+        private sealed class WebApiConfig
         {
-            public string ContentRoot { get; init; }
-            public Dictionary<string, string> Listen { get; init; }
+            public string ContentRoot { get; set; }
+            public Dictionary<string, string> Listens { get; set; }
         }
 
         /// <summary>
-        /// 配置Web主机
+        /// 配置WebApi
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="host"></param>
+        /// <param name="configuration"></param>
+        /// <param name="path"></param>
         /// <returns></returns>
-        public static ServiceHost ConfigureWebAPI<T>(this ServiceHost host) where T : class
+        public static ServiceHost ConfigureWebApi<T>(this ServiceHost host, IConfiguration configuration, string path = null) where T : class
         {
-            host.ConfigureAppConfiguration((context, app) =>
+            var config = configuration.GetConfig<WebApiConfig>(path);
+            if (config == null) throw new Exception("未读取到WebAPI配置");
+            if (config.Listens == null || config.Listens.Count <= 0) throw new Exception("缺少Listen配置");
+            host.ConfigureHostBuilder(hostBuilder =>
             {
-                var config = context.Configuration.GetConfig<WebAPIConfig>();
-                if (config == null) throw new Exception("未读取到WebAPI配置");
-                if (config.Listen.Count <= 0) throw new Exception("缺少Listen配置");
-                host.HostBuilder.ConfigureWebHost(builder =>
+                hostBuilder.ConfigureWebHost(webHostBuilder =>
                 {
-                    builder.UseKestrel(options =>
+                    webHostBuilder.UseKestrel(options =>
                     {
-                        var listen = "";
-                        if (config.Listen.ContainsKey("http"))
+                        if (config.Listens.ContainsKey("http"))
                         {
-                            var ipAndPort = config.Listen["http"].Split(":");
+                            var ipAndPort = config.Listens["http"].Split(":");
                             var ip = string.IsNullOrEmpty(ipAndPort[0]) ? IPAddress.Any : IPAddress.Parse(ipAndPort[0]);
                             var port = int.Parse(ipAndPort[1]);
                             options.Listen(ip, port);
-                            listen += $"http://{ip}:{port}";
                         }
-                        if (config.Listen.ContainsKey("https"))
+                        if (config.Listens.ContainsKey("https"))
                         {
-                            var addrAndCert = config.Listen["https"].Split(";");
+                            var addrAndCert = config.Listens["https"].Split(";");
                             var ipAndPort = addrAndCert[0].Split(":");
                             var ip = string.IsNullOrEmpty(ipAndPort[0]) ? IPAddress.Any : IPAddress.Parse(ipAndPort[0]);
                             var port = int.Parse(ipAndPort[1]);
@@ -66,13 +66,55 @@ namespace DwFramework.WEB
                                 var certAndPassword = addrAndCert[1].Split(",");
                                 listenOptions.UseHttps(certAndPassword[0], certAndPassword[1]);
                             });
-                            if (!string.IsNullOrEmpty(listen)) listen += ",";
-                            listen += $"https://{ip}:{port}";
                         }
-                    });
+                    }).UseStartup<T>();
                 });
             });
             return host;
         }
+
+        /// <summary>
+        /// 配置WebApi
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="host"></param>
+        /// <param name="file"></param>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        public static ServiceHost ConfigureWebApiWithJson<T>(this ServiceHost host, string file, string path = null) where T : class
+            => host.ConfigureWebApi<T>(new ConfigurationBuilder().AddJsonFile(file).Build(), path);
+
+        /// <summary>
+        /// 配置WebApi
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="host"></param>
+        /// <param name="stream"></param>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        public static ServiceHost ConfigureWebApiWithJson<T>(this ServiceHost host, Stream stream, string path = null) where T : class
+            => host.ConfigureWebApi<T>(new ConfigurationBuilder().AddJsonStream(stream).Build(), path);
+
+        /// <summary>
+        /// 配置WebApi
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="host"></param>
+        /// <param name="file"></param>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        public static ServiceHost ConfigureWebApiWithXml<T>(this ServiceHost host, string file, string path = null) where T : class
+            => host.ConfigureWebApi<T>(new ConfigurationBuilder().AddXmlFile(file).Build(), path);
+
+        /// <summary>
+        /// 配置WebApi
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="host"></param>
+        /// <param name="stream"></param>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        public static ServiceHost ConfigureWebApiWithXml<T>(this ServiceHost host, Stream stream, string path = null) where T : class
+            => host.ConfigureWebApi<T>(new ConfigurationBuilder().AddXmlStream(stream).Build(), path);
     }
 }

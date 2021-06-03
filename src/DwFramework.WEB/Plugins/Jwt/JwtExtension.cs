@@ -5,7 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 
-namespace DwFramework.WebAPI.Plugins
+namespace DwFramework.WEB.Plugins
 {
     public static class JwtExtension
     {

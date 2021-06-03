@@ -1,0 +1,8 @@
+{
+    "WebApi": {
+        "ContentRoot": "",
+        "Listens": {
+            "http": ":6001"
+        }
+    }
+}

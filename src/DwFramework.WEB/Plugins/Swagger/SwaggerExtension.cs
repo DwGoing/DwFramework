@@ -2,7 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 
-namespace DwFramework.WebAPI.Plugins
+namespace DwFramework.WEB.Plugins
 {
     public static class SwaggerExtension
     {

@@ -20,6 +20,11 @@
     <PackageReference Include="Microsoft.AspNetCore.Server.Kestrel" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="5.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />
+    <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.11.1"/>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.6"/>
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.11.1"/>
+    <PackageReference Include="Consul" Version="1.6.10.1"/>
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.1.4"/>
   </ItemGroup>
   <ItemGroup>
     <None Include="README.md">

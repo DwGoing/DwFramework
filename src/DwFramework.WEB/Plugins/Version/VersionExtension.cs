@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace DwFramework.WebAPI.Plugins
+namespace DwFramework.WEB.Plugins
 {
     public static class VersionExtension
     {

@@ -5,10 +5,9 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
+using DwFramework.Core;
 
-using DwFramework.Core.Plugins;
-
-namespace DwFramework.WebAPI.Plugins
+namespace DwFramework.WEB.Plugins
 {
     public static class JwtManager
     {

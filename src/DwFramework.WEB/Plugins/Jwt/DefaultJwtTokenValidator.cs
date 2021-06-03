@@ -2,7 +2,7 @@
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
 
-namespace DwFramework.WebAPI.Plugins
+namespace DwFramework.WEB.Plugins
 {
     public class DefaultJwtTokenValidator : JwtTokenValidator
     {

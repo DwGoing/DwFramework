@@ -5,10 +5,13 @@
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\DwFramework.Core\DwFramework.Core.csproj" />
-    <ProjectReference Include="..\..\src\DwFramework.Plugins\DwFramework.Plugins.csproj" />
+    <ProjectReference Include="..\..\src\DwFramework.WEB\DwFramework.WEB.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Update="NLog.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Config.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

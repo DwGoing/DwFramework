@@ -1,6 +1,0 @@
-{
-    "ContentRoot": "",
-    "Listen": {
-        "http": ":6001"
-    }
-}

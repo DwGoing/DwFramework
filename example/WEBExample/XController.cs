@@ -1,15 +1,14 @@
 using System;
 using Microsoft.AspNetCore.Mvc;
 
-namespace CoreExample
+namespace WEBExample
 {
     [ApiController]
     [Route("x")]
     public class XController : Controller
     {
-        public XController(I a)
+        public XController()
         {
-            var x = a.Do(10, 20);
         }
 
         [HttpGet("ok")]
