@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Autofac;
 using DwFramework.Core;
-using DwFramework.Plugins.AOP;
+using DwFramework.Core.AOP;
 using ilib;
 
 namespace CoreExample
