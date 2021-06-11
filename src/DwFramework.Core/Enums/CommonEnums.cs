@@ -9,9 +9,13 @@ namespace DwFramework.Core
     public enum StatusCode
     {
         [Description("Ok")]
-        OK = 200,
-        [Description("Unknow Error")]
-        ERROR = 400
+        Ok = 200,
+        [Description("未知错误")]
+        Error = 4000,
+        [Description("无法找到")]
+        NotFound = 4001,
+        [Description("类型不匹配")]
+        TypeNotMatch = 4002
     }
 
     /// <summary>

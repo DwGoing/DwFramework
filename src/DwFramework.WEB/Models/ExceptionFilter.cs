@@ -12,7 +12,7 @@ namespace DwFramework.WEB
     {
         public Task OnExceptionAsync(ExceptionContext context)
         {
-            if (context.ExceptionHandled == false) context.Result = new ObjectResult(ResultInfo.Create(StatusCode.ERROR, context.Exception.Message));
+            if (context.ExceptionHandled == false) context.Result = new ObjectResult(ResultInfo.Create(StatusCode.Error, context.Exception.Message));
             context.ExceptionHandled = true;
             return Task.CompletedTask;
         }

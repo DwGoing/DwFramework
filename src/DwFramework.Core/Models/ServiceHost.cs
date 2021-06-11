@@ -16,8 +16,9 @@ namespace DwFramework.Core
         private readonly IHostBuilder _hostBuilder;
         private static IHost _host;
 
-        public event Action<IServiceProvider> OnHostStarted;
+        public static EnvironmentType EnvironmentType { get; private set; }
         public static IServiceProvider ServiceProvider => _host.Services;
+        public event Action<IServiceProvider> OnHostStarted;
 
         /// <summary>
         /// 构造函数
@@ -28,6 +29,7 @@ namespace DwFramework.Core
         {
             _hostBuilder = Host.CreateDefaultBuilder(args).UseServiceProviderFactory(new AutofacServiceProviderFactory());
             if (!Enum.IsDefined<EnvironmentType>(environmentType)) environmentType = EnvironmentType.Development;
+            EnvironmentType = environmentType;
             _hostBuilder.UseEnvironment(environmentType.ToString());
         }
 

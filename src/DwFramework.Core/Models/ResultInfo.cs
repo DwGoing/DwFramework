@@ -16,7 +16,7 @@ namespace DwFramework.Core
         /// <param name="code"></param>
         /// <param name="message"></param>
         /// <returns></returns>
-        public static ResultInfo Create(StatusCode code = StatusCode.OK, string message = "Success")
+        public static ResultInfo Create(StatusCode code = StatusCode.Ok, string message = "Success")
         {
             return new ResultInfo()
             {
@@ -33,7 +33,7 @@ namespace DwFramework.Core
         /// <param name="message"></param>
         /// <param name="data"></param>
         /// <returns></returns>
-        public static ResultInfo Create<T>(StatusCode code = StatusCode.OK, string message = "Success", T data = default)
+        public static ResultInfo Create<T>(StatusCode code = StatusCode.Ok, string message = "Success", T data = default)
         {
             return new ResultInfo()
             {

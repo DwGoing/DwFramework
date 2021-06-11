@@ -2,7 +2,7 @@ using System;
 
 namespace DwFramework.Core
 {
-    public abstract class ExceptionBase : Exception
+    public class ExceptionBase : Exception
     {
         public StatusCode Code { get; init; }
 
@@ -12,7 +12,7 @@ namespace DwFramework.Core
         /// <param name="code"></param>
         /// <param name="message"></param>
         /// <param name="innerException"></param>
-        public ExceptionBase(StatusCode code, string message, Exception innerException = null) : base(message, innerException)
+        public ExceptionBase(StatusCode code, string message = null, Exception innerException = null) : base(message ?? code.GetDescription(), innerException)
         {
             Code = code;
         }
