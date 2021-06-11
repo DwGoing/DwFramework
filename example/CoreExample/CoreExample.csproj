@@ -4,12 +4,13 @@
     <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\src\DwFramework.Core\DwFramework.Core.csproj"/>
-    <ProjectReference Include="..\..\src\DwFramework.Plugins\DwFramework.Plugins.csproj"/>
-  </ItemGroup>
-  <ItemGroup>
     <None Update="NLog.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\DwFramework.Core\DwFramework.Core.csproj" />
+    <ProjectReference Include="..\..\src\DwFramework.Plugins\DwFramework.Plugins.csproj" />
+    <ProjectReference Include="..\ilib\ilib.csproj" />
   </ItemGroup>
 </Project>
