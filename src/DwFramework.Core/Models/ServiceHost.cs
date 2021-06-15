@@ -215,10 +215,11 @@ namespace DwFramework.Core
         /// <param name="assembly"></param>
         public void RegisterFromAssembly(Assembly assembly)
         {
+            var t = assembly.GetTypes();
             foreach (var item in assembly.GetTypes())
             {
                 var attr = item.GetCustomAttribute<RegisterableAttribute>();
-                if (attr == null) return;
+                if (attr == null) continue;
                 _hostBuilder.ConfigureContainer<ContainerBuilder>(builder =>
                 {
                     var registration = builder.RegisterType(item);
