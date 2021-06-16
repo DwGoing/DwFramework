@@ -1,5 +1,6 @@
 ﻿using System;
-
+using Microsoft.Extensions.DependencyInjection;
+using Autofac;
 using DwFramework.Core;
 
 namespace DwFramework.TaskSchedule
@@ -10,9 +11,11 @@ namespace DwFramework.TaskSchedule
         /// 注册服务
         /// </summary>
         /// <param name="host"></param>
-        public static void RegisterTaskScheduleService(this ServiceHost host)
+        /// <returns></returns>
+        public static ServiceHost ConfigureTaskScheduleService(this ServiceHost host)
         {
-            host.RegisterType<TaskScheduleService>().SingleInstance();
+            host.ConfigureContainer(builder => builder.RegisterType<TaskScheduleService>().SingleInstance());
+            return host;
         }
 
         /// <summary>
@@ -20,9 +23,6 @@ namespace DwFramework.TaskSchedule
         /// </summary>
         /// <param name="provider"></param>
         /// <returns></returns>
-        public static TaskScheduleService GetTaskScheduleService(this IServiceProvider provider)
-        {
-            return provider.GetService<TaskScheduleService>();
-        }
+        public static TaskScheduleService GetTaskScheduleService(this IServiceProvider provider) => provider.GetService<TaskScheduleService>();
     }
 }

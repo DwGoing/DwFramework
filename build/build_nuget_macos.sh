@@ -1,5 +1,5 @@
 #!/bin/bash
-usage="Usage:\n-c|--configuration <CONFIGURATION>\n-o|--output <OUTPUT_DIRECTORY>\n-mv|--main-version <MAIN_VERSION>\n-sv|--sub-version <SUB_VERSION>\n-t|--start-year <START_YEAR>\n-s|--suffix <SUFFIX>"
+usage="Usage:\n-c|--configuration <CONFIGURATION>\n-o|--output <OUTPUT_DIRECTORY>\n-m|--minor <MINOR_VERSION>\n-r|--revision <REVISION_VERSION>\n-t|--start-year <START_YEAR>\n-s|--suffix <SUFFIX>"
 # 参数校验
 if [[ $# -eq 0 ]]; then
     echo -e $usage
@@ -14,15 +14,15 @@ fi
 tag=""
 configuration=Debug
 output=.
-mainVersion=""
-subVersion=""
+minorVersion=""
+revisionVersion=""
 startYear=$(date +%Y)
 suffix=""
 
 file=${@: -1}
 for i; do
     case $i in
-    -c | --configuration | -o | --output | -mv | --main-version | -sv | --sub-version | -t | --start-year | -s | --suffix)
+    -c | --configuration | -o | --output | -m | --minor | -r | --revision | -t | --start-year | -s | --suffix)
         tag=$i
         ;;
     *)
@@ -35,12 +35,12 @@ for i; do
             output=$i
             tag=""
             ;;
-        -mv | --mian-version)
-            mainVersion=$i
+        -m | --minor)
+            minorVersion=$i
             tag=""
             ;;
-        -sv | --sub-version)
-            subVersion=$i
+        -r | --revision)
+            revisionVersion=$i
             tag=""
             ;;
         -t | --start-year)
@@ -66,8 +66,8 @@ if [[ "${file##*.}"x != "csproj"x ]]; then
     exit 4
 fi
 
-if [[ "$mainVersion"x == ""x || "$subVersion"x == ""x ]]; then
-    echo "未提供主版本号或子版本号!"
+if [[ "$minorVersion"x == ""x || "$revisionVersion"x == ""x ]]; then
+    echo "未提供次要版本号或修订版本号!"
     exit 5
 fi
 
@@ -86,7 +86,7 @@ week=$(expr $timestamp / 604800)
 if [[ "$suffix"x != ""x ]]; then
     suffix=-$suffix.$(expr $(expr $timestamp % 604800) / 60)
 fi
-buildVersion=$mainVersion.$subVersion.$week$suffix
+buildVersion=$minorVersion.$revisionVersion.$week$suffix
 sed -i "" "s/\(<BuildVersion>\)[^<]*\(<\)/\1$buildVersion\2/g" $file
 
 # 构建

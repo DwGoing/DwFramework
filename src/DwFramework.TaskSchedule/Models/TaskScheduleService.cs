@@ -7,9 +7,7 @@ using Quartz.Simpl;
 using Quartz.Impl.Calendar;
 using Quartz.Impl.Matchers;
 using Quartz.Logging;
-
-using DwFramework.Core.Extensions;
-using DwFramework.Core.Plugins;
+using DwFramework.Core;
 
 namespace DwFramework.TaskSchedule
 {
@@ -33,11 +31,10 @@ namespace DwFramework.TaskSchedule
         /// 创建调度器
         /// </summary>
         /// <param name="schedulerKey"></param>
-        /// <param name="calendar"></param>
         /// <returns></returns>
-        public async Task CreateScheduler(string schedulerKey)
+        public async Task CreateSchedulerAsync(string schedulerKey)
         {
-            _schedulerFactory.CreateScheduler(schedulerKey, RandomGenerater.RandomString(16), new DefaultThreadPool(), new RAMJobStore());
+            _schedulerFactory.CreateScheduler(schedulerKey, Guid.NewGuid().ToString(), new DefaultThreadPool(), new RAMJobStore());
             var scheduler = await _schedulerFactory.GetScheduler(schedulerKey);
             await scheduler.Start();
             _schedulers[schedulerKey] = scheduler;
