@@ -28,6 +28,17 @@ namespace DwFramework.TaskSchedule
         }
 
         /// <summary>
+        /// 获取调度器
+        /// </summary>
+        /// <param name="schedulerKey"></param>
+        /// <returns></returns>
+        public IScheduler GetScheduler(string schedulerKey)
+        {
+            if (!_schedulers.ContainsKey(schedulerKey)) throw new Exception("未知调度器");
+            return _schedulers[schedulerKey];
+        }
+
+        /// <summary>
         /// 创建调度器
         /// </summary>
         /// <param name="schedulerKey"></param>
