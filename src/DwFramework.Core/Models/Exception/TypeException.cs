@@ -7,7 +7,7 @@ namespace DwFramework.Core
         public readonly Type SourceType;
         public readonly Type TargetType;
 
-        public TypeNotMatchException(Type sourceType, Type targetType) : base(StatusCode.TypeNotMatch, $"{sourceType}与{targetType}类型不匹配")
+        public TypeNotMatchException(Type sourceType, Type targetType) : base((StatusCode)40002, $"{sourceType}与{targetType}类型不匹配")
         {
             SourceType = sourceType;
             TargetType = targetType;

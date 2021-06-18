@@ -11,11 +11,7 @@ namespace DwFramework.Core
         [Description("Ok")]
         Ok = 200,
         [Description("未知错误")]
-        Error = 4000,
-        [Description("无法找到")]
-        NotFound = 4001,
-        [Description("类型不匹配")]
-        TypeNotMatch = 4002
+        Error = 40000
     }
 
     /// <summary>

@@ -13,11 +13,18 @@ namespace DwFramework.WEB
         public async Task OnResultExecutionAsync(ResultExecutingContext context, ResultExecutionDelegate next)
         {
             if (context.Result is EmptyResult) context.Result = new ObjectResult(ResultInfo.Create());
-            else if (context.Result is ObjectResult)
+            else if (context.Result is ObjectResult objectResult)
             {
-                var result = context.Result as ObjectResult;
-                if (result.Value is ResultInfo) context.Result = new ObjectResult(result.Value);
-                else context.Result = new ObjectResult(ResultInfo.Create<object>(data: result?.Value));
+                if (objectResult.Value is ResultInfo resultInfo) context.Result = new ObjectResult(resultInfo);
+                else
+                {
+                    objectResult.StatusCode ??= 200;
+                    context.Result = new ObjectResult(ResultInfo.Create(
+                        (StatusCode)objectResult.StatusCode,
+                        objectResult.StatusCode == 200 ? "Success" : context.Result.GetType().Name.Replace("ObjectResult", ""),
+                        objectResult.Value)
+                    );
+                }
             }
             _ = await next();
         }

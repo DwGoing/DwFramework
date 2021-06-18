@@ -6,7 +6,7 @@ namespace DwFramework.Core
     {
         public readonly string FoundThings;
 
-        public NotFoundException(string foundThings) : base(StatusCode.NotFound, $"无法找到\"{foundThings}\"")
+        public NotFoundException(string foundThings) : base((StatusCode)40001, $"无法找到\"{foundThings}\"")
         {
             FoundThings = foundThings;
         }
