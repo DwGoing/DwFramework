@@ -11,10 +11,10 @@ namespace TaskScheduleExample
         static async Task Main(string[] args)
         {
             var host = new ServiceHost();
-            host.ConfigureTaskScheduleService();
+            host.ConfigureTaskSchedule();
             host.OnHostStarted += async p =>
             {
-                var s = p.GetTaskScheduleService();
+                var s = p.GetTaskSchedule();
                 await s.CreateSchedulerAsync("X");
                 Console.WriteLine(await s.CreateJobAsync<Job>("X", "1/5 * * * * ?"));
             };

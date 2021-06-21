@@ -13,16 +13,24 @@ namespace DwFramework.ORM
         /// 配置ORM
         /// </summary>
         /// <param name="host"></param>
-        /// <param name="configuration"></param>
-        /// <param name="path"></param>
+        /// <param name="config"></param>
         /// <returns></returns>
-        public static ServiceHost ConfigureORM(this ServiceHost host, IConfiguration configuration, string path = null)
+        public static ServiceHost ConfigureORM(this ServiceHost host, Config config)
         {
-            var config = configuration.GetConfig<Config>(path);
             if (config == null) throw new Exception("未读取到ORM配置");
             host.ConfigureContainer(builder => builder.Register(_ => new ORMService(config)).SingleInstance());
             return host;
         }
+
+        /// <summary>
+        /// 配置ORM
+        /// </summary>
+        /// <param name="host"></param>
+        /// <param name="configuration"></param>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        public static ServiceHost ConfigureORM(this ServiceHost host, IConfiguration configuration, string path = null)
+            => host.ConfigureORM(configuration.GetConfig<Config>(path));
 
         /// <summary>
         /// 配置ORM

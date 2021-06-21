@@ -12,7 +12,7 @@ namespace DwFramework.TaskSchedule
         /// </summary>
         /// <param name="host"></param>
         /// <returns></returns>
-        public static ServiceHost ConfigureTaskScheduleService(this ServiceHost host)
+        public static ServiceHost ConfigureTaskSchedule(this ServiceHost host)
         {
             host.ConfigureContainer(builder => builder.RegisterType<TaskScheduleService>().SingleInstance());
             return host;
@@ -23,6 +23,6 @@ namespace DwFramework.TaskSchedule
         /// </summary>
         /// <param name="provider"></param>
         /// <returns></returns>
-        public static TaskScheduleService GetTaskScheduleService(this IServiceProvider provider) => provider.GetService<TaskScheduleService>();
+        public static TaskScheduleService GetTaskSchedule(this IServiceProvider provider) => provider.GetService<TaskScheduleService>();
     }
 }
