@@ -14,8 +14,10 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DwFramework.Core\DwFramework.Core.csproj" />
+    <ProjectReference Include="..\DwFramework.Plugins\DwFramework.Plugins.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.WebSockets" Version="2.2.1" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.6"/>
     <PackageReference Include="Consul" Version="1.6.10.1"/>
   </ItemGroup>

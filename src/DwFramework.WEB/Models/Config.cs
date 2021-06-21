@@ -7,5 +7,6 @@ namespace DwFramework.WEB
     {
         public string ContentRoot { get; set; }
         public Dictionary<string, string> Listens { get; set; }
+        public int BufferSize { get; init; } = 1024 * 4;
     }
 }
