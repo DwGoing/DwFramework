@@ -4,34 +4,12 @@ using System.Collections.Generic;
 using System.Text;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
-using Microsoft.Extensions.Logging;
-
 using DwFramework.Core;
-using DwFramework.Core.Plugins;
-using DwFramework.Core.Extensions;
 
 namespace DwFramework.RabbitMQ
 {
-    public sealed class ExchangeType
+    public sealed class RabbitMQService
     {
-        public const string Direct = "direct";
-        public const string Fanout = "fanout";
-        public const string Headers = "headers";
-        public const string Topic = "topic";
-    }
-
-    public sealed class RabbitMQService : ConfigableServiceBase
-    {
-        public sealed class Config
-        {
-            public string Host { get; init; } = "localhost";
-            public int Port { get; init; } = 5672;
-            public string UserName { get; init; }
-            public string Password { get; init; }
-            public string VirtualHost { get; init; } = "/";
-        }
-
-        private readonly ILogger<RabbitMQService> _logger;
         private Config _config;
         private ConnectionFactory _connectionFactory;
         private IConnection _publishConnection;
@@ -41,61 +19,28 @@ namespace DwFramework.RabbitMQ
         /// <summary>
         /// 构造函数
         /// </summary>
-        /// <param name="logger"></param>
-        public RabbitMQService(ILogger<RabbitMQService> logger = null)
-        {
-            _logger = logger;
-        }
-
-        /// <summary>
-        /// 读取配置
-        /// </summary>
         /// <param name="config"></param>
-        public void ReadConfig(Config config)
+        public RabbitMQService(Config config)
         {
-            try
-            {
-                _config = config;
-                if (_config == null) throw new Exception("未读取到RabbitMQ配置");
-                _connectionFactory = new ConnectionFactory()
-                {
-                    HostName = _config.Host,
-                    Port = _config.Port,
-                    UserName = _config.UserName,
-                    Password = _config.Password,
-                    VirtualHost = _config.VirtualHost
-                };
-                _publishConnection?.Dispose();
-                _publishConnection = _connectionFactory.CreateConnection();
-                _subscribeConnection?.Dispose();
-                _subscribeConnection = _connectionFactory.CreateConnection();
-                _subscribers.Clear();
-            }
-            catch (Exception ex)
-            {
-                _ = _logger?.LogErrorAsync(ex.Message);
-                throw;
-            }
-        }
+            _config = config;
 
-        /// <summary>
-        /// 读取配置
-        /// </summary>
-        /// <param name="path"></param>
-        /// <param name="key"></param>
-        public void ReadConfig(string path = null, string key = null)
-        {
-            ReadConfig(ReadConfig<Config>(path, key));
+            _connectionFactory = new ConnectionFactory()
+            {
+                HostName = _config.Host,
+                Port = _config.Port,
+                UserName = _config.UserName,
+                Password = _config.Password,
+                VirtualHost = _config.VirtualHost
+            };
+            _publishConnection = _connectionFactory.CreateConnection();
+            _subscribeConnection = _connectionFactory.CreateConnection();
         }
 
         /// <summary>
         /// 创建连接
         /// </summary>
         /// <returns></returns>
-        public IConnection CreateConnection()
-        {
-            return _connectionFactory.CreateConnection(); ;
-        }
+        public IConnection CreateConnection() => _connectionFactory.CreateConnection();
 
         /// <summary>
         /// 创建交换机
@@ -188,9 +133,7 @@ namespace DwFramework.RabbitMQ
         /// <param name="returnAction"></param>
         /// <returns></returns>
         public Task PublishAsync(byte[] data, string exchange = "", string routingKey = "", Action<IBasicProperties> basicPropertiesSetting = null, Action<BasicReturnEventArgs> returnAction = null)
-        {
-            return TaskManager.CreateTask(() => Publish(data, exchange, routingKey, basicPropertiesSetting, returnAction));
-        }
+            => Task.Factory.StartNew(() => Publish(data, exchange, routingKey, basicPropertiesSetting, returnAction));
 
         /// <summary>
         /// 发布消息
@@ -220,9 +163,7 @@ namespace DwFramework.RabbitMQ
         /// <param name="returnAction"></param>
         /// <returns></returns>
         public Task PublishAsync<T>(T data, string exchange = "", string routingKey = "", Encoding encoding = null, Action<IBasicProperties> basicPropertiesSetting = null, Action<BasicReturnEventArgs> returnAction = null)
-        {
-            return TaskManager.CreateTask(() => Publish(data, exchange, routingKey, encoding, basicPropertiesSetting, returnAction));
-        }
+            => Task.Factory.StartNew(() => Publish(data, exchange, routingKey, encoding, basicPropertiesSetting, returnAction));
 
         /// <summary>
         /// 发布消息并等待Ack
@@ -264,9 +205,7 @@ namespace DwFramework.RabbitMQ
         /// <param name="returnAction"></param>
         /// <returns></returns>
         public Task<bool> PublishWaitForAckAsync<T>(T data, string exchange = "", string routingKey = "", Encoding encoding = null, Action<IBasicProperties> basicPropertiesSetting = null, int timeoutSeconds = 0, Action<BasicReturnEventArgs> returnAction = null)
-        {
-            return TaskManager.CreateTask(() => PublishWaitForAck(data, exchange, routingKey, encoding, basicPropertiesSetting, timeoutSeconds, returnAction));
-        }
+            => Task.Factory.StartNew(() => PublishWaitForAck(data, exchange, routingKey, encoding, basicPropertiesSetting, timeoutSeconds, returnAction));
 
         /// <summary>
         /// 订阅消息
@@ -302,6 +241,5 @@ namespace DwFramework.RabbitMQ
             _subscribers[queue].ForEach(item => item.Model.Abort());
             _subscribers.Remove(queue);
         }
-
     }
 }
