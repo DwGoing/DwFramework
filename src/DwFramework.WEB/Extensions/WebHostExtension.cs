@@ -27,12 +27,10 @@ namespace DwFramework.WEB
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="host"></param>
-        /// <param name="configuration"></param>
-        /// <param name="path"></param>
+        /// <param name="config"></param>
         /// <returns></returns>
-        public static ServiceHost ConfigureWebApi<T>(this ServiceHost host, IConfiguration configuration, string path = null) where T : class
+        public static ServiceHost ConfigureWebApi<T>(this ServiceHost host, Config config) where T : class
         {
-            var config = configuration.GetConfig<WebApiConfig>(path);
             if (config == null) throw new Exception("未读取到WebAPI配置");
             if (config.Listens == null || config.Listens.Count <= 0) throw new Exception("缺少Listen配置");
             host.ConfigureHostBuilder(hostBuilder =>
@@ -63,6 +61,21 @@ namespace DwFramework.WEB
                     }).UseStartup<T>();
                 });
             });
+            return host;
+        }
+
+        /// <summary>
+        /// 配置WebApi
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="host"></param>
+        /// <param name="configuration"></param>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        public static ServiceHost ConfigureWebApi<T>(this ServiceHost host, IConfiguration configuration, string path = null) where T : class
+        {
+            var config = configuration.GetConfig<Config>(path);
+            host.ConfigureWebApi<T>(config);
             return host;
         }
 
