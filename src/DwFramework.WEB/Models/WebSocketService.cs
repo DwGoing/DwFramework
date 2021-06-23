@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.WebSockets;
-using System.Threading;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Hosting;
@@ -15,16 +14,14 @@ namespace DwFramework.WEB
 {
     public sealed class WebSocketService
     {
-        private Config _config;
-        private readonly Dictionary<string, WebSocketConnection> _connections = new Dictionary<string, WebSocketConnection>();
-        private CancellationTokenSource _cancellationTokenSource;
-        private event Action<IServiceCollection> _onConfigureServices;
-
         public event Action<WebSocketConnection, OnConnectEventArgs> OnConnect;
         public event Action<WebSocketConnection, OnCloceEventArgs> OnClose;
         public event Action<WebSocketConnection, OnSendEventArgs> OnSend;
         public event Action<WebSocketConnection, OnReceiveEventargs> OnReceive;
         public event Action<WebSocketConnection, OnErrorEventArgs> OnError;
+
+        private Config _config;
+        private readonly Dictionary<string, WebSocketConnection> _connections = new Dictionary<string, WebSocketConnection>();
 
         /// <summary>
         /// 构造函数
