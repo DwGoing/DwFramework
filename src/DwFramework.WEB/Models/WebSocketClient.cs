@@ -17,19 +17,20 @@ namespace DwFramework.WEB
         public event Action<OnErrorEventArgs> OnError;
 
         private readonly ClientWebSocket _client;
-        private int _bufferSize = 4096;
+        private int _bufferSize;
         public int BufferSize
         {
             get => _bufferSize;
-            set => _bufferSize = value <= 0 ? 4096 : value;
+            set { if (value > 0) _bufferSize = value; }
         }
         public WebSocketState State => _client.State;
 
         /// <summary>
         /// 构造函数
         /// </summary>
-        public WebSocketClient()
+        public WebSocketClient(int bufferSize = 4096)
         {
+            _bufferSize = bufferSize;
             _client = new ClientWebSocket();
         }
 

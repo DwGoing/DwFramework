@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Hosting;
@@ -15,7 +16,20 @@ namespace WEBExample
         {
             var host = new ServiceHost();
             host.ConfigureWebApiWithJson<Startup>("Config.json");
+            host.ConfigureWebSocketWithJson("Config.json");
             host.ConfigureLogging(builder => builder.UserNLog());
+            host.OnHostStarted += p =>
+            {
+                var w = p.GetWebSocket();
+                w.OnConnect += (c, a) => Console.WriteLine($"{c.ID} connected");
+                w.OnReceive += (c, a) =>
+                {
+                    Console.WriteLine($"{c.ID} received {Encoding.UTF8.GetString(a.Data)}");
+                    _ = c.SendAsync(a.Data);
+                };
+                w.OnSend += (c, a) => Console.WriteLine($"{c.ID} sent {Encoding.UTF8.GetString(a.Data)}");
+                w.OnClose += (c, a) => Console.WriteLine($"{c.ID} closed");
+            };
             await host.RunAsync();
         }
     }

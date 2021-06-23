@@ -13,7 +13,7 @@ namespace DwFramework.WEB
         public string ID { get; init; }
         public bool IsClose { get; private set; } = false;
 
-        private readonly System.Net.WebSockets.WebSocket _webSocket;
+        private readonly WebSocket _webSocket;
         private readonly byte[] _buffer;
         private readonly List<byte> _dataBytes = new List<byte>();
         private readonly AutoResetEvent _resetEvent;
@@ -28,7 +28,8 @@ namespace DwFramework.WEB
         /// </summary>
         /// <param name="webSocket"></param>
         /// <param name="bufferSize"></param>
-        public WebSocketConnection(System.Net.WebSockets.WebSocket webSocket, int bufferSize, out AutoResetEvent resetEvent)
+        /// <param name="resetEvent"></param>
+        public WebSocketConnection(WebSocket webSocket, int bufferSize, out AutoResetEvent resetEvent)
         {
             ID = MD5.Encode(Guid.NewGuid().ToString());
             _webSocket = webSocket;
@@ -64,7 +65,6 @@ namespace DwFramework.WEB
             }
             catch (WebSocketException ex)
             {
-                // TODO
                 OnError?.Invoke(this, new OnErrorEventArgs() { Exception = ex });
                 await CloseAsync(WebSocketCloseStatus.InternalServerError);
             }

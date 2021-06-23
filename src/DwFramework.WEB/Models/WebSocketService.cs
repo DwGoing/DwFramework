@@ -1,10 +1,9 @@
 ﻿using System;
+using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.WebSockets;
 using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Hosting;
@@ -16,31 +15,6 @@ namespace DwFramework.WEB
 {
     public sealed class WebSocketService
     {
-        public class OnConnectEventArgs : EventArgs
-        {
-            public IHeaderDictionary Header { get; init; }
-        }
-
-        public class OnCloceEventArgs : EventArgs
-        {
-            public WebSocketCloseStatus? CloseStatus { get; init; }
-        }
-
-        public class OnSendEventArgs : EventArgs
-        {
-            public byte[] Data { get; init; }
-        }
-
-        public class OnReceiveEventargs : EventArgs
-        {
-            public byte[] Data { get; init; }
-        }
-
-        public class OnErrorEventArgs : EventArgs
-        {
-            public Exception Exception { get; init; }
-        }
-
         private Config _config;
         private readonly Dictionary<string, WebSocketConnection> _connections = new Dictionary<string, WebSocketConnection>();
         private CancellationTokenSource _cancellationTokenSource;
@@ -56,10 +30,58 @@ namespace DwFramework.WEB
         /// 构造函数
         /// </summary>
         /// <param name="config"></param>
-        public WebSocketService(Config config)
+        public WebSocketService(ServiceHost host, Config config)
         {
             _config = config;
-            if (_config == null) throw new Exception("未读取到WebSocket配置");
+            host.ConfigureHostBuilder(hostBuilder =>
+            {
+                hostBuilder.ConfigureWebHost(webHostBuilder =>
+                {
+                    webHostBuilder.UseKestrel(options =>
+                    {
+                        if (config.Listens.ContainsKey("ws"))
+                        {
+                            var ipAndPort = config.Listens["ws"].Split(":");
+                            var ip = string.IsNullOrEmpty(ipAndPort[0]) ? IPAddress.Any : IPAddress.Parse(ipAndPort[0]);
+                            var port = int.Parse(ipAndPort[1]);
+                            options.Listen(ip, port);
+                        }
+                        if (config.Listens.ContainsKey("wss"))
+                        {
+                            var addrAndCert = config.Listens["wss"].Split(";");
+                            var ipAndPort = addrAndCert[0].Split(":");
+                            var ip = string.IsNullOrEmpty(ipAndPort[0]) ? IPAddress.Any : IPAddress.Parse(ipAndPort[0]);
+                            var port = int.Parse(ipAndPort[1]);
+                            options.Listen(ip, port, listenOptions =>
+                            {
+                                var certAndPassword = addrAndCert[1].Split(",");
+                                listenOptions.UseHttps(certAndPassword[0], certAndPassword[1]);
+                            });
+                        }
+                    })
+                    .Configure(app =>
+                     {
+                         app.UseWebSockets();
+                         // 接受连接
+                         app.Run(async context =>
+                         {
+                             if (!context.WebSockets.IsWebSocketRequest) return;
+                             var webSocket = await context.WebSockets.AcceptWebSocketAsync();
+                             var connection = new WebSocketConnection(webSocket, _config.BufferSize, out var resetEvent)
+                             {
+                                 OnClose = OnClose,
+                                 OnSend = OnSend,
+                                 OnReceive = OnReceive,
+                                 OnError = OnError
+                             };
+                             _connections[connection.ID] = connection;
+                             OnConnect?.Invoke(connection, new OnConnectEventArgs() { Header = context.Request.Headers });
+                             _ = connection.BeginReceiveAsync();
+                             resetEvent.WaitOne();
+                         });
+                     });
+                });
+            });
         }
 
         /// <summary>
@@ -80,9 +102,27 @@ namespace DwFramework.WEB
         /// <returns></returns>
         public void BroadCast(byte[] data)
         {
-            _connections.Values.ForEach(async item => await item.SendAsync(data), (connection, ex) =>
+            foreach (var item in _connections.Values)
             {
-                OnError?.Invoke(connection, new OnErrorEventArgs() { Exception = ex });
+                item.SendAsync(data).ContinueWith(task =>
+                {
+                    if (!task.IsCompletedSuccessfully) OnError?.Invoke(item, new OnErrorEventArgs() { Exception = task.Exception });
+                });
+            }
+        }
+
+        /// <summary>
+        /// 断开连接
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public Task CloseAsync(string id)
+        {
+            if (!_connections.ContainsKey(id)) return Task.CompletedTask;
+            var connection = _connections[id];
+            return connection.CloseAsync(WebSocketCloseStatus.NormalClosure).ContinueWith(task =>
+            {
+                if (!task.IsCompletedSuccessfully) OnError?.Invoke(connection, new OnErrorEventArgs() { Exception = task.Exception });
             });
         }
 
@@ -91,10 +131,7 @@ namespace DwFramework.WEB
         /// </summary>
         public void CloseAll()
         {
-            _connections.Values.ForEach(async item => await item.CloseAsync(WebSocketCloseStatus.NormalClosure), (connection, ex) =>
-            {
-                OnError?.Invoke(connection, new OnErrorEventArgs() { Exception = ex });
-            });
+            foreach (var item in _connections.Keys) CloseAsync(item);
         }
     }
 }

@@ -45,10 +45,10 @@ namespace DwFramework.ORM.Repository
         /// <param name="identity"></param>
         /// <param name="con"></param>
         /// <returns></returns>
-        public async Task<List<T>> InsertOrUpdateAsync(List<T> objs, Expression<Func<T, object>> identityColumn = null, SqlSugarClient conn = null)
+        public Task<List<T>> InsertOrUpdateAsync(List<T> objs, Expression<Func<T, object>> identityColumn = null, SqlSugarClient conn = null)
         {
             conn ??= _ormService.CreateConnection(_connName);
-            var tran = await conn.UseTranAsync(async () =>
+            var tran = conn.UseTran(async () =>
             {
                 var storageable = conn.Storageable<T>(objs).Saveable();
                 if (identityColumn != null) storageable.WhereColumns(identityColumn);
@@ -75,7 +75,7 @@ namespace DwFramework.ORM.Repository
                 if (identity == null || identities == null) return null;
                 return await conn.Queryable<T>().In(identity, identities).ToListAsync();
             }, ex => throw ex);
-            return await tran.Data;
+            return tran.Data;
         }
 
         /// <summary>
@@ -83,10 +83,10 @@ namespace DwFramework.ORM.Repository
         /// </summary>
         /// <param name="expression"></param>
         /// <returns></returns>
-        public async Task<bool> DeleteAsync(Expression<Func<T, bool>> expression = null, SqlSugarClient conn = null)
+        public Task<bool> DeleteAsync(Expression<Func<T, bool>> expression = null, SqlSugarClient conn = null)
         {
             conn ??= _ormService.CreateConnection(_connName);
-            return await conn.Deleteable<T>(expression).ExecuteCommandHasChangeAsync();
+            return conn.Deleteable<T>(expression).ExecuteCommandHasChangeAsync();
         }
     }
 }
