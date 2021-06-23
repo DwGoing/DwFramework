@@ -13,7 +13,7 @@ namespace DwFramework.WEB
         public event Action<OnConnectEventArgs> OnConnect;
         public event Action<OnCloceEventArgs> OnClose;
         public event Action<OnSendEventArgs> OnSend;
-        public event Action<OnReceiveEventargs> OnReceive;
+        public event Action<OnReceiveEventArgs> OnReceive;
         public event Action<OnErrorEventArgs> OnError;
 
         private readonly ClientWebSocket _client;
@@ -65,7 +65,7 @@ namespace DwFramework.WEB
                             }
                             dataBytes.AddRange(buffer.Take(result.Count));
                             if (!result.EndOfMessage) continue;
-                            OnReceive?.Invoke(new OnReceiveEventargs() { Data = dataBytes.ToArray() });
+                            OnReceive?.Invoke(new OnReceiveEventArgs() { Data = dataBytes.ToArray() });
                             dataBytes.Clear();
                         }
                         catch (Exception ex)
@@ -132,7 +132,7 @@ namespace DwFramework.WEB
             if (OnReceive != null)
             {
                 var actions = OnReceive.GetInvocationList();
-                actions.ForEach(item => OnReceive -= (Action<OnReceiveEventargs>)item);
+                actions.ForEach(item => OnReceive -= (Action<OnReceiveEventArgs>)item);
             }
         }
     }

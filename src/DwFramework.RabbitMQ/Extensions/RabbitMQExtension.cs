@@ -17,7 +17,7 @@ namespace DwFramework.RabbitMQ
         /// <returns></returns>
         public static ServiceHost ConfigureRabbitMQ(this ServiceHost host, Config config)
         {
-            if (config == null) throw new Exception("未读取到WebAPI配置");
+            if (config == null) throw new Exception("未读取到RabbitMQ配置");
             host.ConfigureContainer(builder => builder.Register(_ => new RabbitMQService(config)).SingleInstance());
             return host;
         }
@@ -73,7 +73,7 @@ namespace DwFramework.RabbitMQ
             => host.ConfigureRabbitMQ(new ConfigurationBuilder().AddXmlStream(stream).Build(), path);
 
         /// <summary>
-        /// 获取服务
+        /// 获取RabbitMQ服务
         /// </summary>
         /// <param name="provider"></param>
         /// <returns></returns>

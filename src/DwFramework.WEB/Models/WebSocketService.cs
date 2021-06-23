@@ -17,7 +17,7 @@ namespace DwFramework.WEB
         public event Action<WebSocketConnection, OnConnectEventArgs> OnConnect;
         public event Action<WebSocketConnection, OnCloceEventArgs> OnClose;
         public event Action<WebSocketConnection, OnSendEventArgs> OnSend;
-        public event Action<WebSocketConnection, OnReceiveEventargs> OnReceive;
+        public event Action<WebSocketConnection, OnReceiveEventArgs> OnReceive;
         public event Action<WebSocketConnection, OnErrorEventArgs> OnError;
 
         private Config _config;

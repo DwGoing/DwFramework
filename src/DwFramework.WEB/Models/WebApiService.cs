@@ -19,7 +19,6 @@ namespace DwFramework.WEB
         public WebApiService(ServiceHost host, Config config, Type startup)
         {
             _config = config;
-            if (config.Listens == null || config.Listens.Count <= 0) throw new Exception("缺少Listen配置");
             host.ConfigureHostBuilder(hostBuilder =>
             {
                 hostBuilder.ConfigureWebHost(webHostBuilder =>

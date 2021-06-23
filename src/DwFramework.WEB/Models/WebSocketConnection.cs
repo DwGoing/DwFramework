@@ -20,7 +20,7 @@ namespace DwFramework.WEB
 
         public Action<WebSocketConnection, OnCloceEventArgs> OnClose { get; init; }
         public Action<WebSocketConnection, OnSendEventArgs> OnSend { get; init; }
-        public Action<WebSocketConnection, OnReceiveEventargs> OnReceive { get; init; }
+        public Action<WebSocketConnection, OnReceiveEventArgs> OnReceive { get; init; }
         public Action<WebSocketConnection, OnErrorEventArgs> OnError { get; init; }
 
         /// <summary>
@@ -58,15 +58,21 @@ namespace DwFramework.WEB
                 _dataBytes.AddRange(_buffer.Take(result.Count));
                 if (result.EndOfMessage)
                 {
-                    OnReceive?.Invoke(this, new OnReceiveEventargs() { Data = _dataBytes.ToArray() });
+                    OnReceive?.Invoke(this, new OnReceiveEventArgs() { Data = _dataBytes.ToArray() });
                     _dataBytes.Clear();
                 }
                 await BeginReceiveAsync();
             }
             catch (WebSocketException ex)
             {
-                OnError?.Invoke(this, new OnErrorEventArgs() { Exception = ex });
-                await CloseAsync(WebSocketCloseStatus.InternalServerError);
+                switch (ex.ErrorCode)
+                {
+                    // TODO
+                    default:
+                        OnError?.Invoke(this, new OnErrorEventArgs() { Exception = ex });
+                        await CloseAsync(WebSocketCloseStatus.InternalServerError);
+                        break;
+                }
             }
             catch (Exception ex)
             {

@@ -19,7 +19,7 @@ namespace DwFramework.WEB
         public byte[] Data { get; init; }
     }
 
-    public class OnReceiveEventargs : EventArgs
+    public class OnReceiveEventArgs : EventArgs
     {
         public byte[] Data { get; init; }
     }

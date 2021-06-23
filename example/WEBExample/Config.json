@@ -4,5 +4,9 @@
         "http": ":6001",
         "ws": ":6002"
     },
-    "BufferSize": 4096
+    "BufferSize": 4096,
+    "BackLog": 25,
+    "AddressFamily": "InterNetwork",
+    "SocketType": "Stream",
+    "ProtocolType": "Tcp"
 }

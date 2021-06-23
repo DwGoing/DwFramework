@@ -17,6 +17,7 @@ namespace WEBExample
             var host = new ServiceHost();
             host.ConfigureWebApiWithJson<Startup>("Config.json");
             host.ConfigureWebSocketWithJson("Config.json");
+            host.ConfigureSocketWithJson("Config.json");
             host.ConfigureLogging(builder => builder.UserNLog());
             host.OnHostStarted += p =>
             {
