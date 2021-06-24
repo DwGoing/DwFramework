@@ -6,7 +6,7 @@ using System.Linq;
 using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
 
-namespace DwFramework.WEB.JWT
+namespace DwFramework.Web.JWT
 {
     public static class JwtManager
     {

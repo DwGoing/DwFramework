@@ -6,9 +6,9 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using DwFramework.Core;
-using DwFramework.WEB;
+using DwFramework.Web;
 
-namespace WEBExample
+namespace WebExample
 {
     class Program
     {
