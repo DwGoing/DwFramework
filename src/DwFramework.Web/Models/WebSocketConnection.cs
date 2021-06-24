@@ -33,7 +33,7 @@ namespace DwFramework.Web
         {
             ID = MD5.Encode(Guid.NewGuid().ToString());
             _webSocket = webSocket;
-            _buffer = new byte[bufferSize];
+            _buffer = new byte[bufferSize > 0 ? bufferSize : 4096];
             _resetEvent = new AutoResetEvent(false);
             resetEvent = _resetEvent;
         }

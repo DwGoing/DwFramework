@@ -6,7 +6,7 @@ using System.Net.Sockets;
 
 namespace DwFramework.Web
 {
-    public sealed class SocketService
+    public sealed class TcpService
     {
         private Config _config;
         private readonly Dictionary<string, TcpConnection> _connections = new();
@@ -22,44 +22,10 @@ namespace DwFramework.Web
         /// 构造函数
         /// </summary>
         /// <param name="config"></param>
-        public SocketService(Config config)
+        public TcpService(Config config)
         {
             _config = config;
-            switch (config.ProtocolType)
-            {
-                case ProtocolType.Tcp:
-                    _server = new Socket(config.AddressFamily, config.SocketType, config.ProtocolType);
-                    StartTcpServiceAsync();
-                    break;
-                case ProtocolType.Udp:
-
-                    break;
-                default:
-                    throw new Exception("未定义协议类型");
-            }
-        }
-
-        /// <summary>
-        /// 开始TCP服务
-        /// </summary>
-        private void StartTcpServiceAsync()
-        {
-            async Task AcceptAsync()
-            {
-                var socket = await _server.AcceptAsync();
-                _ = AcceptAsync();
-                if (socket == null) return;
-                var connection = new TcpConnection(socket, _config.BufferSize)
-                {
-                    OnClose = OnClose,
-                    OnSend = OnSend,
-                    OnReceive = OnReceive,
-                    OnError = OnError
-                };
-                _connections[connection.ID] = connection;
-                OnConnect?.Invoke(connection, new OnConnectEventArgs() { });
-                _ = connection.BeginReceiveAsync();
-            }
+            _server = new Socket(config.AddressFamily, config.SocketType, ProtocolType.Tcp);
 
             if (!_config.Listens.ContainsKey("tcp")) throw new Exception("缺少Listens配置");
             var ipAndPort = _config.Listens["tcp"].Split(":");
@@ -71,6 +37,26 @@ namespace DwFramework.Web
         }
 
         /// <summary>
+        /// 开始TCP服务
+        /// </summary>
+        private async Task AcceptAsync()
+        {
+            var socket = await _server.AcceptAsync();
+            _ = AcceptAsync();
+            if (socket == null) return;
+            var connection = new TcpConnection(socket, _config.BufferSize)
+            {
+                OnClose = OnClose,
+                OnSend = OnSend,
+                OnReceive = OnReceive,
+                OnError = OnError
+            };
+            _connections[connection.ID] = connection;
+            OnConnect?.Invoke(connection, new OnConnectEventArgs() { });
+            _ = connection.BeginReceiveAsync();
+        }
+
+        /// <summary>
         /// 获取连接
         /// </summary>
         /// <param name="id"></param>
@@ -79,6 +65,18 @@ namespace DwFramework.Web
         {
             if (!_connections.ContainsKey(id)) return null;
             return _connections[id];
+        }
+
+        /// <summary>
+        /// 发送消息
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        public Task SendAsync(string id, byte[] data)
+        {
+            if (!_connections.ContainsKey(id)) return Task.CompletedTask;
+            return _connections[id].SendAsync(data);
         }
 
         /// <summary>

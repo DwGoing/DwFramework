@@ -2,7 +2,6 @@ using System;
 using System.IO;
 using System.Net.Sockets;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using Autofac;
 using DwFramework.Core;
 
@@ -20,8 +19,19 @@ namespace DwFramework.Web
         public static ServiceHost ConfigureSocket(this ServiceHost host, Config config)
         {
             if (config == null) throw new Exception("未读取到Socket配置");
-            var socketService = new SocketService(config);
-            host.ConfigureContainer(builder => builder.RegisterInstance(socketService).SingleInstance());
+            switch (config.ProtocolType)
+            {
+                case ProtocolType.Tcp:
+                    var tcpService = new TcpService(config);
+                    host.ConfigureContainer(builder => builder.RegisterInstance(tcpService).SingleInstance());
+                    break;
+                case ProtocolType.Udp:
+                    var udpService = new UdpService(config);
+                    host.ConfigureContainer(builder => builder.RegisterInstance(udpService).SingleInstance());
+                    break;
+                default:
+                    throw new Exception("未定义的协议类型");
+            }
             return host;
         }
 
@@ -79,14 +89,6 @@ namespace DwFramework.Web
         /// <returns></returns>
         public static ServiceHost ConfigureSocketWithXml<T>(this ServiceHost host, Stream stream, string path = null)
             => host.ConfigureSocket(new ConfigurationBuilder().AddXmlStream(stream).Build(), path);
-
-        /// <summary>
-        /// 获取Socket服务
-        /// </summary>
-        /// <param name="provider"></param>
-        /// <typeparam name="SocketService"></typeparam>
-        /// <returns></returns>
-        public static SocketService GetSocket(this IServiceProvider provider) => provider.GetService<SocketService>();
 
         /// <summary>
         /// 启用keep-alive

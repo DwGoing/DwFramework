@@ -1,6 +1,6 @@
 using System;
 using Microsoft.AspNetCore.Mvc;
-using DwFramework.WEB.JWT;
+using DwFramework.Web.JWT;
 
 namespace WEBExample
 {

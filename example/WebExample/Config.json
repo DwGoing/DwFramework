@@ -3,11 +3,14 @@
     "Listens": {
         "http": ":6001",
         "ws": ":6002",
-        "tcp": ":6003"
+        "tcp": ":6003",
+        "udp": ":6004"
     },
     "BufferSize": 4096,
     "BackLog": 25,
     "AddressFamily": "InterNetwork",
-    "SocketType": "Stream",
-    "ProtocolType": "Tcp"
+    // "SocketType": "Stream",
+    // "ProtocolType": "Tcp"
+    "SocketType": "Dgram",
+    "ProtocolType": "Udp"
 }
