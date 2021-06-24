@@ -24,31 +24,31 @@ namespace WebExample
             host.ConfigureLogging(builder => builder.UserNLog());
             host.OnHostStarted += p =>
             {
-                // var w = p.GetTcp();
-                // w.OnConnect += (c, a) => Console.WriteLine($"{c.ID} connected");
-                // w.OnReceive += (c, a) =>
-                // {
-                //     Console.WriteLine($"{c.ID} received {Encoding.UTF8.GetString(a.Data)}");
-                //     var body = @"<h1>Hello World</h1><span>XXXXXXX</span>";
-                //     _ = c.SendAsync(Encoding.UTF8.GetBytes(
-                //         "HTTP/1.1 200 OK\r\n"
-                //         + "Date: Sat, 31 Dec 2005 23:59:59 GMT\r\n"
-                //         + "Content-Type: text/html;charset=UTF8\r\n"
-                //         + $"Content-Length: {Encoding.UTF8.GetByteCount(body)}\r\n\n"
-                //         + $"{body}"
-                //     ));
-                // };
-                // w.OnSend += (c, a) => Console.WriteLine($"{c.ID} sent {Encoding.UTF8.GetString(a.Data)}");
-                // w.OnClose += (c, a) => Console.WriteLine($"{c.ID} closed");
+                var tcp = p.GetTcp();
+                tcp.OnConnect += (c, a) => Console.WriteLine($"{c.ID} connected");
+                tcp.OnReceive += (c, a) =>
+                {
+                    Console.WriteLine($"{c.ID} received {Encoding.UTF8.GetString(a.Data)}");
+                    var body = @"<h1>Hello World</h1><span>XXXXXXX</span>";
+                    _ = c.SendAsync(Encoding.UTF8.GetBytes(
+                        "HTTP/1.1 200 OK\r\n"
+                        + "Date: Sat, 31 Dec 2005 23:59:59 GMT\r\n"
+                        + "Content-Type: text/html;charset=UTF8\r\n"
+                        + $"Content-Length: {Encoding.UTF8.GetByteCount(body)}\r\n\n"
+                        + $"{body}"
+                    ));
+                };
+                tcp.OnSend += (c, a) => Console.WriteLine($"{c.ID} sent {Encoding.UTF8.GetString(a.Data)}");
+                tcp.OnClose += (c, a) => Console.WriteLine($"{c.ID} closed");
 
 
-                var w = p.GetUdp();
-                w.OnReceive += (c, a) =>
+                var udp = p.GetUdp();
+                udp.OnReceive += (c, a) =>
                 {
                     Console.WriteLine($"{c} received {Encoding.UTF8.GetString(a.Data)}");
-                    w.SendTo(Encoding.UTF8.GetBytes("World"), c);
+                    udp.SendTo(Encoding.UTF8.GetBytes("World"), c);
                 };
-                w.OnSend += (c, a) => Console.WriteLine($"{c} sent {Encoding.UTF8.GetString(a.Data)}");
+                udp.OnSend += (c, a) => Console.WriteLine($"{c} sent {Encoding.UTF8.GetString(a.Data)}");
             };
             await host.RunAsync();
         }
