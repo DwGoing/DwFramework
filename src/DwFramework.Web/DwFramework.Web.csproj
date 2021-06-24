@@ -6,7 +6,7 @@
     <BuildVersion>1.0.21-preview.9614</BuildVersion>
     <Version>$(ReleaseVersion).$(BuildVersion)</Version>
     <Authors>DwGoing</Authors>
-    <Description>DwFramework WEB库</Description>
+    <Description>DwFramework Web库</Description>
     <PackageProjectUrl>https://github.com/Dwgoing/DwFramework</PackageProjectUrl>
   </PropertyGroup>
   <ItemGroup>

@@ -2,7 +2,8 @@
     "ContentRoot": "",
     "Listens": {
         "http": ":6001",
-        "ws": ":6002"
+        "ws": ":6002",
+        "tcp": ":6003"
     },
     "BufferSize": 4096,
     "BackLog": 25,

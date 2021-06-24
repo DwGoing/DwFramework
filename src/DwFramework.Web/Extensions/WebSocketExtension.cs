@@ -5,7 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Autofac;
 using DwFramework.Core;
 
-namespace DwFramework.WEB
+namespace DwFramework.Web
 {
     public static class WebSocketExtension
     {

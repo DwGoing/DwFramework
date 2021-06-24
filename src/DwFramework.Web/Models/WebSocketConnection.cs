@@ -6,7 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using DwFramework.Core.Encrypt;
 
-namespace DwFramework.WEB
+namespace DwFramework.Web
 {
     public class WebSocketConnection
     {
@@ -15,7 +15,7 @@ namespace DwFramework.WEB
 
         private readonly WebSocket _webSocket;
         private readonly byte[] _buffer;
-        private readonly List<byte> _dataBytes = new List<byte>();
+        private readonly List<byte> _dataBytes = new();
         private readonly AutoResetEvent _resetEvent;
 
         public Action<WebSocketConnection, OnCloceEventArgs> OnClose { get; init; }

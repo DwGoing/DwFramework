@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using DwFramework.Core;
 
-namespace DwFramework.WEB
+namespace DwFramework.Web
 {
     public static class WebHostExtension
     {

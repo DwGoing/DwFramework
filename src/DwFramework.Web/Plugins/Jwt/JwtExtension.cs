@@ -4,8 +4,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 
-
-namespace DwFramework.WEB.JWT
+namespace DwFramework.Web.JWT
 {
     public static class JwtExtension
     {

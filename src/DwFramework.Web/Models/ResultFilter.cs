@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using DwFramework.Core;
 
-namespace DwFramework.WEB
+namespace DwFramework.Web
 {
     /// <summary>
     /// 结果过滤器

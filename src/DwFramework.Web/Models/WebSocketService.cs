@@ -10,7 +10,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.DependencyInjection;
 using DwFramework.Core;
 
-namespace DwFramework.WEB
+namespace DwFramework.Web
 {
     public sealed class WebSocketService
     {
@@ -21,7 +21,7 @@ namespace DwFramework.WEB
         public event Action<WebSocketConnection, OnErrorEventArgs> OnError;
 
         private Config _config;
-        private readonly Dictionary<string, WebSocketConnection> _connections = new Dictionary<string, WebSocketConnection>();
+        private readonly Dictionary<string, WebSocketConnection> _connections = new();
 
         /// <summary>
         /// 构造函数
@@ -64,6 +64,7 @@ namespace DwFramework.WEB
                          {
                              if (!context.WebSockets.IsWebSocketRequest) return;
                              var webSocket = await context.WebSockets.AcceptWebSocketAsync();
+                             if (webSocket == null) return;
                              var connection = new WebSocketConnection(webSocket, _config.BufferSize, out var resetEvent)
                              {
                                  OnClose = OnClose,

@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Consul;
 using DwFramework.Core;
 
-namespace DwFramework.WEB.Consul
+namespace DwFramework.Web.Consul
 {
     public static class ConsulExtension
     {

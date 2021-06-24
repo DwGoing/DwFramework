@@ -3,7 +3,7 @@ using System.Net.Sockets;
 using System.Text.Json.Serialization;
 using System.Collections.Generic;
 
-namespace DwFramework.WEB
+namespace DwFramework.Web
 {
     public sealed class Config
     {

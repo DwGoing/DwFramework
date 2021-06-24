@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using DwFramework.Core.Encrypt;
 
-namespace DwFramework.WEB
+namespace DwFramework.Web
 {
     public sealed class TcpConnection
     {

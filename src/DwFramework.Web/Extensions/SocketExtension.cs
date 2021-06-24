@@ -6,7 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Autofac;
 using DwFramework.Core;
 
-namespace DwFramework.WEB
+namespace DwFramework.Web
 {
     public static class SocketExtension
     {
@@ -20,7 +20,8 @@ namespace DwFramework.WEB
         public static ServiceHost ConfigureSocket(this ServiceHost host, Config config)
         {
             if (config == null) throw new Exception("未读取到Socket配置");
-            host.ConfigureContainer(builder => builder.Register(_ => new SocketService(config)).AutoActivate().SingleInstance());
+            var socketService = new SocketService(config);
+            host.ConfigureContainer(builder => builder.RegisterInstance(socketService).SingleInstance());
             return host;
         }
 
@@ -93,7 +94,7 @@ namespace DwFramework.WEB
         /// <param name="socket"></param>
         /// <param name="intervalStart"></param>
         /// <param name="retryInterval"></param>
-        public static void EnableKeepAlive(this System.Net.Sockets.Socket socket, uint keepAliveTime, uint interval)
+        public static void EnableKeepAlive(this Socket socket, uint keepAliveTime, uint interval)
         {
             var size = sizeof(uint);
             var inArray = new byte[size * 3];

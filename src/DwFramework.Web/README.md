@@ -1,12 +1,12 @@
-# DwFramework.WebAPI
+# DwFramework.Web
 
 ```shell
-PM> Install-Package DwFramework.WebAPI
+PM> Install-Package DwFramework.Web
 或
-> dotnet add package DwFramework.WebAPI
+> dotnet add package DwFramework.Web
 ```
 
-## DwFramework WebAPI库
+## DwFramework Web库
 
 ### 0x1 配置
 

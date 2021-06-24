@@ -2,7 +2,7 @@ using System;
 using System.Net.WebSockets;
 using Microsoft.AspNetCore.Http;
 
-namespace DwFramework.WEB
+namespace DwFramework.Web
 {
     public class OnConnectEventArgs : EventArgs
     {

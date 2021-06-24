@@ -25,9 +25,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DwFramework.TensorFlow", "s
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DwFramework.Plugins", "src\DwFramework.Plugins\DwFramework.Plugins.csproj", "{C161B24B-63A7-4676-91EF-5AF0BE5D4FD2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DwFramework.WEB", "src\DwFramework.WEB\DwFramework.WEB.csproj", "{8C2AAED6-94C4-48E8-9B59-46AEF27F5B1C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DwFramework.Web", "src\DwFramework.WEB\DwFramework.WEB.csproj", "{8C2AAED6-94C4-48E8-9B59-46AEF27F5B1C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WEBExample", "example\WEBExample\WEBExample.csproj", "{194827EF-1896-445E-9CA1-A90545B849CF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebExample", "example\WebExample\WebExample.csproj", "{194827EF-1896-445E-9CA1-A90545B849CF}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ORMExample", "example\ORMExample\ORMExample.csproj", "{BA8735E5-EAB4-4887-8ED5-D0A45B791431}"
 EndProject
