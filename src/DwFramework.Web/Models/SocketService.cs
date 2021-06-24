@@ -69,5 +69,43 @@ namespace DwFramework.Web
             _server.Listen(_config.BackLog);
             _ = AcceptAsync();
         }
+
+        /// <summary>
+        /// 获取连接
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public TcpConnection GetSocketConnection(string id)
+        {
+            if (!_connections.ContainsKey(id)) return null;
+            return _connections[id];
+        }
+
+        /// <summary>
+        /// 广播消息
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        public void BroadCast(byte[] data)
+        {
+            foreach (var item in _connections.Values)
+            {
+                item.SendAsync(data).ContinueWith(task =>
+                {
+                    if (!task.IsCompletedSuccessfully) OnError?.Invoke(item, new OnErrorEventArgs() { Exception = task.Exception });
+                });
+            }
+        }
+
+        /// <summary>
+        /// 断开连接
+        /// </summary>
+        /// <param name="id"></param>
+        public void Close(string id)
+        {
+            if (!_connections.ContainsKey(id)) return;
+            var connection = _connections[id];
+            connection.Close();
+        }
     }
 }

@@ -123,13 +123,5 @@ namespace DwFramework.Web
                 if (!task.IsCompletedSuccessfully) OnError?.Invoke(connection, new OnErrorEventArgs() { Exception = task.Exception });
             });
         }
-
-        /// <summary>
-        /// 断开所有连接
-        /// </summary>
-        public void CloseAll()
-        {
-            foreach (var item in _connections.Keys) CloseAsync(item);
-        }
     }
 }
