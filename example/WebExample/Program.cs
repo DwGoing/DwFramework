@@ -18,9 +18,10 @@ namespace WebExample
         static async Task Main(string[] args)
         {
             var host = new ServiceHost();
-            host.ConfigureWebApiWithJson<Startup>("Config.json");
-            host.ConfigureWebSocketWithJson("Config.json");
-            host.ConfigureSocketWithJson("Config.json");
+            host.ConfigureWebApiWithJson<Startup>("Config.json", "http");
+            host.ConfigureWebSocketWithJson("Config.json", "websocket");
+            host.ConfigureSocketWithJson("Config.json", "tcp");
+            host.ConfigureSocketWithJson("Config.json", "udp");
             host.ConfigureLogging(builder => builder.UserNLog());
             host.OnHostStarted += p =>
             {

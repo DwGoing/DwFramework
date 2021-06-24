@@ -1,16 +1,33 @@
 {
-    "ContentRoot": "",
-    "Listens": {
-        "http": ":6001",
-        "ws": ":6002",
-        "tcp": ":6003",
-        "udp": ":6004"
+    "http": {
+        "ContentRoot": "",
+        "Listens": {
+            "http": ":6001"
+        }
     },
-    "BufferSize": 4096,
-    "BackLog": 25,
-    "AddressFamily": "InterNetwork",
-    // "SocketType": "Stream",
-    // "ProtocolType": "Tcp"
-    "SocketType": "Dgram",
-    "ProtocolType": "Udp"
+    "websocket": {
+        "ContentRoot": "",
+        "Listens": {
+            "ws": ":6002"
+        },
+        "BufferSize": 4096
+    },
+    "tcp": {
+        "AddressFamily": "InterNetwork",
+        "SocketType": "Stream",
+        "ProtocolType": "Tcp",
+        "Listens": {
+            "tcp": ":6003"
+        },
+        "BufferSize": 4096
+    },
+    "udp": {
+        "AddressFamily": "InterNetwork",
+        "SocketType": "Dgram",
+        "ProtocolType": "Udp",
+        "Listens": {
+            "udp": ":6004"
+        },
+        "BufferSize": 4096
+    }
 }
