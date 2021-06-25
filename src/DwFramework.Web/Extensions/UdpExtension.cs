@@ -1,7 +1,7 @@
 using System;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace DwFramework.Web
+namespace DwFramework.Web.Socket
 {
     public static class UdpExtension
     {

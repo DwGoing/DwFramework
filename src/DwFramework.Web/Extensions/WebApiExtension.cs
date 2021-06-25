@@ -5,7 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Autofac;
 using DwFramework.Core;
 
-namespace DwFramework.Web
+namespace DwFramework.Web.WebApi
 {
     public static class WebApiExtension
     {
@@ -18,7 +18,7 @@ namespace DwFramework.Web
         /// <returns></returns>
         public static ServiceHost ConfigureWebApi<T>(this ServiceHost host, Config config) where T : class
         {
-            if (config == null) throw new Exception("未读取到WebAPI配置");
+            if (config == null) throw new Exception("未读取到WebApi配置");
             var webApiService = new WebApiService(host, config, typeof(T));
             host.ConfigureContainer(builder => builder.RegisterInstance(webApiService).SingleInstance());
             return host;

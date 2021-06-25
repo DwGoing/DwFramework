@@ -10,7 +10,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.DependencyInjection;
 using DwFramework.Core;
 
-namespace DwFramework.Web
+namespace DwFramework.Web.WebSocket
 {
     public sealed class WebSocketService
     {

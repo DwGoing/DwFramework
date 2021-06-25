@@ -4,13 +4,13 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 
-namespace DwFramework.Web
+namespace DwFramework.Web.Socket
 {
     public sealed class TcpService
     {
         private Config _config;
         private readonly Dictionary<string, TcpConnection> _connections = new();
-        private Socket _server;
+        private System.Net.Sockets.Socket _server;
 
         public event Action<TcpConnection, OnConnectEventArgs> OnConnect;
         public event Action<TcpConnection, OnCloceEventArgs> OnClose;
@@ -25,7 +25,7 @@ namespace DwFramework.Web
         public TcpService(Config config)
         {
             _config = config;
-            _server = new Socket(config.AddressFamily, config.SocketType, ProtocolType.Tcp);
+            _server = new System.Net.Sockets.Socket(config.AddressFamily, config.SocketType, ProtocolType.Tcp);
 
             if (!_config.Listens.ContainsKey("tcp")) throw new Exception("缺少Listens配置");
             var ipAndPort = _config.Listens["tcp"].Split(":");

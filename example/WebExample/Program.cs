@@ -1,15 +1,21 @@
 ﻿using System;
 using System.Text;
+using System.ServiceModel;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
+using ProtoBuf;
+using ProtoBuf.Grpc.Configuration;
+using ProtoBuf.Grpc;
+using ProtoBuf.Grpc.Client;
+using Grpc.Net.Client;
 using DwFramework.Core;
-using DwFramework.Web;
-
-using System.Net;
-using System.Net.Sockets;
+using DwFramework.Web.Rpc;
+using DwFramework.Web.Socket;
+using DwFramework.Web.WebApi;
+using DwFramework.Web.WebSocket;
 
 namespace WebExample
 {
@@ -18,6 +24,7 @@ namespace WebExample
         static async Task Main(string[] args)
         {
             var host = new ServiceHost();
+            host.ConfigureRpcWithJson("Config.json", "rpc");
             host.ConfigureWebApiWithJson<Startup>("Config.json", "http");
             host.ConfigureWebSocketWithJson("Config.json", "websocket");
             host.ConfigureSocketWithJson("Config.json", "tcp");
@@ -25,6 +32,22 @@ namespace WebExample
             host.ConfigureLogging(builder => builder.UserNLog());
             host.OnHostStarted += p =>
             {
+                Task.Factory.StartNew(async () =>
+                {
+                    await Task.Delay(1000);
+                    GrpcClientFactory.AllowUnencryptedHttp2 = true;
+                    var channel = GrpcChannel.ForAddress("http://localhost:6000");
+                    var client = channel.CreateGrpcService<IA>();
+                    try
+                    {
+                        var res = await client.Do(new Request() { Message = "Hello" });
+                    }
+                    catch (Exception ex)
+                    {
+
+                    }
+                });
+
                 var tcp = p.GetTcp();
                 tcp.OnConnect += (c, a) => Console.WriteLine($"{c.ID} connected");
                 tcp.OnReceive += (c, a) =>
@@ -52,6 +75,41 @@ namespace WebExample
                 udp.OnSend += (c, a) => Console.WriteLine($"{c} sent {Encoding.UTF8.GetString(a.Data)}");
             };
             await host.RunAsync();
+        }
+    }
+
+    [Service]
+    public interface IA
+    {
+        [OperationContract]
+        Task<Response> Do(Request request, CallContext context = default);
+    }
+
+    [ProtoContract]
+    public class Request
+    {
+        [ProtoMember(1)]
+        public string Message { get; set; }
+    }
+
+    [ProtoContract]
+    public class Response
+    {
+        [ProtoMember(1)]
+        public string Message { get; set; }
+    }
+
+    [RPC]
+    public class A : IA
+    {
+        public A()
+        {
+
+        }
+
+        public Task<Response> Do(Request request, CallContext context = default)
+        {
+            return Task.FromResult(new Response() { Message = request.Message });
         }
     }
 

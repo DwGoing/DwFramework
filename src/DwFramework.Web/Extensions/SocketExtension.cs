@@ -5,7 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Autofac;
 using DwFramework.Core;
 
-namespace DwFramework.Web
+namespace DwFramework.Web.Socket
 {
     public static class SocketExtension
     {
@@ -96,7 +96,7 @@ namespace DwFramework.Web
         /// <param name="socket"></param>
         /// <param name="intervalStart"></param>
         /// <param name="retryInterval"></param>
-        public static void EnableKeepAlive(this Socket socket, uint keepAliveTime, uint interval)
+        public static void EnableKeepAlive(this System.Net.Sockets.Socket socket, uint keepAliveTime, uint interval)
         {
             var size = sizeof(uint);
             var inArray = new byte[size * 3];

@@ -14,22 +14,12 @@ using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ProtoBuf.Grpc.Server;
 using ProtoBuf.Grpc.Configuration;
-
 using DwFramework.Core;
-using DwFramework.Core.Plugins;
-using DwFramework.Core.Extensions;
 
 namespace DwFramework.RPC
 {
-    public sealed class RPCService : ConfigableServiceBase
+    public sealed class RPCService
     {
-        public sealed class Config
-        {
-            public string ContentRoot { get; init; }
-            public Dictionary<string, string> Listen { get; init; }
-        }
-
-        private readonly ILogger<RPCService> _logger;
         private Config _config;
         private CancellationTokenSource _cancellationTokenSource;
         private event Action<IServiceCollection> _onConfigureServices;
@@ -38,95 +28,30 @@ namespace DwFramework.RPC
         /// <summary>
         /// 构造函数
         /// </summary>
-        /// <param name="logger"></param>
-        public RPCService(ILogger<RPCService> logger = null)
-        {
-            _logger = logger;
-        }
-
-        /// <summary>
-        /// 读取配置
-        /// </summary>
         /// <param name="config"></param>
-        public void ReadConfig(Config config)
+        public RPCService(Config config)
         {
-            try
-            {
-                _config = config;
-                if (_config == null) throw new Exception("未读取到Rpc配置");
-            }
-            catch (Exception ex)
-            {
-                _ = _logger?.LogErrorAsync(ex.Message);
-                throw;
-            }
-        }
-
-        /// <summary>
-        /// 读取配置
-        /// </summary>
-        /// <param name="path"></param>
-        /// <param name="key"></param>
-        public void ReadConfig(string path = null, string key = null)
-        {
-            ReadConfig(ReadConfig<Config>(path, key));
-        }
-
-        /// <summary>
-        /// 添加内部服务
-        /// </summary>
-        /// <param name="action"></param>
-        /// <returns></returns>
-        public RPCService AddInternalService(Action<IServiceCollection> action)
-        {
-            _onConfigureServices += action;
-            return this;
-        }
-
-        /// <summary>
-        /// 添加外部服务
-        /// </summary>
-        /// <param name="type"></param>
-        /// <returns></returns>
-        public RPCService AddExternalService(Type type)
-        {
-            _onConfigureServices += services => services.AddTransient(type, _ => ServiceHost.Provider.GetService(type));
-            return this;
-        }
-
-        /// <summary>
-        /// 添加外部服务
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
-        public RPCService AddExternalService<T>() where T : class
-        {
-            AddExternalService(typeof(T));
-            return this;
+            _config = config;
         }
 
         /// <summary>
         /// 添加RPC服务
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
-        public RPCService AddRpcImplement<T>() where T : class
+        public void AddRpcImplement<T>() where T : class
         {
             _onEndpointsBuild += endpoint => endpoint.MapGrpcService<T>();
-            return this;
         }
 
         /// <summary>
         /// 添加RPC服务
         /// </summary>
         /// <param name="type"></param>
-        /// <returns></returns>
-        public RPCService AddRpcImplement(Type type)
+        public void AddRpcImplement(Type type)
         {
             var method = typeof(GrpcEndpointRouteBuilderExtensions).GetMethod("MapGrpcService");
             var genericMethod = method.MakeGenericMethod(type);
             _onEndpointsBuild += endpoint => genericMethod.Invoke(null, new object[] { endpoint });
-            return this;
         }
 
         /// <summary>
@@ -142,9 +67,7 @@ namespace DwFramework.RPC
                 {
                     var attribute = type.GetCustomAttribute<RPCAttribute>();
                     if (attribute == null) return;
-                    AddInternalService(services => services.AddTransient(type));
                     AddRpcImplement(type);
-                    attribute.ExternalServices.ForEach(item => AddExternalService(item));
                 });
             });
         }

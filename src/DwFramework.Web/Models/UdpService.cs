@@ -4,13 +4,13 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 
-namespace DwFramework.Web
+namespace DwFramework.Web.Socket
 {
     public sealed class UdpService
     {
         private Config _config;
         private readonly Dictionary<string, TcpConnection> _connections = new();
-        private readonly Socket _server;
+        private readonly System.Net.Sockets.Socket _server;
         private byte[] _buffer;
 
         public event Action<EndPoint, OnSendEventArgs> OnSend;
@@ -24,7 +24,7 @@ namespace DwFramework.Web
         {
             _config = config;
             _buffer = new byte[_config.BufferSize > 0 ? _config.BufferSize : 4096];
-            _server = new Socket(config.AddressFamily, config.SocketType, ProtocolType.Udp);
+            _server = new System.Net.Sockets.Socket(config.AddressFamily, config.SocketType, ProtocolType.Udp);
 
             if (!_config.Listens.ContainsKey("udp")) throw new Exception("缺少Listens配置");
             var ipAndPort = _config.Listens["udp"].Split(":");

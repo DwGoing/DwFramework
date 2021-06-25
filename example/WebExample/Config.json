@@ -1,4 +1,10 @@
 {
+    "rpc": {
+        "ContentRoot": "",
+        "Listens": {
+            "rpc": ":6000"
+        }
+    },
     "http": {
         "ContentRoot": "",
         "Listens": {

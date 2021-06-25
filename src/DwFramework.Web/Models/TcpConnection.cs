@@ -4,14 +4,14 @@ using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using DwFramework.Core.Encrypt;
 
-namespace DwFramework.Web
+namespace DwFramework.Web.Socket
 {
     public sealed class TcpConnection
     {
         public string ID { get; init; }
         public bool IsClose { get; private set; } = false;
 
-        private readonly Socket _socket;
+        private readonly System.Net.Sockets.Socket _socket;
         private readonly byte[] _buffer;
 
         public Action<TcpConnection, OnCloceEventArgs> OnClose { get; init; }
@@ -24,7 +24,7 @@ namespace DwFramework.Web
         /// </summary>
         /// <param name="socket"></param>
         /// <param name="bufferSize"></param>
-        public TcpConnection(Socket socket, int bufferSize)
+        public TcpConnection(System.Net.Sockets.Socket socket, int bufferSize)
         {
             ID = MD5.Encode(Guid.NewGuid().ToString());
             _socket = socket;
