@@ -6,7 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using DwFramework.Core.Encrypt;
 
-namespace DwFramework.Web.WebSocket
+namespace DwFramework.Web
 {
     public class WebSocketConnection
     {

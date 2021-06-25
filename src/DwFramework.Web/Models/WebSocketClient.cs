@@ -6,7 +6,7 @@ using System.Linq;
 using System.Collections.Generic;
 using DwFramework.Core;
 
-namespace DwFramework.Web.WebSocket
+namespace DwFramework.Web
 {
     public class WebSocketClient
     {

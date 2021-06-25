@@ -8,7 +8,7 @@ namespace DwFramework.Web.Socket
 {
     public sealed class TcpService
     {
-        private Config _config;
+        private Config.Socket _config;
         private readonly Dictionary<string, TcpConnection> _connections = new();
         private System.Net.Sockets.Socket _server;
 
@@ -22,7 +22,7 @@ namespace DwFramework.Web.Socket
         /// 构造函数
         /// </summary>
         /// <param name="config"></param>
-        public TcpService(Config config)
+        public TcpService(Config.Socket config)
         {
             _config = config;
             _server = new System.Net.Sockets.Socket(config.AddressFamily, config.SocketType, ProtocolType.Tcp);

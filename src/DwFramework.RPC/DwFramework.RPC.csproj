@@ -1,26 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
-    <PropertyGroup>
-        <TargetFramework>net5.0</TargetFramework>
-        <ReleaseVersion>5</ReleaseVersion>
-        <BuildVersion>0.1.17-20200506.9651</BuildVersion>
-        <Version>$(ReleaseVersion).$(BuildVersion)</Version>
-        <Authors>DwGoing</Authors>
-        <Description>DwFramework RPC库</Description>
-        <PackageProjectUrl>https://github.com/Dwgoing/DwFramework</PackageProjectUrl>
-        <RootNamespace>DwFramework.RPC</RootNamespace>
-        <AssemblyName>DwFramework.RPC</AssemblyName>
-    </PropertyGroup>
-    <ItemGroup>
-        <ProjectReference Include="..\DwFramework.Core\DwFramework.Core.csproj" />
-    </ItemGroup>
-    <ItemGroup>
-        <PackageReference Include="Grpc.Net.Client" Version="2.37.0" />
-        <PackageReference Include="Microsoft.AspNetCore.Hosting" Version="2.2.7" />
-        <PackageReference Include="Microsoft.AspNetCore.Server.Kestrel" Version="2.2.0" />
-        <PackageReference Include="protobuf-net.Grpc" Version="1.0.152" />
-        <PackageReference Include="protobuf-net.Grpc.AspNetCore" Version="1.0.152" />
-        <PackageReference Include="protobuf-net.Grpc.AspNetCore.Reflection" Version="1.0.152" />
-        <PackageReference Include="System.ServiceModel.Primitives" Version="4.8.1" />
-    </ItemGroup>
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <ReleaseVersion>5</ReleaseVersion>
+    <BuildVersion>0.1.17-20200506.9651</BuildVersion>
+    <Version>$(ReleaseVersion).$(BuildVersion)</Version>
+    <Authors>DwGoing</Authors>
+    <Description>DwFramework RPC库</Description>
+    <PackageProjectUrl>https://github.com/Dwgoing/DwFramework</PackageProjectUrl>
+    <RootNamespace>DwFramework.RPC</RootNamespace>
+    <AssemblyName>DwFramework.RPC</AssemblyName>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DwFramework.Core\DwFramework.Core.csproj"/>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Grpc.Net.Client" Version="2.37.0"/>
+    <PackageReference Include="Microsoft.AspNetCore.Hosting" Version="2.2.7"/>
+    <PackageReference Include="Microsoft.AspNetCore.Server.Kestrel" Version="2.2.0"/>
+    <PackageReference Include="protobuf-net.Grpc" Version="1.0.152"/>
+    <PackageReference Include="protobuf-net.Grpc.AspNetCore" Version="1.0.152"/>
+    <PackageReference Include="protobuf-net.Grpc.AspNetCore.Reflection" Version="Unknown"/>
+    <PackageReference Include="System.ServiceModel.Primitives" Version="Unknown"/>
+  </ItemGroup>
 </Project>

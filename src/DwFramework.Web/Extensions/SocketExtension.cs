@@ -16,7 +16,7 @@ namespace DwFramework.Web.Socket
         /// <param name="host"></param>
         /// <param name="config"></param>
         /// <returns></returns>
-        public static ServiceHost ConfigureSocket(this ServiceHost host, Config config)
+        public static ServiceHost ConfigureSocket(this ServiceHost host, Config.Socket config)
         {
             if (config == null) throw new Exception("未读取到Socket配置");
             switch (config.ProtocolType)
@@ -45,7 +45,7 @@ namespace DwFramework.Web.Socket
         /// <returns></returns>
         public static ServiceHost ConfigureSocket(this ServiceHost host, IConfiguration configuration, string path = null)
         {
-            var config = configuration.GetConfig<Config>(path);
+            var config = configuration.GetConfig<Config.Socket>(path);
             host.ConfigureSocket(config);
             return host;
         }

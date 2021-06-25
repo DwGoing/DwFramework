@@ -8,7 +8,7 @@ namespace DwFramework.Web.Socket
 {
     public sealed class UdpService
     {
-        private Config _config;
+        private Config.Socket _config;
         private readonly Dictionary<string, TcpConnection> _connections = new();
         private readonly System.Net.Sockets.Socket _server;
         private byte[] _buffer;
@@ -20,7 +20,7 @@ namespace DwFramework.Web.Socket
         /// 构造函数
         /// </summary>
         /// <param name="config"></param>
-        public UdpService(Config config)
+        public UdpService(Config.Socket config)
         {
             _config = config;
             _buffer = new byte[_config.BufferSize > 0 ? _config.BufferSize : 4096];

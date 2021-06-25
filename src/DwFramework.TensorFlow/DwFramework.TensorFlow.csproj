@@ -10,7 +10,7 @@
     <PackageProjectUrl>https://github.com/Dwgoing/DwFramework</PackageProjectUrl>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="TensorFlow.NET" Version="0.40.1"/>
-    <PackageReference Include="SciSharp.TensorFlow.Redist" Version="2.5.0"/>
+    <PackageReference Include="TensorFlow.NET" Version="Unknown"/>
+    <PackageReference Include="SciSharp.TensorFlow.Redist" Version="Unknown"/>
   </ItemGroup>
 </Project>

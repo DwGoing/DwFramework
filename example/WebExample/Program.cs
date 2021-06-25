@@ -1,21 +1,18 @@
 ﻿using System;
 using System.Text;
-using System.ServiceModel;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using ProtoBuf;
-using ProtoBuf.Grpc.Configuration;
 using ProtoBuf.Grpc;
+using ProtoBuf.Grpc.Configuration;
 using ProtoBuf.Grpc.Client;
 using Grpc.Net.Client;
 using DwFramework.Core;
-using DwFramework.Web.Rpc;
+using DwFramework.Web;
 using DwFramework.Web.Socket;
-using DwFramework.Web.WebApi;
-using DwFramework.Web.WebSocket;
 
 namespace WebExample
 {
@@ -24,27 +21,70 @@ namespace WebExample
         static async Task Main(string[] args)
         {
             var host = new ServiceHost();
-            host.ConfigureRpcWithJson("Config.json", "rpc");
-            host.ConfigureWebApiWithJson<Startup>("Config.json", "http");
-            host.ConfigureWebSocketWithJson("Config.json", "websocket");
+            host.ConfigureServices(services =>
+            {
+                services.AddTransient<IGreeterService, GreeterService>();
+            });
+            host.ConfigureWebWithJson("Config.json", "web", services =>
+            {
+                services.AddCors(options =>
+                {
+                    options.AddPolicy("any", builder => { builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader(); });
+                });
+                services.AddSwaggerGen(c =>
+                {
+                    c.SwaggerDoc("name", new OpenApiInfo()
+                    {
+                        Title = "title",
+                        Version = "version",
+                        Description = "description"
+                    });
+                });
+                services.AddControllers(options =>
+                {
+                    options.Filters.Add<ExceptionFilter>();
+                }).AddJsonOptions(options =>
+                {
+                    //不使用驼峰样式的key
+                    options.JsonSerializerOptions.PropertyNamingPolicy = null;
+                    //不使用驼峰样式的key
+                    options.JsonSerializerOptions.DictionaryKeyPolicy = null;
+                });
+            }, app =>
+            {
+                app.UseCors("any");
+                app.UseRouting();
+                app.UseSwagger(c => c.RouteTemplate = "{documentName}/swagger.json");
+                app.UseSwaggerUI(c => c.SwaggerEndpoint($"/{"name"}/swagger.json", "desc"));
+            }, endpoints =>
+            {
+                endpoints.MapControllers();
+            });
             host.ConfigureSocketWithJson("Config.json", "tcp");
             host.ConfigureSocketWithJson("Config.json", "udp");
             host.ConfigureLogging(builder => builder.UserNLog());
             host.OnHostStarted += p =>
             {
+                var web = p.GetWeb();
+                web.OnWebSocketReceive += (c, a) => Console.WriteLine($"{c.ID} {Encoding.UTF8.GetString(a.Data)}");
+
                 Task.Factory.StartNew(async () =>
                 {
                     await Task.Delay(1000);
                     GrpcClientFactory.AllowUnencryptedHttp2 = true;
-                    var channel = GrpcChannel.ForAddress("http://localhost:6000");
-                    var client = channel.CreateGrpcService<IA>();
                     try
                     {
-                        var res = await client.Do(new Request() { Message = "Hello" });
+                        using var channel = GrpcChannel.ForAddress("http://localhost:6000");
+                        var client = channel.CreateGrpcService<IGreeterService>();
+
+                        var reply = await client.SayHelloAsync(
+                            new HelloRequest { Name = "GreeterClient" });
+
+                        Console.WriteLine($"Greeting: {reply.Message}");
                     }
                     catch (Exception ex)
                     {
-
+                        Console.WriteLine(ex);
                     }
                 });
 
@@ -79,37 +119,38 @@ namespace WebExample
     }
 
     [Service]
-    public interface IA
+    public interface IGreeterService
     {
-        [OperationContract]
-        Task<Response> Do(Request request, CallContext context = default);
+        [Operation
+        ]
+        Task<HelloReply> SayHelloAsync(HelloRequest request,
+            CallContext context = default);
     }
 
     [ProtoContract]
-    public class Request
+    public class HelloRequest
     {
         [ProtoMember(1)]
-        public string Message { get; set; }
+        public string Name { get; set; }
     }
 
     [ProtoContract]
-    public class Response
+    public class HelloReply
     {
         [ProtoMember(1)]
         public string Message { get; set; }
     }
 
     [RPC]
-    public class A : IA
+    public class GreeterService : IGreeterService
     {
-        public A()
+        public Task<HelloReply> SayHelloAsync(HelloRequest request, CallContext context = default)
         {
-
-        }
-
-        public Task<Response> Do(Request request, CallContext context = default)
-        {
-            return Task.FromResult(new Response() { Message = request.Message });
+            return Task.FromResult(
+                   new HelloReply
+                   {
+                       Message = $"Hello {request.Name}"
+                   });
         }
     }
 

@@ -1,19 +1,12 @@
 {
-    "rpc": {
+    "web": {
+        "EnableHttp": true,
+        "EnableRpc": false,
+        "EnableWebSocket": true,
         "ContentRoot": "",
         "Listens": {
-            "rpc": ":6000"
-        }
-    },
-    "http": {
-        "ContentRoot": "",
-        "Listens": {
-            "http": ":6001"
-        }
-    },
-    "websocket": {
-        "ContentRoot": "",
-        "Listens": {
+            "rpc": ":6000",
+            "http": ":6001",
             "ws": ":6002"
         },
         "BufferSize": 4096
