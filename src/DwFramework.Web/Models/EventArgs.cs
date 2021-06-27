@@ -11,7 +11,7 @@ namespace DwFramework.Web
 
     public class OnCloceEventArgs : EventArgs
     {
-        public WebSocketCloseStatus? CloseStatus { get; init; }
+
     }
 
     public class OnSendEventArgs : EventArgs

@@ -106,37 +106,5 @@ namespace DwFramework.Web
         /// <typeparam name="WebApiService"></typeparam>
         /// <returns></returns>
         public static WebService GetWeb(this IServiceProvider provider) => provider.GetService<WebService>();
-
-        /// <summary>
-        /// 添加Rpc服务
-        /// </summary>
-        /// <param name="services"></param>
-        /// <returns></returns>
-        public static IServiceCollection AddRpcImplements(this IServiceCollection services, params Type[] rpcImpls)
-        {
-            WebService.Instance.AddRpcImplements(services, rpcImpls);
-            return services;
-        }
-
-        /// <summary>
-        /// 匹配Rpc路由
-        /// </summary>
-        /// <param name="endpoints"></param>
-        /// <returns></returns>
-        public static IEndpointRouteBuilder MapRpcImplements(this IEndpointRouteBuilder endpoints)
-        {
-            WebService.Instance.MapRpcImplements(endpoints);
-            return endpoints;
-        }
-
-        /// <summary>
-        /// 配置WebSocket
-        /// </summary>
-        /// <param name="app"></param>
-        public static IApplicationBuilder UseWebSocket(this IApplicationBuilder app)
-        {
-            WebService.Instance.UseWebSocket(app);
-            return app;
-        }
     }
 }

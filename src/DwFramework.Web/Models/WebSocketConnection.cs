@@ -6,7 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using DwFramework.Core.Encrypt;
 
-namespace DwFramework.Web
+namespace DwFramework.Web.WebSocket
 {
     public class WebSocketConnection
     {
@@ -112,7 +112,7 @@ namespace DwFramework.Web
             _webSocket.Abort();
             _webSocket.Dispose();
             IsClose = true;
-            OnClose?.Invoke(this, new OnCloceEventArgs() { CloseStatus = closeStatus });
+            OnClose?.Invoke(this, new OnCloceEventArgs() { });
             _resetEvent.Set();
         }
     }

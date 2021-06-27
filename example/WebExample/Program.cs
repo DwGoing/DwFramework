@@ -13,6 +13,8 @@ using ProtoBuf.Grpc.Client;
 using Grpc.Net.Client;
 using DwFramework.Core;
 using DwFramework.Web;
+using DwFramework.Web.Rpc;
+using DwFramework.Web.WebSocket;
 using DwFramework.Web.Socket;
 
 namespace WebExample

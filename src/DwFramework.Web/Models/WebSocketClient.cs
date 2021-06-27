@@ -6,7 +6,7 @@ using System.Linq;
 using System.Collections.Generic;
 using DwFramework.Core;
 
-namespace DwFramework.Web
+namespace DwFramework.Web.WebSocket
 {
     public class WebSocketClient
     {
@@ -74,7 +74,7 @@ namespace DwFramework.Web
                             continue;
                         }
                     }
-                    OnClose?.Invoke(new OnCloceEventArgs() { CloseStatus = closeStates });
+                    OnClose?.Invoke(new OnCloceEventArgs() { });
                     ClearAllEvent();
                     if (_client.State == WebSocketState.CloseReceived) await CloseAsync();
                 });

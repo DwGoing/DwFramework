@@ -15,6 +15,8 @@ using Microsoft.Extensions.DependencyInjection;
 using ProtoBuf.Grpc.Server;
 using ProtoBuf.Grpc.Configuration;
 using DwFramework.Core;
+using DwFramework.Web.Rpc;
+using DwFramework.Web.WebSocket;
 
 namespace DwFramework.Web
 {
