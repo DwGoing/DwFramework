@@ -1,15 +1,9 @@
 {
-    "web": {
-        "EnableHttp": true,
-        "EnableRpc": false,
-        "EnableWebSocket": true,
+    "http": {
         "ContentRoot": "",
         "Listens": {
-            "rpc": ":6000",
-            "http": ":6001",
-            "ws": ":6002"
-        },
-        "BufferSize": 4096
+            "http": ":6001"
+        }
     },
     "tcp": {
         "AddressFamily": "InterNetwork",

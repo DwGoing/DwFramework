@@ -25,68 +25,34 @@ namespace WebExample
             {
                 services.AddTransient<IGreeterService, GreeterService>();
             });
-            host.ConfigureWebWithJson("Config.json", "web", services =>
-            {
-                services.AddCors(options =>
-                {
-                    options.AddPolicy("any", builder => { builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader(); });
-                });
-                services.AddSwaggerGen(c =>
-                {
-                    c.SwaggerDoc("name", new OpenApiInfo()
-                    {
-                        Title = "title",
-                        Version = "version",
-                        Description = "description"
-                    });
-                });
-                services.AddControllers(options =>
-                {
-                    options.Filters.Add<ExceptionFilter>();
-                }).AddJsonOptions(options =>
-                {
-                    //不使用驼峰样式的key
-                    options.JsonSerializerOptions.PropertyNamingPolicy = null;
-                    //不使用驼峰样式的key
-                    options.JsonSerializerOptions.DictionaryKeyPolicy = null;
-                });
-            }, app =>
-            {
-                app.UseCors("any");
-                app.UseRouting();
-                app.UseSwagger(c => c.RouteTemplate = "{documentName}/swagger.json");
-                app.UseSwaggerUI(c => c.SwaggerEndpoint($"/{"name"}/swagger.json", "desc"));
-            }, endpoints =>
-            {
-                endpoints.MapControllers();
-            });
+            host.ConfigureWebApiWithJson<Startup>("Config.json", "http");
             host.ConfigureSocketWithJson("Config.json", "tcp");
             host.ConfigureSocketWithJson("Config.json", "udp");
             host.ConfigureLogging(builder => builder.UserNLog());
             host.OnHostStarted += p =>
             {
-                var web = p.GetWeb();
-                web.OnWebSocketReceive += (c, a) => Console.WriteLine($"{c.ID} {Encoding.UTF8.GetString(a.Data)}");
+                // var web = p.GetWeb();
+                // web.OnWebSocketReceive += (c, a) => Console.WriteLine($"{c.ID} {Encoding.UTF8.GetString(a.Data)}");
 
-                Task.Factory.StartNew(async () =>
-                {
-                    await Task.Delay(1000);
-                    GrpcClientFactory.AllowUnencryptedHttp2 = true;
-                    try
-                    {
-                        using var channel = GrpcChannel.ForAddress("http://localhost:6000");
-                        var client = channel.CreateGrpcService<IGreeterService>();
+                // Task.Factory.StartNew(async () =>
+                // {
+                //     await Task.Delay(1000);
+                //     GrpcClientFactory.AllowUnencryptedHttp2 = true;
+                //     try
+                //     {
+                //         using var channel = GrpcChannel.ForAddress("http://localhost:6000");
+                //         var client = channel.CreateGrpcService<IGreeterService>();
 
-                        var reply = await client.SayHelloAsync(
-                            new HelloRequest { Name = "GreeterClient" });
+                //         var reply = await client.SayHelloAsync(
+                //             new HelloRequest { Name = "GreeterClient" });
 
-                        Console.WriteLine($"Greeting: {reply.Message}");
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine(ex);
-                    }
-                });
+                //         Console.WriteLine($"Greeting: {reply.Message}");
+                //     }
+                //     catch (Exception ex)
+                //     {
+                //         Console.WriteLine(ex);
+                //     }
+                // });
 
                 var tcp = p.GetTcp();
                 tcp.OnConnect += (c, a) => Console.WriteLine($"{c.ID} connected");

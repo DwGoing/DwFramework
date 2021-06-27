@@ -22,9 +22,6 @@ namespace DwFramework.Web
 
         public sealed class Web
         {
-            public bool EnableHttp { get; init; } = false;
-            public bool EnableRpc { get; init; } = false;
-            public bool EnableWebSocket { get; init; } = false;
             public string ContentRoot { get; init; }
             public Dictionary<string, string> Listens { get; init; }
             public int BufferSize { get; init; } = 1024 * 4;
