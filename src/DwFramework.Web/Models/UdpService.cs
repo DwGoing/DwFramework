@@ -26,11 +26,8 @@ namespace DwFramework.Web.Socket
             _buffer = new byte[_config.BufferSize > 0 ? _config.BufferSize : 4096];
             _server = new System.Net.Sockets.Socket(config.AddressFamily, config.SocketType, ProtocolType.Udp);
 
-            if (!_config.Listens.ContainsKey("udp")) throw new Exception("缺少Listens配置");
-            var ipAndPort = _config.Listens["udp"].Split(":");
-            var ip = string.IsNullOrEmpty(ipAndPort[0]) ? IPAddress.Any : IPAddress.Parse(ipAndPort[0]);
-            var port = int.Parse(ipAndPort[1]);
-            _server.Bind(new IPEndPoint(ip, port));
+            if (_config.Listen == null) throw new Exception("缺少Listen配置");
+            _server.Bind(new IPEndPoint(string.IsNullOrEmpty(_config.Listen.Ip) ? IPAddress.Any : IPAddress.Parse(_config.Listen.Ip), _config.Listen.Port));
             _ = AcceptAsync();
         }
 

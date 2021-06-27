@@ -1,16 +1,27 @@
 {
-    "http": {
+    "web": {
         "ContentRoot": "",
-        "Listens": {
-            "http": ":6001"
-        }
+        "Listens": [
+            {
+                "Scheme": "Http",
+                "Port": 6001
+            },
+            {
+                "Scheme": "Rpc",
+                "Port": 6002
+            },
+            {
+                "Scheme": "Ws",
+                "Port": 6003
+            }
+        ]
     },
     "tcp": {
         "AddressFamily": "InterNetwork",
         "SocketType": "Stream",
         "ProtocolType": "Tcp",
-        "Listens": {
-            "tcp": ":6003"
+        "Listen": {
+            "Port": 6004
         },
         "BufferSize": 4096
     },
@@ -18,8 +29,8 @@
         "AddressFamily": "InterNetwork",
         "SocketType": "Dgram",
         "ProtocolType": "Udp",
-        "Listens": {
-            "udp": ":6004"
+        "Listen": {
+            "Port": 6005
         },
         "BufferSize": 4096
     }

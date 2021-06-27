@@ -2,6 +2,7 @@
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
@@ -21,38 +22,34 @@ namespace WebExample
         static async Task Main(string[] args)
         {
             var host = new ServiceHost();
-            host.ConfigureServices(services =>
-            {
-                services.AddTransient<IGreeterService, GreeterService>();
-            });
-            host.ConfigureWebApiWithJson<Startup>("Config.json", "http");
+            host.ConfigureWebWithJson("Config.json", builder => builder.UseStartup<Startup>(), "web");
             host.ConfigureSocketWithJson("Config.json", "tcp");
             host.ConfigureSocketWithJson("Config.json", "udp");
             host.ConfigureLogging(builder => builder.UserNLog());
             host.OnHostStarted += p =>
             {
-                // var web = p.GetWeb();
-                // web.OnWebSocketReceive += (c, a) => Console.WriteLine($"{c.ID} {Encoding.UTF8.GetString(a.Data)}");
+                var web = p.GetWeb();
+                web.OnWebSocketReceive += (c, a) => Console.WriteLine($"{c.ID} {Encoding.UTF8.GetString(a.Data)}");
 
-                // Task.Factory.StartNew(async () =>
-                // {
-                //     await Task.Delay(1000);
-                //     GrpcClientFactory.AllowUnencryptedHttp2 = true;
-                //     try
-                //     {
-                //         using var channel = GrpcChannel.ForAddress("http://localhost:6000");
-                //         var client = channel.CreateGrpcService<IGreeterService>();
+                Task.Factory.StartNew(async () =>
+                {
+                    await Task.Delay(1000);
+                    GrpcClientFactory.AllowUnencryptedHttp2 = true;
+                    try
+                    {
+                        using var channel = GrpcChannel.ForAddress("http://localhost:6002");
+                        var client = channel.CreateGrpcService<IGreeterService>();
 
-                //         var reply = await client.SayHelloAsync(
-                //             new HelloRequest { Name = "GreeterClient" });
+                        var reply = await client.SayHelloAsync(
+                            new HelloRequest { Name = "GreeterClient" });
 
-                //         Console.WriteLine($"Greeting: {reply.Message}");
-                //     }
-                //     catch (Exception ex)
-                //     {
-                //         Console.WriteLine(ex);
-                //     }
-                // });
+                        Console.WriteLine($"Greeting: {reply.Message}");
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex);
+                    }
+                });
 
                 var tcp = p.GetTcp();
                 tcp.OnConnect += (c, a) => Console.WriteLine($"{c.ID} connected");
@@ -147,6 +144,7 @@ namespace WebExample
                 //不使用驼峰样式的key
                 options.JsonSerializerOptions.DictionaryKeyPolicy = null;
             });
+            services.AddRpcImplements();
         }
 
         public void Configure(IApplicationBuilder app, IHostApplicationLifetime lifetime)
@@ -155,9 +153,11 @@ namespace WebExample
             app.UseRouting();
             app.UseSwagger(c => c.RouteTemplate = "{documentName}/swagger.json");
             app.UseSwaggerUI(c => c.SwaggerEndpoint($"/{"name"}/swagger.json", "desc"));
+            app.UseWebSocket();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapRpcImplements();
             });
         }
     }

@@ -7,9 +7,19 @@ namespace DwFramework.Web
 {
     public sealed class Config
     {
+        public sealed class Listen
+        {
+            [JsonConverter(typeof(Scheme))]
+            public Scheme Scheme { get; init; }
+            public string Ip { get; init; }
+            public int Port { get; init; }
+            public string Cert { get; init; }
+            public string Password { get; init; }
+        }
+
         public sealed class Socket
         {
-            public Dictionary<string, string> Listens { get; init; }
+            public Listen Listen { get; init; }
             public int BufferSize { get; init; } = 1024 * 4;
             public int BackLog { get; init; } = 100;
             [JsonConverter(typeof(AddressFamily))]
@@ -23,7 +33,7 @@ namespace DwFramework.Web
         public sealed class Web
         {
             public string ContentRoot { get; init; }
-            public Dictionary<string, string> Listens { get; init; }
+            public List<Listen> Listens { get; init; } = new();
             public int BufferSize { get; init; } = 1024 * 4;
         }
     }
