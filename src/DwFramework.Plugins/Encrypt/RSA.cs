@@ -1,5 +1,4 @@
 using System;
-using System.Text;
 using System.Security.Cryptography;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,6 +19,19 @@ namespace DwFramework.Core.Encrypt
             [RSAEncryptionPadding.OaepSHA384] = 98,
             [RSAEncryptionPadding.OaepSHA512] = 130
         };
+
+        /// <summary>
+        /// 生成RSA密钥对
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="size"></param>
+        /// <param name="isPem"></param>
+        /// <returns></returns>
+        public static (string PrivateKey, string PublicKey) GenerateKeyPair(RSAKeyType type = RSAKeyType.Pkcs1, int size = 1024, bool isPem = false)
+        {
+            using var rsa = System.Security.Cryptography.RSA.Create(size);
+            return (rsa.ExportPrivateKey(type, isPem), rsa.ExportPublicKey(type, isPem));
+        }
 
         /// <summary>
         /// 加密
@@ -95,22 +107,6 @@ namespace DwFramework.Core.Encrypt
         }
 
         /// <summary>
-        /// 公钥加密
-        /// </summary>
-        /// <param name="data"></param>
-        /// <param name="type"></param>
-        /// <param name="publicKey"></param>
-        /// <param name="isPem"></param>
-        /// <param name="padding"></param>
-        /// <param name="encoding"></param>
-        /// <returns></returns>
-        public static string EncryptWithPublicKey(string data, RSAKeyType type, string publicKey, bool isPem = false, RSAEncryptionPadding padding = null, Encoding encoding = null)
-        {
-            encoding ??= Encoding.UTF8;
-            return EncryptWithPublicKey(encoding.GetBytes(data), type, publicKey, isPem, padding).ToBase64String();
-        }
-
-        /// <summary>
         /// 私钥加密
         /// </summary>
         /// <param name="data"></param>
@@ -127,22 +123,6 @@ namespace DwFramework.Core.Encrypt
         }
 
         /// <summary>
-        /// 私钥加密
-        /// </summary>
-        /// <param name="data"></param>
-        /// <param name="type"></param>
-        /// <param name="privateKey"></param>
-        /// <param name="isPem"></param>
-        /// <param name="padding"></param>
-        /// <param name="encoding"></param>
-        /// <returns></returns>
-        public static string EncryptWithPrivateKey(string data, RSAKeyType type, string privateKey, bool isPem = false, RSAEncryptionPadding padding = null, Encoding encoding = null)
-        {
-            encoding ??= Encoding.UTF8;
-            return EncryptWithPrivateKey(encoding.GetBytes(data), type, privateKey, isPem, padding).ToBase64String();
-        }
-
-        /// <summary>
         /// 私钥解密
         /// </summary>
         /// <param name="encryptedData"></param>
@@ -156,35 +136,6 @@ namespace DwFramework.Core.Encrypt
             using var rsa = System.Security.Cryptography.RSA.Create();
             rsa.ImportPrivateKey(type, privateKey, isPem);
             return Decrypt(rsa, encryptedData, padding);
-        }
-
-        /// <summary>
-        /// 私钥解密
-        /// </summary>
-        /// <param name="encryptedData"></param>
-        /// <param name="type"></param>
-        /// <param name="privateKey"></param>
-        /// <param name="isPem"></param>
-        /// <param name="padding"></param>
-        /// <param name="encoding"></param>
-        /// <returns></returns>
-        public static string Decrypt(string encryptedData, RSAKeyType type, string privateKey, bool isPem = false, RSAEncryptionPadding padding = null, Encoding encoding = null)
-        {
-            encoding ??= Encoding.UTF8;
-            return encoding.GetString(Decrypt(encryptedData.FromBase64String(), type, privateKey, isPem, padding));
-        }
-
-        /// <summary>
-        /// 生成RSA密钥对
-        /// </summary>
-        /// <param name="type"></param>
-        /// <param name="size"></param>
-        /// <param name="isPem"></param>
-        /// <returns></returns>
-        public static (string PrivateKey, string PublicKey) GenerateKeyPair(RSAKeyType type = RSAKeyType.Pkcs1, int size = 1024, bool isPem = false)
-        {
-            using var rsa = System.Security.Cryptography.RSA.Create(size);
-            return (rsa.ExportPrivateKey(type, isPem), rsa.ExportPublicKey(type, isPem));
         }
     }
 }

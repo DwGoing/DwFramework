@@ -1,4 +1,3 @@
-using System;
 using System.Text;
 
 namespace DwFramework.Core.Encrypt
@@ -6,19 +5,16 @@ namespace DwFramework.Core.Encrypt
     public static class MD5
     {
         /// <summary>
-        /// 加密
+        /// 加密（32位）
         /// </summary>
-        /// <param name="str"></param>
-        /// <param name="encoding"></param>
+        /// <param name="data"></param>
         /// <returns></returns>
-        public static string Encode(string str, Encoding encoding = null)
+        public static string Encrypt(byte[] data)
         {
-            encoding ??= Encoding.UTF8;
-            var bytes = encoding.GetBytes(str);
-            using var md5 = System.Security.Cryptography.MD5.Create();
-            var encodedBytes = md5.ComputeHash(bytes);
+            using var encoder = System.Security.Cryptography.MD5.Create();
+            var bytes = encoder.ComputeHash(data);
             var builder = new StringBuilder();
-            for (int i = 0; i < encodedBytes.Length; i++) builder.Append(encodedBytes[i].ToString("x2"));
+            for (int i = 0; i < bytes.Length; i++) builder.Append(bytes[i].ToString("x2"));
             return builder.ToString();
         }
     }

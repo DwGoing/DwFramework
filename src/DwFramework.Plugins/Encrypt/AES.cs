@@ -1,5 +1,4 @@
 using System;
-using System.Text;
 using System.Security.Cryptography;
 
 namespace DwFramework.Core.Encrypt
@@ -9,104 +8,45 @@ namespace DwFramework.Core.Encrypt
         /// <summary>
         /// 加密
         /// </summary>
-        /// <param name="str"></param>
+        /// <param name="data"></param>
         /// <param name="key"></param>
         /// <param name="iv"></param>
         /// <param name="mode"></param>
         /// <param name="padding"></param>
-        /// <param name="encoding"></param>
         /// <returns></returns>
-        public static byte[] Encrypt(string str, string key, string iv, CipherMode mode = CipherMode.ECB, PaddingMode padding = PaddingMode.PKCS7, Encoding encoding = null)
+        public static byte[] Encrypt(byte[] data, byte[] key, byte[] iv, CipherMode mode = CipherMode.ECB, PaddingMode padding = PaddingMode.PKCS7)
         {
-            encoding ??= Encoding.UTF8;
-            var bytes = encoding.GetBytes(str);
-            using var aes = Aes.Create();
-            aes.Key = encoding.GetBytes(key);
-            aes.IV = encoding.GetBytes(iv);
-            aes.Mode = mode;
-            aes.Padding = padding;
-            var encryptor = aes.CreateEncryptor(aes.Key, aes.IV);
-            return encryptor.TransformFinalBlock(bytes, 0, bytes.Length);
-        }
-
-        /// <summary>
-        /// 加密
-        /// </summary>
-        /// <param name="str"></param>
-        /// <param name="key"></param>
-        /// <param name="iv"></param>
-        /// <param name="mode"></param>
-        /// <param name="padding"></param>
-        /// <param name="encoding"></param>
-        /// <returns></returns>
-        public static string EncryptToBase64(string str, string key, string iv, CipherMode mode = CipherMode.ECB, PaddingMode padding = PaddingMode.PKCS7, Encoding encoding = null)
-        {
-            return Encrypt(str, key, iv, mode, padding, encoding).ToBase64String();
-        }
-
-        /// <summary>
-        /// 加密
-        /// </summary>
-        /// <param name="str"></param>
-        /// <param name="key"></param>
-        /// <param name="iv"></param>
-        /// <param name="mode"></param>
-        /// <param name="padding"></param>
-        /// <param name="encoding"></param>
-        /// <returns></returns>
-        public static string EncryptToHex(string str, string key, string iv, CipherMode mode = CipherMode.ECB, PaddingMode padding = PaddingMode.PKCS7, Encoding encoding = null)
-        {
-            return Encrypt(str, key, iv, mode, padding, encoding).ToHex();
+            using var encoder = Aes.Create();
+            if (encoder.Key.Length != key.Length) throw new Exception("Key长度错误");
+            encoder.Key = key;
+            if (encoder.IV.Length != iv.Length) throw new Exception("IV长度错误");
+            encoder.IV = iv;
+            encoder.Mode = mode;
+            encoder.Padding = padding;
+            using var encryptor = encoder.CreateEncryptor();
+            return encryptor.TransformFinalBlock(data, 0, data.Length);
         }
 
         /// <summary>
         /// 解密
         /// </summary>
-        /// <param name="str"></param>
-        /// <param name="key"></param>
-        /// <param name="iv"></param>
-        /// <param name="encoding"></param>
-        /// <returns></returns>
-        public static string Decrypt(byte[] bytes, string key, string iv, CipherMode mode = CipherMode.ECB, PaddingMode padding = PaddingMode.PKCS7, Encoding encoding = null)
-        {
-            encoding ??= Encoding.UTF8;
-            using var aes = System.Security.Cryptography.Aes.Create();
-            aes.Key = encoding.GetBytes(key);
-            aes.IV = encoding.GetBytes(iv);
-            aes.Mode = mode;
-            aes.Padding = padding;
-            var decryptor = aes.CreateDecryptor(aes.Key, aes.IV);
-            return encoding.GetString(decryptor.TransformFinalBlock(bytes, 0, bytes.Length));
-        }
-
-        /// <summary>
-        /// 解密
-        /// </summary>
-        /// <param name="base64String"></param>
+        /// <param name="data"></param>
         /// <param name="key"></param>
         /// <param name="iv"></param>
         /// <param name="mode"></param>
         /// <param name="padding"></param>
-        /// <param name="encoding"></param>
         /// <returns></returns>
-        public static string DecryptFromBase64(string base64String, string key, string iv, CipherMode mode = CipherMode.ECB, PaddingMode padding = System.Security.Cryptography.PaddingMode.PKCS7, Encoding encoding = null)
+        public static byte[] Decrypt(byte[] data, byte[] key, byte[] iv, CipherMode mode = CipherMode.ECB, PaddingMode padding = PaddingMode.PKCS7)
         {
-            return Decrypt(base64String.FromBase64String(), key, iv, mode, padding, encoding);
-        }
-
-        /// <summary>
-        /// 解密
-        /// </summary>
-        /// <param name="hexString"></param>
-        /// <param name="key"></param>
-        /// <param name="iv"></param>
-        /// <param name="mode"></param>
-        /// <param name="padding"></param>
-        /// <param name="encoding"></param>
-        /// <returns></returns>
-        public static string DecryptFromHex(string hexString, string key, string iv, CipherMode mode = CipherMode.ECB, PaddingMode padding = PaddingMode.PKCS7, Encoding encoding = null)
-        {
-            return Decrypt(hexString.FromHex(), key, iv, mode, padding, encoding);
+            using var encoder = Aes.Create();
+            if (encoder.Key.Length != key.Length) throw new Exception("Key长度错误");
+            encoder.Key = key;
+            if (encoder.IV.Length != iv.Length) throw new Exception("IV长度错误");
+            encoder.IV = iv;
+            encoder.Mode = mode;
+            encoder.Padding = padding;
+            using var decryptor = encoder.CreateDecryptor();
+            return decryptor.TransformFinalBlock(data, 0, data.Length);
         }
     }
 }
