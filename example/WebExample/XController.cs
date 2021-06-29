@@ -2,7 +2,7 @@ using System;
 using Microsoft.AspNetCore.Mvc;
 using DwFramework.Web.JWT;
 
-namespace WEBExample
+namespace WebExample
 {
     [ApiController]
     [Route("x")]
