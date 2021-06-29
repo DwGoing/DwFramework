@@ -172,6 +172,7 @@ namespace DwFramework.Web
                     OnWebSocketConnect?.Invoke(connection, new OnConnectEventArgs() { Header = context.Request.Headers });
                     _ = connection.BeginReceiveAsync();
                     resetEvent.WaitOne();
+                    return;
                 }
                 await next();
             });
