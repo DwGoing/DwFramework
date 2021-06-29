@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace DwFramework.Core
+namespace DwFramework.Core.Time
 {
     public static class StopwatchManager
     {

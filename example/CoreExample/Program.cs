@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Autofac;
@@ -14,27 +13,41 @@ namespace CoreExample
     {
         static async Task Main(string[] args)
         {
-            var host = new ServiceHost();
-            host.ConfigureLogging(builder => builder.UserNLog());
-            host.ConfigureContainer(builder =>
-            {
-                builder.Register(c => new LoggerInterceptor(invocation => (
-                    $"{invocation.TargetType.Name}InvokeLog",
-                    LogLevel.Debug,
-                    "\n========================================\n"
-                    + $"Method:\t{invocation.Method}\n"
-                    + $"Args:\t{string.Join('|', invocation.Arguments)}\n"
-                    + $"Return:\t{invocation.ReturnValue}\n"
-                    + "========================================"
-                )));
-                builder.RegisterType<A>().As<I>().EnableInterfaceInterceptors();
-                builder.RegisterType<B>().As<I>().EnableInterfaceInterceptors();
-            });
-            host.OnHostStarted += provider =>
-            {
-                foreach (var item in provider.GetServices<I>()) item.Do(5, 6);
-            };
-            await host.RunAsync();
+            var a = "欢迎来到chacuo.net";
+            var b = DwFramework.Core.Encrypt.AES.Encrypt(
+                System.Text.Encoding.UTF8.GetBytes(a),
+                System.Text.Encoding.UTF8.GetBytes("asdfggggghjkl;'asdfggggghjkl;'xx"),
+                System.Text.Encoding.UTF8.GetBytes("asdfggggghjkl;'x")
+            ).ToBase64String();
+            Console.WriteLine(b);
+            var c = System.Text.Encoding.UTF8.GetString(DwFramework.Core.Encrypt.AES.Decrypt(
+                b.FromBase64String(),
+                System.Text.Encoding.UTF8.GetBytes("asdfggggghjkl;'asdfggggghjkl;'xx"),
+                System.Text.Encoding.UTF8.GetBytes("asdfggggghjkl;'x")
+            ));
+            Console.WriteLine(c);
+
+            // var host = new ServiceHost();
+            // host.ConfigureLogging(builder => builder.UserNLog());
+            // host.ConfigureContainer(builder =>
+            // {
+            //     builder.Register(c => new LoggerInterceptor(invocation => (
+            //         $"{invocation.TargetType.Name}InvokeLog",
+            //         LogLevel.Debug,
+            //         "\n========================================\n"
+            //         + $"Method:\t{invocation.Method}\n"
+            //         + $"Args:\t{string.Join('|', invocation.Arguments)}\n"
+            //         + $"Return:\t{invocation.ReturnValue}\n"
+            //         + "========================================"
+            //     )));
+            //     builder.RegisterType<A>().As<I>().EnableInterfaceInterceptors();
+            //     builder.RegisterType<B>().As<I>().EnableInterfaceInterceptors();
+            // });
+            // host.OnHostStarted += provider =>
+            // {
+            //     foreach (var item in provider.GetServices<I>()) item.Do(5, 6);
+            // };
+            // await host.RunAsync();
         }
     }
 
