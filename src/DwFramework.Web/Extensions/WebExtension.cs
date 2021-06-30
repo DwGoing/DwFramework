@@ -21,7 +21,7 @@ namespace DwFramework.Web
         /// <returns></returns>
         public static ServiceHost ConfigureWebHost(this ServiceHost host, Action<IWebHostBuilder> configure)
         {
-            host.ConfigureHostBuilder(builder => builder.ConfigureWebHost(configure));
+            host.ConfigureHostBuilder(builder => builder.ConfigureWebHostDefaults(configure));
             return host;
         }
 
