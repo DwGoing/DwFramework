@@ -7,14 +7,14 @@ using System.Threading;
 using System.Threading.Tasks;
 using DwFramework.Core.Encrypt;
 
-namespace DwFramework.Web.WebSocket
+namespace DwFramework.Web
 {
     public class WebSocketConnection
     {
         public string ID { get; init; }
         public bool IsClose { get; private set; } = false;
 
-        private readonly System.Net.WebSockets.WebSocket _webSocket;
+        private readonly WebSocket _webSocket;
         private readonly byte[] _buffer;
         private readonly List<byte> _dataBytes = new();
         private readonly AutoResetEvent _resetEvent;
@@ -30,7 +30,7 @@ namespace DwFramework.Web.WebSocket
         /// <param name="webSocket"></param>
         /// <param name="bufferSize"></param>
         /// <param name="resetEvent"></param>
-        public WebSocketConnection(System.Net.WebSockets.WebSocket webSocket, int bufferSize, out AutoResetEvent resetEvent)
+        public WebSocketConnection(WebSocket webSocket, int bufferSize, out AutoResetEvent resetEvent)
         {
             ID = MD5.Encrypt(Encoding.UTF8.GetBytes(Guid.NewGuid().ToString()));
             _webSocket = webSocket;

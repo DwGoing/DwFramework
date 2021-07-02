@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Net;
@@ -15,8 +14,6 @@ using Microsoft.Extensions.DependencyInjection;
 using ProtoBuf.Grpc.Server;
 using ProtoBuf.Grpc.Configuration;
 using DwFramework.Core;
-using DwFramework.Web.Rpc;
-using DwFramework.Web.WebSocket;
 
 namespace DwFramework.Web
 {
@@ -55,7 +52,6 @@ namespace DwFramework.Web
                         {
                             case Scheme.Http:
                             case Scheme.Rpc:
-                            case Scheme.Ws:
                                 options.Listen(string.IsNullOrEmpty(item.Ip) ? IPAddress.Any : IPAddress.Parse(item.Ip), item.Port, listenOptions =>
                                 {
                                     if (item.Scheme == Scheme.Rpc) listenOptions.Protocols = HttpProtocols.Http2;
@@ -63,7 +59,6 @@ namespace DwFramework.Web
                                 break;
                             case Scheme.Https:
                             case Scheme.Rpcs:
-                            case Scheme.Wss:
                                 options.Listen(string.IsNullOrEmpty(item.Ip) ? IPAddress.Any : IPAddress.Parse(item.Ip), item.Port, listenOptions =>
                                 {
                                     listenOptions.UseHttps(item.Cert, item.Password);
@@ -154,10 +149,7 @@ namespace DwFramework.Web
             app.UseWebSockets();
             app.Use(async (context, next) =>
             {
-                if (
-                    context.WebSockets.IsWebSocketRequest
-                    && _config.Listens.Where(item => item.Port == context.Connection.LocalPort && item.Scheme == Scheme.Ws || item.Scheme == Scheme.Wss).Any()
-                )
+                if (context.WebSockets.IsWebSocketRequest)
                 {
                     var webSocket = await context.WebSockets.AcceptWebSocketAsync();
                     if (webSocket == null) return;

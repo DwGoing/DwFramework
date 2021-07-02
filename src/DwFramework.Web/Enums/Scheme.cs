@@ -7,9 +7,7 @@ namespace DwFramework.Web
         Https = 2,
         Rpc = 3,
         Rpcs = 4,
-        Ws = 5,
-        Wss = 6,
-        Tcp = 7,
-        Udp = 8
+        Tcp = 5,
+        Udp = 6
     }
 }

@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Net.Sockets;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Autofac;
 using DwFramework.Core;
 
@@ -105,5 +106,21 @@ namespace DwFramework.Web.Socket
             Array.Copy(BitConverter.GetBytes(interval), 0, inArray, size * 2, size);
             socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.KeepAlive, inArray);
         }
+
+        /// <summary>
+        /// 获取Tcp服务
+        /// </summary>
+        /// <param name="provider"></param>
+        /// <typeparam name="TcpService"></typeparam>
+        /// <returns></returns>
+        public static TcpService GetTcp(this IServiceProvider provider) => provider.GetService<TcpService>();
+
+        /// <summary>
+        /// 获取Udp服务
+        /// </summary>
+        /// <param name="provider"></param>
+        /// <typeparam name="UdpService"></typeparam>
+        /// <returns></returns>
+        public static UdpService GetUdp(this IServiceProvider provider) => provider.GetService<UdpService>();
     }
 }

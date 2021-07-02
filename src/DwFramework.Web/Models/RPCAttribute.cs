@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DwFramework.Web.Rpc
+namespace DwFramework.Web
 {
     [AttributeUsage(AttributeTargets.Class)]
     public class RPCAttribute : Attribute

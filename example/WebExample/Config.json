@@ -9,10 +9,6 @@
             {
                 "Scheme": "Rpc",
                 "Port": 6002
-            },
-            {
-                "Scheme": "Ws",
-                "Port": 6003
             }
         ]
     },
@@ -21,7 +17,7 @@
         "SocketType": "Stream",
         "ProtocolType": "Tcp",
         "Listen": {
-            "Port": 6004
+            "Port": 6003
         },
         "BufferSize": 4096
     },
@@ -30,7 +26,7 @@
         "SocketType": "Dgram",
         "ProtocolType": "Udp",
         "Listen": {
-            "Port": 6005
+            "Port": 6004
         },
         "BufferSize": 4096
     }

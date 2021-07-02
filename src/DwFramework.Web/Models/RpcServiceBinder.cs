@@ -5,7 +5,7 @@ using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 using ProtoBuf.Grpc.Configuration;
 
-namespace DwFramework.Web.Rpc
+namespace DwFramework.Web
 {
     public sealed class RpcServiceBinder : ServiceBinder
     {
