@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
     <ReleaseVersion>5</ReleaseVersion>
-    <BuildVersion>1.0.21-preview.9614</BuildVersion>
+    <BuildVersion>1.0.26</BuildVersion>
     <Version>$(ReleaseVersion).$(BuildVersion)</Version>
     <Authors>DwGoing</Authors>
     <Description>DwFramework 插件库</Description>

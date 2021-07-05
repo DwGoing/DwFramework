@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
     <ReleaseVersion>5</ReleaseVersion>
-    <BuildVersion>0.1.17-20200506.9653</BuildVersion>
+    <BuildVersion>1.0.26</BuildVersion>
     <Version>$(ReleaseVersion).$(BuildVersion)</Version>
     <Authors>DwGoing</Authors>
     <Description>DwFramework RabbitMQ库</Description>
