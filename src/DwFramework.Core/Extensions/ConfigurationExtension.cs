@@ -3,7 +3,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace DwFramework.Core
 {
-    public static class ConfigurationExtensions
+    public static class ConfigurationExtension
     {
         /// <summary>
         /// 获取配置

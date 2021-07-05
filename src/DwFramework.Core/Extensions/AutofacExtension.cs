@@ -2,7 +2,7 @@
 
 namespace DwFramework.Core
 {
-    public static class AutofacExtensions
+    public static class AutofacExtension
     {
 
     }

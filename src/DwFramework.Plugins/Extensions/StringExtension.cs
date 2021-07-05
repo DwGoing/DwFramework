@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 using Microsoft.International.Converters.PinYinConverter;
 using K4os.Compression.LZ4.Streams;
 
-namespace DwFramework.Core.Extensions
+namespace DwFramework.Core
 {
-    public static class StringExtensions
+    public static class StringExtension
     {
         /// <summary>
         /// 是否为中文字符

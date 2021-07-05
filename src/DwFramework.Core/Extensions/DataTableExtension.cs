@@ -4,7 +4,7 @@ using System.Data;
 
 namespace DwFramework.Core
 {
-    public static class DataTableExtensions
+    public static class DataTableExtension
     {
         /// <summary>
         /// DataTable转实体数组

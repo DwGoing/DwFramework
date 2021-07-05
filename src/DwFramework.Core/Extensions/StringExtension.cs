@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace DwFramework.Core
 {
-    public static class StringExtensions
+    public static class StringExtension
     {
         private static readonly string _characters = "0123456789abcdef";
 

@@ -3,7 +3,7 @@ using System.ComponentModel;
 
 namespace DwFramework.Core
 {
-    public static class EnumExtensions
+    public static class EnumExtension
     {
         /// <summary>
         /// 获取枚举的描述

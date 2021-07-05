@@ -7,7 +7,7 @@ using System.Xml.Serialization;
 
 namespace DwFramework.Core
 {
-    public static class ObjectExtensions
+    public static class ObjectExtension
     {
         /// <summary>
         /// 序列化
