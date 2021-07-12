@@ -3,6 +3,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using System.Reflection;
 using SqlSugar;
 
 namespace DwFramework.ORM.Repository
@@ -25,14 +26,26 @@ namespace DwFramework.ORM.Repository
         }
 
         /// <summary>
+        /// 创建连接
+        /// </summary>
+        /// <param name="initKeyType"></param>
+        /// <param name="entityNameService"></param>
+        /// <param name="entityService"></param>
+        /// <returns></returns>
+        public SqlSugarClient CreateConnection(
+            InitKeyType initKeyType = InitKeyType.Attribute,
+            Action<Type, EntityInfo> entityNameService = null,
+            Action<PropertyInfo, EntityColumnInfo> entityService = null
+        ) => _ormService.CreateConnection(_connName, initKeyType, entityNameService, entityService);
+
+        /// <summary>
         /// 查询
         /// </summary>
-        /// <param name="expression"></param>
         /// <param name="conn"></param>
+        /// <param name="expression"></param>
         /// <returns></returns>
-        public ISugarQueryable<T> Select(Expression<Func<T, bool>> expression = null, SqlSugarClient conn = null)
+        public ISugarQueryable<T> Select(SqlSugarClient conn, Expression<Func<T, bool>> expression = null)
         {
-            conn ??= _ormService.CreateConnection(_connName);
             var queryable = conn.Queryable<T>();
             if (expression != null) queryable = queryable.Where(expression);
             return queryable;
@@ -41,52 +54,45 @@ namespace DwFramework.ORM.Repository
         /// <summary>
         /// 插入或更新
         /// </summary>
+        /// <param name="conn"></param>
         /// <param name="objs"></param>
         /// <param name="identity"></param>
-        /// <param name="con"></param>
         /// <returns></returns>
-        public Task<List<T>> InsertOrUpdateAsync(List<T> objs, Expression<Func<T, object>> identityColumn = null, SqlSugarClient conn = null)
+        public async Task<List<T>> InsertOrUpdateAsync(SqlSugarClient conn, List<T> objs, Expression<Func<T, object>> identityColumn = null)
         {
-            conn ??= _ormService.CreateConnection(_connName);
-            var tran = conn.UseTran(async () =>
+            var storageable = conn.Storageable<T>(objs).Saveable();
+            if (identityColumn != null) storageable.WhereColumns(identityColumn);
+            var storage = storageable.ToStorage();
+            if (storage.InsertList.Count > 0) await storage.AsInsertable.ExecuteCommandAsync();
+            if (storage.UpdateList.Count > 0) await storage.AsUpdateable.ExecuteCommandAsync();
+            string identity = null;
+            object[] identities = null;
+            if (identityColumn == null)
             {
-                var storageable = conn.Storageable<T>(objs).Saveable();
-                if (identityColumn != null) storageable.WhereColumns(identityColumn);
-                var storage = storageable.ToStorage();
-                if (storage.InsertList.Count > 0) await storage.AsInsertable.ExecuteCommandAsync();
-                if (storage.UpdateList.Count > 0) await storage.AsUpdateable.ExecuteCommandAsync();
-                string identity = null;
-                object[] identities = null;
-                if (identityColumn == null)
+                var entityInfo = _ormService.CreateConnection(_connName).EntityMaintenance.GetEntityInfo<T>();
+                var columnInfo = entityInfo.Columns.Where(item => item.IsIdentity).FirstOrDefault();
+                if (columnInfo != null)
                 {
-                    var entityInfo = _ormService.CreateConnection(_connName).EntityMaintenance.GetEntityInfo<T>();
-                    var columnInfo = entityInfo.Columns.Where(item => item.IsIdentity).FirstOrDefault();
-                    if (columnInfo != null)
-                    {
-                        identity = columnInfo.PropertyName;
-                        identities = objs.Select(item => columnInfo.PropertyInfo.GetValue(item)).ToArray();
-                    }
+                    identity = columnInfo.PropertyName;
+                    identities = objs.Select(item => columnInfo.PropertyInfo.GetValue(item)).ToArray();
                 }
-                else
-                {
-                    identity = ((MemberExpression)identityColumn.Body).Member.Name;
-                    identities = objs.Select(identityColumn.Compile()).ToArray();
-                }
-                if (identity == null || identities == null) return null;
-                return await conn.Queryable<T>().In(identity, identities).ToListAsync();
-            }, ex => throw ex);
-            return tran.Data;
+            }
+            else
+            {
+                identity = ((MemberExpression)identityColumn.Body).Member.Name;
+                identities = objs.Select(identityColumn.Compile()).ToArray();
+            }
+            if (identity == null || identities == null) return null;
+            return conn.Queryable<T>().In(identity, identities).ToList();
         }
 
         /// <summary>
         /// 删除
         /// </summary>
+        /// <param name="conn"></param>
         /// <param name="expression"></param>
         /// <returns></returns>
-        public Task<bool> DeleteAsync(Expression<Func<T, bool>> expression = null, SqlSugarClient conn = null)
-        {
-            conn ??= _ormService.CreateConnection(_connName);
-            return conn.Deleteable<T>(expression).ExecuteCommandHasChangeAsync();
-        }
+        public Task<bool> DeleteAsync(SqlSugarClient conn, Expression<Func<T, bool>> expression = null)
+            => conn.Deleteable<T>(expression).ExecuteCommandHasChangeAsync();
     }
 }

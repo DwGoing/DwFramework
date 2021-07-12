@@ -2,14 +2,16 @@
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using System.Reflection;
 using SqlSugar;
 
 namespace DwFramework.ORM.Repository
 {
     public interface IRepository<T> where T : class, new()
     {
-        public ISugarQueryable<T> Select(Expression<Func<T, bool>> expression = null, SqlSugarClient conn = null);
-        public Task<List<T>> InsertOrUpdateAsync(List<T> objs, Expression<Func<T, object>> identity = null, SqlSugarClient conn = null);
-        public Task<bool> DeleteAsync(Expression<Func<T, bool>> expression = null, SqlSugarClient conn = null);
+        public SqlSugarClient CreateConnection(InitKeyType initKeyType = InitKeyType.Attribute, Action<Type, EntityInfo> entityNameService = null, Action<PropertyInfo, EntityColumnInfo> entityService = null);
+        public ISugarQueryable<T> Select(SqlSugarClient conn, Expression<Func<T, bool>> expression = null);
+        public Task<List<T>> InsertOrUpdateAsync(SqlSugarClient conn, List<T> objs, Expression<Func<T, object>> identity = null);
+        public Task<bool> DeleteAsync(SqlSugarClient conn, Expression<Func<T, bool>> expression = null);
     }
 }
