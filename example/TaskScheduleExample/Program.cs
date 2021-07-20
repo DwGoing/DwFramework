@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Quartz;
+using Autofac;
 using DwFramework.Core;
 using DwFramework.TaskSchedule;
 
@@ -11,22 +12,40 @@ namespace TaskScheduleExample
         static async Task Main(string[] args)
         {
             var host = new ServiceHost();
+            host.ConfigureContainer(b =>
+            {
+                b.RegisterType<A>().SingleInstance();
+                b.RegisterType<Job>();
+            });
             host.ConfigureTaskSchedule();
             host.OnHostStarted += async p =>
             {
                 var s = p.GetTaskSchedule();
-                await s.CreateSchedulerAsync("X");
-                Console.WriteLine(await s.CreateJobAsync<Job>("X", "1/5 * * * * ?"));
+                var ss = await s.CreateSchedulerAsync("X", true);
+                await s.CreateJobAsync<Job>("X", "1/5 * * * * ?");
+                await ss.Start();
             };
             await host.RunAsync();
         }
     }
 
+    public class A
+    {
+        public readonly Guid Id = Guid.NewGuid();
+    }
+
     public class Job : IJob
     {
+        private A _a;
+
+        public Job(A a)
+        {
+            _a = a;
+        }
+
         public Task Execute(IJobExecutionContext context)
         {
-            Console.WriteLine(DateTime.Now);
+            Console.WriteLine(_a.Id);
             return Task.CompletedTask;
         }
     }

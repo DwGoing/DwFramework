@@ -6,174 +6,183 @@ using Quartz.Impl;
 using Quartz.Simpl;
 using Quartz.Impl.Calendar;
 using Quartz.Impl.Matchers;
-using Quartz.Logging;
 using DwFramework.Core;
 
 namespace DwFramework.TaskSchedule
 {
     public sealed class TaskScheduleService
     {
-        private readonly DirectSchedulerFactory _schedulerFactory;
-        private readonly Dictionary<string, IScheduler> _schedulers = new Dictionary<string, IScheduler>();
-
-        public bool EnableLog { get => !LogProvider.IsDisabled; set => LogProvider.IsDisabled = !value; }
+        private readonly DependencyInjectionJobFactory _dependencyInjectionJobFactory;
 
         /// <summary>
         /// 构造函数
         /// </summary>
-        public TaskScheduleService()
+        public TaskScheduleService(DependencyInjectionJobFactory dependencyInjectionJobFactory)
         {
-            EnableLog = false;
-            _schedulerFactory = DirectSchedulerFactory.Instance;
+            _dependencyInjectionJobFactory = dependencyInjectionJobFactory;
         }
 
         /// <summary>
         /// 获取调度器
         /// </summary>
-        /// <param name="schedulerKey"></param>
+        /// <param name="schedulerName"></param>
         /// <returns></returns>
-        public IScheduler GetScheduler(string schedulerKey)
+        public async Task<IScheduler> GetSchedulerAsync(string schedulerName)
         {
-            if (!_schedulers.ContainsKey(schedulerKey)) throw new Exception("未知调度器");
-            return _schedulers[schedulerKey];
+            var scheduler = await DirectSchedulerFactory.Instance.GetScheduler(schedulerName);
+            if (scheduler == null) throw new Exception("未知调度器");
+            return scheduler;
         }
 
         /// <summary>
         /// 创建调度器
         /// </summary>
-        /// <param name="schedulerKey"></param>
+        /// <param name="schedulerName"></param>
         /// <returns></returns>
-        public async Task CreateSchedulerAsync(string schedulerKey)
+        public async Task<IScheduler> CreateSchedulerAsync(string schedulerName, bool dependencyInjectionJob = false)
         {
-            _schedulerFactory.CreateScheduler(schedulerKey, Guid.NewGuid().ToString(), new DefaultThreadPool(), new RAMJobStore());
-            var scheduler = await _schedulerFactory.GetScheduler(schedulerKey);
-            await scheduler.Start();
-            _schedulers[schedulerKey] = scheduler;
+            DirectSchedulerFactory.Instance.CreateScheduler(
+                schedulerName,
+                Guid.NewGuid().ToString(),
+                new DefaultThreadPool(),
+                new RAMJobStore()
+            );
+            var scheduler = await GetSchedulerAsync(schedulerName);
+            if (dependencyInjectionJob) scheduler.JobFactory = _dependencyInjectionJobFactory;
+            return scheduler;
         }
 
         /// <summary>
         /// 添加ScheduleListener
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="schedulerKey"></param>
-        public void AddScheduleListener<T>(string schedulerKey) where T : ScheduleListener, new()
+        /// <param name="schedulerName"></param>
+        /// <returns></returns>
+        public async Task AddScheduleListenerAsync<T>(string schedulerName) where T : ISchedulerListener, new()
         {
-            if (!_schedulers.ContainsKey(schedulerKey)) throw new Exception("未知调度器");
-            _schedulers[schedulerKey].ListenerManager.AddSchedulerListener(new T());
+            var scheduler = await GetSchedulerAsync(schedulerName);
+            scheduler.ListenerManager.AddSchedulerListener(new T());
         }
 
         /// <summary>
         /// 添加JobListener
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="schedulerKey"></param>
-        public void AddJobListener<T>(string schedulerKey) where T : JobListener, new()
+        /// <param name="schedulerName"></param>
+        /// <returns></returns>
+        public async Task AddJobListenerAsync<T>(string schedulerName) where T : IJobListener, new()
         {
-            if (!_schedulers.ContainsKey(schedulerKey)) throw new Exception("未知调度器");
-            _schedulers[schedulerKey].ListenerManager.AddJobListener(new T(), GroupMatcher<JobKey>.AnyGroup());
+            var scheduler = await GetSchedulerAsync(schedulerName);
+            scheduler.ListenerManager.AddJobListener(new T(), GroupMatcher<JobKey>.AnyGroup());
         }
 
         /// <summary>
         /// 添加JobListener
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="schedulerKey"></param>
+        /// <param name="schedulerName"></param>
         /// <param name="name"></param>
         /// <param name="group"></param>
-        public void AddJobListener<T>(string schedulerKey, string name, string group) where T : JobListener, new()
+        /// <returns></returns>
+        public async Task AddJobListenerAsync<T>(string schedulerName, string name, string group) where T : IJobListener, new()
         {
-            if (!_schedulers.ContainsKey(schedulerKey)) throw new Exception("未知调度器");
-            _schedulers[schedulerKey].ListenerManager.AddJobListener(new T(), KeyMatcher<JobKey>.KeyEquals(new JobKey(name, group)));
+            var scheduler = await GetSchedulerAsync(schedulerName);
+            scheduler.ListenerManager.AddJobListener(new T(), KeyMatcher<JobKey>.KeyEquals(new JobKey(name, group)));
         }
 
         /// <summary>
         /// 添加JobListener
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="schedulerKey"></param>
+        /// <param name="schedulerName"></param>
         /// <param name="group"></param>
-        public void AddJobListenerForGroup<T>(string schedulerKey, string group) where T : JobListener, new()
+        /// <returns></returns>
+        public async Task AddJobListenerForGroupAsync<T>(string schedulerName, string group) where T : IJobListener, new()
         {
-            if (!_schedulers.ContainsKey(schedulerKey)) throw new Exception("未知调度器");
-            _schedulers[schedulerKey].ListenerManager.AddJobListener(new T(), GroupMatcher<JobKey>.GroupContains(group));
+            var scheduler = await GetSchedulerAsync(schedulerName);
+            scheduler.ListenerManager.AddJobListener(new T(), GroupMatcher<JobKey>.GroupContains(group));
         }
 
         /// <summary>
         /// 添加JobListener
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="schedulerKey"></param>
+        /// <param name="schedulerName"></param>
         /// <param name="name"></param>
-        public void AddJobListenerForName<T>(string schedulerKey, string name) where T : JobListener, new()
+        /// <returns></returns>
+        public async Task AddJobListenerForNameAsync<T>(string schedulerName, string name) where T : IJobListener, new()
         {
-            if (!_schedulers.ContainsKey(schedulerKey)) throw new Exception("未知调度器");
-            _schedulers[schedulerKey].ListenerManager.AddJobListener(new T(), NameMatcher<JobKey>.NameContains(name));
+            var scheduler = await GetSchedulerAsync(schedulerName);
+            scheduler.ListenerManager.AddJobListener(new T(), NameMatcher<JobKey>.NameContains(name));
         }
 
         /// <summary>
         /// 添加TriggerListener
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="schedulerKey"></param>
-        public void AddTriggerListener<T>(string schedulerKey) where T : TriggerListener, new()
+        /// <param name="schedulerName"></param>
+        /// <returns></returns>
+        public async Task AddTriggerListenerAsync<T>(string schedulerName) where T : ITriggerListener, new()
         {
-            if (!_schedulers.ContainsKey(schedulerKey)) throw new Exception("未知调度器");
-            _schedulers[schedulerKey].ListenerManager.AddTriggerListener(new T(), GroupMatcher<TriggerKey>.AnyGroup());
+            var scheduler = await GetSchedulerAsync(schedulerName);
+            scheduler.ListenerManager.AddTriggerListener(new T(), GroupMatcher<TriggerKey>.AnyGroup());
         }
 
         /// <summary>
         /// 添加TriggerListener
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="schedulerKey"></param>
+        /// <param name="schedulerName"></param>
         /// <param name="name"></param>
         /// <param name="group"></param>
-        public void AddTriggerListener<T>(string schedulerKey, string name, string group) where T : TriggerListener, new()
+        /// <returns></returns>
+        public async Task AddTriggerListenerAsync<T>(string schedulerName, string name, string group) where T : ITriggerListener, new()
         {
-            if (!_schedulers.ContainsKey(schedulerKey)) throw new Exception("未知调度器");
-            _schedulers[schedulerKey].ListenerManager.AddTriggerListener(new T(), KeyMatcher<JobKey>.KeyEquals(new TriggerKey(name, group)));
+            var scheduler = await GetSchedulerAsync(schedulerName);
+            scheduler.ListenerManager.AddTriggerListener(new T(), KeyMatcher<JobKey>.KeyEquals(new TriggerKey(name, group)));
         }
 
         /// <summary>
         /// 添加TriggerListener
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="schedulerKey"></param>
+        /// <param name="schedulerName"></param>
         /// <param name="group"></param>
-        public void AddTriggerListenerForGroup<T>(string schedulerKey, string group) where T : TriggerListener, new()
+        /// <returns></returns>
+        public async Task AddTriggerListenerForGroupAsync<T>(string schedulerName, string group) where T : ITriggerListener, new()
         {
-            if (!_schedulers.ContainsKey(schedulerKey)) throw new Exception("未知调度器");
-            _schedulers[schedulerKey].ListenerManager.AddTriggerListener(new T(), GroupMatcher<TriggerKey>.GroupContains(group));
+            var scheduler = await GetSchedulerAsync(schedulerName);
+            scheduler.ListenerManager.AddTriggerListener(new T(), GroupMatcher<TriggerKey>.GroupContains(group));
         }
 
         /// <summary>
         /// 添加TriggerListener
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="schedulerKey"></param>
+        /// <param name="schedulerName"></param>
         /// <param name="name"></param>
-        public void AddTriggerListenerForName<T>(string schedulerKey, string name) where T : TriggerListener, new()
+        /// <returns></returns>
+        public async Task AddTriggerListenerForNameAsync<T>(string schedulerName, string name) where T : ITriggerListener, new()
         {
-            if (!_schedulers.ContainsKey(schedulerKey)) throw new Exception("未知调度器");
-            _schedulers[schedulerKey].ListenerManager.AddTriggerListener(new T(), NameMatcher<TriggerKey>.NameContains(name));
+            var scheduler = await GetSchedulerAsync(schedulerName);
+            scheduler.ListenerManager.AddTriggerListener(new T(), NameMatcher<TriggerKey>.NameContains(name));
         }
 
         /// <summary>
         /// 释放调度器
         /// </summary>
-        /// <param name="schedulerKey"></param>
+        /// <param name="schedulerName"></param>
         /// <returns></returns>
-        public Task DisposeSchedulerAsync(string schedulerKey)
+        public async Task DisposeSchedulerAsync(string schedulerName)
         {
-            if (!_schedulers.ContainsKey(schedulerKey)) throw new Exception("未知调度器");
-            _schedulers.Remove(schedulerKey);
-            return _schedulers[schedulerKey].Shutdown(false);
+            var scheduler = await GetSchedulerAsync(schedulerName);
+            await scheduler.Shutdown();
         }
 
         /// <summary>
         /// 每日排除
         /// </summary>
-        /// <param name="schedulerKey"></param>
+        /// <param name="schedulerName"></param>
         /// <param name="calName"></param>
         /// <param name="startHour"></param>
         /// <param name="startMinute"></param>
@@ -182,77 +191,77 @@ namespace DwFramework.TaskSchedule
         /// <param name="endMinute"></param>
         /// <param name="endSecond"></param>
         /// <returns></returns>
-        public Task ExcludeInDayAsync(string schedulerKey, string calName, int startHour = 0, int startMinute = 0, int startSecond = 0, int endHour = 23, int endMinute = 59, int endSecond = 59)
+        public async Task ExcludeInDayAsync(string schedulerName, string calName, int startHour = 0, int startMinute = 0, int startSecond = 0, int endHour = 23, int endMinute = 59, int endSecond = 59)
         {
-            if (!_schedulers.ContainsKey(schedulerKey)) throw new Exception("未知调度器");
+            var scheduler = await GetSchedulerAsync(schedulerName);
             var calender = new DailyCalendar(DateBuilder.DateOf(startHour, startMinute, startSecond).DateTime, DateBuilder.DateOf(endHour, endMinute, endSecond).DateTime);
-            return _schedulers[schedulerKey].AddCalendar(calName, calender, true, true);
+            await scheduler.AddCalendar(calName, calender, true, true);
         }
 
         /// <summary>
         /// 每周排除
         /// </summary>
-        /// <param name="schedulerKey"></param>
+        /// <param name="schedulerName"></param>
         /// <param name="calName"></param>
         /// <param name="excludeDays"></param>
         /// <returns></returns>
-        public Task ExcludeInWeekAsync(string schedulerKey, string calName, DayOfWeek[] excludeDays)
+        public async Task ExcludeInWeekAsync(string schedulerName, string calName, DayOfWeek[] excludeDays)
         {
-            if (!_schedulers.ContainsKey(schedulerKey)) throw new Exception("未知调度器");
+            var scheduler = await GetSchedulerAsync(schedulerName);
             var calender = new WeeklyCalendar();
             excludeDays.ForEach(item => calender.SetDayExcluded(item, true));
-            return _schedulers[schedulerKey].AddCalendar(calName, calender, true, true);
+            await scheduler.AddCalendar(calName, calender, true, true);
         }
 
         /// <summary>
         /// 每月排除
         /// </summary>
-        /// <param name="schedulerKey"></param>
+        /// <param name="schedulerName"></param>
         /// <param name="calName"></param>
         /// <param name="excludeDays"></param>
         /// <returns></returns>
-        public Task ExcludeInMonthAsync(string schedulerKey, string calName, int[] excludeDays)
+        public async Task ExcludeInMonthAsync(string schedulerName, string calName, int[] excludeDays)
         {
-            if (!_schedulers.ContainsKey(schedulerKey)) throw new Exception("未知调度器");
+            var scheduler = await GetSchedulerAsync(schedulerName);
             var calender = new MonthlyCalendar();
             excludeDays.ForEach(item => calender.SetDayExcluded(item, true));
-            return _schedulers[schedulerKey].AddCalendar(calName, calender, true, true);
+            await scheduler.AddCalendar(calName, calender, true, true);
         }
 
         /// <summary>
         /// 每年排除
         /// </summary>
-        /// <param name="schedulerKey"></param>
+        /// <param name="schedulerName"></param>
         /// <param name="calName"></param>
         /// <param name="excludeMonthDays"></param>
         /// <returns></returns>
-        public Task ExcludeInYearAsync(string schedulerKey, string calName, (int, int)[] excludeMonthDays)
+        public async Task ExcludeInYearAsync(string schedulerName, string calName, (int, int)[] excludeMonthDays)
         {
-            if (!_schedulers.ContainsKey(schedulerKey)) throw new Exception("未知调度器");
+            var scheduler = await GetSchedulerAsync(schedulerName);
             var calender = new AnnualCalendar();
             excludeMonthDays.ForEach(item => calender.SetDayExcluded(DateBuilder.DateOf(0, 0, 0, item.Item2, item.Item1).DateTime, true));
-            return _schedulers[schedulerKey].AddCalendar(calName, calender, true, true);
+            await scheduler.AddCalendar(calName, calender, true, true);
         }
 
         /// <summary>
         /// 根据Cron表达式排除
         /// </summary>
-        /// <param name="schedulerKey"></param>
+        /// <param name="schedulerName"></param>
         /// <param name="calName"></param>
         /// <param name="cronExpression"></param>
         /// <returns></returns>
-        public Task ExcludeByCronAsync(string schedulerKey, string calName, string cronExpression)
+        public async Task ExcludeByCronAsync(string schedulerName, string calName, string cronExpression)
         {
-            if (!_schedulers.ContainsKey(schedulerKey)) throw new Exception("未知调度器");
+            var scheduler = await GetSchedulerAsync(schedulerName);
             var calender = new CronCalendar(cronExpression);
-            return _schedulers[schedulerKey].AddCalendar(calName, calender, true, true);
+            await scheduler.AddCalendar(calName, calender, true, true);
         }
 
         /// <summary>
         /// 创建任务
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="schedulerKey"></param>
+        /// <param name="schedulerName"></param>
         /// <param name="jobBuild"></param>
         /// <param name="triggerBuild"></param>
         /// <param name="jobName"></param>
@@ -260,9 +269,10 @@ namespace DwFramework.TaskSchedule
         /// <param name="triggerName"></param>
         /// <param name="triggerGroup"></param>
         /// <returns></returns>
-        private Task<DateTimeOffset> CreateJobAsync<T>(string schedulerKey, Func<JobBuilder, JobBuilder> jobBuild, Func<TriggerBuilder, TriggerBuilder> triggerBuild, string jobName = null, string jobGroup = null, string triggerName = null, string triggerGroup = null) where T : IJob
+        private async Task<DateTimeOffset> CreateJobAsync<T>(string schedulerName, Func<JobBuilder, JobBuilder> jobBuild, Func<TriggerBuilder, TriggerBuilder> triggerBuild, string jobName = null, string jobGroup = null, string triggerName = null, string triggerGroup = null) where T : IJob
         {
-            if (!_schedulers.ContainsKey(schedulerKey)) throw new Exception("未知调度器");
+
+            var scheduler = await GetSchedulerAsync(schedulerName);
             var jobBuilder = jobBuild(JobBuilder.Create<T>());
             if (jobName != null)
             {
@@ -279,14 +289,14 @@ namespace DwFramework.TaskSchedule
                 triggerBuilder.WithIdentity(key);
             }
             var trigger = triggerBuilder.Build();
-            return _schedulers[schedulerKey].ScheduleJob(jobDetails, trigger);
+            return await scheduler.ScheduleJob(jobDetails, trigger);
         }
 
         /// <summary>
         /// 创建任务
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="schedulerKey"></param>
+        /// <param name="schedulerName"></param>
         /// <param name="repeat"></param>
         /// <param name="intervalMilliseconds"></param>
         /// <param name="startAt"></param>
@@ -297,10 +307,10 @@ namespace DwFramework.TaskSchedule
         /// <param name="triggerName"></param>
         /// <param name="triggerGroup"></param>
         /// <returns></returns>
-        public Task<DateTimeOffset> CreateJobAsync<T>(string schedulerKey, int repeat, long intervalMilliseconds, DateTimeOffset? startAt = null, string calName = null, IDictionary<string, object> properties = null, string jobName = null, string jobGroup = null, string triggerName = null, string triggerGroup = null) where T : IJob
+        public Task<DateTimeOffset> CreateJobAsync<T>(string schedulerName, int repeat, long intervalMilliseconds, DateTimeOffset? startAt = null, string calName = null, IDictionary<string, object> properties = null, string jobName = null, string jobGroup = null, string triggerName = null, string triggerGroup = null) where T : IJob
         {
             if (repeat < 0 || intervalMilliseconds <= 0) throw new Exception("参数错误");
-            return CreateJobAsync<T>(schedulerKey, jobBuilder =>
+            return CreateJobAsync<T>(schedulerName, jobBuilder =>
              {
                  if (properties != null) jobBuilder.SetJobData(new JobDataMap(properties));
                  return jobBuilder;
@@ -323,7 +333,7 @@ namespace DwFramework.TaskSchedule
         /// 创建任务
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="schedulerKey"></param>
+        /// <param name="schedulerName"></param>
         /// <param name="cronExpression"></param>
         /// <param name="startAt"></param>
         /// <param name="calName"></param>
@@ -333,9 +343,9 @@ namespace DwFramework.TaskSchedule
         /// <param name="triggerName"></param>
         /// <param name="triggerGroup"></param>
         /// <returns></returns>
-        public Task<DateTimeOffset> CreateJobAsync<T>(string schedulerKey, string cronExpression, DateTimeOffset? startAt = null, string calName = null, IDictionary<string, object> properties = null, string jobName = null, string jobGroup = null, string triggerName = null, string triggerGroup = null) where T : IJob
+        public Task<DateTimeOffset> CreateJobAsync<T>(string schedulerName, string cronExpression, DateTimeOffset? startAt = null, string calName = null, IDictionary<string, object> properties = null, string jobName = null, string jobGroup = null, string triggerName = null, string triggerGroup = null) where T : IJob
         {
-            return CreateJobAsync<T>(schedulerKey, jobBuilder =>
+            return CreateJobAsync<T>(schedulerName, jobBuilder =>
              {
                  if (properties != null) jobBuilder.SetJobData(new JobDataMap(properties));
                  return jobBuilder;

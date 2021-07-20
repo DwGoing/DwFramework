@@ -14,7 +14,11 @@ namespace DwFramework.TaskSchedule
         /// <returns></returns>
         public static ServiceHost ConfigureTaskSchedule(this ServiceHost host)
         {
-            host.ConfigureContainer(builder => builder.RegisterType<TaskScheduleService>().SingleInstance());
+            host.ConfigureContainer(builder =>
+            {
+                builder.RegisterType<TaskScheduleService>().SingleInstance();
+                builder.RegisterType<DependencyInjectionJobFactory>().SingleInstance();
+            });
             return host;
         }
 
