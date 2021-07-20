@@ -17,5 +17,9 @@
     <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="5.0.0"/>
     <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="7.1.0"/>
     <PackageReference Include="NLog.Extensions.Logging" Version="1.7.2"/>
+    <PackageReference Include="Autofac.Extras.DynamicProxy" Version="6.0.0"/>
+    <PackageReference Include="RSAExtensions" Version="1.0.3"/>
+    <PackageReference Include="CHSPinYinConv" Version="1.0.0"/>
+    <PackageReference Include="K4os.Compression.LZ4.Streams" Version="1.2.6"/>
   </ItemGroup>
 </Project>
