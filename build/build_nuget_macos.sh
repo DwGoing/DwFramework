@@ -72,7 +72,12 @@ for i; do
             tag=""
             ;;
         -s | --suffix)
-            SUFFIX=.$i
+            if [[ "$i"x != ""x ]]; then
+                start=$(date -j -f %Y-%m-%dT%H:%M:%S 1970-01-01T00:00:00 +%s)
+                current=$(date +%s)
+                timestamp=$(expr $current - $start)
+                SUFFIX=-$timestamp.$i
+            fi
             tag=""
             ;;
         esac
@@ -89,11 +94,10 @@ else
     REVISION_VERSION=$(expr $REVISION_VERSION + 1)
 fi
 
-# 计算时间戳版本号
-start=$(date -j -f %Y-%m-%dT%H:%M:%S 1970-01-01T00:00:00 +%s)
-current=$(date +%s)
-timestamp=$(expr $current - $start)
-version=$NET_VERSION.$FRAMEWORK_VERSION.$MINOR_VERSION.$REVISION_VERSION-$timestamp$SUFFIX
+# 生成版本号
+version=$NET_VERSION.$FRAMEWORK_VERSION.$MINOR_VERSION.$REVISION_VERSION$SUFFIX
+echo $version
+exit 0
 sed -i "" "s/\(<Version>\)[^<]*\(<\)/\1$version\2/g" $FILE
 
 # 构建

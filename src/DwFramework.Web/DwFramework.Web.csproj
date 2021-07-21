@@ -2,9 +2,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
-    <ReleaseVersion>5</ReleaseVersion>
-    <BuildVersion>1.0.26</BuildVersion>
-    <Version>$(ReleaseVersion).$(BuildVersion)</Version>
+    <Version>5.1.0.27-1626884220.rc</Version>
     <Authors>DwGoing</Authors>
     <Description>DwFramework Web库</Description>
     <PackageProjectUrl>https://github.com/Dwgoing/DwFramework</PackageProjectUrl>
@@ -14,7 +12,6 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DwFramework.Core\DwFramework.Core.csproj" />
-    <ProjectReference Include="..\DwFramework.Plugins\DwFramework.Plugins.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Grpc.Net.Client" Version="2.37.0" />
