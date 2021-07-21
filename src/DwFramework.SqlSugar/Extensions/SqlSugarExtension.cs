@@ -73,7 +73,7 @@ namespace DwFramework.SqlSugar
             => host.ConfigureSqlSugar(new ConfigurationBuilder().AddXmlStream(stream).Build(), path);
 
         /// <summary>
-        /// 获取SqlSugar服务
+        /// 获取SqlSugar
         /// </summary>
         /// <param name="provider"></param>
         /// <returns></returns>
