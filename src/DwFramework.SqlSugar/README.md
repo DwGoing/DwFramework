@@ -1,4 +1,4 @@
-# DwFramework.ORM
+# DwFramework.SqlSugar
 
 ```shell
 PM> Install-Package DwFramework.SqlSugar
@@ -13,7 +13,6 @@ PM> Install-Package DwFramework.SqlSugar
 当使用该库时，需提前读取配置文件，Json配置如下：
 
 ```json
-// ORM
 {
   "ConnectionString": "", // 连接字符串
   "DbType": "", // 数据库类型
@@ -31,14 +30,15 @@ PM> Install-Package DwFramework.SqlSugar
 ### 0x2 注册服务
 
 ```c#
-// 注册服务
-host.RegisterORMService();
+// 配置服务
+host.ConfigureSqlSugarWithJson("Config.json");
 ```
 
 ### 0x3 简单使用
 
 ```c#
 // 定义实体
+[SugarTable("record")]
 public class User
 {
     [SugarColumn(ColumnName = "id", IsIdentity = true, IsPrimaryKey = true)]
@@ -49,16 +49,9 @@ public class User
     public int IsEnable { get; set; }
 }
 
-// 获取Database服务进行数据库操作
-var host = new ServiceHost();
-host.AddJsonConfig("ORM.json");
-host.RegisterORMService();
-host.OnInitialized += provider =>
-{
-  var db = provider.GetService<ORMService>();
-  var result = db.DbConnection.Queryable<Record>().ToArray();
-};
-host.Run();
+// 获取SqlSugar服务进行数据库操作
+var db = provider.GetService<SqlSugarService>();
+var result = db.CreateConnection("db").Queryable<Record>().ToArray();
 ```
 
 更多的操作实现可以参考SqlSugar文档示例。
