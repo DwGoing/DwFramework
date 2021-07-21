@@ -2,7 +2,7 @@
 CORE_PATH=$(cd "$(dirname "$0")" && pwd)/../src/DwFramework.Core/DwFramework.Core.csproj
 
 usage="Usage:\n-c|--configuration <CONFIGURATION>\n-o|--output <OUTPUT_DIRECTORY>\n-m|--minor <MINOR_VERSION>\n-s|--suffix <SUFFIX>"
-# 参数
+# 参数验证
 if [[ $# -eq 0 ]]; then
     echo -e $usage
     exit 1
@@ -18,7 +18,7 @@ if [[ "$FILE"x == ""x || "${FILE##*.}"x != "csproj"x ]]; then
     exit 3
 fi
 
-#获取当前版本号
+# 生成版本号
 coreVersion=$(cat $CORE_PATH | grep -E '<Version>' | sed "s/<Version>//g" | sed "s/<\/Version>//g" | sed 's/^[ \t]*//g')
 coreVersion=$(awk 'BEGIN {split('"\"$coreVersion\""',a,"-"); print a[1]}')
 OLD_IFS="$IFS"
@@ -41,6 +41,7 @@ OLD_IFS="$IFS"
 IFS="."
 array=($currentVersion)
 IFS="$OLD_IFS"
+CURRENT_FRAMEWORK_VERSION=${array[1]}
 MINOR_VERSION=${array[2]}
 REVISION_VERSION=${array[3]}
 
@@ -68,7 +69,11 @@ for i; do
             if [[ $MINOR_VERSION != $i ]]; then
                 REVISION_VERSION=""
             fi
-            MINOR_VERSION=$i
+            if [[ $CURRENT_FRAMEWORK_VERSION != $CURRENT_FRAMEWORK_VERSION ]]; then
+                MINOR_VERSION=""
+            else
+                MINOR_VERSION=$i
+            fi
             tag=""
             ;;
         -s | --suffix)
@@ -94,7 +99,6 @@ else
     REVISION_VERSION=$(expr $REVISION_VERSION + 1)
 fi
 
-# 生成版本号
 version=$NET_VERSION.$FRAMEWORK_VERSION.$MINOR_VERSION.$REVISION_VERSION$SUFFIX
 echo $version
 exit 0
