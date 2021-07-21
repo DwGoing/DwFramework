@@ -2,8 +2,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
-    <ReleaseVersion>5</ReleaseVersion>
-    <BuildVersion>1.0.26</BuildVersion>
+    <BuildVersion>5.1.0.26</BuildVersion>
     <Version>$(ReleaseVersion).$(BuildVersion)</Version>
     <Authors>DwGoing</Authors>
     <Description>DwFramework 核心库</Description>

@@ -1,6 +1,8 @@
 #!/bin/bash
-usage="Usage:\n-c|--configuration <CONFIGURATION>\n-o|--output <OUTPUT_DIRECTORY>\n-m|--minor <MINOR_VERSION>\n-r|--revision <REVISION_VERSION>\n-t|--start-year <START_YEAR>\n-s|--suffix <SUFFIX>"
-# 参数校验
+CORE_PATH=$(cd "$(dirname "$0")" && pwd)/../src/DwFramework.Core/DwFramework.Core.csproj
+
+usage="Usage:\n-c|--configuration <CONFIGURATION>\n-o|--output <OUTPUT_DIRECTORY>\n-m|--minor <MINOR_VERSION>\n-s|--suffix <SUFFIX>"
+# 参数
 if [[ $# -eq 0 ]]; then
     echo -e $usage
     exit 1
@@ -10,19 +12,41 @@ if [ $? -ne 0 ]; then
     echo -e $usage
     exit 2
 fi
+file=${@: -1}
+if [[ "$file"x == ""x || "${file##*.}"x != "csproj"x ]]; then
+    echo "缺少目标项目文件或者文件类型错误"
+    exit 3
+fi
+
+#获取当前版本号
+coreVersion=$(cat $CORE_PATH | grep -E '<BuildVersion>' | sed "s/<BuildVersion>//g" | sed "s/<\/BuildVersion>//g")
+OLD_IFS="$IFS"
+IFS="."
+array=($coreVersion)
+IFS="$OLD_IFS"
+NET_VERSION=${array[0]}       # 和.NET版本保持一致
+FRAMEWORK_VERSION=${array[1]} # 和DwFramework.Core保持一致
+if [[ "$coreVersion"x == ""x || "$NET_VERSION"x == ""x || "$FRAMEWORK_VERSION"x == ""x ]]; then
+    echo "DwFramework.Core项目文件版本号错误"
+    exit 4
+fi
+currentVersion=$(cat $file | grep -E '<BuildVersion>' | sed "s/<BuildVersion>//g" | sed "s/<\/BuildVersion>//g")
+if [[ "$currentVersion"x == ""x ]]; then
+    echo "无法获取项目文件版本号信息"
+    exit 5
+fi
+MINOR_VERSION=${array[2]}
+REVISION_VERSION=${array[3]}
 
 tag=""
 configuration=Debug
 output=.
-minorVersion=""
-revisionVersion=""
 startYear=$(date +%Y)
 suffix=""
 
-file=${@: -1}
 for i; do
     case $i in
-    -c | --configuration | -o | --output | -m | --minor | -r | --revision | -t | --start-year | -s | --suffix)
+    -c | --configuration | -o | --output | -m | --minor | -s | --suffix)
         tag=$i
         ;;
     *)
@@ -36,19 +60,11 @@ for i; do
             tag=""
             ;;
         -m | --minor)
-            minorVersion=$i
-            tag=""
-            ;;
-        -r | --revision)
-            revisionVersion=$i
-            tag=""
-            ;;
-        -t | --start-year)
-            startYear=$i
+            MINOR_VERSION=$i
             tag=""
             ;;
         -s | --suffix)
-            suffix=$i
+            suffix=.$i
             tag=""
             ;;
         esac
@@ -56,37 +72,20 @@ for i; do
     esac
 done
 
-if [[ ! -f "$file" ]]; then
-    echo "文件不存在!"
-    exit 3
+if [[ "$MINOR_VERSION"x == ""x ]]; then
+    MINOR_VERSION=0
 fi
-
-if [[ "${file##*.}"x != "csproj"x ]]; then
-    echo "文件格式不支持!"
-    exit 4
-fi
-
-if [[ "$minorVersion"x == ""x || "$revisionVersion"x == ""x ]]; then
-    echo "未提供次要版本号或修订版本号!"
-    exit 5
-fi
-
-currentYear=$(date +%Y)
-offset=$(expr $currentYear - $startYear)
-if [[ $offset -lt 0 ]]; then
-    echo "起始年不可用!"
-    exit 5
+if [[ "$REVISION_VERSION"x == ""x ]]; then
+    REVISION_VERSION=0
+else
+    REVISION_VERSION=$(expr $REVISION_VERSION + 1)
 fi
 
 # 计算时间戳版本号
-start=$(date -j -f %Y-%m-%dT%H:%M:%S $startYear-01-01T00:00:00 +%s)
+start=$(date -j -f %Y-%m-%dT%H:%M:%S 1970-01-01T00:00:00 +%s)
 current=$(date +%s)
 timestamp=$(expr $current - $start)
-week=$(expr $timestamp / 604800)
-if [[ "$suffix"x != ""x ]]; then
-    suffix=-$suffix.$(expr $(expr $timestamp % 604800) / 60)
-fi
-buildVersion=$minorVersion.$revisionVersion.$week$suffix
+buildVersion=$NET_VERSION.$FRAMEWORK_VERSION.$MINOR_VERSION.$REVISION_VERSION-$timestamp$suffix
 sed -i "" "s/\(<BuildVersion>\)[^<]*\(<\)/\1$buildVersion\2/g" $file
 
 # 构建
