@@ -12,14 +12,15 @@ if [ $? -ne 0 ]; then
     echo -e $usage
     exit 2
 fi
-file=${@: -1}
-if [[ "$file"x == ""x || "${file##*.}"x != "csproj"x ]]; then
+FILE=${@: -1}
+if [[ "$FILE"x == ""x || "${FILE##*.}"x != "csproj"x ]]; then
     echo "缺少目标项目文件或者文件类型错误"
     exit 3
 fi
 
 #获取当前版本号
-coreVersion=$(cat $CORE_PATH | grep -E '<BuildVersion>' | sed "s/<BuildVersion>//g" | sed "s/<\/BuildVersion>//g")
+coreVersion=$(cat $CORE_PATH | grep -E '<Version>' | sed "s/<Version>//g" | sed "s/<\/Version>//g" | sed 's/^[ \t]*//g')
+coreVersion=$(awk 'BEGIN {split('"\"$coreVersion\""',a,"-"); print a[1]}')
 OLD_IFS="$IFS"
 IFS="."
 array=($coreVersion)
@@ -30,20 +31,24 @@ if [[ "$coreVersion"x == ""x || "$NET_VERSION"x == ""x || "$FRAMEWORK_VERSION"x 
     echo "DwFramework.Core项目文件版本号错误"
     exit 4
 fi
-currentVersion=$(cat $file | grep -E '<BuildVersion>' | sed "s/<BuildVersion>//g" | sed "s/<\/BuildVersion>//g")
+currentVersion=$(cat $FILE | grep -E '<Version>' | sed "s/<Version>//g" | sed "s/<\/Version>//g" | sed 's/^[ \t]*//g')
+currentVersion=$(awk 'BEGIN {split('"\"$currentVersion\""',a,"-"); print a[1]}')
 if [[ "$currentVersion"x == ""x ]]; then
     echo "无法获取项目文件版本号信息"
     exit 5
 fi
+OLD_IFS="$IFS"
+IFS="."
+array=($currentVersion)
+IFS="$OLD_IFS"
 MINOR_VERSION=${array[2]}
 REVISION_VERSION=${array[3]}
 
-tag=""
-configuration=Debug
-output=.
-startYear=$(date +%Y)
-suffix=""
+CONFIGURATION=Debug
+OUTPUT=.
+SUFFIX=""
 
+tag=""
 for i; do
     case $i in
     -c | --configuration | -o | --output | -m | --minor | -s | --suffix)
@@ -52,19 +57,22 @@ for i; do
     *)
         case $tag in
         -c | --configuration)
-            configuration=$i
+            CONFIGURATION=$i
             tag=""
             ;;
         -o | --output)
-            output=$i
+            OUTPUT=$i
             tag=""
             ;;
         -m | --minor)
+            if [[ $MINOR_VERSION != $i ]]; then
+                REVISION_VERSION=""
+            fi
             MINOR_VERSION=$i
             tag=""
             ;;
         -s | --suffix)
-            suffix=.$i
+            SUFFIX=.$i
             tag=""
             ;;
         esac
@@ -85,8 +93,8 @@ fi
 start=$(date -j -f %Y-%m-%dT%H:%M:%S 1970-01-01T00:00:00 +%s)
 current=$(date +%s)
 timestamp=$(expr $current - $start)
-buildVersion=$NET_VERSION.$FRAMEWORK_VERSION.$MINOR_VERSION.$REVISION_VERSION-$timestamp$suffix
-sed -i "" "s/\(<BuildVersion>\)[^<]*\(<\)/\1$buildVersion\2/g" $file
+version=$NET_VERSION.$FRAMEWORK_VERSION.$MINOR_VERSION.$REVISION_VERSION-$timestamp$SUFFIX
+sed -i "" "s/\(<Version>\)[^<]*\(<\)/\1$version\2/g" $FILE
 
 # 构建
-dotnet pack -c $configuration -o $output $file
+dotnet pack -c $CONFIGURATION -o $OUTPUT $FILE
