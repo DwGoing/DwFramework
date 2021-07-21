@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <OutputType>Exe</OutputType>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\DwFramework.Core\DwFramework.Core.csproj" />
+    <ProjectReference Include="..\..\src\DwFramework.Quartz\DwFramework.Quartz.csproj" />
+  </ItemGroup>
+</Project>
