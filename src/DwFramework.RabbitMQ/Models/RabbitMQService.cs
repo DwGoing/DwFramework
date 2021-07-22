@@ -23,7 +23,6 @@ namespace DwFramework.RabbitMQ
         public RabbitMQService(Config config)
         {
             _config = config;
-
             _connectionFactory = new ConnectionFactory()
             {
                 HostName = _config.Host,
