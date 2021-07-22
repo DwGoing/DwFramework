@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SqlSugarExample", "example\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebExample", "example\WebExample\WebExample.csproj", "{E83121B5-EEC4-48E5-8FF6-3430DD037226}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuartzExample", "example\QuartzExample\QuartzExample.csproj", "{DCD0D056-5104-4710-9F52-FDED3EEACED0}"
+EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{98D6A6FD-8ABC-49BC-B19D-CAE15BE955C9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DwFramework.Core", "src\DwFramework.Core\DwFramework.Core.csproj", "{F6F13AA7-2BF0-4ABE-8924-838EFD64EDD0}"
@@ -24,8 +26,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DwFramework.Web", "src\DwFramework.Web\DwFramework.Web.csproj", "{691625CC-692D-4D1E-804A-FF07F1117F65}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DwFramework.Quartz", "src\DwFramework.Quartz\DwFramework.Quartz.csproj", "{468D79FF-74BF-42DD-AC04-7A30146B4D7D}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuartzExample", "example\QuartzExample\QuartzExample.csproj", "{DCD0D056-5104-4710-9F52-FDED3EEACED0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

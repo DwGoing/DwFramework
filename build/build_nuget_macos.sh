@@ -69,7 +69,7 @@ for i; do
             if [[ $MINOR_VERSION != $i ]]; then
                 REVISION_VERSION=""
             fi
-            if [[ $CURRENT_FRAMEWORK_VERSION != $CURRENT_FRAMEWORK_VERSION ]]; then
+            if [[ $(echo $i | sed "s/[0-9]//g")x != ""x ]]; then
                 MINOR_VERSION=""
             else
                 MINOR_VERSION=$i
@@ -90,6 +90,10 @@ for i; do
     esac
 done
 
+if [[ $CURRENT_FRAMEWORK_VERSION != $FRAMEWORK_VERSION ]]; then
+    MINOR_VERSION=""
+    REVISION_VERSION=""
+fi
 if [[ "$MINOR_VERSION"x == ""x ]]; then
     MINOR_VERSION=0
 fi
