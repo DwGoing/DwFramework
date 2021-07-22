@@ -22,10 +22,10 @@ namespace DwFramework.Core.Generator
             /// </summary>
             /// <param name="id"></param>
             /// <param name="startTime"></param>
-            public SnowflakeIdInfo(long id, DateTime? startTime = null)
+            public SnowflakeIdInfo(long id, DateTime startTime)
             {
                 ID = id;
-                StartTime = startTime != null ? startTime.Value : DateTime.UnixEpoch;
+                StartTime = startTime != null ? startTime : DateTime.UnixEpoch;
                 var timestamp = id >> (WorkerIdBits + SequenceBits);
                 Timestamp = timestamp + DateTime.UnixEpoch.GetTimeDiff(startTime);
                 WorkId = (id ^ (timestamp << (WorkerIdBits + SequenceBits))) >> SequenceBits;
@@ -51,14 +51,14 @@ namespace DwFramework.Core.Generator
         /// </summary>
         /// <param name="workerId"></param>
         /// <param name="startTime"></param>
-        public SnowflakeGenerator(long workerId = 0, DateTime? startTime = null)
+        public SnowflakeGenerator(long workerId, DateTime startTime)
         {
             MaxTimestamp = 2L << TimestampBits;
             MaxWorkerId = (2L << WorkerIdBits) - 1;
             MaxSequence = (2L << SequenceBits) - 1;
             if (workerId < 0 || workerId > MaxWorkerId) throw new Exception("机器ID超过上限");
             WorkerId = workerId;
-            StartTime = startTime != null ? startTime.Value : DateTime.UnixEpoch;
+            StartTime = startTime != null ? startTime : DateTime.UnixEpoch;
         }
 
         /// <summary>
@@ -89,6 +89,6 @@ namespace DwFramework.Core.Generator
         /// <param name="id"></param>
         /// <param name="startTime"></param>
         /// <returns></returns>
-        public static SnowflakeIdInfo DecodeId(long id, DateTime? startTime = null) => new SnowflakeIdInfo(id, startTime);
+        public static SnowflakeIdInfo DecodeId(long id, DateTime startTime) => new SnowflakeIdInfo(id, startTime);
     }
 }
