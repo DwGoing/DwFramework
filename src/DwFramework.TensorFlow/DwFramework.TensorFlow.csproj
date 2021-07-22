@@ -2,11 +2,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
-    <ReleaseVersion>5</ReleaseVersion>
-    <BuildVersion>0.0.56-dev.713</BuildVersion>
-    <Version>$(ReleaseVersion).$(BuildVersion)</Version>
+    <Version>5.0.0.56</Version>
     <Authors>DwGoing</Authors>
-    <Description>DwFramework TensorFlow库</Description>
+    <Description>DwFramework TensorFlow封装库</Description>
     <PackageProjectUrl>https://github.com/Dwgoing/DwFramework</PackageProjectUrl>
   </PropertyGroup>
   <ItemGroup>

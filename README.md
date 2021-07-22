@@ -12,13 +12,11 @@
 
 |            组件             |     说明      |                             版本                             |
 | :-------------------------: | :-----------: | :----------------------------------------------------------: |
-|      DwFramework.Core       |   核心组件    | [![](https://img.shields.io/badge/Nuget-5.1.0.26-brightgreen.svg)](https://www.nuget.org/packages/DwFramework.Core/) |
-|    DwFramework.Plugins     |    核心插件    | [![](https://img.shields.io/badge/Nuget-5.1.0.26-brightgreen.svg)](https://www.nuget.org/packages/DwFramework.Plugins/) |
-|    DwFramework.ORM     |    ORM组件    | [![](https://img.shields.io/badge/Nuget-5.1.0.26-brightgreen.svg)](https://www.nuget.org/packages/DwFramework.ORM/) |
-|    DwFramework.RabbitMQ     | RabbitMQ组件  | [![](https://img.shields.io/badge/Nuget-5.1.0.26-brightgreen.svg)](https://www.nuget.org/packages/DwFramework.RabbitMQ/) |
-|       DwFramework.RPC       |    Rpc组件    | [![](https://img.shields.io/badge/Nuget-5.1.0.26-brightgreen.svg)](https://www.nuget.org/packages/DwFramework.RPC/) |
-|  DwFramework.TaskSchedule   | 任务调度组件  | [![](https://img.shields.io/badge/Nuget-5.1.0.26-brightgreen.svg)](https://www.nuget.org/packages/DwFramework.TaskSchedule/) |
-|     DwFramework.Web      |  Web组件   | [![](https://img.shields.io/badge/Nuget-5.1.0.26-brightgreen.svg)](https://www.nuget.org/packages/DwFramework.Web/) |
+|      DwFramework.Core       |   核心库    | [![](https://img.shields.io/badge/Nuget-5.1.0.26-brightgreen.svg)](https://www.nuget.org/packages/DwFramework.Core/) |
+|    DwFramework.SqlSugar     |    SqlSugar封装库    | [![](https://img.shields.io/badge/Nuget-5.1.0.26-brightgreen.svg)](https://www.nuget.org/packages/DwFramework.SqlSugar/) |
+|    DwFramework.RabbitMQ     | RabbitMQ封装库  | [![](https://img.shields.io/badge/Nuget-5.1.0.26-brightgreen.svg)](https://www.nuget.org/packages/DwFramework.RabbitMQ/) |
+|       DwFramework.Quartz       |    Quartz封装库    | [![](https://img.shields.io/badge/Nuget-5.1.0.26-brightgreen.svg)](https://www.nuget.org/packages/DwFramework.Quartz/) |
+|     DwFramework.Web      |  网络库   | [![](https://img.shields.io/badge/Nuget-5.1.0.26-brightgreen.svg)](https://www.nuget.org/packages/DwFramework.Web/) |
 
 ---
 

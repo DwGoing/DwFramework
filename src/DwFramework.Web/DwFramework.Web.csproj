@@ -4,7 +4,7 @@
     <TargetFramework>net5.0</TargetFramework>
     <Version>5.1.0.27-1626884220.rc</Version>
     <Authors>DwGoing</Authors>
-    <Description>DwFramework Web库</Description>
+    <Description>DwFramework 网络库</Description>
     <PackageProjectUrl>https://github.com/Dwgoing/DwFramework</PackageProjectUrl>
   </PropertyGroup>
   <ItemGroup>
