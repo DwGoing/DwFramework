@@ -10,9 +10,6 @@ namespace DwFramework.Core.Cache
         /// </summary>
         /// <param name="provider"></param>
         /// <returns></returns>
-        public static ICache GetCache(this IServiceProvider provider)
-        {
-            return provider.GetService<ICache>();
-        }
+        public static ICache GetCache(this IServiceProvider provider) => provider.GetService<ICache>();
     }
 }

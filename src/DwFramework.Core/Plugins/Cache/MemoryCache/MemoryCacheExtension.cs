@@ -1,5 +1,4 @@
-﻿using System;
-using Autofac;
+﻿using Autofac;
 
 namespace DwFramework.Core.Cache
 {
@@ -8,15 +7,17 @@ namespace DwFramework.Core.Cache
         /// <summary>
         /// 注册MemoryCache服务
         /// </summary>
-        /// <param name="builder"></param>
+        /// <param name="host"></param>
         /// <param name="storeCount"></param>
         /// <param name="isGlobal"></param>
         /// <returns></returns>
-        public static ContainerBuilder RegisterMemoryCache(this ContainerBuilder builder, int storeCount = 6, bool isGlobal = true)
+        public static ServiceHost ConfigureMemoryCache(this ServiceHost host, int storeCount = 6, bool isGlobal = true)
         {
-            var registration = builder.Register(context => new MemoryCache(storeCount)).As<ICache>();
-            if (isGlobal) registration.SingleInstance();
-            return builder;
+            return host.ConfigureContainer(builder =>
+            {
+                var registration = builder.Register(context => new MemoryCache(storeCount)).As<ICache>();
+                if (isGlobal) registration.SingleInstance();
+            });
         }
     }
 }
