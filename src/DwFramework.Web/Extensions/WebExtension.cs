@@ -14,18 +14,6 @@ namespace DwFramework.Web
     public static class WebExtension
     {
         /// <summary>
-        /// 配置Web主机
-        /// </summary>
-        /// <param name="host"></param>
-        /// <param name="configure"></param>
-        /// <returns></returns>
-        public static ServiceHost ConfigureWebHost(this ServiceHost host, Action<IWebHostBuilder> configure)
-        {
-            host.ConfigureHostBuilder(builder => builder.ConfigureWebHostDefaults(configure));
-            return host;
-        }
-
-        /// <summary>
         /// 配置Web服务
         /// </summary>
         /// <param name="host"></param>
@@ -34,6 +22,10 @@ namespace DwFramework.Web
         /// <returns></returns>
         public static ServiceHost ConfigureWeb(this ServiceHost host, Config.Web config, Action<IWebHostBuilder> configureWebHostBuilder)
         {
+            host.ConfigureHostBuilder(builder =>
+            {
+
+            });
             if (config == null) throw new Exception("未读取到Web配置");
             var webService = WebService.Init(host, config, configureWebHostBuilder);
             host.ConfigureContainer(builder => builder.RegisterInstance(webService).SingleInstance());

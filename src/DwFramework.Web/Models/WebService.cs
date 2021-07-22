@@ -41,7 +41,7 @@ namespace DwFramework.Web
         private WebService(ServiceHost host, Config.Web config, Action<IWebHostBuilder> configureWebHostBuilder)
         {
             _config = config;
-            host.ConfigureWebHost(webHostBuilder =>
+            host.ConfigureHostBuilder(builder => builder.ConfigureWebHostDefaults(webHostBuilder =>
             {
                 if (!string.IsNullOrEmpty(_config.ContentRoot)) webHostBuilder.UseContentRoot(_config.ContentRoot);
                 webHostBuilder.UseKestrel(options =>
@@ -71,7 +71,7 @@ namespace DwFramework.Web
                     }
                 });
                 configureWebHostBuilder?.Invoke(webHostBuilder);
-            });
+            }));
         }
 
         /// <summary>
