@@ -23,35 +23,11 @@ namespace WebExample
         {
             var host = new ServiceHost();
             host.AddJsonConfig("Config.json");
+            host.ConfigureWeb(builder => builder.UseStartup<Startup>());
             // host.ConfigureWebWithJson("Config.json", builder => builder.UseStartup<Startup>(), "web");
             // host.ConfigureSocket(ProtocolType.Tcp, "tcp");
             // host.ConfigureSocket(ProtocolType.Udp, "udp");
             // host.ConfigureLogging(builder => builder.UserNLog());
-
-            host.ConfigureHostBuilder(b =>
-            {
-
-            });
-            host.ConfigureServices(_ =>
-            {
-
-            });
-            host.ConfigureLogging(_ =>
-            {
-
-            });
-            host.ConfigureAppConfiguration(_ =>
-            {
-
-            });
-            host.ConfigureHostConfiguration(_ =>
-            {
-
-            });
-            host.ConfigureContainer(_ =>
-            {
-
-            });
 
             host.OnHostStarted += p =>
             {

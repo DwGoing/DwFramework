@@ -13,6 +13,41 @@ namespace DwFramework.Web
 {
     public static class WebExtension
     {
+        public static ServiceHost ConfigureWeb(this ServiceHost host, Action<IWebHostBuilder> configureWebHostBuilder)
+        {
+            host.ConfigureHostBuilder(builder => builder.ConfigureWebHostDefaults(webHostBuilder =>
+            {
+                webHostBuilder.UseKestrel(options =>
+                {
+                    // foreach (var item in _config.Listens)
+                    // {
+                    //     switch (item.Scheme)
+                    //     {
+                    //         case Scheme.Http:
+                    //         case Scheme.Rpc:
+                    //             options.Listen(string.IsNullOrEmpty(item.Ip) ? IPAddress.Any : IPAddress.Parse(item.Ip), item.Port, listenOptions =>
+                    //             {
+                    //                 if (item.Scheme == Scheme.Rpc) listenOptions.Protocols = HttpProtocols.Http2;
+                    //             });
+                    //             break;
+                    //         case Scheme.Https:
+                    //         case Scheme.Rpcs:
+                    //             options.Listen(string.IsNullOrEmpty(item.Ip) ? IPAddress.Any : IPAddress.Parse(item.Ip), item.Port, listenOptions =>
+                    //             {
+                    //                 listenOptions.UseHttps(item.Cert, item.Password);
+                    //                 if (item.Scheme == Scheme.Rpc) listenOptions.Protocols = HttpProtocols.Http2;
+                    //             });
+                    //             break;
+                    //         default:
+                    //             continue;
+                    //     }
+                    // }
+                });
+                configureWebHostBuilder?.Invoke(webHostBuilder);
+            }));
+            return host;
+        }
+
         /// <summary>
         /// 配置Web服务
         /// </summary>

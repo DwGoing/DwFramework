@@ -80,28 +80,6 @@ namespace DwFramework.Core
         }
 
         /// <summary>
-        /// 配置日志
-        /// </summary>
-        /// <param name="configure"></param>
-        /// <returns></returns>
-        public ServiceHost ConfigureLogging(Action<ILoggingBuilder> configure)
-        {
-            _hostBuilder.ConfigureLogging(configure);
-            return this;
-        }
-
-        /// <summary>
-        /// 配置日志
-        /// </summary>
-        /// <param name="configure"></param>
-        /// <returns></returns>
-        public ServiceHost ConfigureLogging(Action<HostBuilderContext, ILoggingBuilder> configure)
-        {
-            _hostBuilder.ConfigureLogging(configure);
-            return this;
-        }
-
-        /// <summary>
         /// 配置服务
         /// </summary>
         /// <param name="configure"></param>
@@ -120,6 +98,28 @@ namespace DwFramework.Core
         public ServiceHost ConfigureServices(Action<HostBuilderContext, IServiceCollection> configure)
         {
             _hostBuilder.ConfigureServices(configure);
+            return this;
+        }
+
+        /// <summary>
+        /// 配置日志
+        /// </summary>
+        /// <param name="configure"></param>
+        /// <returns></returns>
+        public ServiceHost ConfigureLogging(Action<ILoggingBuilder> configure)
+        {
+            _hostBuilder.ConfigureLogging(configure);
+            return this;
+        }
+
+        /// <summary>
+        /// 配置日志
+        /// </summary>
+        /// <param name="configure"></param>
+        /// <returns></returns>
+        public ServiceHost ConfigureLogging(Action<HostBuilderContext, ILoggingBuilder> configure)
+        {
+            _hostBuilder.ConfigureLogging(configure);
             return this;
         }
 
