@@ -1,7 +1,7 @@
 {
     "ConnectionConfigs": {
         "Main": {
-            "ConnectionString": "server=bancode.net;port=3306;uid=dwgoing;pwd=ayou1209;database=telegram_bot;CharSet=utf8mb4;Allow User Variables=True;Allow Zero Datetime=True;SslMode = none;",
+            "ConnectionString": "server=bancode.net;port=3306;uid=root;pwd=Root1qaz@WSX;database=telegram_bot;charset=utf8mb4;allowUserVariables=true;allowZeroDatetime=true;sslMode=Required;",
             "DbType": "MySql",
             "UseMemoryCache": true
         }

@@ -17,6 +17,7 @@ namespace SqlSugarExample
             {
                 var s = p.GetSqlSugarService();
                 var c = s.CreateConnection("Main");
+                var d = c.DbMaintenance.GetTableInfoList();
             };
             await host.RunAsync();
         }
