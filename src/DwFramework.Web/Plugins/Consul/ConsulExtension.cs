@@ -36,7 +36,7 @@ namespace DwFramework.Web.Consul
         /// <returns></returns>
         public static IApplicationBuilder UseConsul(this IApplicationBuilder app, IHostApplicationLifetime lifetime, IConfiguration configuration, string configKey = null)
         {
-            var config = configuration.GetConfig<Config>(configKey);
+            var config = configuration.ParseConfiguration<Config>(configKey);
             foreach (var item in config.Services)
             {
                 var client = new ConsulClient(c =>

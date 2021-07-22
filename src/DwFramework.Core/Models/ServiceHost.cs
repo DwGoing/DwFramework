@@ -23,9 +23,20 @@ namespace DwFramework.Core
         /// <summary>
         /// 构造函数
         /// </summary>
+        /// <param name="args"></param>
+        public ServiceHost(params string[] args)
+        {
+            _hostBuilder = Host.CreateDefaultBuilder(args).UseServiceProviderFactory(new AutofacServiceProviderFactory());
+            var environmentType = Environment.GetEnvironmentVariable("ENVIRONMENT_TYPE");
+            _hostBuilder.UseEnvironment(string.IsNullOrEmpty(environmentType) ? "Development" : environmentType);
+        }
+
+        /// <summary>
+        /// 构造函数
+        /// </summary>
         /// <param name="environmentType"></param>
         /// <param name="args"></param>
-        public ServiceHost(EnvironmentType environmentType = EnvironmentType.Development, params string[] args)
+        public ServiceHost(EnvironmentType environmentType, params string[] args)
         {
             _hostBuilder = Host.CreateDefaultBuilder(args).UseServiceProviderFactory(new AutofacServiceProviderFactory());
             if (!Enum.IsDefined<EnvironmentType>(environmentType)) environmentType = EnvironmentType.Development;
@@ -192,24 +203,6 @@ namespace DwFramework.Core
         }
 
         /// <summary>
-        /// 运行服务
-        /// </summary>
-        /// <returns></returns>
-        public async Task RunAsync()
-        {
-            _hostBuilder.UseConsoleLifetime();
-            _host = _hostBuilder.Build();
-            OnHostStarted?.Invoke(ServiceProvider);
-            await _host.RunAsync();
-        }
-
-        /// <summary>
-        /// 停止服务
-        /// </summary>
-        /// <returns></returns>
-        public async Task StopAsync() => await _host.WaitForShutdownAsync();
-
-        /// <summary>
         /// 注册服务
         /// </summary>
         /// <param name="assembly"></param>
@@ -241,6 +234,47 @@ namespace DwFramework.Core
         public void RegisterFromAssemblies()
         {
             foreach (var item in AppDomain.CurrentDomain.GetAssemblies()) RegisterFromAssembly(item);
+        }
+
+        /// <summary>
+        /// 运行服务
+        /// </summary>
+        /// <returns></returns>
+        public async Task RunAsync()
+        {
+            _hostBuilder.UseConsoleLifetime();
+            _host = _hostBuilder.Build();
+            OnHostStarted?.Invoke(ServiceProvider);
+            await _host.RunAsync();
+        }
+
+        /// <summary>
+        /// 停止服务
+        /// </summary>
+        /// <returns></returns>
+        public async Task StopAsync() => await _host.WaitForShutdownAsync();
+
+        /// <summary>
+        /// 获取配置
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        public static IConfiguration GetConfiguration(string path = null)
+        {
+            var root = ServiceProvider.GetService<IConfiguration>();
+            return string.IsNullOrEmpty(path) ? root : root.GetSection(path);
+        }
+
+        /// <summary>
+        /// 获取配置
+        /// </summary>
+        /// <param name="path"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public static T ParseConfiguration<T>(string path = null)
+        {
+            var root = ServiceProvider.GetService<IConfiguration>();
+            return root.ParseConfiguration<T>(path);
         }
     }
 }

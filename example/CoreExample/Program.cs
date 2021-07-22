@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Autofac;
 using Autofac.Extras.DynamicProxy;
@@ -14,6 +15,7 @@ namespace CoreExample
         static async Task Main(string[] args)
         {
             var host = new ServiceHost();
+            host.AddJsonConfig("Config.json", reloadOnChange: true);
             host.ConfigureLogging(builder => builder.UserNLog());
             host.ConfigureContainer(builder =>
             {
@@ -31,6 +33,7 @@ namespace CoreExample
             });
             host.OnHostStarted += provider =>
             {
+                ServiceHost.ParseConfiguration<string>("ConnectionString");
                 foreach (var item in provider.GetServices<I>()) item.Do(5, 6);
             };
             await host.RunAsync();

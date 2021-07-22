@@ -13,6 +13,37 @@ namespace DwFramework.Web.Socket
         /// <summary>
         /// 配置Socket
         /// </summary>
+        /// <param name="host"></param>
+        /// <param name="type"></param>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        public static ServiceHost ConfigureSocket(this ServiceHost host, ProtocolType type, string path = null)
+        {
+            switch (type)
+            {
+                case ProtocolType.Tcp:
+                    host.ConfigureContainer(builder => builder.Register(_ =>
+                    {
+                        var config = ServiceHost.ParseConfiguration<Config.Socket>(path);
+                        return new TcpService(config);
+                    }).SingleInstance());
+                    break;
+                case ProtocolType.Udp:
+                    host.ConfigureContainer(builder => builder.Register(_ =>
+                    {
+                        var config = ServiceHost.ParseConfiguration<Config.Socket>(path);
+                        return new UdpService(config);
+                    }).SingleInstance());
+                    break;
+                default:
+                    throw new Exception("未定义的协议类型");
+            }
+            return host;
+        }
+
+        /// <summary>
+        /// 配置Socket
+        /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="host"></param>
         /// <param name="config"></param>
@@ -46,7 +77,7 @@ namespace DwFramework.Web.Socket
         /// <returns></returns>
         public static ServiceHost ConfigureSocket(this ServiceHost host, IConfiguration configuration, string path = null)
         {
-            var config = configuration.GetConfig<Config.Socket>(path);
+            var config = configuration.ParseConfiguration<Config.Socket>(path);
             host.ConfigureSocket(config);
             return host;
         }

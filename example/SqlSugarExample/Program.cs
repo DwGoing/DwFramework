@@ -10,7 +10,8 @@ namespace SqlSugarExample
         static async Task Main(string[] args)
         {
             var host = new ServiceHost();
-            host.ConfigureSqlSugarWithJson("Config.json");
+            host.AddJsonConfig("Config.json");
+            host.ConfigureSqlSugar();
             host.ConfigureLogging(builder => builder.UserNLog());
             host.OnHostStarted += p =>
             {

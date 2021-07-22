@@ -50,7 +50,7 @@ namespace DwFramework.Web
         /// <returns></returns>
         public static ServiceHost ConfigureWeb(this ServiceHost host, IConfiguration configuration, Action<IWebHostBuilder> configureWebHostBuilder, string path = null)
         {
-            var config = configuration.GetConfig<Config.Web>(path);
+            var config = configuration.ParseConfiguration<Config.Web>(path);
             host.ConfigureWeb(config, configureWebHostBuilder);
             return host;
         }

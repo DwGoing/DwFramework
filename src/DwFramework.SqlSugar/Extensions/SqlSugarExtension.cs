@@ -13,6 +13,22 @@ namespace DwFramework.SqlSugar
         /// 配置SqlSugar
         /// </summary>
         /// <param name="host"></param>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        public static ServiceHost ConfigureSqlSugar(this ServiceHost host, string path = null)
+        {
+            host.ConfigureContainer(builder => builder.Register(c =>
+            {
+                var config = ServiceHost.ParseConfiguration<Config>(path);
+                return new SqlSugarService(config);
+            }).SingleInstance());
+            return host;
+        }
+
+        /// <summary>
+        /// 配置SqlSugar
+        /// </summary>
+        /// <param name="host"></param>
         /// <param name="config"></param>
         /// <returns></returns>
         public static ServiceHost ConfigureSqlSugar(this ServiceHost host, Config config)
@@ -30,7 +46,7 @@ namespace DwFramework.SqlSugar
         /// <param name="path"></param>
         /// <returns></returns>
         public static ServiceHost ConfigureSqlSugar(this ServiceHost host, IConfiguration configuration, string path = null)
-            => host.ConfigureSqlSugar(configuration.GetConfig<Config>(path));
+            => host.ConfigureSqlSugar(configuration.ParseConfiguration<Config>(path));
 
         /// <summary>
         /// 配置SqlSugar
