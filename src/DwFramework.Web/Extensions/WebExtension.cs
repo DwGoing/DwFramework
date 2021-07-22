@@ -22,10 +22,6 @@ namespace DwFramework.Web
         /// <returns></returns>
         public static ServiceHost ConfigureWeb(this ServiceHost host, Config.Web config, Action<IWebHostBuilder> configureWebHostBuilder)
         {
-            host.ConfigureHostBuilder(builder =>
-            {
-
-            });
             if (config == null) throw new Exception("未读取到Web配置");
             var webService = WebService.Init(host, config, configureWebHostBuilder);
             host.ConfigureContainer(builder => builder.RegisterInstance(webService).SingleInstance());

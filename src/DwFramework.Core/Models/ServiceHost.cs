@@ -16,32 +16,23 @@ namespace DwFramework.Core
         private readonly IHostBuilder _hostBuilder;
         private static IHost _host;
 
-        public static EnvironmentType EnvironmentType { get; private set; }
+        public static bool IsDebug { get; private set; }
+        public static string EnvironmentType { get; private set; }
         public static IServiceProvider ServiceProvider => _host.Services;
         public event Action<IServiceProvider> OnHostStarted;
 
         /// <summary>
         /// 构造函数
         /// </summary>
-        /// <param name="args"></param>
-        public ServiceHost(params string[] args)
-        {
-            _hostBuilder = Host.CreateDefaultBuilder(args).UseServiceProviderFactory(new AutofacServiceProviderFactory());
-            var environmentType = Environment.GetEnvironmentVariable("ENVIRONMENT_TYPE");
-            _hostBuilder.UseEnvironment(string.IsNullOrEmpty(environmentType) ? "Development" : environmentType);
-        }
-
-        /// <summary>
-        /// 构造函数
-        /// </summary>
+        /// <param name="isDebug"></param>
         /// <param name="environmentType"></param>
         /// <param name="args"></param>
-        public ServiceHost(EnvironmentType environmentType, params string[] args)
+        public ServiceHost(bool isDebug = true, string environmentType = null, params string[] args)
         {
             _hostBuilder = Host.CreateDefaultBuilder(args).UseServiceProviderFactory(new AutofacServiceProviderFactory());
-            if (!Enum.IsDefined<EnvironmentType>(environmentType)) environmentType = EnvironmentType.Development;
-            EnvironmentType = environmentType;
-            _hostBuilder.UseEnvironment(environmentType.ToString());
+            if (string.IsNullOrEmpty(environmentType)) environmentType = Environment.GetEnvironmentVariable("ENVIRONMENT_TYPE");
+            if (string.IsNullOrEmpty(environmentType)) environmentType = "Development";
+            _hostBuilder.UseEnvironment(environmentType);
         }
 
         /// <summary>
