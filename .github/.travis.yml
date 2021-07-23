@@ -1,0 +1,6 @@
+language: csharp
+solution: DwFramework.sln
+dotnet: 5.0.*
+script:
+  - dotnet restore
+  - dotnet build --no-restore
