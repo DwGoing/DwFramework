@@ -1,4 +1,4 @@
-name: TestOnUbuntu
+name: Ubuntu
 
 on:
   push:
@@ -13,7 +13,6 @@ on:
       - ".gitignore"
       - "LICENSE"
       - "*.md"
-      - "*.yml"
 
 jobs:
   build:
