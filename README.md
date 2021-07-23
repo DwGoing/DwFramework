@@ -1,5 +1,5 @@
 # DwFramework
-[](https://github.com/DwGoingJiang/DwFramework/workflows/Ubuntu/badge.svg)
+![](https://github.com/DwGoingJiang/DwFramework/workflows/Ubuntu/badge.svg)
 
 ### 0x1 项目简介
 
