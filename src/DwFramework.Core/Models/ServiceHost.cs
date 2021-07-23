@@ -146,28 +146,33 @@ namespace DwFramework.Core
         }
 
         /// <summary>
-        /// 添加Json配置
+        /// 添加配置
         /// </summary>
-        /// <param name="path"></param>
-        /// <param name="optional"></param>
-        /// <param name="reloadOnChange"></param>
+        /// <param name="configuration"></param>
         /// <returns></returns>
-        public ServiceHost AddJsonConfig(string path, bool optional = false, bool reloadOnChange = false)
+        public ServiceHost AddConfiguration(IConfiguration configuration)
         {
-            _hostBuilder.ConfigureHostConfiguration(builder => builder.AddJsonFile(path, optional, reloadOnChange));
+            _hostBuilder.ConfigureHostConfiguration(builder => builder.AddConfiguration(configuration));
             return this;
         }
 
         /// <summary>
         /// 添加Json配置
         /// </summary>
+        /// <param name="path"></param>
+        /// <param name="optional"></param>
+        /// <param name="reloadOnChange"></param>
+        /// <returns></returns>
+        public ServiceHost AddJsonConfiguration(string path, bool optional = false, bool reloadOnChange = false)
+            => AddConfiguration(new ConfigurationBuilder().AddJsonFile(path, optional, reloadOnChange).Build());
+
+        /// <summary>
+        /// 添加Json配置
+        /// </summary>
         /// <param name="stream"></param>
         /// <returns></returns>
-        public ServiceHost AddJsonConfig(Stream stream)
-        {
-            _hostBuilder.ConfigureHostConfiguration(builder => builder.AddJsonStream(stream));
-            return this;
-        }
+        public ServiceHost AddJsonConfiguration(Stream stream)
+            => AddConfiguration(new ConfigurationBuilder().AddJsonStream(stream).Build());
 
         /// <summary>
         /// 添加Xml配置
@@ -176,22 +181,16 @@ namespace DwFramework.Core
         /// <param name="optional"></param>
         /// <param name="reloadOnChange"></param>
         /// <returns></returns>         
-        public ServiceHost AddXmlConfig(string path, bool optional = false, bool reloadOnChange = false)
-        {
-            _hostBuilder.ConfigureHostConfiguration(builder => builder.AddXmlFile(path, optional, reloadOnChange));
-            return this;
-        }
+        public ServiceHost AddXmlConfiguration(string path, bool optional = false, bool reloadOnChange = false)
+            => AddConfiguration(new ConfigurationBuilder().AddXmlFile(path, optional, reloadOnChange).Build());
 
         /// <summary>
         /// 添加Xml配置
         /// </summary>
         /// <param name="stream"></param>
         /// <returns></returns>    
-        public ServiceHost AddXmlConfig(Stream stream)
-        {
-            _hostBuilder.ConfigureHostConfiguration(builder => builder.AddXmlStream(stream));
-            return this;
-        }
+        public ServiceHost AddXmlConfiguration(Stream stream)
+            => AddConfiguration(new ConfigurationBuilder().AddXmlStream(stream).Build());
 
         /// <summary>
         /// 注册服务
@@ -257,15 +256,15 @@ namespace DwFramework.Core
         }
 
         /// <summary>
-        /// 获取配置
+        /// 解析配置
         /// </summary>
         /// <param name="path"></param>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
         public static T ParseConfiguration<T>(string path = null)
         {
-            var root = ServiceProvider.GetService<IConfiguration>();
-            return root.ParseConfiguration<T>(path);
+            var root = GetConfiguration(path);
+            return root == null ? default : root.Get<T>();
         }
     }
 }

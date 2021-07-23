@@ -16,27 +16,7 @@ namespace DwFramework.SqlSugar
         /// <param name="path"></param>
         /// <returns></returns>
         public static ServiceHost ConfigureSqlSugar(this ServiceHost host, string path = null)
-        {
-            host.ConfigureContainer(builder => builder.Register(c =>
-            {
-                var config = ServiceHost.ParseConfiguration<Config>(path);
-                return new SqlSugarService(config);
-            }).SingleInstance());
-            return host;
-        }
-
-        /// <summary>
-        /// 配置SqlSugar
-        /// </summary>
-        /// <param name="host"></param>
-        /// <param name="config"></param>
-        /// <returns></returns>
-        public static ServiceHost ConfigureSqlSugar(this ServiceHost host, Config config)
-        {
-            if (config == null) throw new Exception("未读取到ORM配置");
-            host.ConfigureContainer(builder => builder.Register(_ => new SqlSugarService(config)).SingleInstance());
-            return host;
-        }
+            => host.ConfigureContainer(builder => builder.Register(_ => new SqlSugarService(ServiceHost.GetConfiguration(path))).SingleInstance());
 
         /// <summary>
         /// 配置SqlSugar
@@ -46,7 +26,10 @@ namespace DwFramework.SqlSugar
         /// <param name="path"></param>
         /// <returns></returns>
         public static ServiceHost ConfigureSqlSugar(this ServiceHost host, IConfiguration configuration, string path = null)
-            => host.ConfigureSqlSugar(configuration.ParseConfiguration<Config>(path));
+        {
+            host.AddConfiguration(configuration);
+            return host.ConfigureSqlSugar(path);
+        }
 
         /// <summary>
         /// 配置SqlSugar
@@ -56,7 +39,10 @@ namespace DwFramework.SqlSugar
         /// <param name="path"></param>
         /// <returns></returns>
         public static ServiceHost ConfigureSqlSugarWithJson(this ServiceHost host, string file, string path = null)
-            => host.ConfigureSqlSugar(new ConfigurationBuilder().AddJsonFile(file).Build(), path);
+        {
+            host.AddJsonConfiguration(file, reloadOnChange: true);
+            return host.ConfigureSqlSugar(path);
+        }
 
         /// <summary>
         /// 配置SqlSugar
@@ -66,7 +52,10 @@ namespace DwFramework.SqlSugar
         /// <param name="path"></param>
         /// <returns></returns>
         public static ServiceHost ConfigureSqlSugarWithJson(this ServiceHost host, Stream stream, string path = null)
-            => host.ConfigureSqlSugar(new ConfigurationBuilder().AddJsonStream(stream).Build(), path);
+        {
+            host.AddJsonConfiguration(stream);
+            return host.ConfigureSqlSugar(path);
+        }
 
         /// <summary>
         /// 配置SqlSugar
@@ -76,7 +65,10 @@ namespace DwFramework.SqlSugar
         /// <param name="path"></param>
         /// <returns></returns>
         public static ServiceHost ConfigureSqlSugarWithXml(this ServiceHost host, string file, string path = null)
-            => host.ConfigureSqlSugar(new ConfigurationBuilder().AddXmlFile(file).Build(), path);
+        {
+            host.AddXmlConfiguration(file, reloadOnChange: true);
+            return host.ConfigureSqlSugar(path);
+        }
 
         /// <summary>
         /// 配置SqlSugar
@@ -86,7 +78,10 @@ namespace DwFramework.SqlSugar
         /// <param name="path"></param>
         /// <returns></returns>
         public static ServiceHost ConfigureSqlSugarWithXml(this ServiceHost host, Stream stream, string path = null)
-            => host.ConfigureSqlSugar(new ConfigurationBuilder().AddXmlStream(stream).Build(), path);
+        {
+            host.AddXmlConfiguration(stream);
+            return host.ConfigureSqlSugar(path);
+        }
 
         /// <summary>
         /// 获取SqlSugar
