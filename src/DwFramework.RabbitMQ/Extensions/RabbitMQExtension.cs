@@ -13,40 +13,11 @@ namespace DwFramework.RabbitMQ
         /// 配置RabbitMQ
         /// </summary>
         /// <param name="host"></param>
-        /// <param name="path"></param>
-        /// <returns></returns>
-        public static ServiceHost ConfigureRabbitMQ(this ServiceHost host, string path = null)
-        {
-            host.ConfigureContainer(builder => builder.Register(_ =>
-            {
-                var config = ServiceHost.ParseConfiguration<Config>(path);
-                return new RabbitMQService(config);
-            }).SingleInstance());
-            return host;
-        }
-
-        /// <summary>
-        /// 配置RabbitMQ
-        /// </summary>
-        /// <param name="host"></param>
-        /// <param name="config"></param>
-        /// <returns></returns>
-        public static ServiceHost ConfigureRabbitMQ(this ServiceHost host, Config config)
-        {
-            if (config == null) throw new Exception("未读取到RabbitMQ配置");
-            host.ConfigureContainer(builder => builder.Register(_ => new RabbitMQService(config)).SingleInstance());
-            return host;
-        }
-
-        /// <summary>
-        /// 配置RabbitMQ
-        /// </summary>
-        /// <param name="host"></param>
         /// <param name="configuration"></param>
         /// <param name="path"></param>
         /// <returns></returns>
         public static ServiceHost ConfigureRabbitMQ(this ServiceHost host, IConfiguration configuration, string path = null)
-            => host.ConfigureRabbitMQ(configuration.ParseConfiguration<Config>(path));
+            => host.ConfigureContainer(builder => builder.Register(_ => new RabbitMQService(string.IsNullOrEmpty(path) ? configuration : configuration.GetSection(path))).SingleInstance());
 
         /// <summary>
         /// 配置RabbitMQ

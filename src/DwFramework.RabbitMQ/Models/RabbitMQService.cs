@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Text;
+using Microsoft.Extensions.Configuration;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using DwFramework.Core;
@@ -10,8 +11,8 @@ namespace DwFramework.RabbitMQ
 {
     public sealed class RabbitMQService
     {
-        private Config _config;
-        private ConnectionFactory _connectionFactory;
+        private readonly Config _config;
+        private readonly ConnectionFactory _connectionFactory;
         private IConnection _publishConnection;
         private IConnection _subscribeConnection;
         private readonly Dictionary<string, EventingBasicConsumer[]> _subscribers = new Dictionary<string, EventingBasicConsumer[]>();
@@ -19,10 +20,11 @@ namespace DwFramework.RabbitMQ
         /// <summary>
         /// 构造函数
         /// </summary>
-        /// <param name="config"></param>
-        public RabbitMQService(Config config)
+        /// <param name="configuration"></param>
+        public RabbitMQService(IConfiguration configuration)
         {
-            _config = config;
+            _config = configuration.Get<Config>();
+            if (_config == null) throw new NotFoundException("缺少RabbitMQ配置");
             _connectionFactory = new ConnectionFactory()
             {
                 HostName = _config.Host,
