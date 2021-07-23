@@ -1,9 +1,0 @@
-{
-    "ConnectionConfigs": {
-        "Main": {
-            "ConnectionString": "server=bancode.net;port=3306;uid=root;pwd=Root1qaz@WSX;database=telegram_bot;charset=utf8mb4;allowUserVariables=true;allowZeroDatetime=true;sslMode=Required;",
-            "DbType": "MySql",
-            "UseMemoryCache": true
-        }
-    }
-}
