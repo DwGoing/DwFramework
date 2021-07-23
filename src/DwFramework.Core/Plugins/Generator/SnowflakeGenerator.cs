@@ -25,7 +25,7 @@ namespace DwFramework.Core.Generator
             public SnowflakeIdInfo(long id, DateTime startTime)
             {
                 ID = id;
-                StartTime = startTime != null ? startTime : DateTime.UnixEpoch;
+                StartTime = startTime;
                 var timestamp = id >> (WorkerIdBits + SequenceBits);
                 Timestamp = timestamp + DateTime.UnixEpoch.GetTimeDiff(startTime);
                 WorkId = (id ^ (timestamp << (WorkerIdBits + SequenceBits))) >> SequenceBits;
@@ -58,7 +58,7 @@ namespace DwFramework.Core.Generator
             MaxSequence = (2L << SequenceBits) - 1;
             if (workerId < 0 || workerId > MaxWorkerId) throw new Exception("机器ID超过上限");
             WorkerId = workerId;
-            StartTime = startTime != null ? startTime : DateTime.UnixEpoch;
+            StartTime = startTime;
         }
 
         /// <summary>

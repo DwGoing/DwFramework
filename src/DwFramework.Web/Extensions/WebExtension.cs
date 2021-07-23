@@ -3,7 +3,6 @@ using System.IO;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Autofac;
@@ -17,29 +16,14 @@ namespace DwFramework.Web
         /// 配置Web服务
         /// </summary>
         /// <param name="host"></param>
-        /// <param name="config"></param>
-        /// <param name="configureWebHostBuilder"></param>
-        /// <returns></returns>
-        public static ServiceHost ConfigureWeb(this ServiceHost host, Config.Web config, Action<IWebHostBuilder> configureWebHostBuilder)
-        {
-            if (config == null) throw new Exception("未读取到Web配置");
-            var webService = WebService.Init(host, config, configureWebHostBuilder);
-            host.ConfigureContainer(builder => builder.RegisterInstance(webService).SingleInstance());
-            return host;
-        }
-
-        /// <summary>
-        /// 配置Web服务
-        /// </summary>
-        /// <param name="host"></param>
         /// <param name="configuration"></param>
         /// <param name="configureWebHostBuilder"></param>
         /// <param name="path"></param>
         /// <returns></returns>
         public static ServiceHost ConfigureWeb(this ServiceHost host, IConfiguration configuration, Action<IWebHostBuilder> configureWebHostBuilder, string path = null)
         {
-            var config = configuration.ParseConfiguration<Config.Web>(path);
-            host.ConfigureWeb(config, configureWebHostBuilder);
+            var webService = WebService.Init(host, configuration.GetConfiguration(path), configureWebHostBuilder);
+            host.ConfigureContainer(builder => builder.RegisterInstance(webService).SingleInstance());
             return host;
         }
 

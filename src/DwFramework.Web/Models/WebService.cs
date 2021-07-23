@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using ProtoBuf.Grpc.Server;
 using ProtoBuf.Grpc.Configuration;
@@ -36,11 +37,12 @@ namespace DwFramework.Web
         /// 构造函数
         /// </summary>
         /// <param name="host"></param>
-        /// <param name="config"></param>
+        /// <param name="configuration"></param>
         /// <param name="configureWebHostBuilder"></param>
-        private WebService(ServiceHost host, Config.Web config, Action<IWebHostBuilder> configureWebHostBuilder)
+        private WebService(ServiceHost host, IConfiguration configuration, Action<IWebHostBuilder> configureWebHostBuilder)
         {
-            _config = config;
+            _config = configuration.Get<Config.Web>();
+            if (_config == null) throw new NotFoundException("缺少Web配置");
             host.ConfigureHostBuilder(builder => builder.ConfigureWebHostDefaults(webHostBuilder =>
             {
                 if (!string.IsNullOrEmpty(_config.ContentRoot)) webHostBuilder.UseContentRoot(_config.ContentRoot);
@@ -78,12 +80,12 @@ namespace DwFramework.Web
         /// 初始化
         /// </summary>
         /// <param name="host"></param>
-        /// <param name="config"></param>
+        /// <param name="configuration"></param>
         /// <param name="configureWebHostBuilder"></param>
         /// <returns></returns>
-        public static WebService Init(ServiceHost host, Config.Web config, Action<IWebHostBuilder> configureWebHostBuilder)
+        public static WebService Init(ServiceHost host, IConfiguration configuration, Action<IWebHostBuilder> configureWebHostBuilder)
         {
-            Instance = new WebService(host, config, configureWebHostBuilder);
+            Instance = new WebService(host, configuration, configureWebHostBuilder);
             return Instance;
         }
 

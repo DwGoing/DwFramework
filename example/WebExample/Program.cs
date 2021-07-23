@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Text;
 using System.Threading.Tasks;
-using System.Net.Sockets;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
@@ -22,10 +21,10 @@ namespace WebExample
         static async Task Main(string[] args)
         {
             var host = new ServiceHost();
-            host.AddJsonConfig("Config.json");
-            host.ConfigureWebWithJson("Config.json", builder => builder.UseStartup<Startup>(), "web");
-            host.ConfigureSocket(ProtocolType.Tcp, "tcp");
-            host.ConfigureSocket(ProtocolType.Udp, "udp");
+            var configuration = new ConfigurationBuilder().AddJsonFile("Config.json").Build();
+            host.ConfigureWeb(configuration, builder => builder.UseStartup<Startup>(), "web");
+            host.ConfigureSocket(configuration, "tcp");
+            host.ConfigureSocket(configuration, "udp");
             host.ConfigureLogging(builder => builder.UserNLog());
 
             host.OnHostStarted += p =>

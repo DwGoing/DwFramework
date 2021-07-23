@@ -22,7 +22,8 @@ namespace DwFramework.Core
         /// <param name="configuration"></param>
         /// <param name="path"></param>
         /// <returns></returns>
-        public static T ParseConfiguration<T>(this IConfiguration configuration, string path = null) => configuration.Get<T>();
+        public static T ParseConfiguration<T>(this IConfiguration configuration, string path = null)
+            => configuration.GetConfiguration(path).Get<T>();
 
         /// <summary>
         /// 解析配置

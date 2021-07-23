@@ -14,71 +14,26 @@ namespace DwFramework.Web.Socket
         /// 配置Socket
         /// </summary>
         /// <param name="host"></param>
-        /// <param name="type"></param>
-        /// <param name="path"></param>
-        /// <returns></returns>
-        public static ServiceHost ConfigureSocket(this ServiceHost host, ProtocolType type, string path = null)
-        {
-            switch (type)
-            {
-                case ProtocolType.Tcp:
-                    host.ConfigureContainer(builder => builder.Register(_ =>
-                    {
-                        var config = ServiceHost.ParseConfiguration<Config.Socket>(path);
-                        return new TcpService(config);
-                    }).SingleInstance());
-                    break;
-                case ProtocolType.Udp:
-                    host.ConfigureContainer(builder => builder.Register(_ =>
-                    {
-                        var config = ServiceHost.ParseConfiguration<Config.Socket>(path);
-                        return new UdpService(config);
-                    }).SingleInstance());
-                    break;
-                default:
-                    throw new Exception("未定义的协议类型");
-            }
-            return host;
-        }
-
-        /// <summary>
-        /// 配置Socket
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="host"></param>
-        /// <param name="config"></param>
-        /// <returns></returns>
-        public static ServiceHost ConfigureSocket(this ServiceHost host, Config.Socket config)
-        {
-            if (config == null) throw new Exception("未读取到Socket配置");
-            switch (config.ProtocolType)
-            {
-                case ProtocolType.Tcp:
-                    var tcpService = new TcpService(config);
-                    host.ConfigureContainer(builder => builder.RegisterInstance(tcpService).SingleInstance());
-                    break;
-                case ProtocolType.Udp:
-                    var udpService = new UdpService(config);
-                    host.ConfigureContainer(builder => builder.RegisterInstance(udpService).SingleInstance());
-                    break;
-                default:
-                    throw new Exception("未定义的协议类型");
-            }
-            return host;
-        }
-
-        /// <summary>
-        /// 配置Socket
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="host"></param>
         /// <param name="configuration"></param>
         /// <param name="path"></param>
         /// <returns></returns>
         public static ServiceHost ConfigureSocket(this ServiceHost host, IConfiguration configuration, string path = null)
         {
             var config = configuration.ParseConfiguration<Config.Socket>(path);
-            host.ConfigureSocket(config);
+            if (config == null) throw new NotFoundException("未读取到Socket配置");
+            switch (config.ProtocolType)
+            {
+                case ProtocolType.Tcp:
+                    var tcpService = new TcpService(configuration.GetConfiguration(path));
+                    host.ConfigureContainer(builder => builder.RegisterInstance(tcpService).SingleInstance());
+                    break;
+                case ProtocolType.Udp:
+                    var udpService = new UdpService(configuration.GetConfiguration(path));
+                    host.ConfigureContainer(builder => builder.RegisterInstance(udpService).SingleInstance());
+                    break;
+                default:
+                    throw new Exception("未定义的协议类型");
+            }
             return host;
         }
 

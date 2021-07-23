@@ -15,7 +15,7 @@ namespace CoreExample
         static async Task Main(string[] args)
         {
             var host = new ServiceHost();
-            host.AddJsonConfig("Config.json", reloadOnChange: true);
+            host.AddJsonConfiguration("Config.json", reloadOnChange: true);
             host.ConfigureLogging(builder => builder.UserNLog());
             host.ConfigureContainer(builder =>
             {

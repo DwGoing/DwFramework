@@ -3,12 +3,14 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
+using Microsoft.Extensions.Configuration;
+using DwFramework.Core;
 
 namespace DwFramework.Web.Socket
 {
     public sealed class TcpService
     {
-        private Config.Socket _config;
+        private readonly Config.Socket _config;
         private readonly Dictionary<string, TcpConnection> _connections = new();
         private System.Net.Sockets.Socket _server;
 
@@ -21,13 +23,13 @@ namespace DwFramework.Web.Socket
         /// <summary>
         /// 构造函数
         /// </summary>
-        /// <param name="config"></param>
-        public TcpService(Config.Socket config)
+        /// <param name="configuration"></param>
+        public TcpService(IConfiguration configuration)
         {
-            _config = config;
-            _server = new System.Net.Sockets.Socket(config.AddressFamily, config.SocketType, ProtocolType.Tcp);
-
-            if (_config.Listen == null) throw new Exception("缺少Listen配置");
+            _config = configuration.ParseConfiguration<Config.Socket>();
+            if (_config.Listen == null) throw new NotFoundException("缺少Socket配置");
+            _server = new System.Net.Sockets.Socket(_config.AddressFamily, _config.SocketType, ProtocolType.Tcp);
+            if (_config.Listen == null) throw new NotFoundException("缺少Listen配置");
             _server.Bind(new IPEndPoint(string.IsNullOrEmpty(_config.Listen.Ip) ? IPAddress.Any : IPAddress.Parse(_config.Listen.Ip), _config.Listen.Port));
             _server.Listen(_config.BackLog);
             _ = AcceptAsync();
