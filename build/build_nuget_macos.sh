@@ -104,8 +104,6 @@ else
 fi
 
 version=$NET_VERSION.$FRAMEWORK_VERSION.$MINOR_VERSION.$REVISION_VERSION$SUFFIX
-echo $version
-exit 0
 sed -i "" "s/\(<Version>\)[^<]*\(<\)/\1$version\2/g" $FILE
 
 # 构建

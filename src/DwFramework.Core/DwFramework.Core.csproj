@@ -2,7 +2,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
-    <Version>5.1.0.27-1626883993.rc</Version>
+    <Version>5.1.1.0</Version>
     <Authors>DwGoing</Authors>
     <Description>DwFramework 核心库</Description>
     <PackageProjectUrl>https://github.com/Dwgoing/DwFramework</PackageProjectUrl>
