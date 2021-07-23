@@ -18,12 +18,21 @@ namespace DwFramework.Core
         /// <summary>
         /// 解析配置
         /// </summary>
-        /// <typeparam name="T"></typeparam>
         /// <param name="configuration"></param>
         /// <param name="path"></param>
+        /// <typeparam name="T"></typeparam>
         /// <returns></returns>
         public static T ParseConfiguration<T>(this IConfiguration configuration, string path = null)
             => configuration.GetConfiguration(path).Get<T>();
+
+        /// <summary>
+        /// 获取配置
+        /// </summary>
+        /// <param name="provider"></param>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        public static IConfiguration GetConfiguration(this IServiceProvider provider, string path = null)
+            => provider.GetService<IConfiguration>().GetConfiguration(path);
 
         /// <summary>
         /// 解析配置
@@ -33,6 +42,6 @@ namespace DwFramework.Core
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
         public static T ParseConfiguration<T>(this IServiceProvider provider, string path = null)
-            => provider.GetService<IConfiguration>().ParseConfiguration<T>();
+            => provider.GetConfiguration(path).ParseConfiguration<T>();
     }
 }

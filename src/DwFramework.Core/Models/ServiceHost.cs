@@ -250,10 +250,7 @@ namespace DwFramework.Core
         /// <param name="path"></param>
         /// <returns></returns>
         public static IConfiguration GetConfiguration(string path = null)
-        {
-            var root = ServiceProvider.GetService<IConfiguration>();
-            return string.IsNullOrEmpty(path) ? root : root.GetSection(path);
-        }
+            => ServiceProvider.GetConfiguration(path);
 
         /// <summary>
         /// 解析配置
@@ -262,9 +259,6 @@ namespace DwFramework.Core
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
         public static T ParseConfiguration<T>(string path = null)
-        {
-            var root = GetConfiguration(path);
-            return root == null ? default : root.Get<T>();
-        }
+            => ServiceProvider.ParseConfiguration<T>(path);
     }
 }
