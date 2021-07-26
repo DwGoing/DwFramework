@@ -4,6 +4,13 @@ on:
   push:
     branches:
       - 5.1.x
+    paths-ignore:
+      - ".github/**"
+      - "build/**"
+      - ".gitignore"
+      - "LICENSE"
+      - "*.md"
+      - "*.yml"
   pull_request:
     branches:
       - 5.1.x

@@ -1,4 +1,5 @@
 using System;
+using Microsoft.Extensions.DependencyInjection;
 using Autofac;
 
 namespace DwFramework.Core.Generator
@@ -13,7 +14,7 @@ namespace DwFramework.Core.Generator
         /// <param name="startTime"></param>
         /// <param name="isGlobal"></param>
         /// <returns></returns>
-        public static ServiceHost cSnowflakeGenerator(this ServiceHost host, long workerId, DateTime startTime, bool isGlobal = true)
+        public static ServiceHost ConfigureSnowflakeGenerator(this ServiceHost host, long workerId, DateTime startTime, bool isGlobal = true)
         {
             return host.ConfigureContainer(builder =>
             {
@@ -21,5 +22,13 @@ namespace DwFramework.Core.Generator
                 if (isGlobal) registration.SingleInstance();
             });
         }
+
+        /// <summary>
+        /// 获取雪花生成器
+        /// </summary>
+        /// <param name="provider"></param>
+        /// <typeparam name="SnowflakeGenerator"></typeparam>
+        /// <returns></returns>
+        public static SnowflakeGenerator GetSnowflakeGenerator(this IServiceProvider provider) => provider.GetService<SnowflakeGenerator>();
     }
 }
