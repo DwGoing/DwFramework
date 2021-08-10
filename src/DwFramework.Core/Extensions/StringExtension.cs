@@ -5,7 +5,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Microsoft.International.Converters.PinYinConverter;
+using hyjiacan.py4n;
 using K4os.Compression.LZ4.Streams;
 
 namespace DwFramework.Core
@@ -210,23 +210,28 @@ namespace DwFramework.Core
         /// </summary>
         /// <param name="char"></param>
         /// <returns></returns>
-        public static bool IsChinese(this char @char)
+        public static bool IsChinese(this char @char) => PinyinUtil.IsHanzi(@char);
+
+        /// <summary>
+        /// 获取中文字符的拼音首字母
+        /// </summary>
+        /// <param name="@char"></param>
+        /// <returns></returns>
+        public static string GetFirstPinyin(this char @char)
         {
-            var pattern = @"^[\u4e00-\u9fa5]$";
-            if (Regex.IsMatch(@char.ToString(), pattern)) return true;
-            return false;
+            if (!IsChinese(@char)) return null;
+            return Pinyin4Net.GetFirstPinyin(@char, PinyinFormat.UPPERCASE);
         }
 
         /// <summary>
         /// 获取中文字符的拼音
         /// </summary>
-        /// <param name="@char"></param>
+        /// <param name="char"></param>
         /// <returns></returns>
-        public static string[] GetPinYin(this char @char)
+        public static string[] GetPinyin(this char @char)
         {
             if (!IsChinese(@char)) return null;
-            var decoder = new ChineseChar(@char);
-            return decoder.Pinyins;
+            return Pinyin4Net.GetPinyin(@char, PinyinFormat.UPPERCASE);
         }
 
         /// <summary>
