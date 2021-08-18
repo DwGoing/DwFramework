@@ -91,7 +91,7 @@ namespace DwFramework.Core
         /// <returns></returns>
         public static IEnumerable<TSource> DistinctBy<TSource, TKey>(this IEnumerable<TSource> source, Func<TSource, TKey> selector)
         {
-            var hash = source.ToHashSet(selector);
+            var hash = new HashSet<TKey>();
             return source.Where(item => hash.Add(selector(item)));
         }
 

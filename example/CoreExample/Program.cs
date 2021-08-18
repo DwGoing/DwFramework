@@ -13,6 +13,12 @@ namespace CoreExample
 {
     class Program
     {
+        class A
+        {
+            public int id { get; set; }
+            public string name { get; set; }
+        }
+
         static async Task Main(string[] args)
         {
             var host = new ServiceHost();
