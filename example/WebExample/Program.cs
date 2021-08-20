@@ -126,8 +126,8 @@ namespace WebExample
                 //不使用驼峰样式的key
                 options.JsonSerializerOptions.DictionaryKeyPolicy = null;
             });
+            services.AddMvc(options => options.UseRoutePrefix("api"));
             services.AddRpcImplements();
-
             services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddAntDesign();

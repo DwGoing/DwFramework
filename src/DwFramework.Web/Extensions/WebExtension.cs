@@ -3,6 +3,8 @@ using System.IO;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Autofac;
@@ -110,6 +112,16 @@ namespace DwFramework.Web
         {
             WebService.Instance.UseWebSocket(app);
             return app;
+        }
+
+        /// <summary>
+        /// 使用全局路由前缀
+        /// </summary>
+        /// <param name="options"></param>
+        /// <param name="prefix"></param>
+        public static void UseRoutePrefix(this MvcOptions options, string prefix)
+        {
+            options.Conventions.Insert(0, new RoutePrefix(new RouteAttribute(prefix)));
         }
     }
 }
