@@ -20,7 +20,7 @@ namespace QuartzExample
             host.ConfigureQuartz();
             host.OnHostStarted += async p =>
             {
-                var s = p.GetTaskSchedule();
+                var s = p.GetQuartz();
                 var ss = await s.CreateSchedulerAsync("X", true);
                 await s.CreateJobAsync<Job>("X", "1/5 * * * * ?");
                 await ss.Start();

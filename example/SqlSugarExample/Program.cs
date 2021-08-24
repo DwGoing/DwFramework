@@ -16,7 +16,7 @@ namespace SqlSugarExample
             host.ConfigureLogging(builder => builder.UserNLog());
             host.OnHostStarted += p =>
             {
-                var s = p.GetSqlSugarService();
+                var s = p.GetSqlSugar();
                 var c = s.CreateConnection("Main");
                 var d = c.DbMaintenance.GetTableInfoList();
             };
