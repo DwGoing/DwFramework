@@ -12,7 +12,8 @@ namespace RabbitMQExample
         static async Task Main(string[] args)
         {
             var host = new ServiceHost();
-            host.ConfigureRabbitMQWithJson("Config.json");
+            host.AddJsonConfiguration("Config.json");
+            host.ConfigureRabbitMQ("MQ");
             host.OnHostStarted += p =>
             {
                 var s = p.GetRabbitMQ();

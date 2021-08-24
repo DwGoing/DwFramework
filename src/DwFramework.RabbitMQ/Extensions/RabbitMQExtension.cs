@@ -13,6 +13,15 @@ namespace DwFramework.RabbitMQ
         /// 配置RabbitMQ
         /// </summary>
         /// <param name="host"></param>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        public static ServiceHost ConfigureRabbitMQ(this ServiceHost host, string path = null)
+            => host.ConfigureContainer((context, builder) => builder.Register(_ => new RabbitMQService(context.Configuration.GetConfiguration(path))).SingleInstance());
+
+        /// <summary>
+        /// 配置RabbitMQ
+        /// </summary>
+        /// <param name="host"></param>
         /// <param name="configuration"></param>
         /// <param name="path"></param>
         /// <returns></returns>
