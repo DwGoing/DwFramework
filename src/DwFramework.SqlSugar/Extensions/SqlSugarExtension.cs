@@ -88,6 +88,6 @@ namespace DwFramework.SqlSugar
         /// </summary>
         /// <param name="provider"></param>
         /// <returns></returns>
-        public static SqlSugarService GetSqlSugarService(this IServiceProvider provider) => provider.GetService<SqlSugarService>();
+        public static SqlSugarService GetSqlSugar(this IServiceProvider provider) => provider.GetService<SqlSugarService>();
     }
 }

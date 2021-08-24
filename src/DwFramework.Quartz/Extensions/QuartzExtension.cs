@@ -27,6 +27,6 @@ namespace DwFramework.Quartz
         /// </summary>
         /// <param name="provider"></param>
         /// <returns></returns>
-        public static QuartzService GetTaskSchedule(this IServiceProvider provider) => provider.GetService<QuartzService>();
+        public static QuartzService GetQuartz(this IServiceProvider provider) => provider.GetService<QuartzService>();
     }
 }
