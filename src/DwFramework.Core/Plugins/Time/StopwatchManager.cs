@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections.Concurrent;
 
 namespace DwFramework.Core.Time
 {
@@ -34,7 +34,7 @@ namespace DwFramework.Core.Time
             public long GetTotalSeconds() => GetTotalMilliseconds() / 1000;
         }
 
-        private static Dictionary<string, Stopwatch> _stopwatches = new();
+        private static ConcurrentDictionary<string, Stopwatch> _stopwatches = new();
 
         /// <summary>
         /// 创建计时器
@@ -68,7 +68,7 @@ namespace DwFramework.Core.Time
         public static void Remove(string tag)
         {
             if (!_stopwatches.ContainsKey(tag)) return;
-            _stopwatches.Remove(tag);
+            _stopwatches.RemoveWhere(item => item.Key == tag);
         }
 
         /// <summary>
