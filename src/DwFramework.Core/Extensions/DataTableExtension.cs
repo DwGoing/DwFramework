@@ -22,7 +22,7 @@ namespace DwFramework.Core
             {
                 arr[i] = Activator.CreateInstance<T>();
                 var row = dataTable.Rows[i];
-                properties.ForEach(property =>
+                foreach (var property in properties)
                 {
                     var srcData = row[property.Name];
                     // 自定义类型转换
@@ -31,7 +31,7 @@ namespace DwFramework.Core
                     // 自定义字段转换
                     srcData = propertyFunc != null && propertyFunc.ContainsKey(property.Name) ? propertyFunc[property.Name](srcData) : srcData;
                     property.SetValue(arr[i], srcData);
-                });
+                };
             }
             return arr;
         }

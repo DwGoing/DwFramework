@@ -38,11 +38,11 @@ namespace DwFramework.Core.Cache
             var currentTime = DateTime.UtcNow;
             _isCleaning = true;
             var keys = _datas.Keys;
-            keys.ForEach(item =>
+            foreach (var item in keys)
             {
                 var data = (MemoryCacheData)_datas[item];
                 if (data.IsExpired) Del((string)item);
-            });
+            };
             _isCleaning = false;
         }
 
@@ -186,7 +186,7 @@ namespace DwFramework.Core.Cache
             var table = Get<Hashtable>(key);
             if (table == null) return default;
             var dic = new Dictionary<string, object>();
-            table.ForEach(item => dic.Add((string)((DictionaryEntry)item).Key, ((DictionaryEntry)item).Value));
+            foreach (var item in table) dic.Add((string)((DictionaryEntry)item).Key, ((DictionaryEntry)item).Value);
             return dic;
         }
 

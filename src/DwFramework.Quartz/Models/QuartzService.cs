@@ -209,7 +209,7 @@ namespace DwFramework.Quartz
         {
             var scheduler = await GetSchedulerAsync(schedulerName);
             var calender = new WeeklyCalendar();
-            excludeDays.ForEach(item => calender.SetDayExcluded(item, true));
+            foreach (var item in excludeDays) calender.SetDayExcluded(item, true);
             await scheduler.AddCalendar(calName, calender, true, true);
         }
 
@@ -224,7 +224,7 @@ namespace DwFramework.Quartz
         {
             var scheduler = await GetSchedulerAsync(schedulerName);
             var calender = new MonthlyCalendar();
-            excludeDays.ForEach(item => calender.SetDayExcluded(item, true));
+            foreach (var item in excludeDays) calender.SetDayExcluded(item, true);
             await scheduler.AddCalendar(calName, calender, true, true);
         }
 
@@ -239,7 +239,7 @@ namespace DwFramework.Quartz
         {
             var scheduler = await GetSchedulerAsync(schedulerName);
             var calender = new AnnualCalendar();
-            excludeMonthDays.ForEach(item => calender.SetDayExcluded(DateBuilder.DateOf(0, 0, 0, item.Item2, item.Item1).DateTime, true));
+            foreach (var item in excludeMonthDays) calender.SetDayExcluded(DateBuilder.DateOf(0, 0, 0, item.Item2, item.Item1).DateTime, true);
             await scheduler.AddCalendar(calName, calender, true, true);
         }
 

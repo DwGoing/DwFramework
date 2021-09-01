@@ -68,7 +68,7 @@ namespace DwFramework.Core.Time
         public static void Remove(string tag)
         {
             if (!_stopwatches.ContainsKey(tag)) return;
-            _stopwatches.RemoveWhere(item => item.Key == tag);
+            _stopwatches.TryRemove(tag, out _);
         }
 
         /// <summary>

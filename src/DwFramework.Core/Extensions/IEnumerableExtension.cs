@@ -9,79 +9,6 @@ namespace DwFramework.Core
     public static class IEnumerableExtension
     {
         /// <summary>
-        /// 遍历
-        /// </summary>
-        /// <param name="enumerable"></param>
-        /// <param name="action"></param>
-        /// <param name="onException"></param>
-        public static void ForEach(this IEnumerable enumerable, Action<object> action, Action<object, Exception> onException = null)
-        {
-            foreach (var item in enumerable)
-            {
-                try
-                {
-                    action?.Invoke(item);
-                }
-                catch (Exception ex)
-                {
-                    if (onException == null) throw;
-                    onException?.Invoke(item, ex);
-                }
-            }
-        }
-
-        /// <summary>
-        /// 遍历
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="enumerable"></param>
-        /// <param name="action"></param>
-        /// <param name="onException"></param>
-        public static void ForEach<T>(this IEnumerable<T> enumerable, Action<T> action, Action<T, Exception> onException = null)
-        {
-            foreach (var item in enumerable)
-            {
-                try
-                {
-                    action?.Invoke(item);
-                }
-                catch (Exception ex)
-                {
-                    if (onException == null) throw;
-                    onException?.Invoke(item, ex);
-                }
-            }
-        }
-
-        /// <summary>
-        /// 遍历（并行）
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="enumerable"></param>
-        /// <param name="action"></param>
-        /// <param name="onException"></param>
-        public static void ForEachParallel<T>(this IEnumerable<T> enumerable, Action<T> action, Action<T, Exception> onException = null)
-        {
-            Parallel.ForEach(enumerable, (item, state) =>
-            {
-                try
-                {
-                    if (state.ShouldExitCurrentIteration) return;
-                    action?.Invoke(item);
-                }
-                catch (Exception ex)
-                {
-                    if (onException == null)
-                    {
-                        state.Stop();
-                        throw;
-                    }
-                    onException?.Invoke(item, ex);
-                }
-            });
-        }
-
-        /// <summary>
         /// 按字段去重
         /// </summary>
         /// <typeparam name="TSource"></typeparam>
@@ -103,7 +30,7 @@ namespace DwFramework.Core
         /// <param name="values"></param>
         public static void AddRange<T>(this ICollection<T> collection, params T[] values)
         {
-            values.ForEach(item => collection.Add(item));
+            foreach (var item in values) collection.Add(item);
         }
 
         /// <summary>
@@ -115,7 +42,7 @@ namespace DwFramework.Core
         /// <param name="values"></param>
         public static void AddRangeIf<T>(this ICollection<T> collection, Func<T, bool> predicate, params T[] values)
         {
-            values.ForEach(item => { if (predicate(item)) collection.Add(item); });
+            foreach (var item in values) if (predicate(item)) collection.Add(item);
         }
 
         /// <summary>
@@ -126,7 +53,7 @@ namespace DwFramework.Core
         /// <param name="values"></param>
         public static void AddRangeIfNotContains<T>(this ICollection<T> collection, params T[] values)
         {
-            values.ForEach(item => { if (!collection.Contains(item)) collection.Add(item); });
+            foreach (var item in values) if (!collection.Contains(item)) collection.Add(item);
         }
 
         /// <summary>
@@ -137,7 +64,8 @@ namespace DwFramework.Core
         /// <param name="predicate"></param>
         public static void RemoveWhere<T>(this ICollection<T> collection, Func<T, bool> predicate)
         {
-            collection.Where(predicate).ForEach(item => collection.Remove(item));
+            var removable = collection.Where(predicate);
+            foreach (var item in removable) collection.Remove(item);
         }
 
         /// <summary>
@@ -150,11 +78,11 @@ namespace DwFramework.Core
         public static void InsertAfter<T>(this IList<T> list, Func<T, bool> predicate, T value)
         {
             var tmp = list.Select((item, index) => new { item, index }).Where(p => predicate(p.item)).OrderByDescending(p => p.index);
-            tmp.ForEach(item =>
+            foreach (var item in tmp)
             {
                 if (item.index + 1 == list.Count) list.Add(value);
                 else list.Insert(item.index + 1, value);
-            });
+            };
         }
 
         /// <summary>
@@ -167,11 +95,11 @@ namespace DwFramework.Core
         public static void InsertAfter<T>(this IList<T> list, int index, T value)
         {
             var tmp = list.Select((v, i) => new { Value = v, Index = i }).Where(p => p.Index == index).OrderByDescending(p => p.Index);
-            tmp.ForEach(item =>
+            foreach (var item in tmp)
             {
                 if (item.Index + 1 == list.Count) list.Add(value);
                 else list.Insert(item.Index + 1, value);
-            });
+            };
         }
 
         /// <summary>

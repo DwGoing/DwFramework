@@ -87,7 +87,7 @@ namespace DwFramework.Core
             var bitsRemaining = (byte)8;
             var arrayIndex = 0;
 
-            str.ForEach(item =>
+            foreach (var item in str)
             {
                 var cValue = ToBase32Value(item);
                 int mask;
@@ -105,7 +105,7 @@ namespace DwFramework.Core
                     curByte = (byte)(cValue << (3 + bitsRemaining));
                     bitsRemaining += 3;
                 }
-            });
+            };
 
             if (arrayIndex != byteCount)
             {
@@ -130,7 +130,7 @@ namespace DwFramework.Core
             var bitsRemaining = (byte)5;
             var arrayIndex = 0;
 
-            bytes.ForEach(item =>
+            foreach (var item in bytes)
             {
                 nextChar = (byte)(nextChar | (item >> (8 - bitsRemaining)));
                 returnArray[arrayIndex++] = ToBase32Char(nextChar);
@@ -144,7 +144,7 @@ namespace DwFramework.Core
 
                 bitsRemaining -= 3;
                 nextChar = (byte)((item << bitsRemaining) & 31);
-            });
+            };
 
             if (arrayIndex != charCount)
             {
@@ -335,11 +335,11 @@ namespace DwFramework.Core
         public static int GetLength(this string str)
         {
             var len = 0;
-            str.ForEach(item =>
+            foreach (var item in str)
             {
                 if (item.IsChinese() || item.IsSBC()) len += 2;
                 else len++;
-            });
+            };
             return len;
         }
     }

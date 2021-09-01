@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using System.Net.WebSockets;
 using System.Linq;
 using System.Collections.Generic;
-using DwFramework.Core;
 
 namespace DwFramework.Web
 {
@@ -112,27 +111,27 @@ namespace DwFramework.Web
             if (OnConnect != null)
             {
                 var actions = OnConnect.GetInvocationList();
-                actions.ForEach(item => OnConnect -= (Action<OnConnectEventArgs>)item);
+                foreach (var item in actions) OnConnect -= (Action<OnConnectEventArgs>)item;
             }
             if (OnClose != null)
             {
                 var actions = OnClose.GetInvocationList();
-                actions.ForEach(item => OnClose -= (Action<OnCloceEventArgs>)item);
+                foreach (var item in actions) OnClose -= (Action<OnCloceEventArgs>)item;
             }
             if (OnError != null)
             {
                 var actions = OnError.GetInvocationList();
-                actions.ForEach(item => OnError -= (Action<OnErrorEventArgs>)item);
+                foreach (var item in actions) OnError -= (Action<OnErrorEventArgs>)item;
             }
             if (OnSend != null)
             {
                 var actions = OnSend.GetInvocationList();
-                actions.ForEach(item => OnSend -= (Action<OnSendEventArgs>)item);
+                foreach (var item in actions) OnSend -= (Action<OnSendEventArgs>)item;
             }
             if (OnReceive != null)
             {
                 var actions = OnReceive.GetInvocationList();
-                actions.ForEach(item => OnReceive -= (Action<OnReceiveEventArgs>)item);
+                foreach (var item in actions) OnReceive -= (Action<OnReceiveEventArgs>)item;
             }
         }
     }

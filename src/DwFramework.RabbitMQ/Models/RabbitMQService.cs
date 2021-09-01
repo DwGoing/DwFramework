@@ -239,7 +239,7 @@ namespace DwFramework.RabbitMQ
         public void Unsubscribe(string queue)
         {
             if (!_subscribers.ContainsKey(queue)) return;
-            _subscribers[queue].ForEach(item => item.Model.Abort());
+            foreach (var item in _subscribers[queue]) item.Model.Abort();
             _subscribers.Remove(queue);
         }
     }
