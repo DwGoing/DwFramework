@@ -11,9 +11,9 @@ namespace DwFramework.Core
         /// <param name="endTime"></param>
         /// <param name="isMilliseconds"></param>
         /// <returns></returns>
-        public static long GetTimeDiff(this DateTime startTime, DateTime? endTime = null, bool isMilliseconds = false)
+        public static long GetTimeDiff(this DateTime startTime, DateTime endTime, bool isMilliseconds = false)
         {
-            var diffTime = (endTime ?? DateTime.Now).ToUniversalTime() - startTime.ToUniversalTime();
+            var diffTime = endTime - startTime;
             if (isMilliseconds) return (long)diffTime.TotalMilliseconds;
             else return (long)diffTime.TotalSeconds;
         }

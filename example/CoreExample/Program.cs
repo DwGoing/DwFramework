@@ -7,6 +7,7 @@ using Autofac;
 using Autofac.Extras.DynamicProxy;
 using NLog;
 using DwFramework.Core;
+using DwFramework.Core.Generator;
 using DwFramework.Core.AOP;
 
 namespace CoreExample
@@ -21,29 +22,38 @@ namespace CoreExample
 
         static async Task Main(string[] args)
         {
-            var host = new ServiceHost();
-            host.AddJsonConfiguration("Config.json", reloadOnChange: true);
-            host.ConfigureLogging(builder => builder.UserNLog());
-            host.ConfigureContainer(builder =>
+            var s = DateTime.Parse("2020.01.01");
+            var g = new SnowflakeGenerator(0, s);
+            while (true)
             {
-                builder.Register(c => new LoggerInterceptor(invocation => (
-                    $"{invocation.TargetType.Name}InvokeLog",
-                    LogLevel.Debug,
-                    "\n========================================\n"
-                    + $"Method:\t{invocation.Method}\n"
-                    + $"Args:\t{string.Join('|', invocation.Arguments)}\n"
-                    + $"Return:\t{invocation.ReturnValue}\n"
-                    + "========================================"
-                )));
-                builder.RegisterType<A>().As<I>().EnableInterfaceInterceptors();
-                builder.RegisterType<B>().As<I>().EnableInterfaceInterceptors();
-            });
-            host.OnHostStarted += provider =>
-            {
-                ServiceHost.ParseConfiguration<string>("ConnectionString");
-                foreach (var item in provider.GetServices<I>()) item.Do(5, 6);
-            };
-            await host.RunAsync();
+                var i = g.GenerateId();
+                var x = SnowflakeGenerator.DecodeId(i, s);
+                Console.WriteLine(i);
+            }
+
+            // var host = new ServiceHost();
+            // host.AddJsonConfiguration("Config.json", reloadOnChange: true);
+            // host.ConfigureLogging(builder => builder.UserNLog());
+            // host.ConfigureContainer(builder =>
+            // {
+            //     builder.Register(c => new LoggerInterceptor(invocation => (
+            //         $"{invocation.TargetType.Name}InvokeLog",
+            //         LogLevel.Debug,
+            //         "\n========================================\n"
+            //         + $"Method:\t{invocation.Method}\n"
+            //         + $"Args:\t{string.Join('|', invocation.Arguments)}\n"
+            //         + $"Return:\t{invocation.ReturnValue}\n"
+            //         + "========================================"
+            //     )));
+            //     builder.RegisterType<A>().As<I>().EnableInterfaceInterceptors();
+            //     builder.RegisterType<B>().As<I>().EnableInterfaceInterceptors();
+            // });
+            // host.OnHostStarted += provider =>
+            // {
+            //     ServiceHost.ParseConfiguration<string>("ConnectionString");
+            //     foreach (var item in provider.GetServices<I>()) item.Do(5, 6);
+            // };
+            // await host.RunAsync();
         }
     }
 

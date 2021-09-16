@@ -8,14 +8,14 @@ namespace DwFramework.Core.Generator
     /// </summary>
     public sealed class SnowflakeGenerator
     {
-        public sealed class SnowflakeIdInfo
+        public record SnowflakeIdInfo
         {
-            public long ID { get; }
-            public DateTime StartTime { get; }
-            public long Timestamp { get; }
+            public long ID { get; init; }
+            public DateTime StartTime { get; init; }
+            public long Timestamp { get; init; }
             public DateTime Time => DateTime.UnixEpoch.AddSeconds(Timestamp);
-            public long WorkId { get; }
-            public long Sequence { get; }
+            public long WorkId { get; init; }
+            public long Sequence { get; init; }
 
             /// <summary>
             /// 构造函数
@@ -71,7 +71,7 @@ namespace DwFramework.Core.Generator
             {
                 _currentSequence++;
                 if (_currentSequence > MaxSequence) Thread.Sleep(1);
-                var timestamp = StartTime.GetTimeDiff(DateTime.Now);
+                var timestamp = StartTime.GetTimeDiff(DateTime.UtcNow);
                 if (timestamp > MaxTimestamp) throw new Exception("时间戳容量不足,请调整StartTime");
                 if (timestamp < _currentTimestamp) throw new Exception("时间获取异常,请检查服务器时间");
                 else if (timestamp > _currentTimestamp)
