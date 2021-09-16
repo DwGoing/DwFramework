@@ -13,11 +13,11 @@
 
 |            组件             |     说明      |                             版本                             |
 | :-------------------------: | :-----------: | :----------------------------------------------------------: |
-|      DwFramework.Core       |   核心库    | [![](https://img.shields.io/badge/Nuget-5.1.0.26-brightgreen.svg)](https://www.nuget.org/packages/DwFramework.Core/) |
-|    DwFramework.SqlSugar     |    SqlSugar封装库    | [![](https://img.shields.io/badge/Nuget-5.1.0.26-brightgreen.svg)](https://www.nuget.org/packages/DwFramework.SqlSugar/) |
-|    DwFramework.RabbitMQ     | RabbitMQ封装库  | [![](https://img.shields.io/badge/Nuget-5.1.0.26-brightgreen.svg)](https://www.nuget.org/packages/DwFramework.RabbitMQ/) |
-|       DwFramework.Quartz       |    Quartz封装库    | [![](https://img.shields.io/badge/Nuget-5.1.0.26-brightgreen.svg)](https://www.nuget.org/packages/DwFramework.Quartz/) |
-|     DwFramework.Web      |  网络库   | [![](https://img.shields.io/badge/Nuget-5.1.0.26-brightgreen.svg)](https://www.nuget.org/packages/DwFramework.Web/) |
+|      DwFramework.Core       |   核心库    | [![](https://img.shields.io/badge/Nuget-5.1.2-brightgreen.svg)](https://www.nuget.org/packages/DwFramework.Core/) |
+|    DwFramework.SqlSugar     |    SqlSugar封装库    | [![](https://img.shields.io/badge/Nuget-5.1.2-brightgreen.svg)](https://www.nuget.org/packages/DwFramework.SqlSugar/) |
+|    DwFramework.RabbitMQ     | RabbitMQ封装库  | [![](https://img.shields.io/badge/Nuget-5.1.2-brightgreen.svg)](https://www.nuget.org/packages/DwFramework.RabbitMQ/) |
+|       DwFramework.Quartz       |    Quartz封装库    | [![](https://img.shields.io/badge/Nuget-5.1.2-brightgreen.svg)](https://www.nuget.org/packages/DwFramework.Quartz/) |
+|     DwFramework.Web      |  网络库   | [![](https://img.shields.io/badge/Nuget-5.1.2-brightgreen.svg)](https://www.nuget.org/packages/DwFramework.Web/) |
 
 ---
 
