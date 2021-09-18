@@ -180,30 +180,14 @@ namespace DwFramework.Core
         /// </summary>
         /// <param name="bytes"></param>
         /// <returns></returns>
-        public static string ToHex(this byte[] bytes)
-        {
-            var builder = new StringBuilder();
-            for (var i = 0; i < bytes.Length; i++)
-            {
-                builder.Append(bytes[i].ToString("x2"));
-            }
-            return builder.ToString();
-        }
+        public static string ToHex(this byte[] bytes) => Convert.ToHexString(bytes);
 
         /// <summary>
         /// Hex转字节数组
         /// </summary>
         /// <param name="hexString"></param>
         /// <returns></returns>
-        public static byte[] FromHex(this string hexString)
-        {
-            var bytes = new byte[hexString.Length / 2];
-            for (var i = 0; i < bytes.Length; i++)
-            {
-                bytes[i] = (byte)Convert.ToInt32(hexString.Substring(i * 2, 2), 16);
-            }
-            return bytes;
-        }
+        public static byte[] FromHex(this string hexString) => Convert.FromHexString(hexString);
 
         /// <summary>
         /// 是否为中文字符
